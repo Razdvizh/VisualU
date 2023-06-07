@@ -123,8 +123,7 @@ public:
 			&& SceneStartAnimation == Other.SceneStartAnimation
 			&& SceneEndAnimation == Other.SceneEndAnimation)
 		{
-			int i = 0;
-			for (i = 0; i < SpritesParams.Num(); i++)
+			for (int i = 0; i < SpritesParams.Num(); i++)
 			{
 				if (!Other.SpritesParams.IsValidIndex(i) || SpritesParams[i] != Other.SpritesParams[i])
 				{
