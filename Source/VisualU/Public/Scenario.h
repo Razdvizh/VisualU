@@ -18,11 +18,10 @@ struct VISUALU_API FSprite
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FSprite() : Position(ForceInit) {}
+	FSprite() : Position(ForceInit), ZOrder(0) {}
 
-	//TODO: Field name is confusing, needs refactoring.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
-	TSubclassOf<UVisualSprite> SpriteName;
+	TSubclassOf<UVisualSprite> SpriteClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
 	FVector2D Position;
@@ -33,9 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
 	TArray<TSoftObjectPtr<UPaperFlipbook>> Expressions;
 
-	bool operator== (const FSprite& Other)
+	FORCEINLINE bool operator== (const FSprite& Other)
 	{
-		if (SpriteName == Other.SpriteName
+		if (SpriteClass == Other.SpriteClass
 			&& Position == Other.Position)
 		{
 			for (int i = 0; i < Expressions.Num(); i++)
@@ -51,7 +50,7 @@ public:
 		return false;
 	}
 
-	bool operator!= (const FSprite& Other)
+	FORCEINLINE bool operator!= (const FSprite& Other)
 	{
 		return !(*this == Other);
 	}
@@ -66,9 +65,8 @@ struct VISUALU_API FScenario : public FTableRowBase
 public:
 	FScenario() {}
 
-	//TODO: Change to FText
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
-	FString Author;
+	FText Author;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
 	FText Line;
@@ -112,7 +110,7 @@ public:
 		Intrusive(InDataTable);
 	}
 
-	bool operator== (const FScenario& Other)
+	FORCEINLINE bool operator== (const FScenario& Other)
 	{
 		if (Author == Other.Author
 			&& Line.CompareTo(Other.Line)
@@ -138,7 +136,7 @@ public:
 		return false;
 	}
 
-	bool operator!= (const FScenario& Other)
+	FORCEINLINE bool operator!= (const FScenario& Other)
 	{
 		return !(*this == Other);
 	}
@@ -183,7 +181,7 @@ public:
 		{
 			for (const auto& SpriteParam : SpritesParams)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("\tSprite Name: %s"), SpriteParam.SpriteName ? *SpriteParam.SpriteName->GetFName().ToString() : TEXT("None"));
+				UE_LOG(LogTemp, Warning, TEXT("\tSprite Class: %s"), SpriteParam.SpriteClass ? *SpriteParam.SpriteClass->GetFName().ToString() : TEXT("None"));
 				UE_LOG(LogTemp, Warning, TEXT("\tPosition: %s"), *SpriteParam.Position.ToString());
 				if (!SpriteParam.Expressions.IsEmpty())
 				{
@@ -203,7 +201,7 @@ public:
 		{
 			for (const auto& SpriteParam : SpritesParams)
 			{
-				if (SpriteParam.SpriteName->IsChildOf<UVisualChoice>())
+				if (SpriteParam.SpriteClass->IsChildOf<UVisualChoice>())
 				{
 					return true;
 				}
@@ -218,7 +216,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(164)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(219)"), Rows);
 		Rows.Find(this, Index);
 	}
 };

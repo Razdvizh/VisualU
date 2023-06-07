@@ -88,7 +88,7 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 	PlaySound(Scene->Music.Get());
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
-		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteName, SpriteData.SpriteName->GetFName());
+		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass, SpriteData.SpriteClass->GetFName());
 		Sprite->AssignExpressions(SpriteData.Expressions);
 		Canvas->AddChildToCanvas(Sprite);
 		UCanvasPanelSlot* const SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
@@ -96,13 +96,16 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 		SpriteSlot->SetAnchors(FVisualAnchors::BottomLeft);
 		SpriteSlot->SetAutoSize(true);
 		SpriteSlot->SetPosition(SpriteData.Position);
+
+		OnSceneConstructed.Broadcast();
+		OnNativeSceneConstructed.Broadcast();
 	}
 }
 
-void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScenes)
+void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene)
 {
 	check(Scene);
-	if (UnloadScenes) CancelSceneLoading();
+	if (UnloadScene) CancelSceneLoading();
 	
 	TArray<FSoftObjectPath> DataToLoad;
 	
@@ -214,7 +217,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneEnd.Broadcast();
 
 	Branch.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(233)"), Branch);
+	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(220)"), Branch);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -308,7 +311,7 @@ const FText UVisualScene::GetLine() const
 	return Branch[SceneIndex]->Line;
 }
 
-const FString UVisualScene::GetAuthor() const
+const FText UVisualScene::GetAuthor() const
 {
 	return Branch[SceneIndex]->Author;
 }
@@ -340,7 +343,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(388)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(346)"), Rows);
 
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 
