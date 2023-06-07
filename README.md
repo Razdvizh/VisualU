@@ -12,5 +12,5 @@ Build the plugin for the Unreal Engine 5 project (should be also compatible with
 ## Install Plugin for the project
 1. Open project's directory for which you want to install the plugin
 2. Create ```Plugins``` folder
-3. Go to ```Desktop\Package\VisualU```
-4. Copy ```VisualU``` folder (the one under HostProject) and paste it to the newly created ```Plugins``` folder inside project's directory
+3. Go to ```Desktop\Package```
+4. Copy everything and paste it to the newly created ```Plugins``` folder inside project's directory
