@@ -61,7 +61,7 @@ public:
 	bool IsSceneExhausted(const FScenario* Scene) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Visual Scene|Scenario")
-	bool IsScenarioExhausted(const FScenario& Scene) const;
+	bool IsScenarioExhausted(const FScenario& Scenario) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	bool CanAdvanceScene() const;
@@ -81,7 +81,7 @@ public:
 	bool ToScene(const FScenario* Scene);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
-	bool ToScene(const FScenario& Scene);
+	bool ToScenario(const FScenario& Scenario);
 
 	void NativeToBranch(const TArray<FScenario*>& Rows);
 

@@ -62,7 +62,7 @@ void UVisualScene::NativeOnInitialized()
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(66)"), Branch);
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(65)"), Branch);
 	checkf(Branch.IsValidIndex(0), TEXT("First scene is empty!"));
 }
 
@@ -206,9 +206,9 @@ bool UVisualScene::ToScene(const FScenario* Scene)
 	return isFound;
 }
 
-bool UVisualScene::ToScene(const FScenario& Scene)
+bool UVisualScene::ToScenario(const FScenario& Scenario)
 {
-	return ToScene(&Scene);
+	return ToScene(&Scenario);
 }
 
 void UVisualScene::SetCurrentScene(const FScenario* Scene)
@@ -301,9 +301,9 @@ bool UVisualScene::IsSceneExhausted(const FScenario* Scene) const
 	return ExhaustedScenes.Contains(Scene);
 }
 
-bool UVisualScene::IsScenarioExhausted(const FScenario& Scene) const
+bool UVisualScene::IsScenarioExhausted(const FScenario& Scenario) const
 {
-	return IsSceneExhausted(&Scene);
+	return IsSceneExhausted(&Scenario);
 }
 
 const FText UVisualScene::GetLine() const
