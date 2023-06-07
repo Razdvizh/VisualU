@@ -26,22 +26,22 @@ public:
 	void SetCharacterAppearanceDelay(float Delay);
 
 	UFUNCTION(BlueprintGetter)
-	FORCEINLINE float GetCharacterAppearanceDelay() const { return CharacterAppearanceDelay; };
+	float GetCharacterAppearanceDelay() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	FORCEINLINE bool IsAppearingText() const { return bIsAppearingText; };
+	bool IsAppearingText() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Determines whether the text block displays the whole text instantly or in by-character manner"))
 	void SetDisplayMode(bool ShouldDisplayInstantly);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	FORCEINLINE bool GetDisplayMode() const { return bDisplayInstantly; };
+	bool GetDisplayMode() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	FORCEINLINE int GetLineWidth() const { return LineWidth; };
+	int GetLineWidth() const;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", BlueprintGetter = GetCharacterAppearanceDelay, meta = (Units = "s"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetCharacterAppearanceDelay, Category = "Visual Text Block", meta = (Units = "s"))
 	float CharacterAppearanceDelay = 0.04f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have this amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
@@ -60,9 +60,14 @@ private:
 private:
 	FTimerHandle CharacterDelayTimer;
 
-	FTimerDelegate CharacterDelayDelegate;
+	FTimerDynamicDelegate CharacterDelayDelegate;
+
+	UFUNCTION()
+	void DisplayOneCharacter();
 
 	FString CurrentString;
+
+	FString TextString;
 
 	uint32 TextLength;
 

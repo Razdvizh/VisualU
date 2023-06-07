@@ -6,6 +6,7 @@
 #include "Fonts/FontMeasure.h"
 #include "Widgets/Text/SRichTextBlock.h"
 #include "Components/PanelSlot.h"
+#include "TimerManager.h"
 
 #define LOCTEXT_NAMESPACE "Visual U"
 
@@ -39,7 +40,6 @@ void UVisualTextBlock::SetText(const FText& InText)
 	ensureMsgf(LineWidth > 1, TEXT("Line Width is %d, text will be displayed immediately"), LineWidth);
 	 
 	/*Check if this FText-to-FString conversion works properly with localization. If not, consider using FTextStringHelper*/
-	FString TextString;
 	CurrentString = FString();
 	TextString = InText.ToString();
 	TextLength = TextString.Len();
@@ -74,21 +74,7 @@ void UVisualTextBlock::SetText(const FText& InText)
 	}
 
 	/**Display one character of the text on the screen*/
-	CharacterDelayDelegate.BindLambda([TextString, this]
-	{
-		FText TextToDisplay;
-		const TCHAR ch = TextString[CurrCharCnt];
-		CurrentString.AppendChar(ch);
-		CurrCharCnt++;
-		const TCHAR* Buffer = CurrentString.GetCharArray().GetData();
-		TextToDisplay = FText::FromString(Buffer);
-		Super::SetText(TextToDisplay);
-		if (CurrCharCnt == TextLength)
-		{
-			GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
-			bIsAppearingText = false;
-		}
-	});
+	CharacterDelayDelegate.BindUFunction(this, TEXT("DisplayOneCharacter"));
 
 	if (TextString.IsValidIndex(CurrCharCnt))
 	{
@@ -112,11 +98,47 @@ void UVisualTextBlock::SetCharacterAppearanceDelay(float Delay)
 	CharacterAppearanceDelay = Delay;
 }
 
+bool UVisualTextBlock::IsAppearingText() const
+{
+	return bIsAppearingText;
+}
+
+bool UVisualTextBlock::GetDisplayMode() const
+{
+	return bDisplayInstantly;
+}
+
+int UVisualTextBlock::GetLineWidth() const
+{
+	return LineWidth;
+}
+
+float UVisualTextBlock::GetCharacterAppearanceDelay() const
+{
+	return CharacterAppearanceDelay;
+}
+
 #if WITH_EDITOR
 const FText UVisualTextBlock::GetPaletteCategory()
 {
 	return LOCTEXT("Visual U", "Visual U");
 }
 #endif
+
+void UVisualTextBlock::DisplayOneCharacter()
+{
+	FText TextToDisplay;
+	const TCHAR ch = TextString[CurrCharCnt];
+	CurrentString.AppendChar(ch);
+	CurrCharCnt++;
+	const TCHAR* Buffer = CurrentString.GetCharArray().GetData();
+	TextToDisplay = FText::FromString(Buffer);
+	Super::SetText(TextToDisplay);
+	if (CurrCharCnt == TextLength)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
+		bIsAppearingText = false;
+	}
+}
 
 #undef LOCTEXT_NAMESPACE

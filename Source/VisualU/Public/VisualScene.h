@@ -23,8 +23,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEndEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneConstructedEvent);
-
 /**
  * Class that loads, displays and connects scenes in the game
  */
@@ -45,7 +43,7 @@ public:
 	const FText GetLine() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario")
-	const FText GetAuthor() const;
+	const FString GetAuthor() const;
 
 	const FScenario* GetCurrentScene() const;
 
@@ -55,7 +53,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario")
 	bool IsWithChoice() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation")
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Loading")
 	bool IsSceneLoading() const;
 
 	bool IsSceneExhausted(const FScenario* Scene) const;
@@ -69,7 +67,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	bool CanRetractScene() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation")
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Loading")
 	bool IsSceneLoaded() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
@@ -105,12 +103,6 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
-
-	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
-	FOnSceneConstructedEvent OnSceneConstructed;
-
-	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneConstructedEvent);
-	FOnNativeSceneConstructedEvent OnNativeSceneConstructed;
 
 	/*
 	* 
@@ -151,7 +143,7 @@ protected:
 	/*Visual Scene*/
 	virtual void ConstructScene(const FScenario* Scene);
 
-	virtual void LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene = true);
+	virtual void LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScenes = true);
 	/*~Visual Scene*/
 
 	bool ClearSprites();

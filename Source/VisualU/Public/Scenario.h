@@ -20,8 +20,9 @@ struct VISUALU_API FSprite
 public:
 	FSprite() : Position(ForceInit) {}
 
+	//TODO: Field name is confusing, needs refactoring.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
-	TSubclassOf<UVisualSprite> SpriteClass;
+	TSubclassOf<UVisualSprite> SpriteName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
 	FVector2D Position;
@@ -32,9 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
 	TArray<TSoftObjectPtr<UPaperFlipbook>> Expressions;
 
-	FORCEINLINE bool operator== (const FSprite& Other)
+	bool operator== (const FSprite& Other)
 	{
-		if (SpriteClass == Other.SpriteClass
+		if (SpriteName == Other.SpriteName
 			&& Position == Other.Position)
 		{
 			for (int i = 0; i < Expressions.Num(); i++)
@@ -50,7 +51,7 @@ public:
 		return false;
 	}
 
-	FORCEINLINE bool operator!= (const FSprite& Other)
+	bool operator!= (const FSprite& Other)
 	{
 		return !(*this == Other);
 	}
@@ -65,8 +66,9 @@ struct VISUALU_API FScenario : public FTableRowBase
 public:
 	FScenario() {}
 
+	//TODO: Change to FText
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
-	FText Author;
+	FString Author;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
 	FText Line;
@@ -110,9 +112,9 @@ public:
 		Intrusive(InDataTable);
 	}
 
-	FORCEINLINE bool operator== (const FScenario& Other)
+	bool operator== (const FScenario& Other)
 	{
-		if (Author.CompareTo(Other.Author)
+		if (Author == Other.Author
 			&& Line.CompareTo(Other.Line)
 			&& BackgroundArt.GetAssetName() == Other.BackgroundArt.GetAssetName()
 			&& Music.GetAssetName() == Other.Music.GetAssetName()
@@ -121,7 +123,8 @@ public:
 			&& SceneStartAnimation == Other.SceneStartAnimation
 			&& SceneEndAnimation == Other.SceneEndAnimation)
 		{
-			for (int i = 0; i < SpritesParams.Num(); i++)
+			int i = 0;
+			for (i = 0; i < SpritesParams.Num(); i++)
 			{
 				if (!Other.SpritesParams.IsValidIndex(i) || SpritesParams[i] != Other.SpritesParams[i])
 				{
@@ -135,7 +138,7 @@ public:
 		return false;
 	}
 
-	FORCEINLINE bool operator!= (const FScenario& Other)
+	bool operator!= (const FScenario& Other)
 	{
 		return !(*this == Other);
 	}
@@ -167,7 +170,7 @@ public:
 
 	virtual void ToString() const
 	{
-		UE_LOG(LogTemp, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
+		UE_LOG(LogTemp, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tBackground Art: %s"), *BackgroundArt.GetAssetName());
@@ -180,7 +183,7 @@ public:
 		{
 			for (const auto& SpriteParam : SpritesParams)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("\tSprite Class: %s"), SpriteParam.SpriteClass ? *SpriteParam.SpriteClass->GetFName().ToString() : TEXT("None"));
+				UE_LOG(LogTemp, Warning, TEXT("\tSprite Name: %s"), SpriteParam.SpriteName ? *SpriteParam.SpriteName->GetFName().ToString() : TEXT("None"));
 				UE_LOG(LogTemp, Warning, TEXT("\tPosition: %s"), *SpriteParam.Position.ToString());
 				if (!SpriteParam.Expressions.IsEmpty())
 				{
@@ -200,7 +203,7 @@ public:
 		{
 			for (const auto& SpriteParam : SpritesParams)
 			{
-				if (SpriteParam.SpriteClass->IsChildOf<UVisualChoice>())
+				if (SpriteParam.SpriteName->IsChildOf<UVisualChoice>())
 				{
 					return true;
 				}
@@ -215,7 +218,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(219)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(164)"), Rows);
 		Rows.Find(this, Index);
 	}
 };

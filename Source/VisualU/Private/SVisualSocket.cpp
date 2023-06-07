@@ -2,6 +2,7 @@
 
 
 #include "SVisualSocket.h"
+#include "Animation/CurveSequence.h"
 #include "VisualImage.h"
 #include "PaperSprite.h"
 #include "PaperFlipbook.h"

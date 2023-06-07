@@ -2,7 +2,7 @@
 
 #include "VisualU.h"
 #include "VisualUSettings.h"
-#include "ISettingsModule.h"
+#include "Developer/Settings/Public/ISettingsModule.h"
 
 #define LOCTEXT_NAMESPACE "FVisualUModule"
 

@@ -16,11 +16,6 @@ UVisualChoice::~UVisualChoice() noexcept
 	
 }
 
-void UVisualChoice::SetVisualScene(UVisualScene* Scene)
-{
-	VisualScene = Scene;
-}
-
 void UVisualChoice::AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook>>& InExpressions)
 {
 	Super::AssignExpressions(InExpressions);
@@ -29,13 +24,16 @@ void UVisualChoice::AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook
 void UVisualChoice::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	
+	VisualScene = UVisualScene::Get();
 }
 
 void UVisualChoice::Choose(UDataTable* Branch) const
 {
 	TArray<FScenario*> Scenes;
-	Branch->GetAllRows(TEXT("VisualChoice.cpp(37)"), Scenes);
-	
-	checkf(VisualScene, TEXT("Visual Scene is invalid. Use SetVisualScene() first"));
-	VisualScene->NativeToBranch(Scenes);
+	Branch->GetAllRows(TEXT("VisualChoice.cpp(34)"), Scenes);
+	if (VisualScene)
+	{
+		VisualScene->NativeToBranch(Scenes);
+	}
 }

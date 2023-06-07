@@ -20,9 +20,6 @@ public:
 	UVisualChoice(const FObjectInitializer& ObjectInitializer);
 
 	~UVisualChoice() noexcept;
-
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene")
-	void SetVisualScene(UVisualScene* Scene);
 	
 	virtual void AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook>>& InExpressions) override;
 
@@ -32,6 +29,6 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Scene")
+private:
 	UVisualScene* VisualScene;
 };

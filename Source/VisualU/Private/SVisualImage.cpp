@@ -3,6 +3,7 @@
 
 #include "SVisualImage.h"
 #include "Widgets\Images\SImage.h"
+#include "Animation\CurveSequence.h"
 #include "PaperFlipbook.h"
 #include "Rendering\DrawElements.h"
 #include "PaperSprite.h"

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Animation/CurveSequence.h"
 #include "Widgets/Layout/SScaleBox.h"
 
 class UVisualImage;
