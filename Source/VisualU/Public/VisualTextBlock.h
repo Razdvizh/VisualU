@@ -41,7 +41,7 @@ public:
 	int GetLineWidth() const;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetCharacterAppearanceDelay, Category = "Visual Text Block", meta = (Units = "s"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", BlueprintGetter = GetCharacterAppearanceDelay, meta = (Units = "s"))
 	float CharacterAppearanceDelay = 0.04f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have this amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
