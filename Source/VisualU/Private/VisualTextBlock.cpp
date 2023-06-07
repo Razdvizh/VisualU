@@ -112,26 +112,6 @@ void UVisualTextBlock::SetCharacterAppearanceDelay(float Delay)
 	CharacterAppearanceDelay = Delay;
 }
 
-bool UVisualTextBlock::IsAppearingText() const
-{
-	return bIsAppearingText;
-}
-
-bool UVisualTextBlock::GetDisplayMode() const
-{
-	return bDisplayInstantly;
-}
-
-int UVisualTextBlock::GetLineWidth() const
-{
-	return LineWidth;
-}
-
-float UVisualTextBlock::GetCharacterAppearanceDelay() const
-{
-	return CharacterAppearanceDelay;
-}
-
 #if WITH_EDITOR
 const FText UVisualTextBlock::GetPaletteCategory()
 {
