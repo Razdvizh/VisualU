@@ -112,7 +112,7 @@ public:
 
 	FORCEINLINE bool operator== (const FScenario& Other)
 	{
-		if (Author == Other.Author
+		if (Author.CompareTo(Other.Author)
 			&& Line.CompareTo(Other.Line)
 			&& BackgroundArt.GetAssetName() == Other.BackgroundArt.GetAssetName()
 			&& Music.GetAssetName() == Other.Music.GetAssetName()
@@ -168,7 +168,7 @@ public:
 
 	virtual void ToString() const
 	{
-		UE_LOG(LogTemp, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author : TEXT("None"));
+		UE_LOG(LogTemp, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tBackground Art: %s"), *BackgroundArt.GetAssetName());
