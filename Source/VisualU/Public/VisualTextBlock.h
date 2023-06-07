@@ -26,19 +26,19 @@ public:
 	void SetCharacterAppearanceDelay(float Delay);
 
 	UFUNCTION(BlueprintGetter)
-	float GetCharacterAppearanceDelay() const;
+	FORCEINLINE float GetCharacterAppearanceDelay() const { return CharacterAppearanceDelay };
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	bool IsAppearingText() const;
+	FORCEINLINE bool IsAppearingText() const { return bIsAppearingText };
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Determines whether the text block displays the whole text instantly or in by-character manner"))
 	void SetDisplayMode(bool ShouldDisplayInstantly);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	bool GetDisplayMode() const;
+	FORCEINLINE bool GetDisplayMode() const { return bDisplayInstantly };
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	int GetLineWidth() const;
+	FORCEINLINE int GetLineWidth() const { return LineWidth };
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", BlueprintGetter = GetCharacterAppearanceDelay, meta = (Units = "s"))
