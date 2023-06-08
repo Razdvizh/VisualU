@@ -50,6 +50,7 @@ public class VisualU : ModuleRules
 			new string[]
 			{
 				// ... add any modules that your module loads dynamically here ...
+				"AssetRegistry",
 			}
 			);
 	}
