@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
+#include "Engine\DataTable.h"
 #include "VisualSprite.h"
+#include "VisualDefaults.h"
+#include "VisualImage.h"
 #include "VisualChoice.h"
 #include "Scenario.generated.h"
 
@@ -18,10 +20,15 @@ struct VISUALU_API FSprite
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FSprite() : Position(ForceInit), ZOrder(0) {}
+	FSprite() : Anchors(ForceInit), Position(ForceInit), ZOrder(0) {}
+
+	virtual ~FSprite() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
 	TSubclassOf<UVisualSprite> SpriteClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	FVisualAnchors Anchors;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
 	FVector2D Position;
@@ -30,21 +37,39 @@ public:
 	int32 ZOrder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
-	TArray<TSoftObjectPtr<UPaperFlipbook>> Expressions;
+	TArray<FVisualImageInfo> SpriteInfo;
+
+	virtual void PrintLog() const
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Sprite Class: %s"), SpriteClass ? *SpriteClass->GetFName().ToString() : TEXT("None"));
+		UE_LOG(LogTemp, Warning, TEXT("Anchors: %s"), *Anchors.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Position: %s"), *Position.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Z order: %d"), ZOrder);
+		if (!SpriteInfo.IsEmpty())
+		{
+			int cnt = 0;
+			for (const auto& Info : SpriteInfo)
+			{
+				cnt++;
+				UE_LOG(LogTemp, Warning, TEXT("\tSprite Info %d: %s"), cnt, *Info.ToString());
+			}
+		}
+	}
 
 	FORCEINLINE bool operator== (const FSprite& Other)
 	{
 		if (SpriteClass == Other.SpriteClass
-			&& Position == Other.Position)
+			&& Anchors == Other.Anchors
+			&& Position == Other.Position
+			&& ZOrder == Other.ZOrder)
 		{
-			for (int i = 0; i < Expressions.Num(); i++)
+			for (int i = 0; i < SpriteInfo.Num(); i++)
 			{
-				if (!Other.Expressions.IsValidIndex(i) || Expressions[i] != Other.Expressions[i])
+				if (!Other.SpriteInfo.IsValidIndex(i) || SpriteInfo[i] != Other.SpriteInfo[i])
 				{
 					return false;
 				}
 			}
-
 			return true;
 		}
 		return false;
@@ -159,14 +184,14 @@ public:
 		}
 		for (const auto& SpriteParam : SpritesParams)
 		{
-			for (const auto& Expression : SpriteParam.Expressions)
+			for (const auto& Info : SpriteParam.SpriteInfo)
 			{
-				Out.Emplace(Expression.ToSoftObjectPath());
+				Out.Emplace(Info.Expression.ToSoftObjectPath());
 			}
 		}
 	}
 
-	virtual void ToString() const
+	virtual void PrintLog() const
 	{
 		UE_LOG(LogTemp, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
 		UE_LOG(LogTemp, Warning, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
@@ -179,20 +204,14 @@ public:
 
 		if (!SpritesParams.IsEmpty())
 		{
+			int cnt = 0;
 			for (const auto& SpriteParam : SpritesParams)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("\tSprite Class: %s"), SpriteParam.SpriteClass ? *SpriteParam.SpriteClass->GetFName().ToString() : TEXT("None"));
-				UE_LOG(LogTemp, Warning, TEXT("\tPosition: %s"), *SpriteParam.Position.ToString());
-				if (!SpriteParam.Expressions.IsEmpty())
-				{
-					for (const auto& Expression : SpriteParam.Expressions)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("\tExpression: %s"), !Expression.IsNull() ? *Expression.GetAssetName() : TEXT("None"));
-					}
-				}
+				cnt++;
+				UE_LOG(LogTemp, Warning, TEXT("\tSprite Parameter %d"), cnt);
+				SpriteParam.PrintLog();
 			}
 		}
-		UE_LOG(LogTemp, Warning, TEXT("================================================="));
 	}
 
 	inline bool hasChoice() const
@@ -216,7 +235,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(219)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(238)"), Rows);
 		Rows.Find(this, Index);
 	}
 };

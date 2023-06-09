@@ -9,7 +9,7 @@
 #include "PaperSprite.h"
 #include "VisualDefaults.h"
 #if WITH_ACCESSIBILITY
-#include "Widgets/Accessibility/SlateCoreAccessibleWidgets.h"
+#include "Widgets\Accessibility\SlateCoreAccessibleWidgets.h"
 #endif
 
 SLATE_IMPLEMENT_WIDGET(SVisualImage)
@@ -21,7 +21,10 @@ void SVisualImage::PrivateRegisterAttributes(FSlateAttributeInitializer& Attribu
 	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Mirror Scale"), MirrorScale, EInvalidateWidgetReason::Paint);
 }
 
-SVisualImage::SVisualImage() : Flipbook(*this), ColorAndOpacity(*this, FLinearColor(ForceInit)), CustomDesiredScale(*this, FVector2D(ForceInitToZero)), MirrorScale(*this, FVector2D(ForceInitToZero))
+SVisualImage::SVisualImage() : Flipbook(*this),
+	ColorAndOpacity(*this, FLinearColor(ForceInit)), 
+	CustomDesiredScale(*this, FVector2D(ForceInitToZero)), 
+	MirrorScale(*this, FVector2D(ForceInitToZero))
 {
 	SetCanTick(false);
 	bCanSupportFocus = false;
@@ -193,8 +196,6 @@ FSlateBrush SVisualImage::ConvertFlipbookToBrush() const
 		UPaperSprite* CurrentSprite = GetCurrentSprite();
 		
 		checkSlow(CurrentSprite);
-
-		//const FVector2D ImageSize = CurrentSprite->GetSourceSize();
 
 		const FVector3d BoxSize = CurrentSprite->GetRenderBounds().GetBox().GetSize();
 

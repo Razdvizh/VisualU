@@ -8,6 +8,7 @@
 
 class UDataTable;
 class UVisualScene;
+
 /**
  * 
  */
@@ -19,12 +20,10 @@ class VISUALU_API UVisualChoice : public UVisualSprite
 public:
 	UVisualChoice(const FObjectInitializer& ObjectInitializer);
 
-	~UVisualChoice() noexcept;
-
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene")
 	void SetVisualScene(UVisualScene* Scene);
 	
-	virtual void AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook>>& InExpressions) override;
+	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Choice")
 	void Choose(UDataTable* Branch) const;

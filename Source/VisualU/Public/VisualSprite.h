@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "VisualImage.h"
 #include "VisualSprite.generated.h"
-
-class UPaperFlipbook;
 
 /**
  * 
@@ -21,5 +20,5 @@ public:
 
 	/*TODO: Make it implementable in Blueprints; think of more generic version*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Sprite")
-	virtual void AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook>>& InExpressions);
+	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo);
 };

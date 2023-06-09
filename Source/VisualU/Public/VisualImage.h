@@ -12,6 +12,73 @@ class UPaperFlipbook;
 class UPaperSprite;
 class SVisualImage;
 
+USTRUCT(BlueprintType)
+struct VISUALU_API FVisualImageInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FVisualImageInfo() : ColorAndOpacity(ForceInit), 
+		DesiredScale(ForceInit), 
+		MirrorScale(ForceInit),
+		bAnimate(false),
+		FrameIndex(0) 
+	{
+
+	}
+
+	virtual ~FVisualImageInfo() {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	TSoftObjectPtr<UPaperFlipbook> Expression;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	FLinearColor ColorAndOpacity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	FVector2D DesiredScale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	FVector2D MirrorScale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	bool bAnimate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	int32 FrameIndex;
+
+	virtual FString ToString() const
+	{
+		return FString::Printf(TEXT("Expression: %s Color and Opacity: %s Desired Scale: %s Mirror Scale: %s Animate: %s Frame Index: %d"),
+			*Expression.GetAssetName(),
+			*ColorAndOpacity.ToString(),
+			*DesiredScale.ToString(),
+			*MirrorScale.ToString(),
+			bAnimate ? TEXT("true") : TEXT("false"),
+			FrameIndex);
+	}
+
+	FORCEINLINE bool operator== (const FVisualImageInfo& Other)
+	{
+		if (Expression == Other.Expression
+			&& ColorAndOpacity == Other.ColorAndOpacity
+			&& DesiredScale == Other.DesiredScale
+			&& MirrorScale == Other.MirrorScale
+			&& bAnimate == Other.bAnimate
+			&& FrameIndex == Other.FrameIndex)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	FORCEINLINE bool operator!= (const FVisualImageInfo& Other)
+	{
+		return !(*this == Other);
+	}
+};
+
 /**
  * Widget that can visualize paper flipbook either as animation or as static image
  */
@@ -21,14 +88,13 @@ class VISUALU_API UVisualImage : public UWidget
 	GENERATED_BODY()
 
 public:
-
 	UVisualImage(const FObjectInitializer& ObjectInitializer);
 
 	DECLARE_DYNAMIC_DELEGATE_RetVal(UPaperFlipbook*, FGetPaperFlipbook);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetFlipbook)
-	mutable UPaperFlipbook* Flipbook; //TODO: Change this to a strong reference
+	mutable UPaperFlipbook* Flipbook;
 
 	UPROPERTY()
 	FGetPaperFlipbook FlipbookDelegate;
@@ -49,7 +115,7 @@ protected:
 	bool bAnimate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetFrameIndex, meta = (ToolTip = "Index of the flipbook's frame that must be rendered", EditCondition = "!bAnimate", EditConditionHides))
-	int FrameIndex;
+	int32 FrameIndex;
 
 	TSharedPtr<FStreamableHandle> StreamingHandle;
 

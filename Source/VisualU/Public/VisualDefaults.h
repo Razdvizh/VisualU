@@ -37,6 +37,11 @@ public:
 	inline static const FAnchors LeftVertical = FAnchors(0, 0, 0, 1);
 	inline static const FAnchors CenterVertical = FAnchors(0.5, 0, 0.5, 1);
 	inline static const FAnchors RightVertical = FAnchors(1, 0, 1, 1);
+
+	FString ToString() const
+	{
+		return FString::Printf(TEXT("Minimum: %s, Maximum: %s"), *Minimum.ToString(), *Maximum.ToString());
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -53,4 +58,9 @@ public:
 	FVisualMargin(const FVector4& InVector) : Super(InVector) {}
 
 	inline static const FMargin Zero = FMargin(0, 0);
+
+	FString ToString() const
+	{
+		return FString::Printf(TEXT("Left: %d, Top: %d, Right: %d, Bottom: %d"), Left, Top, Right, Bottom);
+	}
 };

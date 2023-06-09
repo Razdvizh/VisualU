@@ -156,8 +156,17 @@ protected:
 
 	bool ClearSprites();
 
+	/*
+	* Outputs a friendly representation of scene's data to the log
+	* @param InScenesData asset data of Scenario Data Tables
+	* @see GetScenesData
+	*/
 	void PrintScenesData(const TArray<FAssetData>& InScenesData) const;
 
+	/*
+	* Gathers asset data of all Scenario Data Tables using Asset Registry
+	* @param OutData gathered asset data
+	*/
 	void GetScenesData(TArray<FAssetData>& OutData) const;
 
 private:

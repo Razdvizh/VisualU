@@ -13,9 +13,9 @@ UVisualSprite::UVisualSprite(const FObjectInitializer& ObjectInitializer) : Supe
 
 }
 
-void UVisualSprite::AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook>>& InExpressions)
+void UVisualSprite::AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	if (InExpressions.IsEmpty())
+	if (InInfo.IsEmpty())
 	{
 		return;
 	}
@@ -29,8 +29,14 @@ void UVisualSprite::AssignExpressions(const TArray<TSoftObjectPtr<UPaperFlipbook
 		if (Child->IsA<UVisualImage>())
 		{
 			UVisualImage* ChildImage = Cast<UVisualImage>(Child);
-			TSoftObjectPtr<UPaperFlipbook> Flipbook = InExpressions[j];
-			ChildImage->SetFlipbookAsync(Flipbook);
+			FVisualImageInfo VisualImageInfo = InInfo[j];
+
+			ChildImage->SetFlipbookAsync(VisualImageInfo.Expression);
+			ChildImage->SetColorAndOpacity(VisualImageInfo.ColorAndOpacity);
+			ChildImage->SetDesiredScale(VisualImageInfo.DesiredScale);
+			ChildImage->SetMirrorScale(VisualImageInfo.MirrorScale);
+			ChildImage->SetAnimate(VisualImageInfo.bAnimate);
+			ChildImage->SetFrameIndex(VisualImageInfo.FrameIndex);
 			j++;
 		}
 	}

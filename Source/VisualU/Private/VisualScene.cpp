@@ -89,17 +89,17 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
 		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass, SpriteData.SpriteClass->GetFName());
-		Sprite->AssignExpressions(SpriteData.Expressions);
+		Sprite->AssignVisualImageInfo(SpriteData.SpriteInfo);
 		Canvas->AddChildToCanvas(Sprite);
 		UCanvasPanelSlot* const SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
 		SpriteSlot->SetZOrder(SpriteData.ZOrder);
-		SpriteSlot->SetAnchors(FVisualAnchors::BottomLeft);
+		SpriteSlot->SetAnchors(SpriteData.Anchors);
 		SpriteSlot->SetAutoSize(true);
 		SpriteSlot->SetPosition(SpriteData.Position);
-
-		OnSceneConstructed.Broadcast();
-		OnNativeSceneConstructed.Broadcast();
 	}
+
+	OnSceneConstructed.Broadcast();
+	OnNativeSceneConstructed.Broadcast();
 }
 
 void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene)
@@ -331,11 +331,6 @@ bool UVisualScene::IsWithChoice() const
 	return GetCurrentScene()->hasChoice();
 }
 
-/*
-* Outputs a friendly representation of scene's data to the log
-* @param InScenesData asset data of Scenario Data Tables
-* @see GetScenesData
-*/
 void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 {
 	for (const auto& Asset : InScenesData)
@@ -343,7 +338,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(346)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(341)"), Rows);
 
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 
@@ -352,15 +347,12 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		{
 			cnt++;
 			UE_LOG(LogTemp, Warning, TEXT("\tRow %d"), cnt);
-			Row->ToString();
+			Row->PrintLog();
+			UE_LOG(LogTemp, Warning, TEXT("================================================="));
 		}
 	}
 }
 
-/*
-* Gathers asset data of all Scenario Data Tables using Asset Registry
-* @param OutData gathered asset data
-*/
 void UVisualScene::GetScenesData(TArray<FAssetData>& OutData) const
 {
 	FAssetRegistryModule* AssetRegistryModule = &FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
