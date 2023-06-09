@@ -18,7 +18,6 @@ class VISUALU_API UVisualSprite : public UUserWidget
 public:
 	UVisualSprite(const FObjectInitializer& ObjectInitializer);
 
-	/*TODO: Make it implementable in Blueprints; think of more generic version*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Sprite")
 	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo);
 };
