@@ -2,49 +2,53 @@
 
 
 #include "VisualTextBlock.h"
-#include "Framework/Application/SlateApplication.h"
-#include "Fonts/FontMeasure.h"
-#include "Widgets/Text/SRichTextBlock.h"
-#include "Components/PanelSlot.h"
+#include "VisualUSettings.h"
+#include "Modules\ModuleManager.h"
+#include "VisualU.h"
+#include "Framework\Application\SlateApplication.h"
+#include "Widgets\Text\SRichTextBlock.h"
+#include "Components\PanelSlot.h"
 #include "TimerManager.h"
 
 #define LOCTEXT_NAMESPACE "Visual U"
 
-UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer),
+	LineWidth(2),
+	CurrentAction(EVisualTextAction::None),
+	CurrentString(),
+	TextString(),
+	TextLength(0),
+	CurrCharCnt(0),
+	bIsAppearingText(false),
+	bDisplayInstantly(false)
+
 {
-
-}
-
-void UVisualTextBlock::SynchronizeProperties()
-{
-	Super::SynchronizeProperties();
-
-	TArray<FRichTextStyleRow*> Rows;
-	FSlateFontInfo Font;
-
-	if (TextStyleSet && TextStyleSet->GetRowStruct()->IsChildOf(FRichTextStyleRow::StaticStruct()))
-	{
-		TextStyleSet.Get()->GetAllRows(TEXT("VisualTextBlock"), Rows);
-		Font = Rows[0]->TextStyle.Font;
-	}
-	else if (bOverrideDefaultStyle)
-	{
-		Font = DefaultTextStyleOverride.Font;
-	}
-	
-	FontSize = FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(Text, Font, 1.f);
+	FVisualUModule* VisualUModule = &FModuleManager::LoadModuleChecked<FVisualUModule>(TEXT("VisualU"));
+	VisualUSettings = VisualUModule->GetVisualSettings();
 }
 
 void UVisualTextBlock::SetText(const FText& InText)
 {
 	ensureMsgf(LineWidth > 1, TEXT("Line Width is %d, text will be displayed immediately"), LineWidth);
-	 
+
 	/*Check if this FText-to-FString conversion works properly with localization. If not, consider using FTextStringHelper*/
-	CurrentString = FString();
 	TextString = InText.ToString();
 	TextLength = TextString.Len();
 	CurrCharCnt = 0;
 
+	/**If something is disrupted, display text immediately*/
+	if (bIsAppearingText || bDisplayInstantly || CharacterAppearanceDelay <= 0.0f || LineWidth <= 1)
+	{
+		FText TextToDisplay;
+		const TCHAR* Buffer = TextString.GetCharArray().GetData();
+		TextToDisplay = FText::FromString(Buffer);
+		GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
+		Super::SetText(TextToDisplay);
+		bIsAppearingText = false;
+		return;
+	}
+
+	/**Pre-wrap text in advance for proper runtime appearance*/
 	const TCHAR newline = 10;
 	const TCHAR whitespace = 32;
 	for (int32 i = 1; i < TextString.GetCharArray().Num(); i++)
@@ -59,18 +63,6 @@ void UVisualTextBlock::SetText(const FText& InText)
 			TextString.InsertAt(localCharIndex, newline);
 			TextString.RemoveAt(localCharIndex + 1);
 		}
-	}
-
-	/**If something is disrupted, display text immediately*/
-	if (bIsAppearingText || bDisplayInstantly || CharacterAppearanceDelay <= 0.0f || LineWidth <= 1)
-	{
-		FText TextToDisplay;
-		const TCHAR* Buffer = TextString.GetCharArray().GetData();
-		TextToDisplay = FText::FromString(Buffer);
-		GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
-		Super::SetText(TextToDisplay);
-		bIsAppearingText = false;
-		return;
 	}
 
 	/**Display one character of the text on the screen*/
@@ -108,6 +100,24 @@ const FText UVisualTextBlock::GetPaletteCategory()
 void UVisualTextBlock::DisplayOneCharacter()
 {
 	FText TextToDisplay;
+	const TCHAR PairCharacter = VisualUSettings->PairCharacter[0];
+	if (TextString[CurrCharCnt] == PairCharacter)
+	{
+		ensureMsgf(TextString.IsValidIndex(CurrCharCnt + 2), TEXT("invalid use of metacharacters at char %d"), CurrCharCnt);
+		const TCHAR meta = TextString[CurrCharCnt + 1];
+		const FString MetaKey = FString::Printf(TEXT("%c"), meta);
+		ensureMsgf(VisualUSettings->Actions.Contains(MetaKey), TEXT("Provided metacharacter \"%c\" is unspecified"), meta);
+		const EVisualTextAction* Action = VisualUSettings->Actions.Find(MetaKey);
+		SetCurrentAction(*Action);
+		switch (*Action)
+		{
+		default:
+		case EVisualTextAction::Break:
+			GetWorld()->GetTimerManager().PauseTimer(CharacterDelayTimer);
+		}
+
+		TextString.RemoveAt(CurrCharCnt, 3);
+	}
 	const TCHAR ch = TextString[CurrCharCnt];
 	CurrentString.AppendChar(ch);
 	CurrCharCnt++;
@@ -119,6 +129,11 @@ void UVisualTextBlock::DisplayOneCharacter()
 		GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
 		bIsAppearingText = false;
 	}
+}
+
+void UVisualTextBlock::SetCurrentAction(const EVisualTextAction& Action)
+{
+	CurrentAction = Action;
 }
 
 #undef LOCTEXT_NAMESPACE

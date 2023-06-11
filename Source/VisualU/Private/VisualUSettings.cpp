@@ -3,7 +3,6 @@
 
 #include "VisualUSettings.h"
 
-UVisualUSettings::UVisualUSettings(const FObjectInitializer& ObjectInitializer)
+UVisualUSettings::UVisualUSettings(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), PairCharacter()
 {
-	//TODO: Add default directories for the properties
 }

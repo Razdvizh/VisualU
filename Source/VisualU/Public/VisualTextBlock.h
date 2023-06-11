@@ -6,6 +6,8 @@
 #include "Components/RichTextBlock.h"
 #include "VisualTextBlock.generated.h"
 
+class UVisualUSettings;
+
 /**
  * Supports Visual Novel style of text wrapping
  */
@@ -40,6 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	FORCEINLINE int GetLineWidth() const { return LineWidth; };
 
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Returns the last encountered action during text display"))
+	FORCEINLINE EVisualTextAction GetCurrentAction() const { return CurrentAction; }
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetCharacterAppearanceDelay, Category = "Visual Text Block", meta = (Units = "s"))
 	float CharacterAppearanceDelay = 0.04f;
@@ -47,23 +52,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have this amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
 	int LineWidth;
 
-	virtual void SynchronizeProperties() override;
-
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override;
 #endif
-
-private:
-	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Font size in pixels where X is width and Y is height. This is used only for debugging", AllowPrivateAccess = true))
-	FVector2D FontSize;
 
 private:
 	FTimerHandle CharacterDelayTimer;
 
 	FTimerDynamicDelegate CharacterDelayDelegate;
 
+	const UVisualUSettings* VisualUSettings;
+
 	UFUNCTION()
 	void DisplayOneCharacter();
+
+	void SetCurrentAction(const EVisualTextAction& Action);
+
+	EVisualTextAction CurrentAction;
 
 	FString CurrentString;
 
