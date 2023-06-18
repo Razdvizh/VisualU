@@ -35,7 +35,7 @@ public:
 
 	virtual ~FVisualImageInfo() {}
 
-	/// <see cref="UVisualImage::Expression"/>
+	/// <see cref="UVisualImage::Flipbook"/>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
 	TSoftObjectPtr<UPaperFlipbook> Expression;
 
