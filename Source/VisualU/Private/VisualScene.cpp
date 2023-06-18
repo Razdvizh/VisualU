@@ -216,7 +216,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneEnd.Broadcast();
 
 	Branch.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(222)"), Branch);
+	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(219)"), Branch);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -337,7 +337,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(343)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(340)"), Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 

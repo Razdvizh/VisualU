@@ -49,10 +49,10 @@ public:
 	/// Static access to the first found <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>
 	/// <returns>first found <see cref="UVisualScene">Visual Scene</see></returns>
-	/// \attention this is an expensive operation, do not use every tick, etc.
 	/// <remarks>
 	/// Essentially a strongly typed version of GetAllObjectsOfClass().
 	/// </remarks>
+	/// \attention this is an expensive operation, do not use every tick, etc.
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene")
 	static UVisualScene* Get();
 
@@ -217,13 +217,11 @@ protected:
 	/// <summary>
 	/// Internal widget for scene background.
 	/// </summary>
-	/// \warning do not expose to Blueprints
 	UVisualImage* Background;
 
 	/// <summary>
 	/// Internal widget for scene canvas panel.
 	/// </summary>
-	/// \warning do not expose to Blueprints
 	/// <remarks>
 	/// All <see cref="UVisualSprite">Visual Sprites</see> and <see cref="UVisualScene::Background"/> are children of this panel widget.
 	/// </remarks>
