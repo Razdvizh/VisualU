@@ -7,10 +7,11 @@
 #include "VisualSocket.generated.h"
 
 class SVisualSocket;
-/**
- * Zero-size scale box that acts as a socket for images
- */
-UCLASS(ClassGroup = UI, meta = (Category = "Visual U"))
+
+/// <summary>
+/// Zero-size scale box that acts as a socket for other widgets with additional functionality for <see cref="UVisualImage">Visual images</see>.
+/// </summary>
+UCLASS()
 class VISUALU_API UVisualSocket : public UScaleBox
 {
 	GENERATED_BODY()
@@ -18,21 +19,32 @@ class VISUALU_API UVisualSocket : public UScaleBox
 public:
 	UVisualSocket(const FObjectInitializer& ObjectInitializer);
 
+	/// <summary>
+	/// Set offset position of child widget.
+	/// </summary>
+	/// <param name="InSocketPosition">New socket offset</param>
 	UFUNCTION(BlueprintCallable, Category = "Visual Socket")
 	void SetSocketOffset(FVector2D InSocketPosition);
 
+	/// <summary>
+	/// Enable or disable auto positioning for <see cref="UVisualImage">Visual Images</see>.
+	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Socket")
 	void SetAutoPositioning(bool ShouldAutoPosition);
 
+	/// <param name="Position">Position of child <see cref="UVisualImage">Visual Image</see></param>
 	UFUNCTION(BlueprintCallable, Category = "Visual Socket")
 	void SetImageDesiredPosition(FVector2D Position);
 
+	/// <returns>Socket offset</returns>
 	UFUNCTION(BlueprintGetter)
 	FORCEINLINE FVector2D GetSocketOffset() const { return SocketOffset; }
 
+	/// <returns><c>true</c> if child <see cref="UVisualImage">Visual Image</see> is auto positioned</returns>
 	UFUNCTION(BlueprintGetter)
 	FORCEINLINE bool IsAutoPositioning() const { return bAutoPositioning; }
 
+	/// <returns>Position, in slate units, of child <see cref="UVisualImage">Visual Image</see></returns>
 	UFUNCTION(BlueprintGetter)
 	FORCEINLINE FVector2D GetImageDesiredPosition() const { return ImageDesiredPosition; }
 
@@ -41,13 +53,23 @@ public:
 #endif
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetSocketOffset, meta = (Category = "Content Position", EditCondition = "bAutoPositioning == false", Delta = 0.005f))
+	/// <summary>
+	/// Offset of child widget position.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetSocketOffset, Category = "Content Position", meta = (ToolTip = "Offset of child widget position", EditCondition = "bAutoPositioning == false", Delta = 0.005f))
 	FVector2D SocketOffset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = IsAutoPositioning, meta = (Category = "Content Position", ToolTip = "If active, socket offset would reflect image desired position. Note that this option only works for images and visual images."))
+	/// <summary>
+	/// If active, socket offset would reflect image desired position. Note: this option only works for <see cref="UVisualImage">Visual Images</see>.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = IsAutoPositioning, Category = "Content Position", meta = (ToolTip = "If active, socket offset would reflect image desired position. Note that this option only works for visual images."))
 	bool bAutoPositioning;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetImageDesiredPosition, meta = (Category = "Content Position", ToolTip = "Desired position of the image's center in size of the object to which this socket is applied.", EditCondition = "bAutoPositioning", EditConditionHides, UIMin = 0, ClampMin = 0))
+	/// <summary>
+	/// Desired position of the <see cref="UVisualImage">Visual Image</see> center in size of the object to which this socket is applied.
+	/// <see cref="UVisualSocket::bAutoPositioning"/> must be enabled for this feature to work.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetImageDesiredPosition, Category = "Content Position", meta = (ToolTip = "Desired position of the image's center in size of the object to which this socket is applied.", EditCondition = "bAutoPositioning", EditConditionHides, UIMin = 0, ClampMin = 0))
 	FVector2D ImageDesiredPosition;
 
 	virtual void SynchronizeProperties() override;

@@ -9,9 +9,10 @@
 class UPaperFlipbook;
 class UPaperSprite;
 
-/**
- * 
- */
+/// <summary>
+/// Slate widget that displays sprite flipbooks.
+/// </summary>
+/// <seealso cref="UVisualImage"/>
 class VISUALU_API SVisualImage : public SLeafWidget
 {
 	SLATE_DECLARE_WIDGET(SVisualImage, SLeafWidget)

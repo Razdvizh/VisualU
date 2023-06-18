@@ -7,9 +7,15 @@
 #include "VisualImage.h"
 #include "VisualSprite.generated.h"
 
-/**
- * 
- */
+/// <summary>
+/// Base class for widgets that represent sprites that will be visualized by <see cref="UVisualScene">Visual Scene</see>.
+/// </summary>
+/// <remarks>
+/// Visual form of the classic Visual Novel sprite. Can represent NPC, an interactive object, etc.
+/// Visual Sprite contains any amount of <see cref="UVisualImage">Visual Images</see> needed to display a sprite,
+/// which can be altered by <see cref="UVisualScene">Visual Scene</see> using information provided in the different <see cref="FScenario">Scenarios</see>.
+/// It can contain any functionality of the normal widget and can be extended as some specific kind of the sprite.
+/// The arrangement of <see cref="UVisualImage">Visual Images</see> is meant to be done inside blueprint class.
 UCLASS(abstract)
 class VISUALU_API UVisualSprite : public UUserWidget
 {
@@ -18,6 +24,16 @@ class VISUALU_API UVisualSprite : public UUserWidget
 public:
 	UVisualSprite(const FObjectInitializer& ObjectInitializer);
 
+	/// <summary>
+	/// Set the desired fields for the <see cref="UVisualImage">Visual images</see> that this Visual Sprite has.
+	/// </summary>
+	/// <param name="InInfo">Fields to assign</param>
+	/// <remarks>
+	/// Default implementation will assign first <c>FVisualImageInfo</c> to the first <see cref="UVisualImage">Visual Image</see>, which is the one closest
+	/// to the root of the <c>WidgetTree</c>. (In Blueprint editor, the top most <see cref="UVisualImage">Visual Image</see> will be the first, 
+	/// the down most will be the last). It will continue assigning fields in this manner until there is no <see cref="UVisualImage">Visual images</see> 
+	/// in the tree. Any extra <c>FVisualImageInfo</c>s will be ignored.
+	/// </remarks>
 	UFUNCTION(BlueprintCallable, Category = "Visual Sprite")
 	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo);
 };

@@ -63,7 +63,7 @@ void UVisualScene::NativeOnInitialized()
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
 	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(65)"), Branch);
-	checkf(Branch.IsValidIndex(0), TEXT("First scene is empty!"));
+	checkf(Branch.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
 void UVisualScene::NativeConstruct()
@@ -82,9 +82,11 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	Background->SetFlipbook(Scene->BackgroundArt.Get());
+	if (UPaperFlipbook* BackgroundArt = Scene->BackgroundArt.Get())
+	{
+		Background->SetFlipbook(BackgroundArt);
+	}
 	
-	PlaySound(Scene->SceneStartAudioEffect.Get());
 	PlaySound(Scene->Music.Get());
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
@@ -97,9 +99,6 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 		SpriteSlot->SetAutoSize(true);
 		SpriteSlot->SetPosition(SpriteData.Position);
 	}
-
-	OnSceneConstructed.Broadcast();
-	OnNativeSceneConstructed.Broadcast();
 }
 
 void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene)
@@ -217,7 +216,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneEnd.Broadcast();
 
 	Branch.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(220)"), Branch);
+	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(222)"), Branch);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -338,17 +337,17 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(341)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(343)"), Rows);
 
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Asset.AssetName.ToString());
+		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 
 		int cnt = 0;
 		for (const auto Row : Rows)
 		{
 			cnt++;
-			UE_LOG(LogTemp, Warning, TEXT("\tRow %d"), cnt);
+			UE_LOG(LogVisualU, Warning, TEXT("\tRow %d"), cnt);
 			Row->PrintLog();
-			UE_LOG(LogTemp, Warning, TEXT("================================================="));
+			UE_LOG(LogVisualU, Warning, TEXT("================================================="));
 		}
 	}
 }

@@ -8,9 +8,15 @@
 
 class UVisualUSettings;
 
-/**
- * Supports Visual Novel style of text wrapping
- */
+/// <summary>
+/// Supports Visual Novel style of typewriter effect.
+/// </summary>
+/// <remarks>
+/// <c>Visual Text Block</c> can be used as [Rich Text Block](https://docs.unrealengine.com/4.27/en-US/API/Runtime/UMG/Components/URichTextBlock/)
+/// for static rich text and embedded images, fields that <c>Visual Text Block</c> provides control only typewriter effect.
+/// Typewriter mode is achived by calling <see cref="UVisualTextBlock::SetText"/> method.
+/// Use of embedded images in this mode may lead to unexpected behavior, other features that <c>Rich Text Block</c> has are supported.
+/// </remarks>
 UCLASS()
 class VISUALU_API UVisualTextBlock : public URichTextBlock
 {
@@ -19,37 +25,74 @@ class VISUALU_API UVisualTextBlock : public URichTextBlock
 public:
 	UVisualTextBlock(const FObjectInitializer& ObjectInitializer);
 
+	/// <summary>
+	/// Sets text for the <c>Text Block</c> as if it is typed on typewriter or keyboard.
+	/// Calling it again while the text visualization is still in progress or with incorrect values of controlling fields
+	/// will cause the whole text to show up immediately.
+	/// </summary>
+	/// <param name="InText">Text to display</param>
 	virtual void SetText(const FText& InText) override;
 
+	/// <summary>
+	/// Sets the desired amount of characters in one line.
+	/// </summary>
+	/// <param name="InLineWidth">Amount of characters in one line</param>
+	/// \warning <see cref="UVisualTextBlock::LineWidth"/> does not guarantee specified amount of characters to be in one line
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void SetLineWidth(int InLineWidth);
 
+	/// <summary>
+	/// Sets the delay for next character to appear.
+	/// </summary>
+	/// <param name="Delay">Delay in seconds</param>
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void SetCharacterAppearanceDelay(float Delay);
 
+	/// <returns>Delay, in seconds, for the next character to appear</returns>
 	UFUNCTION(BlueprintGetter)
 	FORCEINLINE float GetCharacterAppearanceDelay() const { return CharacterAppearanceDelay; };
 
+	/// <summary>
+	/// Whether or not the typewriter effect is active.
+	/// </summary>
+	/// <returns><c>true</c> if the text is displayed as self-typed</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	FORCEINLINE bool IsAppearingText() const { return bIsAppearingText; };
 
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Determines whether the text block displays the whole text instantly or in by-character manner"))
+	/// <summary>
+	/// Determines whether the text block displays the whole text instantly or in self-typed way.
+	/// </summary>
+	/// <param name="ShouldDisplayInstantly">How text should be displayed</param>
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Determines whether the text block displays the whole text instantly or in self-typed way"))
 	void SetDisplayMode(bool ShouldDisplayInstantly);
 
+	/// <summary>
+	/// How text will be visualized during <see cref="UVisualTextBlock::SetText"/> call.
+	/// </summary>
+	/// <returns><c>true</c> if the text would be displayed instantly</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	FORCEINLINE bool GetDisplayMode() const { return bDisplayInstantly; };
 
+	/// <returns>desired amount of characters in one line</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	FORCEINLINE int GetLineWidth() const { return LineWidth; };
 
+	/// <returns>Returns the last encountered action during text display</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Returns the last encountered action during text display"))
 	FORCEINLINE EVisualTextAction GetCurrentAction() const { return CurrentAction; }
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetCharacterAppearanceDelay, Category = "Visual Text Block", meta = (Units = "s"))
+	/// <summary>
+	/// Delay, in seconds, for next character to appear. Must be more than zero to take effect.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetCharacterAppearanceDelay, Category = "Visual Text Block", meta = (ToolTip = "Delay, in seconds, for the next character to appear", Units = "s", UIMin = 0.01f, ClampMin = 0.01f))
 	float CharacterAppearanceDelay = 0.04f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have this amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
+	/// <summary>
+	/// Desired number of characters for one line. Must be more or equal 2 to take effect.
+	/// </summary>
+	/// \warning Does not guarantee that each line would have exact specified amount of characters.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have exact specified amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
 	int LineWidth;
 
 #if WITH_EDITOR
@@ -63,11 +106,19 @@ private:
 
 	const UVisualUSettings* VisualUSettings;
 
+	/// \internal
+	/// <summary>
+	/// Displays one character from provided text. It is specified as a method in order to build a plugin, and it shouldn't be used anywhere else.
+	/// </summary>
 	UFUNCTION()
 	void DisplayOneCharacter();
 
 	void SetCurrentAction(const EVisualTextAction& Action);
 
+	/// \internal
+	/// <summary>
+	/// The last encountered action in provided text, can be None.
+	/// </summary>
 	EVisualTextAction CurrentAction;
 
 	FString CurrentString;

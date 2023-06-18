@@ -7,9 +7,11 @@
 #include "Widgets/Layout/SScaleBox.h"
 
 class UVisualImage;
-/**
- * 
- */
+
+/// <summary>
+/// Slate widget that acts as a socket for child widget with additional features for <see cref="UVisualImage">Visual Image</see>.
+/// </summary>
+/// <seealso cref="UVisualSocket"/>
 class VISUALU_API SVisualSocket : public SScaleBox
 {
 
@@ -24,6 +26,7 @@ public:
 
 	void SetSocketOffset(FVector2D InPosition);
 
+	/// \todo Change this to the Slate Widget
 	void SetVisualImage(UVisualImage* InVisualImage);
 
 	void SetImageDesiredPosition(FVector2D InPosition);
@@ -33,6 +36,7 @@ private:
 
 	FCurveSequence CurveSequence;
 
+	/// \todo Change this to the Slate Widget
 	UVisualImage* VisualImage;
 
 	mutable FVector2D SocketPosition;

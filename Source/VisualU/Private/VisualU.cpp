@@ -6,6 +6,7 @@
 #include "Developer\Settings\Public\ISettingsSection.h"
 
 #define LOCTEXT_NAMESPACE "FVisualUModule"
+DEFINE_LOG_CATEGORY(LogVisualU);
 
 void FVisualUModule::StartupModule()
 {
@@ -26,7 +27,7 @@ void FVisualUModule::ShutdownModule()
 	// we call this function before unloading the module.
 }
 
-UVisualUSettings* FVisualUModule::GetVisualSettings() const
+const UVisualUSettings* FVisualUModule::GetVisualSettings() const
 {
 	return Cast<UVisualUSettings>(SettingsSection->GetSettingsObject().Get());
 }
