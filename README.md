@@ -14,3 +14,7 @@ Build the plugin for the Unreal Engine 5 project (should be also compatible with
 2. Create ```Plugins``` folder, than another folder named ```VisualU``` inside of it
 3. Go to ```Desktop\Package```
 4. Copy everything and paste it to the newly created ```Plugins\VisualU``` folder inside project's directory
+
+# Usage
+
+Check https://razdvizh.github.io/VisualU/ for documentation and guidelines!
