@@ -252,7 +252,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeOnIniti
 <tr class="memdesc:a775e7502b78fadb512ec6e41243aeb4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads assets of the <em>Scene</em>  into the memory.  <br /></td></tr>
 <tr class="separator:a775e7502b78fadb512ec6e41243aeb4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a141810adab4d2c16a2fb15ce11650879"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a141810adab4d2c16a2fb15ce11650879">ClearSprites</a> ()</td></tr>
-<tr class="memdesc:a141810adab4d2c16a2fb15ce11650879"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all <a class="el" href="class_u_visual_sprite.html">Visual Sprites from </a>.  <br /></td></tr>
+<tr class="memdesc:a141810adab4d2c16a2fb15ce11650879"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> from <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>.  <br /></td></tr>
 <tr class="separator:a141810adab4d2c16a2fb15ce11650879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2dd010ae4ac29083f526975075c00f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#ae2dd010ae4ac29083f526975075c00f5">PrintScenesData</a> (const TArray&lt; FAssetData &gt; &amp;InScenesData) const</td></tr>
 <tr class="memdesc:ae2dd010ae4ac29083f526975075c00f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outputs a friendly representation of scene data to the log.  <br /></td></tr>
@@ -263,8 +263,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeOnIniti
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:af1024e42eda045fc887a091ad91536a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_u_visual_image.html">UVisualImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5">Background</a></td></tr>
-<tr class="memdesc:af1024e42eda045fc887a091ad91536a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal widget for scene background.  <br /></td></tr>
+<tr class="memitem:af1024e42eda045fc887a091ad91536a5"><td class="memItemLeft" align="right" valign="top"><a id="af1024e42eda045fc887a091ad91536a5" name="af1024e42eda045fc887a091ad91536a5"></a>
+<a class="el" href="class_u_visual_image.html">UVisualImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>Background</b></td></tr>
+<tr class="memdesc:af1024e42eda045fc887a091ad91536a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal widget for scene background. <br /></td></tr>
 <tr class="separator:af1024e42eda045fc887a091ad91536a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a761703d591f98632e05bfa35e6ed260c"><td class="memItemLeft" align="right" valign="top">UCanvasPanel *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c">Canvas</a></td></tr>
 <tr class="memdesc:a761703d591f98632e05bfa35e6ed260c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal widget for scene canvas panel.  <br /></td></tr>
@@ -290,7 +291,10 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that loads, visualizes and connects <a class="el" href="struct_f_scenario.html">Scenarios</a> in the game. </p>
 <p>Visual Scene organizes branches of <a class="el" href="struct_f_scenario.html">Scenarios</a> into the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. Nodes of the tree are Data Tables, which can have any amount of <a class="el" href="struct_f_scenario.html">Scenarios</a>. Nodes are linked by <a class="el" href="class_u_visual_choice.html">Visual Choice</a> sprite that <b>should</b> reside in the last <a class="el" href="struct_f_scenario.html">Scenario</a>. Note that such linking is not enforced: you may place additional <a class="el" href="struct_f_scenario.html">Scenarios</a> after the scene with <a class="el" href="class_u_visual_choice.html">Visual Choice</a> or not add this sprite at all. Visual Scene operates on one node of tree at a time. It loads resources if they weren't already loaded, constructs requested <a class="el" href="class_u_visual_sprite.html">sprites</a>, provides interfaces to the data of the currently active <a class="el" href="struct_f_scenario.html">Scenario</a>, and can iterate over them forward and backward or jump to the exhausted, or previously seen, <a class="el" href="struct_f_scenario.html">Scenario</a>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no limitations on amount of <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> or size of the branch, however increase in amount of <a class="el" href="struct_f_scenario.html">Scenarios</a> inside Data Table would linearly decrease performance. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="image">
+<img src="Tree_structure.png" alt=""/>
+</div>
+ </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaa36ac1089e04212b3769fac572348c0" name="aaa36ac1089e04212b3769fac572348c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa36ac1089e04212b3769fac572348c0">&#9670;&#160;</a></span>CancelSceneLoading()</h2>
 
@@ -334,7 +338,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </table>
 </div><div class="memdoc">
 
-<p>Removes all <a class="el" href="class_u_visual_sprite.html">Visual Sprites from </a>. </p>
+<p>Removes all <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> from <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if at least one sprite was removed</dd></dl>
 
 </div>
@@ -399,8 +403,8 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 <p>Static access to the first found <a class="el" href="class_u_visual_scene.html">Visual Scene</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>first found <a class="el" href="class_u_visual_scene.html">Visual Scene</a></dd></dl>
-<dl class="section attention"><dt>Attention</dt><dd>this is an expensive operation, do not use every tick, etc. </dd></dl>
 <p>Essentially a strongly typed version of GetAllObjectsOfClass(). </p>
+<dl class="section attention"><dt>Attention</dt><dd>this is an expensive operation, do not use every tick, etc. </dd></dl>
 
 </div>
 </div>
@@ -770,31 +774,6 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af1024e42eda045fc887a091ad91536a5" name="af1024e42eda045fc887a091ad91536a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1024e42eda045fc887a091ad91536a5">&#9670;&#160;</a></span>Background</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_u_visual_image.html">UVisualImage</a>* UVisualScene::Background</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Internal widget for scene background. </p>
-<dl class="section warning"><dt>Warning</dt><dd>do not expose to Blueprints </dd></dl>
-
-</div>
-</div>
 <a id="a5a89558b21d32f73fb7ae110f9b6f59d" name="a5a89558b21d32f73fb7ae110f9b6f59d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a89558b21d32f73fb7ae110f9b6f59d">&#9670;&#160;</a></span>BPScene</h2>
 
@@ -866,7 +845,6 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div><div class="memdoc">
 
 <p>Internal widget for scene canvas panel. </p>
-<dl class="section warning"><dt>Warning</dt><dd>do not expose to Blueprints </dd></dl>
 <p>All <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> and <a class="el" href="class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5" title="Internal widget for scene background.">UVisualScene::Background</a> are children of this panel widget. </p>
 
 </div>
