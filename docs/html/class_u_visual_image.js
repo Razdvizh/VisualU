@@ -1,5 +1,6 @@
 var class_u_visual_image =
 [
+    [ "AsyncLoad", "class_u_visual_image.html#a49310aa237ab3015000489d6ef5fb0b1", null ],
     [ "CancelAsyncLoad", "class_u_visual_image.html#aff2c18c582102ae219d1416446d1d2e4", null ],
     [ "GetColorAndOpacity", "class_u_visual_image.html#a922a46f495a6118ffd4a721fb039bc9f", null ],
     [ "GetCurrentSprite", "class_u_visual_image.html#af00874e90a3f303f82dae8b157d8c154", null ],
@@ -19,14 +20,13 @@ var class_u_visual_image =
     [ "SetFrameIndex", "class_u_visual_image.html#af84e9da43734226a3542cb0e447fe99d", null ],
     [ "SetMirrorScale", "class_u_visual_image.html#a4fb5ca0a805ae2d85d5c7190b08c2f57", null ],
     [ "ToFlipbook", "class_u_visual_image.html#a65aefccf789bac9a43c5667886240b63", null ],
-    [ "TryAsyncLoad", "class_u_visual_image.html#a4a29751285303c0f5fcaa69154c60e24", null ],
     [ "bAnimate", "class_u_visual_image.html#a485c07c3e1d7cf0e9ed63e8ce202e51c", null ],
     [ "ColorAndOpacity", "class_u_visual_image.html#a608a5a0dcec36f660fc09c29d4bf1396", null ],
     [ "ColorAndOpacityDelegate", "class_u_visual_image.html#ab260f494159af5eb2c19d7c2d1469e7d", null ],
     [ "DesiredScale", "class_u_visual_image.html#a0e3621c8bcf4486f90fcad4c29343915", null ],
     [ "Flipbook", "class_u_visual_image.html#a611508e666829206814d2c476b26a09b", null ],
     [ "FlipbookDelegate", "class_u_visual_image.html#a36d31e55a1adc32828ed33b98988ec1e", null ],
+    [ "FlipbookHandle", "class_u_visual_image.html#a1a4ebf5de4e731576b4b2c5afd35e418", null ],
     [ "FrameIndex", "class_u_visual_image.html#ab45c874fa35b2539fde66814a1f16d28", null ],
-    [ "MirrorScale", "class_u_visual_image.html#acff966245652515ef1ec12e2220186d6", null ],
-    [ "StreamingHandle", "class_u_visual_image.html#a0d2eba011b6eb5242ab668ebe8e37810", null ]
+    [ "MirrorScale", "class_u_visual_image.html#acff966245652515ef1ec12e2220186d6", null ]
 ];

@@ -205,9 +205,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SynchronizePr
 <tr class="memitem:afe6c8bf95c7337a088ac903b36e42536"><td class="memItemLeft" align="right" valign="top"><a id="afe6c8bf95c7337a088ac903b36e42536" name="afe6c8bf95c7337a088ac903b36e42536"></a>
 virtual TSharedRef&lt; SWidget &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>RebuildWidget</b> () override</td></tr>
 <tr class="separator:afe6c8bf95c7337a088ac903b36e42536"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a29751285303c0f5fcaa69154c60e24"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#a4a29751285303c0f5fcaa69154c60e24">TryAsyncLoad</a> (TSoftObjectPtr&lt; UPaperFlipbook &gt; SoftFlipbook, FStreamableDelegate AfterLoadDelegate)</td></tr>
-<tr class="memdesc:a4a29751285303c0f5fcaa69154c60e24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads <em>SoftFlipbook</em>  resource and calls <em>AfterLoadDelegate</em>  after loading is completed.  <br /></td></tr>
-<tr class="separator:a4a29751285303c0f5fcaa69154c60e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49310aa237ab3015000489d6ef5fb0b1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#a49310aa237ab3015000489d6ef5fb0b1">AsyncLoad</a> (TSoftObjectPtr&lt; UPaperFlipbook &gt; SoftFlipbook, FStreamableDelegate AfterLoadDelegate)</td></tr>
+<tr class="memdesc:a49310aa237ab3015000489d6ef5fb0b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads <em>SoftFlipbook</em>  resource and calls <em>AfterLoadDelegate</em>  after loading is completed.  <br /></td></tr>
+<tr class="separator:a49310aa237ab3015000489d6ef5fb0b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65aefccf789bac9a43c5667886240b63"><td class="memItemLeft" align="right" valign="top">const UPaperFlipbook *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#a65aefccf789bac9a43c5667886240b63">ToFlipbook</a> (TAttribute&lt; UPaperFlipbook * &gt; InFlipbook) const</td></tr>
 <tr class="memdesc:a65aefccf789bac9a43c5667886240b63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convertion for property binding implementation.  <br /></td></tr>
 <tr class="separator:a65aefccf789bac9a43c5667886240b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -245,14 +245,60 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bAnimate</b></td></tr
 <tr class="memitem:ab45c874fa35b2539fde66814a1f16d28"><td class="memItemLeft" align="right" valign="top">int32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#ab45c874fa35b2539fde66814a1f16d28">FrameIndex</a></td></tr>
 <tr class="memdesc:ab45c874fa35b2539fde66814a1f16d28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the flipbook's frame that must be rendered.  <br /></td></tr>
 <tr class="separator:ab45c874fa35b2539fde66814a1f16d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d2eba011b6eb5242ab668ebe8e37810"><td class="memItemLeft" align="right" valign="top">TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#a0d2eba011b6eb5242ab668ebe8e37810">StreamingHandle</a></td></tr>
-<tr class="memdesc:a0d2eba011b6eb5242ab668ebe8e37810"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle of paper flipbook resource.  <br /></td></tr>
-<tr class="separator:a0d2eba011b6eb5242ab668ebe8e37810"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a4ebf5de4e731576b4b2c5afd35e418"><td class="memItemLeft" align="right" valign="top"><a id="a1a4ebf5de4e731576b4b2c5afd35e418" name="a1a4ebf5de4e731576b4b2c5afd35e418"></a>
+TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FlipbookHandle</b></td></tr>
+<tr class="memdesc:a1a4ebf5de4e731576b4b2c5afd35e418"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle of paper flipbook resource. <br /></td></tr>
+<tr class="separator:a1a4ebf5de4e731576b4b2c5afd35e418"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Widget that can visualize sprite flipbooks either in animated or static state. </p>
 <p>UPaperFlipbook class is provided by Paper2D built-in plugin in order to reuse existing assets and make <a class="el" href="class_visual_u.html">VisualU</a> compatible with normal Unreal pipeline for 2D games. Visual Image sets paper flipbook in a regular synchronous way unless <a class="el" href="class_u_visual_image.html#ab521042e57ee30ae475cfe999a9831f6" title="Asynchronously set paper flipbook.">UVisualImage::SetFlipbookAsync</a> is called. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a49310aa237ab3015000489d6ef5fb0b1" name="a49310aa237ab3015000489d6ef5fb0b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49310aa237ab3015000489d6ef5fb0b1">&#9670;&#160;</a></span>AsyncLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualImage::AsyncLoad </td>
+          <td>(</td>
+          <td class="paramtype">TSoftObjectPtr&lt; UPaperFlipbook &gt;&#160;</td>
+          <td class="paramname"><em>SoftFlipbook</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FStreamableDelegate&#160;</td>
+          <td class="paramname"><em>AfterLoadDelegate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Loads <em>SoftFlipbook</em>  resource and calls <em>AfterLoadDelegate</em>  after loading is completed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SoftFlipbook</td><td>Paper flipbook to load</td></tr>
+    <tr><td class="paramname">AfterLoadDelegate</td><td>Delegate to call after loading</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aff2c18c582102ae219d1416446d1d2e4" name="aff2c18c582102ae219d1416446d1d2e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff2c18c582102ae219d1416446d1d2e4">&#9670;&#160;</a></span>CancelAsyncLoad()</h2>
 
@@ -566,52 +612,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bAnimate</b></td></tr
 
 </div>
 </div>
-<a id="a4a29751285303c0f5fcaa69154c60e24" name="a4a29751285303c0f5fcaa69154c60e24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a29751285303c0f5fcaa69154c60e24">&#9670;&#160;</a></span>TryAsyncLoad()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UVisualImage::TryAsyncLoad </td>
-          <td>(</td>
-          <td class="paramtype">TSoftObjectPtr&lt; UPaperFlipbook &gt;&#160;</td>
-          <td class="paramname"><em>SoftFlipbook</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">FStreamableDelegate&#160;</td>
-          <td class="paramname"><em>AfterLoadDelegate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Loads <em>SoftFlipbook</em>  resource and calls <em>AfterLoadDelegate</em>  after loading is completed. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>refactor to "LoadFlipbookAsync" or "AsyncLoad" </dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">SoftFlipbook</td><td>Paper flipbook to load</td></tr>
-    <tr><td class="paramname">AfterLoadDelegate</td><td>Delegate to call after loading</td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a608a5a0dcec36f660fc09c29d4bf1396" name="a608a5a0dcec36f660fc09c29d4bf1396"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a608a5a0dcec36f660fc09c29d4bf1396">&#9670;&#160;</a></span>ColorAndOpacity</h2>
@@ -711,31 +711,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bAnimate</b></td></tr
 <p>Determines the orientation of the sprite on both axes. </p>
 <p>Only -1 or 1 values are valid.</p>
 <p>Mirror scale does not change the desired size. </p>
-
-</div>
-</div>
-<a id="a0d2eba011b6eb5242ab668ebe8e37810" name="a0d2eba011b6eb5242ab668ebe8e37810"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d2eba011b6eb5242ab668ebe8e37810">&#9670;&#160;</a></span>StreamingHandle</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TSharedPtr&lt;FStreamableHandle&gt; UVisualImage::StreamingHandle</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Handle of paper flipbook resource. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>refactor to "FlipbookHandle" </dd></dl>
 
 </div>
 </div>

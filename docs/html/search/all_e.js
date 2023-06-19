@@ -22,7 +22,6 @@ var searchData=
   ['spriteinfo_19',['SpriteInfo',['../struct_f_sprite.html#a58df0d12f88a507c9a672e8872cd12a8',1,'FSprite']]],
   ['spritesparams_20',['SpritesParams',['../struct_f_scenario.html#a904a0a0f58e40723e3834ab874b86749',1,'FScenario']]],
   ['startupmodule_21',['StartupModule',['../class_f_visual_u_module.html#a7ef37b2c20d8cada28da5521fd5699a7',1,'FVisualUModule']]],
-  ['streaminghandle_22',['StreamingHandle',['../class_u_visual_image.html#a0d2eba011b6eb5242ab668ebe8e37810',1,'UVisualImage']]],
-  ['svisualimage_23',['SVisualImage',['../class_s_visual_image.html',1,'']]],
-  ['svisualsocket_24',['SVisualSocket',['../class_s_visual_socket.html',1,'']]]
+  ['svisualimage_22',['SVisualImage',['../class_s_visual_image.html',1,'']]],
+  ['svisualsocket_23',['SVisualSocket',['../class_s_visual_socket.html',1,'']]]
 ];
