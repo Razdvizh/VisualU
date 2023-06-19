@@ -39,6 +39,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// limitations on amount of <see cref="UVisualSprite">Visual Sprites</see> or size of the branch, however increase in amount of 
 /// <see cref="FScenario">Scenarios</see> inside Data Table would linearly decrease performance.
 /// </remarks>
+/// \image html Tree_structure.png
 UCLASS()
 class VISUALU_API UVisualScene : public UUserWidget
 {
@@ -296,7 +297,7 @@ protected:
 	virtual void LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene = true);
 
 	/// <summary>
-	/// Removes all <see cref="UVisualSprite">Visual Sprites from <see cref="UVisualScene::Canvas"/>.
+	/// Removes all <see cref="UVisualSprite">Visual Sprites</see> from <see cref="UVisualScene::Canvas"/>.
 	/// </summary>
 	/// <returns><c>true</c> if at least one sprite was removed</returns>
 	bool ClearSprites();

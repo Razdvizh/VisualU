@@ -91,7 +91,7 @@ void UVisualImage::SetFlipbook(UPaperFlipbook* InFlipbook)
 	}
 }
 
-void UVisualImage::TryAsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FStreamableDelegate AfterLoadDelegate)
+void UVisualImage::AsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FStreamableDelegate AfterLoadDelegate)
 {
 	CancelAsyncLoad();
 
@@ -104,7 +104,7 @@ void UVisualImage::TryAsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FSt
 	TWeakObjectPtr<UVisualImage> WeakThis = TWeakObjectPtr<UVisualImage>(this);
 	const FSoftObjectPath FlipbookPath = SoftFlipbook.ToSoftObjectPath();
 
-	StreamingHandle = UAssetManager::GetStreamableManager().RequestAsyncLoad(FlipbookPath, [WeakThis, AfterLoadDelegate]()
+	FlipbookHandle = UAssetManager::GetStreamableManager().RequestAsyncLoad(FlipbookPath, [WeakThis, AfterLoadDelegate]()
 	{
 		if (WeakThis.IsValid())
 		{	
@@ -116,18 +116,18 @@ void UVisualImage::TryAsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FSt
 
 void UVisualImage::CancelAsyncLoad()
 {
-	if (StreamingHandle.IsValid())
+	if (FlipbookHandle.IsValid())
 	{
-		StreamingHandle->CancelHandle();
-		StreamingHandle.Reset();
+		FlipbookHandle->CancelHandle();
+		FlipbookHandle.Reset();
 	}
 }
 
 bool UVisualImage::IsFlipbookLoading() const
 {
-	if (StreamingHandle.IsValid())
+	if (FlipbookHandle.IsValid())
 	{
-		return StreamingHandle->IsLoadingInProgress();
+		return FlipbookHandle->IsLoadingInProgress();
 	}
 
 	return false;
@@ -135,9 +135,9 @@ bool UVisualImage::IsFlipbookLoading() const
 
 bool UVisualImage::IsFlipbookLoaded() const
 {
-	if (StreamingHandle.IsValid())
+	if (FlipbookHandle.IsValid())
 	{
-		return StreamingHandle->HasLoadCompleted();
+		return FlipbookHandle->HasLoadCompleted();
 	}
 	
 	return false;
@@ -156,7 +156,7 @@ void UVisualImage::SetFlipbookAsync(TSoftObjectPtr<UPaperFlipbook> InFlipbook)
 		}
 	});
 
-	TryAsyncLoad(InFlipbook, OnFlipbookLoaded);
+	AsyncLoad(InFlipbook, OnFlipbookLoaded);
 }
 
 void UVisualImage::SetColorAndOpacity(const FLinearColor& InColorAndOpacity)

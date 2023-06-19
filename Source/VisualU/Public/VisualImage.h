@@ -168,11 +168,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetFrameIndex, meta = (ToolTip = "Index of the flipbook's frame that must be rendered", EditCondition = "!bAnimate", EditConditionHides))
 	int32 FrameIndex;
 
-	/// \todo refactor to "FlipbookHandle"
 	/// <summary>
 	/// Handle of paper flipbook resource.
 	/// </summary>
-	TSharedPtr<FStreamableHandle> StreamingHandle;
+	TSharedPtr<FStreamableHandle> FlipbookHandle;
 
 public:
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
@@ -291,13 +290,12 @@ protected:
 
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
-	/// \todo refactor to "LoadFlipbookAsync" or "AsyncLoad"
 	/// <summary>
 	/// Loads <paramref name="SoftFlipbook"/> resource and calls <paramref name="AfterLoadDelegate"/> after loading is completed.
 	/// </summary>
 	/// <param name="SoftFlipbook">Paper flipbook to load</param>
 	/// <param name="AfterLoadDelegate">Delegate to call after loading</param>
-	virtual void TryAsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FStreamableDelegate AfterLoadDelegate);
+	virtual void AsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FStreamableDelegate AfterLoadDelegate);
 
 	/// <summary>
 	/// Convertion for property binding implementation.
