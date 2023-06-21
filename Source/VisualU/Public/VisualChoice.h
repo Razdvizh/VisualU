@@ -35,7 +35,7 @@ public:
 	/// </summary>
 	/// <param name="Branch">Branch to operate on</param>
 	UFUNCTION(BlueprintCallable, Category = "Visual Choice")
-	void Choose(UDataTable* Branch) const;
+	void Choose(const UDataTable* Branch) const;
 
 protected:
 	virtual void NativeOnInitialized() override;

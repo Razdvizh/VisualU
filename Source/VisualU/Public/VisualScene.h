@@ -34,10 +34,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// <see cref="FScenario">Scenario</see>. Note that such linking is not enforced: you may place additional <see cref="FScenario">Scenarios</see> after
 /// the scene with <see cref="UVisualChoice">Visual Choice</see> or not add this sprite at all. Visual Scene operates on one node of tree at a time.
 /// It loads resources if they weren't already loaded, constructs requested <see cref="UVisualSprite">sprites</see>, provides interfaces to the data of
-/// the currently active <see cref="FScenario">Scenario</see>, and can iterate over them forward and backward or jump to the exhausted, or previously seen, 
+/// the currently active <see cref="FScenario">Scenario</see>, and can iterate over them forward and backward or jump to the exhausted (previously seen), 
 /// <see cref="FScenario">Scenario</see>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no
-/// limitations on amount of <see cref="UVisualSprite">Visual Sprites</see> or size of the branch, however increase in amount of 
-/// <see cref="FScenario">Scenarios</see> inside Data Table would linearly decrease performance.
+/// limitations on amount of <see cref="UVisualSprite">Visual Sprites</see> or size of the branch. 
+/// Switching to next or previous <see cref="FScenario">Scenario</see> takes constant time (O(1)), random access of <see cref="FScenario">Scenario</see> takes
+/// linear time (O(N)) and number of iterations grow with each new choice made by the player.
 /// </remarks>
 /// \image html Tree_structure.png
 UCLASS()
@@ -156,7 +157,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	bool ToScenario(const FScenario& Scenario);
 
-	/// \todo change the parameter type to UDataTable
 	/// <summary>
 	/// Sets provided branch as active.
 	/// </summary>
@@ -164,18 +164,8 @@ public:
 	/// <remarks>
 	/// <see cref="UVisualScene">Visual Scene</see> operates on one branch at a time.
 	/// </remarks>
-	void NativeToBranch(const TArray<FScenario*>& Rows);
-
-	/// \todo change the parameter type to UDataTable
-	/// <summary>
-	/// Sets provided branch as active.
-	/// </summary>
-	/// <param name="Rows"><see cref="FScenario">Scenarios</see> of the branch</param>
-	/// <remarks>
-	/// <see cref="UVisualScene">Visual Scene</see> operates on one branch at a time.
-	/// </remarks>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
-	void ToBranch(UPARAM(ref) TArray<FScenario>& Rows);
+	void ToBranch(const UDataTable* NewBranch);
 
 	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
 	FOnSceneStartEvent OnSceneStart;

@@ -190,12 +190,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> (
 <tr class="memitem:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#abbbd6f8c0345901cb33a7eb32621a8ea">ToScenario</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Scenario)</td></tr>
 <tr class="memdesc:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
 <tr class="separator:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa45567cc9b87a81230ce816c8c6424c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#afa45567cc9b87a81230ce816c8c6424c">NativeToBranch</a> (const TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> * &gt; &amp;Rows)</td></tr>
-<tr class="memdesc:afa45567cc9b87a81230ce816c8c6424c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets provided branch as active.  <br /></td></tr>
-<tr class="separator:afa45567cc9b87a81230ce816c8c6424c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46a93d4b8e9743b2b34834def296c474"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a46a93d4b8e9743b2b34834def296c474">ToBranch</a> (UPARAM(ref) TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> &gt; &amp;Rows)</td></tr>
-<tr class="memdesc:a46a93d4b8e9743b2b34834def296c474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets provided branch as active.  <br /></td></tr>
-<tr class="separator:a46a93d4b8e9743b2b34834def296c474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d5a2c262ea83fd18a6f08aaa233603a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a5d5a2c262ea83fd18a6f08aaa233603a">ToBranch</a> (const UDataTable *NewBranch)</td></tr>
+<tr class="memdesc:a5d5a2c262ea83fd18a6f08aaa233603a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets provided branch as active.  <br /></td></tr>
+<tr class="separator:a5d5a2c262ea83fd18a6f08aaa233603a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a829b30b4f7d5953ec7804077bb2b37f1"><td class="memItemLeft" align="right" valign="top"><a id="a829b30b4f7d5953ec7804077bb2b37f1" name="a829b30b4f7d5953ec7804077bb2b37f1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>DECLARE_MULTICAST_DELEGATE</b> (FOnNativeSceneStartEvent)</td></tr>
 <tr class="separator:a829b30b4f7d5953ec7804077bb2b37f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,7 +287,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that loads, visualizes and connects <a class="el" href="struct_f_scenario.html">Scenarios</a> in the game. </p>
-<p>Visual Scene organizes branches of <a class="el" href="struct_f_scenario.html">Scenarios</a> into the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. Nodes of the tree are Data Tables, which can have any amount of <a class="el" href="struct_f_scenario.html">Scenarios</a>. Nodes are linked by <a class="el" href="class_u_visual_choice.html">Visual Choice</a> sprite that <b>should</b> reside in the last <a class="el" href="struct_f_scenario.html">Scenario</a>. Note that such linking is not enforced: you may place additional <a class="el" href="struct_f_scenario.html">Scenarios</a> after the scene with <a class="el" href="class_u_visual_choice.html">Visual Choice</a> or not add this sprite at all. Visual Scene operates on one node of tree at a time. It loads resources if they weren't already loaded, constructs requested <a class="el" href="class_u_visual_sprite.html">sprites</a>, provides interfaces to the data of the currently active <a class="el" href="struct_f_scenario.html">Scenario</a>, and can iterate over them forward and backward or jump to the exhausted, or previously seen, <a class="el" href="struct_f_scenario.html">Scenario</a>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no limitations on amount of <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> or size of the branch, however increase in amount of <a class="el" href="struct_f_scenario.html">Scenarios</a> inside Data Table would linearly decrease performance. </p>
+<p>Visual Scene organizes branches of <a class="el" href="struct_f_scenario.html">Scenarios</a> into the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. Nodes of the tree are Data Tables, which can have any amount of <a class="el" href="struct_f_scenario.html">Scenarios</a>. Nodes are linked by <a class="el" href="class_u_visual_choice.html">Visual Choice</a> sprite that <b>should</b> reside in the last <a class="el" href="struct_f_scenario.html">Scenario</a>. Note that such linking is not enforced: you may place additional <a class="el" href="struct_f_scenario.html">Scenarios</a> after the scene with <a class="el" href="class_u_visual_choice.html">Visual Choice</a> or not add this sprite at all. Visual Scene operates on one node of tree at a time. It loads resources if they weren't already loaded, constructs requested <a class="el" href="class_u_visual_sprite.html">sprites</a>, provides interfaces to the data of the currently active <a class="el" href="struct_f_scenario.html">Scenario</a>, and can iterate over them forward and backward or jump to the exhausted (previously seen), <a class="el" href="struct_f_scenario.html">Scenario</a>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no limitations on amount of <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> or size of the branch. Switching to next or previous <a class="el" href="struct_f_scenario.html">Scenario</a> takes constant time (O(1)), random access of <a class="el" href="struct_f_scenario.html">Scenario</a> takes linear time (O(N)) and number of iterations grow with each new choice made by the player. </p>
 <div class="image">
 <img src="Tree_structure.png" alt=""/>
 </div>
@@ -599,34 +596,6 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 </div>
 </div>
-<a id="afa45567cc9b87a81230ce816c8c6424c" name="afa45567cc9b87a81230ce816c8c6424c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa45567cc9b87a81230ce816c8c6424c">&#9670;&#160;</a></span>NativeToBranch()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UVisualScene::NativeToBranch </td>
-          <td>(</td>
-          <td class="paramtype">const TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Rows</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets provided branch as active. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>change the parameter type to UDataTable </dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Rows</td><td><a class="el" href="struct_f_scenario.html">Scenes</a> of the branch</td></tr>
-  </table>
-  </dd>
-</dl>
-<p><a class="el" href="class_u_visual_scene.html">Visual Scene</a> operates on one branch at a time. </p>
-
-</div>
-</div>
 <a id="ae2dd010ae4ac29083f526975075c00f5" name="ae2dd010ae4ac29083f526975075c00f5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae2dd010ae4ac29083f526975075c00f5">&#9670;&#160;</a></span>PrintScenesData()</h2>
 
@@ -689,8 +658,8 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 </div>
 </div>
-<a id="a46a93d4b8e9743b2b34834def296c474" name="a46a93d4b8e9743b2b34834def296c474"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46a93d4b8e9743b2b34834def296c474">&#9670;&#160;</a></span>ToBranch()</h2>
+<a id="a5d5a2c262ea83fd18a6f08aaa233603a" name="a5d5a2c262ea83fd18a6f08aaa233603a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d5a2c262ea83fd18a6f08aaa233603a">&#9670;&#160;</a></span>ToBranch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -698,18 +667,17 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
         <tr>
           <td class="memname">void UVisualScene::ToBranch </td>
           <td>(</td>
-          <td class="paramtype">UPARAM(ref) TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Rows</em></td><td>)</td>
+          <td class="paramtype">const UDataTable *&#160;</td>
+          <td class="paramname"><em>NewBranch</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Sets provided branch as active. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>change the parameter type to UDataTable </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Rows</td><td><a class="el" href="struct_f_scenario.html">Scenarios</a> of the branch</td></tr>
+    <tr><td class="paramname">Rows</td><td><a class="el" href="struct_f_scenario.html">Scenes</a> of the branch</td></tr>
   </table>
   </dd>
 </dl>

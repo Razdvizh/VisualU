@@ -26,11 +26,8 @@ void UVisualChoice::NativeOnInitialized()
 	Super::NativeOnInitialized();
 }
 
-void UVisualChoice::Choose(UDataTable* Branch) const
+void UVisualChoice::Choose(const UDataTable* Branch) const
 {
-	TArray<FScenario*> Scenes;
-	Branch->GetAllRows(TEXT("VisualChoice.cpp(32)"), Scenes);
-
 	checkf(VisualScene, TEXT("Visual Scene is invalid. Use SetVisualScene() first"));
-	VisualScene->NativeToBranch(Scenes);
+	VisualScene->ToBranch(Branch);
 }

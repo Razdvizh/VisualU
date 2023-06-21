@@ -224,9 +224,12 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualScene::NativeToBranch(const TArray<FScenario*>& Rows)
+void UVisualScene::ToBranch(const UDataTable* NewBranch)
 {
 	ExhaustedScenes.Push(Branch.Last());
+
+	TArray<FScenario*> Rows;
+	NewBranch->GetAllRows(TEXT("VisualScene.cpp(232)"), Rows);
 	Branch = Rows;
 
 	OnSceneEnd.Broadcast();
@@ -238,23 +241,6 @@ void UVisualScene::NativeToBranch(const TArray<FScenario*>& Rows)
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
 }
-
-void UVisualScene::ToBranch(UPARAM(ref) TArray<FScenario>& Rows)
-{
-	TArray<FScenario*> RowsPtr;
-	for (auto& Row : Rows)
-	{
-		RowsPtr.Add(&Row);
-	}
-
-	NativeToBranch(MoveTemp(RowsPtr));
-}
-
-/*
-void UVisualScene::AutoProceedScenes(UVisualSceneComponent* Component) {}
-void UVisualScene::FastForward(UVisualSceneComponent* Component, float speedMultiplier) {}
-void UVisualScene::Rewind(UVisualSceneComponent* Component, float speedMultiplier) {}
-*/
 
 void UVisualScene::CancelSceneLoading()
 {
@@ -337,7 +323,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(340)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(326)"), Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 
