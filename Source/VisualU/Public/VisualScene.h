@@ -185,25 +185,6 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
 
-	/*
-	* 
-	* It is unclear how to include functionality of these methods inside Visual Scene.
-	* Implementation of these behaviors seems reasonable on the higher game levels of abstraction.
-	* Despite this, according to the setted purpose of Visual Scene and already implemented methods of control flow,
-	* methods bellow should and probably would be realized later if/when the sufficient solution is found.
-	* Visual Scene Component is also obsolete now because its application where transeferred to another game management authorities.
-	* 
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Components")
-	void AutoProceedScenes(UVisualSceneComponent* Component);
-
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Components")
-	void FastForward(UVisualSceneComponent* Component, float speedMultiplier = 1.0f);
-
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Components")
-	void Rewind(UVisualSceneComponent* Component, float speedMultiplier = 1.0f);
-	* 
-	*/
-
 protected:
 	/// <summary>
 	/// Internal widget for scene background.
