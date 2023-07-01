@@ -17,4 +17,5 @@ Build the plugin for the Unreal Engine 5 project (should be also compatible with
 
 # Usage
 
-Check https://razdvizh.github.io/VisualU/ for documentation and guidelines!
+Check [API documentation!](https://razdvizh.github.io/VisualU/index.html)
+Check [VisualU Wiki!](https://github.com/Razdvizh/VisualU/wiki)
