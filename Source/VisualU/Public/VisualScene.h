@@ -41,6 +41,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// linear time (O(N)) and number of iterations grow with each new choice made by the player.
 /// </remarks>
 /// \image html Tree_structure.png
+/// \warning Do not add any widgets to the Widget tree.
 UCLASS()
 class VISUALU_API UVisualScene : public UUserWidget
 {
@@ -54,10 +55,13 @@ public:
 	/// <remarks>
 	/// Essentially a strongly typed version of GetAllObjectsOfClass().
 	/// </remarks>
-	/// \attention this is an expensive operation, do not use every tick, etc.
+	/// \attention This is an expensive operation, do not use every tick, etc.
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene")
 	static UVisualScene* Get();
 
+	/// <summary>
+	/// Visual Scene can be constructed safely as any other <c>UUserWidget</c>.
+	/// </summary>
 	UVisualScene(const FObjectInitializer& ObjectInitializer);
 
 	/// <summary>
@@ -145,7 +149,7 @@ public:
 	/// </summary>
 	/// <param name="Scene"><see cref="FScenario">scene</see> to visualize</param>
 	/// <returns><c>true</c> if scene was visualized</returns>
-	/// \warning only use this method on <see cref="FScenario">scenes</see> that was already seen by the player.
+	/// \warning Only use this method on <see cref="FScenario">scenes</see> that was already seen by the player.
 	bool ToScene(const FScenario* Scene);
 
 	/// <summary>
@@ -153,7 +157,7 @@ public:
 	/// </summary>
 	/// <param name="Scene"><see cref="FScenario">scenario</see> to visualize</param>
 	/// <returns><c>true</c> if scenario was visualized</returns>
-	/// \warning only use this method on <see cref="FScenario">scenarios</see> that was already seen by the player.
+	/// \warning Only use this method on <see cref="FScenario">scenarios</see> that was already seen by the player.
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	bool ToScenario(const FScenario& Scenario);
 
@@ -202,7 +206,7 @@ protected:
 	/// <summary>
 	/// Blueprint class derived from Visual Scene.
 	/// </summary>
-	/// \attention might be <c>nullptr</c> if there is no blueprint derived class
+	/// \attention Might be <c>nullptr</c> if there is no blueprint derived class
 	const UWidgetBlueprintGeneratedClass* BPScene;
 
 	/// <summary>
@@ -237,6 +241,7 @@ protected:
 	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.
 	/// </summary>
 	/// <returns>Underlying slate widget</returns>
+	/// \warning Do not add any widgets to the Widget tree.
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
 	/// <summary>

@@ -1,5 +1,6 @@
 var class_u_visual_scene =
 [
+    [ "UVisualScene", "class_u_visual_scene.html#a6961585ff78701b822d9c3c60814cbb9", null ],
     [ "CanAdvanceScene", "class_u_visual_scene.html#a4c4e41b8f5278410f306477ff84c7298", null ],
     [ "CancelSceneLoading", "class_u_visual_scene.html#aaa36ac1089e04212b3769fac572348c0", null ],
     [ "CanRetractScene", "class_u_visual_scene.html#a2cfeda560e9030c5a462b0571364753f", null ],

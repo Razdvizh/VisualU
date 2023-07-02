@@ -123,6 +123,7 @@ Inheritance diagram for UVisualScene:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6961585ff78701b822d9c3c60814cbb9"><td class="memItemLeft" align="right" valign="top"><a id="a6961585ff78701b822d9c3c60814cbb9" name="a6961585ff78701b822d9c3c60814cbb9"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>UVisualScene</b> (const FObjectInitializer &amp;ObjectInitializer)</td></tr>
+<tr class="memdesc:a6961585ff78701b822d9c3c60814cbb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visual Scene can be constructed safely as any other <code>UUserWidget</code>. <br /></td></tr>
 <tr class="separator:a6961585ff78701b822d9c3c60814cbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa36ac1089e04212b3769fac572348c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#aaa36ac1089e04212b3769fac572348c0">CancelSceneLoading</a> ()</td></tr>
 <tr class="memdesc:aaa36ac1089e04212b3769fac572348c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases the handle for the assets of the current scene.  <br /></td></tr>
@@ -291,7 +292,8 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 <div class="image">
 <img src="Tree_structure.png" alt=""/>
 </div>
- </div><h2 class="groupheader">Member Function Documentation</h2>
+ <dl class="section warning"><dt>Warning</dt><dd>Do not add any widgets to the Widget tree. </dd></dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaa36ac1089e04212b3769fac572348c0" name="aaa36ac1089e04212b3769fac572348c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa36ac1089e04212b3769fac572348c0">&#9670;&#160;</a></span>CancelSceneLoading()</h2>
 
@@ -401,7 +403,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 <p>Static access to the first found <a class="el" href="class_u_visual_scene.html">Visual Scene</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>first found <a class="el" href="class_u_visual_scene.html">Visual Scene</a></dd></dl>
 <p>Essentially a strongly typed version of GetAllObjectsOfClass(). </p>
-<dl class="section attention"><dt>Attention</dt><dd>this is an expensive operation, do not use every tick, etc. </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>This is an expensive operation, do not use every tick, etc. </dd></dl>
 
 </div>
 </div>
@@ -655,6 +657,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 <p>Constructs <a class="el" href="class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5" title="Internal widget for scene background.">UVisualScene::Background</a> and <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>Underlying slate widget</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Do not add any widgets to the Widget tree. </dd></dl>
 
 </div>
 </div>
@@ -709,7 +712,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if scenario was visualized</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>only use this method on <a class="el" href="struct_f_scenario.html">scenarios</a> that was already seen by the player. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Only use this method on <a class="el" href="struct_f_scenario.html">scenarios</a> that was already seen by the player. </dd></dl>
 
 </div>
 </div>
@@ -737,7 +740,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if scene was visualized</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>only use this method on <a class="el" href="struct_f_scenario.html">scenes</a> that was already seen by the player. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Only use this method on <a class="el" href="struct_f_scenario.html">scenes</a> that was already seen by the player. </dd></dl>
 
 </div>
 </div>
@@ -763,7 +766,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div><div class="memdoc">
 
 <p>Blueprint class derived from Visual Scene. </p>
-<dl class="section attention"><dt>Attention</dt><dd>might be <code>nullptr</code> if there is no blueprint derived class </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Might be <code>nullptr</code> if there is no blueprint derived class </dd></dl>
 
 </div>
 </div>
