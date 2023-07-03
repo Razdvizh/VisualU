@@ -54,7 +54,7 @@ public:
 	TMap<FString, EVisualTextAction> Actions;
 
 	/// <summary>
-	/// A character which, in a pair, would enclose a metacharacter mapped in <see cref="UVisualUSettings::Actions>Actions</see>.
+	/// A character which, in a pair, would enclose a metacharacter mapped in <see cref="UVisualUSettings::Actions">Actions</see>.
 	/// </summary>
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "A character which, in a pair, would enclose a metacharacter"))
 	FString PairCharacter;
