@@ -80,7 +80,7 @@ public:
 	FORCEINLINE int GetLineWidth() const { return LineWidth; };
 
 	/// <summary>
-	/// Pauses active display of the text. 
+	/// Pauses on going display of the text. 
 	/// </summary>
 	/// <returns><c>true</c> if the text was paused</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
@@ -124,6 +124,10 @@ private:
 	UFUNCTION()
 	void DisplayOneCharacter();
 
+	/// \internal
+	/// <summary>
+	/// Parse text for metacharacters and remove them for final display.
+	/// </summary>
 	UFUNCTION()
 	void CheckForActions();
 

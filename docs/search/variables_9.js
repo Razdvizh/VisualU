@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['paircharacter_0',['PairCharacter',['../class_u_visual_u_settings.html#aea6c6c5d874e60ca37a573a4d0d74494',1,'UVisualUSettings']]],
-  ['position_1',['Position',['../struct_f_sprite.html#a2c809693994e7587afb0a223bf361344',1,'FSprite']]]
+  ['onactionencountered_0',['OnActionEncountered',['../class_u_visual_text_block.html#a874fb1e6786c8878bbe4a726c4be18cb',1,'UVisualTextBlock']]]
 ];

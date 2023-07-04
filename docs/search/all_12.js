@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['zorder_0',['ZOrder',['../struct_f_sprite.html#a205bb505c750bfc80d78540249c6d4ce',1,'FSprite']]]
+  ['visualscene_0',['VisualScene',['../class_u_visual_choice.html#a32bf407e73d06f767cd962e42fbf84ee',1,'UVisualChoice']]],
+  ['visualu_1',['VisualU',['../class_visual_u.html',1,'']]]
 ];

@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('class_u_visual_text_block.html',''); i
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_u_visual_text_block-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">UVisualTextBlock Class Reference</div></div>
@@ -149,11 +150,16 @@ FORCEINLINE int&#160;</td><td class="memItemRight" valign="bottom"><b>GetLineWid
 <tr class="memdesc:ab4d361dc2e9d8b6b59c2b1f853491535"><td class="mdescLeft">&#160;</td><td class="mdescRight"><dl class="section return"><dt>Returns</dt><dd>desired amount of characters in one line</dd></dl>
 <br /></td></tr>
 <tr class="separator:ab4d361dc2e9d8b6b59c2b1f853491535"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe2994da0897a8966fee26a9f7239064"><td class="memItemLeft" align="right" valign="top"><a id="abe2994da0897a8966fee26a9f7239064" name="abe2994da0897a8966fee26a9f7239064"></a>
-FORCEINLINE EVisualTextAction&#160;</td><td class="memItemRight" valign="bottom"><b>GetCurrentAction</b> () const</td></tr>
-<tr class="memdesc:abe2994da0897a8966fee26a9f7239064"><td class="mdescLeft">&#160;</td><td class="mdescRight"><dl class="section return"><dt>Returns</dt><dd>Returns the last encountered action during text display</dd></dl>
-<br /></td></tr>
-<tr class="separator:abe2994da0897a8966fee26a9f7239064"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5df0884014328a84c8bc1e9ca40b0c57"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_text_block.html#a5df0884014328a84c8bc1e9ca40b0c57">PauseTextDisplay</a> ()</td></tr>
+<tr class="memdesc:a5df0884014328a84c8bc1e9ca40b0c57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pauses on going display of the text.  <br /></td></tr>
+<tr class="separator:a5df0884014328a84c8bc1e9ca40b0c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a874fb1e6786c8878bbe4a726c4be18cb"><td class="memItemLeft" align="right" valign="top"><a id="a874fb1e6786c8878bbe4a726c4be18cb" name="a874fb1e6786c8878bbe4a726c4be18cb"></a>
+FOnActionEncounteredSignature&#160;</td><td class="memItemRight" valign="bottom"><b>OnActionEncountered</b></td></tr>
+<tr class="memdesc:a874fb1e6786c8878bbe4a726c4be18cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Broadcasts the encountered action in the text. <br /></td></tr>
+<tr class="separator:a874fb1e6786c8878bbe4a726c4be18cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -221,6 +227,26 @@ Protected Attributes</h2></td></tr>
 
 <p>Whether or not the typewriter effect is active. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if the text is displayed as self-typed</dd></dl>
+
+</div>
+</div>
+<a id="a5df0884014328a84c8bc1e9ca40b0c57" name="a5df0884014328a84c8bc1e9ca40b0c57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5df0884014328a84c8bc1e9ca40b0c57">&#9670;&#160;</a></span>PauseTextDisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualTextBlock::PauseTextDisplay </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pauses on going display of the text. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the text was paused</dd></dl>
 
 </div>
 </div>
