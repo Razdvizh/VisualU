@@ -14,7 +14,6 @@
 
 UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer),
 	LineWidth(2),
-	CurrentAction(EVisualTextAction::None),
 	CurrentString(),
 	TextString(),
 	TextLength(0),
@@ -85,6 +84,20 @@ void UVisualTextBlock::SetDisplayMode(bool ShouldDisplayInstantly)
 	bDisplayInstantly = ShouldDisplayInstantly;
 }
 
+bool UVisualTextBlock::PauseTextDisplay()
+{
+	bool bIsTimerActive = false;
+
+	if (GetWorld()->GetTimerManager().IsTimerActive(CharacterDelayTimer))
+	{
+		GetWorld()->GetTimerManager().PauseTimer(CharacterDelayTimer);
+		
+		bIsTimerActive = true;
+	}
+
+	return bIsTimerActive;
+}
+
 void UVisualTextBlock::SetCharacterAppearanceDelay(float Delay)
 {
 	CharacterAppearanceDelay = Delay;
@@ -100,24 +113,7 @@ const FText UVisualTextBlock::GetPaletteCategory()
 void UVisualTextBlock::DisplayOneCharacter()
 {
 	FText TextToDisplay;
-	const TCHAR PairCharacter = VisualUSettings->PairCharacter[0];
-	if (TextString[CurrCharCnt] == PairCharacter)
-	{
-		ensureMsgf(TextString.IsValidIndex(CurrCharCnt + 2), TEXT("invalid use of metacharacters at char %d"), CurrCharCnt);
-		const TCHAR meta = TextString[CurrCharCnt + 1];
-		const FString MetaKey = FString::Printf(TEXT("%c"), meta);
-		ensureMsgf(VisualUSettings->Actions.Contains(MetaKey), TEXT("Provided metacharacter \"%c\" is unspecified"), meta);
-		const EVisualTextAction* Action = VisualUSettings->Actions.Find(MetaKey);
-		SetCurrentAction(*Action);
-		switch (*Action)
-		{
-		default:
-		case EVisualTextAction::Break:
-			GetWorld()->GetTimerManager().PauseTimer(CharacterDelayTimer);
-		}
-
-		TextString.RemoveAt(CurrCharCnt, 3);
-	}
+	CheckForActions();
 	const TCHAR ch = TextString[CurrCharCnt];
 	CurrentString.AppendChar(ch);
 	CurrCharCnt++;
@@ -131,9 +127,20 @@ void UVisualTextBlock::DisplayOneCharacter()
 	}
 }
 
-void UVisualTextBlock::SetCurrentAction(const EVisualTextAction& Action)
+void UVisualTextBlock::CheckForActions()
 {
-	CurrentAction = Action;
+	const TCHAR PairCharacter = VisualUSettings->PairCharacter[0];
+	if (TextString[CurrCharCnt] == PairCharacter)
+	{
+		ensureMsgf(TextString.IsValidIndex(CurrCharCnt + 2), TEXT("invalid use of metacharacters at char %d"), CurrCharCnt);
+		const TCHAR meta = TextString[CurrCharCnt + 1];
+		const FString MetaKey = FString::Printf(TEXT("%c"), meta);
+		ensureMsgf(VisualUSettings->Actions.Contains(MetaKey), TEXT("Provided metacharacter \"%c\" is unspecified"), meta);
+		const EVisualTextAction* Action = VisualUSettings->Actions.Find(MetaKey);
+		OnActionEncountered.Broadcast(*Action);
+
+		TextString.RemoveAt(CurrCharCnt, 3);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

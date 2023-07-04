@@ -8,6 +8,8 @@
 
 class UVisualUSettings;
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnActionEncounteredSignature, UVisualTextBlock, OnActionEncountered, const EVisualTextAction, Action);
+
 /// <summary>
 /// Supports Visual Novel style of typewriter effect.
 /// </summary>
@@ -77,9 +79,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	FORCEINLINE int GetLineWidth() const { return LineWidth; };
 
-	/// <returns>Returns the last encountered action during text display</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Returns the last encountered action during text display"))
-	FORCEINLINE EVisualTextAction GetCurrentAction() const { return CurrentAction; }
+	/// <summary>
+	/// Pauses active display of the text. 
+	/// </summary>
+	/// <returns><c>true</c> if the text was paused</returns>
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	bool PauseTextDisplay();
+
+	/// <summary>
+	/// Broadcasts the encountered action in the text.
+	/// </summary>
+	UPROPERTY(BlueprintAssignable, Category = "Visual Text Block")
+	FOnActionEncounteredSignature OnActionEncountered;
 
 protected:
 	/// <summary>
@@ -113,13 +124,8 @@ private:
 	UFUNCTION()
 	void DisplayOneCharacter();
 
-	void SetCurrentAction(const EVisualTextAction& Action);
-
-	/// \internal
-	/// <summary>
-	/// The last encountered action in provided text, can be None.
-	/// </summary>
-	EVisualTextAction CurrentAction;
+	UFUNCTION()
+	void CheckForActions();
 
 	FString CurrentString;
 
