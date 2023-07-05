@@ -9,9 +9,9 @@
 class SVisualSocket;
 
 /// <summary>
-/// Zero-size scale box that acts as a socket for other widgets with additional functionality for <see cref="UVisualImage">Visual images</see>.
+/// Zero-size scale box that acts as a socket for other widgets with additional functionality for <see cref="UVisualImage">Visual Images</see>.
 /// </summary>
-UCLASS()
+UCLASS(meta = (ToolTip = "Zero-size scale box that acts as a socket for other widgets with additional functionality for Visual Images."))
 class VISUALU_API UVisualSocket : public UScaleBox
 {
 	GENERATED_BODY()
@@ -23,29 +23,29 @@ public:
 	/// Set offset position of child widget.
 	/// </summary>
 	/// <param name="InSocketPosition">New socket offset</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Socket")
+	UFUNCTION(BlueprintCallable, Category = "Visual Socket", meta = (ToolTip = "Set offset position of child widget."))
 	void SetSocketOffset(FVector2D InSocketPosition);
 
 	/// <summary>
 	/// Enable or disable auto positioning for <see cref="UVisualImage">Visual Images</see>.
 	/// </summary>
-	UFUNCTION(BlueprintCallable, Category = "Visual Socket")
+	UFUNCTION(BlueprintCallable, Category = "Visual Socket", meta = (ToolTip = "Enable or disable auto positioning for Visual Images."))
 	void SetAutoPositioning(bool ShouldAutoPosition);
 
 	/// <param name="Position">Position of child <see cref="UVisualImage">Visual Image</see></param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Socket")
+	UFUNCTION(BlueprintCallable, Category = "Visual Socket", meta = (ToolTip = "Set position of child Visual Image"))
 	void SetImageDesiredPosition(FVector2D Position);
 
 	/// <returns>Socket offset</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Socket offset"))
 	FORCEINLINE FVector2D GetSocketOffset() const { return SocketOffset; }
 
 	/// <returns><c>true</c> if child <see cref="UVisualImage">Visual Image</see> is auto positioned</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "true if child Visual Image is auto positioned"))
 	FORCEINLINE bool IsAutoPositioning() const { return bAutoPositioning; }
 
 	/// <returns>Position, in slate units, of child <see cref="UVisualImage">Visual Image</see></returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Position, in slate units, of child Visual Image"))
 	FORCEINLINE FVector2D GetImageDesiredPosition() const { return ImageDesiredPosition; }
 
 #if WITH_EDITOR

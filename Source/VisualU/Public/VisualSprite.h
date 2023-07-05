@@ -16,7 +16,7 @@
 /// which can be altered by <see cref="UVisualScene">Visual Scene</see> using information provided in the different <see cref="FScenario">Scenarios</see>.
 /// It can contain any functionality of the normal widget and can be extended as some specific kind of the sprite.
 /// The arrangement of <see cref="UVisualImage">Visual Images</see> is meant to be done inside blueprint class.
-UCLASS(abstract)
+UCLASS(meta = (ToolTip = "Base class for widgets that represent sprites that will be visualized by Visual Scene"))
 class VISUALU_API UVisualSprite : public UUserWidget
 {
 	GENERATED_BODY()
@@ -35,6 +35,6 @@ public:
 	/// in the tree. Any extra <c>FVisualImageInfo</c>s will be ignored.
 	/// </remarks>
 	/// \image html AssignVisualInfo_default.png
-	UFUNCTION(BlueprintCallable, Category = "Visual Sprite")
+	UFUNCTION(BlueprintCallable, Category = "Visual Sprite", meta = (ToolTip = "Set the desired fields for the Visual images that this Visual Sprite has."))
 	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo);
 };

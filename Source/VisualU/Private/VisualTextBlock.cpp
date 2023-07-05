@@ -98,6 +98,11 @@ bool UVisualTextBlock::PauseTextDisplay()
 	return bIsTimerActive;
 }
 
+void UVisualTextBlock::UnPauseTextDisplay()
+{
+	GetWorld()->GetTimerManager().UnPauseTimer(CharacterDelayTimer);
+}
+
 void UVisualTextBlock::SetCharacterAppearanceDelay(float Delay)
 {
 	CharacterAppearanceDelay = Delay;

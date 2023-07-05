@@ -42,7 +42,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// </remarks>
 /// \image html Tree_structure.png
 /// \warning Do not add any widgets to the Widget tree.
-UCLASS()
+UCLASS(meta = (ToolTip = "Class that loads, visualizes and connects Scenarios in the game."))
 class VISUALU_API UVisualScene : public UUserWidget
 {
 	GENERATED_BODY()
@@ -56,7 +56,7 @@ public:
 	/// Essentially a strongly typed version of GetAllObjectsOfClass().
 	/// </remarks>
 	/// \attention This is an expensive operation, do not use every tick, etc.
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene")
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene", meta = (ToolTip = "Static access to the first found Visual Scene"))
 	static UVisualScene* Get();
 
 	/// <summary>

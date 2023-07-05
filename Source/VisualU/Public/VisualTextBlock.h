@@ -19,7 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnActionEncounteredSignature
 /// Typewriter mode is achived by calling <see cref="UVisualTextBlock::SetText"/> method.
 /// Use of embedded images in this mode may lead to unexpected behavior, other features that <c>Rich Text Block</c> has are supported.
 /// </remarks>
-UCLASS()
+UCLASS(meta = (ToolTip = "Supports Visual Novel style of typewriter effect"))
 class VISUALU_API UVisualTextBlock : public URichTextBlock
 {
 	GENERATED_BODY()
@@ -40,25 +40,25 @@ public:
 	/// </summary>
 	/// <param name="InLineWidth">Amount of characters in one line</param>
 	/// \warning <see cref="UVisualTextBlock::LineWidth"/> does not guarantee specified amount of characters to be in one line
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Sets the desired amount of characters in one line."))
 	void SetLineWidth(int InLineWidth);
 
 	/// <summary>
 	/// Sets the delay for next character to appear.
 	/// </summary>
 	/// <param name="Delay">Delay in seconds</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Sets the delay for next character to appear."))
 	void SetCharacterAppearanceDelay(float Delay);
 
 	/// <returns>Delay, in seconds, for the next character to appear</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Delay, in seconds, for the next character to appear"))
 	FORCEINLINE float GetCharacterAppearanceDelay() const { return CharacterAppearanceDelay; };
 
 	/// <summary>
 	/// Whether or not the typewriter effect is active.
 	/// </summary>
 	/// <returns><c>true</c> if the text is displayed as self-typed</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Whether or not the typewriter effect is active."))
 	FORCEINLINE bool IsAppearingText() const { return bIsAppearingText; };
 
 	/// <summary>
@@ -72,24 +72,30 @@ public:
 	/// How text will be visualized during <see cref="UVisualTextBlock::SetText"/> call.
 	/// </summary>
 	/// <returns><c>true</c> if the text would be displayed instantly</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "How text will be visualized during SetText call."))
 	FORCEINLINE bool GetDisplayMode() const { return bDisplayInstantly; };
 
 	/// <returns>desired amount of characters in one line</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "desired amount of characters in one line"))
 	FORCEINLINE int GetLineWidth() const { return LineWidth; };
 
 	/// <summary>
 	/// Pauses on going display of the text. 
 	/// </summary>
 	/// <returns><c>true</c> if the text was paused</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Pauses on going display of the text."))
 	bool PauseTextDisplay();
+
+	/// <summary>
+	/// Resumes text display.
+	/// </summary>
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Resumes text display."))
+	void UnPauseTextDisplay();
 
 	/// <summary>
 	/// Broadcasts the encountered action in the text.
 	/// </summary>
-	UPROPERTY(BlueprintAssignable, Category = "Visual Text Block")
+	UPROPERTY(BlueprintAssignable, Category = "Visual Text Block", meta = (ToolTip = "Broadcasts the encountered action in the text."))
 	FOnActionEncounteredSignature OnActionEncountered;
 
 protected:
