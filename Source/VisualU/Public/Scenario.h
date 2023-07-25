@@ -168,10 +168,6 @@ public:
 
 	int32 Index;
 
-	/*TODO: Add assertions that the last Scenario in the data table has at least one Visual Sprite at the end.
-	* Visual Choice is intended to be used as link between nodes, however it is possible to change node without any sprite - call method after some event, etc.
-	* The last data table doesn't need any links? (Probably link to the game ending related content?)
-	*/
 	virtual void OnPostDataImport(const UDataTable* InDataTable, const FName InRowName, TArray<FString>& OutCollectedImportProblems) override
 	{
 		Intrusive(InDataTable);
@@ -286,7 +282,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(289)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(285)"), Rows);
 		Rows.Find(this, Index);
 	}
 };
