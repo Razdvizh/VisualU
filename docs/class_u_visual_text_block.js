@@ -9,6 +9,7 @@ var class_u_visual_text_block =
     [ "SetDisplayMode", "class_u_visual_text_block.html#a31f7856823e834af7c2ca8c360099074", null ],
     [ "SetLineWidth", "class_u_visual_text_block.html#a9897effe3966b0e9c86a769a9b7f2d37", null ],
     [ "SetText", "class_u_visual_text_block.html#ac7b47052414bc7625f7cf8a8e5f3d6bb", null ],
+    [ "UnPauseTextDisplay", "class_u_visual_text_block.html#afcc014bc2b627c3e670f4b7bb9232be4", null ],
     [ "CharacterAppearanceDelay", "class_u_visual_text_block.html#a52a5cc9eda76f424bb049ac308a8bce9", null ],
     [ "LineWidth", "class_u_visual_text_block.html#ad811c2d6ec29959d6ed0ce40e1200fcd", null ],
     [ "OnActionEncountered", "class_u_visual_text_block.html#a874fb1e6786c8878bbe4a726c4be18cb", null ]

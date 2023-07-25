@@ -62,8 +62,8 @@ void UVisualScene::NativeOnInitialized()
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(65)"), Branch);
-	checkf(Branch.IsValidIndex(0), TEXT("First Data Table is empty!"));
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(65)"), Node);
+	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
 void UVisualScene::NativeConstruct()
@@ -125,7 +125,7 @@ void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLo
 void UVisualScene::LoadAndConstruct()
 {
 	FStreamableDelegate ConstructSceneDelegate{};
-	const FScenario* Scene = Branch[SceneIndex];
+	const FScenario* Scene = Node[SceneIndex];
 	TWeakObjectPtr<UVisualScene> WeakThis = TWeakObjectPtr<UVisualScene>(this);
 	ConstructSceneDelegate.BindLambda([WeakThis, Scene]()
 	{
@@ -178,13 +178,13 @@ void UVisualScene::ToPreviousScene()
 bool UVisualScene::ToScene(const FScenario* Scene)
 {
 	bool isFound = false;
-	if (Branch[0]->Owner == Scene->Owner)
+	if (Node[0]->Owner == Scene->Owner)
 	{
 		isFound = true;
 	}
 	else
 	{
-		/*Traverse the stack until the requested branch is found*/
+		/*Traverse the stack until the requested Node is found*/
 		for (int i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 		{
 			if (ExhaustedScenes[i]->Owner == Scene->Owner)
@@ -215,8 +215,8 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
-	Branch.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(219)"), Branch);
+	Node.Empty();
+	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(219)"), Node);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -224,13 +224,13 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualScene::ToBranch(const UDataTable* NewBranch)
+void UVisualScene::ToNode(const UDataTable* NewNode)
 {
-	ExhaustedScenes.Push(Branch.Last());
+	ExhaustedScenes.Push(Node.Last());
 
 	TArray<FScenario*> Rows;
-	NewBranch->GetAllRows(TEXT("VisualScene.cpp(232)"), Rows);
-	Branch = Rows;
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(232)"), Rows);
+	Node = Rows;
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
@@ -273,12 +273,12 @@ bool UVisualScene::IsSceneLoaded() const
 
 bool UVisualScene::CanAdvanceScene() const
 {
-	return Branch.IsValidIndex(SceneIndex + 1);
+	return Node.IsValidIndex(SceneIndex + 1);
 }
 
 bool UVisualScene::CanRetractScene() const
 {
-	return Branch.IsValidIndex(SceneIndex - 1);
+	return Node.IsValidIndex(SceneIndex - 1);
 }
 
 bool UVisualScene::IsSceneExhausted(const FScenario* Scene) const
@@ -293,17 +293,17 @@ bool UVisualScene::IsScenarioExhausted(const FScenario& Scenario) const
 
 const FText UVisualScene::GetLine() const
 {
-	return Branch[SceneIndex]->Line;
+	return Node[SceneIndex]->Line;
 }
 
 const FText UVisualScene::GetAuthor() const
 {
-	return Branch[SceneIndex]->Author;
+	return Node[SceneIndex]->Author;
 }
 
 const FScenario* UVisualScene::GetCurrentScene() const
 {
-	return Branch[SceneIndex];
+	return Node[SceneIndex];
 }
 
 const FScenario& UVisualScene::GetCurrentScenario() const
@@ -360,7 +360,7 @@ void UVisualScene::GetScenesData(TArray<FAssetData>& OutData) const
 
 void UVisualScene::ConstructScene()
 {
-	ConstructScene(Branch[SceneIndex]);
+	ConstructScene(Node[SceneIndex]);
 }
 
 bool UVisualScene::ClearSprites()

@@ -10,7 +10,7 @@ class UDataTable;
 class UVisualScene;
 
 /// <summary>
-/// Sprite that represents a choice between branches.
+/// Sprite that represents a choice between nodes.
 /// </summary>
 UCLASS()
 class VISUALU_API UVisualChoice : public UVisualSprite
@@ -31,11 +31,11 @@ public:
 	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo) override;
 
 	/// <summary>
-	/// Sets the provided branch as active for operations inside the <see cref="UVisualScene">Visual Scene</see>.
+	/// Sets the provided node as active for operations inside the <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>
-	/// <param name="Branch">Branch to operate on</param>
+	/// <param name="node">node to operate on</param>
 	UFUNCTION(BlueprintCallable, Category = "Visual Choice")
-	void Choose(const UDataTable* Branch) const;
+	void Choose(const UDataTable* Node) const;
 
 protected:
 	virtual void NativeOnInitialized() override;

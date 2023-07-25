@@ -27,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// Class that loads, visualizes and connects <see cref="FScenario">Scenarios</see> in the game.
 /// </summary>
 /// <remarks>
-/// Visual Scene organizes branches of <see cref="FScenario">Scenarios</see> into
+/// Visual Scene organizes nodes of <see cref="FScenario">Scenarios</see> into
 /// the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. 
 /// Nodes of the tree are Data Tables, which can have any amount
 /// of <see cref="FScenario">Scenarios</see>. Nodes are linked by <see cref="UVisualChoice">Visual Choice</see> sprite that **should** reside in the last
@@ -36,7 +36,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// It loads resources if they weren't already loaded, constructs requested <see cref="UVisualSprite">sprites</see>, provides interfaces to the data of
 /// the currently active <see cref="FScenario">Scenario</see>, and can iterate over them forward and backward or jump to the exhausted (previously seen), 
 /// <see cref="FScenario">Scenario</see>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no
-/// limitations on amount of <see cref="UVisualSprite">Visual Sprites</see> or size of the branch. 
+/// limitations on amount of <see cref="UVisualSprite">Visual Sprites</see> or size of the node. 
 /// Switching to next or previous <see cref="FScenario">Scenario</see> takes constant time (O(1)), random access of <see cref="FScenario">Scenario</see> takes
 /// linear time (O(N)) and number of iterations grow with each new choice made by the player.
 /// </remarks>
@@ -133,13 +133,13 @@ public:
 	bool IsSceneLoaded() const;
 
 	/// <summary>
-	/// Visualize the next <see cref="FScenario">scene</see> in the branch.
+	/// Visualize the next <see cref="FScenario">scene</see> in the node.
 	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	void ToNextScene();
 
 	/// <summary>
-	/// Visualize the previous <see cref="FScenario">scene</see> in the branch.
+	/// Visualize the previous <see cref="FScenario">scene</see> in the node.
 	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	void ToPreviousScene();
@@ -162,14 +162,14 @@ public:
 	bool ToScenario(const FScenario& Scenario);
 
 	/// <summary>
-	/// Sets provided branch as active.
+	/// Sets provided node as active.
 	/// </summary>
-	/// <param name="Rows"><see cref="FScenario">Scenes</see> of the branch</param>
+	/// <param name="Rows"><see cref="FScenario">Scenes</see> of the node</param>
 	/// <remarks>
-	/// <see cref="UVisualScene">Visual Scene</see> operates on one branch at a time.
+	/// <see cref="UVisualScene">Visual Scene</see> operates on one node at a time.
 	/// </remarks>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
-	void ToBranch(const UDataTable* NewBranch);
+	void ToNode(const UDataTable* NewNode);
 
 	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
 	FOnSceneStartEvent OnSceneStart;
@@ -218,10 +218,10 @@ protected:
 	/// Currently active Data table with scenes.
 	/// </summary>
 	/// <seealso cref="FScenario"/>
-	TArray<FScenario*> Branch;
+	TArray<FScenario*> Node;
 
 	/// <summary>
-	/// Index of the scene in the branch.
+	/// Index of the scene in the node.
 	/// </summary>
 	int32 SceneIndex;
 
@@ -245,7 +245,7 @@ protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
 	/// <summary>
-	/// Acquires the first branch and initializes fields.
+	/// Acquires the first node and initializes fields.
 	/// </summary>
 	virtual void NativeOnInitialized() override;
 

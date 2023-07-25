@@ -26,8 +26,8 @@ void UVisualChoice::NativeOnInitialized()
 	Super::NativeOnInitialized();
 }
 
-void UVisualChoice::Choose(const UDataTable* Branch) const
+void UVisualChoice::Choose(const UDataTable* Node) const
 {
 	checkf(VisualScene, TEXT("Visual Scene is invalid. Use SetVisualScene() first"));
-	VisualScene->ToBranch(Branch);
+	VisualScene->ToNode(Node);
 }

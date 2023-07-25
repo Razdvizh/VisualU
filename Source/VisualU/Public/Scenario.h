@@ -114,13 +114,13 @@ public:
 /// Can be imported from CSV or JSON file or added directly as a row to the <c>Data Table</c> that has <c>FScenario</c> row struct.
 /// Terms "Scene", "Row" and "Scenario" all refer to <c>FScenario</c>. <see cref="UVisualScene">Visual Scene</see> and "Scene" are distinguished
 /// by word "Visual" in front of the class one.
-/// Grouped together under <c>Data Table</c>, they represent a branch of the tree structure that allows to create multiple ways to complete the game. 
+/// Grouped together under <c>Data Table</c>, they represent a node of the tree structure that allows to create multiple ways to complete the game. 
 /// The first scene in the game is specified by <see cref="UVisualUSettings::FirstDataTable"/> field.
-/// The last scene in the branch **can** have <see cref="UVisualChoice">Visual Choice sprite</see> that links branches together.
+/// The last scene in the node **can** have <see cref="UVisualChoice">Visual Choice sprite</see> that links nodees together.
 /// Connections between scenes are managed by <see cref="UVisualScene">Visual Scene</see>.
 /// That being said, <c>FScenario</c> is an intrusive data structure, 
-/// meaning that <c>FScenario</c> is well aware in what branch and where in the branch it resides.
-/// That implies that <c>FScenario</c> must be a part of a branch and cannot be owned by some other entity.
+/// meaning that <c>FScenario</c> is well aware in what node and where in the node it resides.
+/// That implies that <c>FScenario</c> must be a part of a node and cannot be owned by some other entity.
 /// <c>FScenario</c> is a polymorphic struct and can be extended if needed.
 /// </remarks>
 /// <seealso cref="FSprite"/>
@@ -169,7 +169,7 @@ public:
 	int32 Index;
 
 	/*TODO: Add assertions that the last Scenario in the data table has at least one Visual Sprite at the end.
-	* Visual Choice is intended to be used as link between branches, however it is possible to change branch without any sprite - call method after some event, etc.
+	* Visual Choice is intended to be used as link between nodes, however it is possible to change node without any sprite - call method after some event, etc.
 	* The last data table doesn't need any links? (Probably link to the game ending related content?)
 	*/
 	virtual void OnPostDataImport(const UDataTable* InDataTable, const FName InRowName, TArray<FString>& OutCollectedImportProblems) override

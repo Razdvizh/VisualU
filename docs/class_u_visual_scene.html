@@ -179,11 +179,11 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsSceneLoaded</b> () 
 <tr class="separator:a63f73ef00de5a44bc3f59b501ee43b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0eabb48c37a6f8932787e2b0b1078d6"><td class="memItemLeft" align="right" valign="top"><a id="af0eabb48c37a6f8932787e2b0b1078d6" name="af0eabb48c37a6f8932787e2b0b1078d6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ToNextScene</b> ()</td></tr>
-<tr class="memdesc:af0eabb48c37a6f8932787e2b0b1078d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize the next <a class="el" href="struct_f_scenario.html">scene</a> in the branch. <br /></td></tr>
+<tr class="memdesc:af0eabb48c37a6f8932787e2b0b1078d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize the next <a class="el" href="struct_f_scenario.html">scene</a> in the node. <br /></td></tr>
 <tr class="separator:af0eabb48c37a6f8932787e2b0b1078d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dd60e038c6395cd0041d97e606722e0"><td class="memItemLeft" align="right" valign="top"><a id="a2dd60e038c6395cd0041d97e606722e0" name="a2dd60e038c6395cd0041d97e606722e0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> ()</td></tr>
-<tr class="memdesc:a2dd60e038c6395cd0041d97e606722e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize the previous <a class="el" href="struct_f_scenario.html">scene</a> in the branch. <br /></td></tr>
+<tr class="memdesc:a2dd60e038c6395cd0041d97e606722e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize the previous <a class="el" href="struct_f_scenario.html">scene</a> in the node. <br /></td></tr>
 <tr class="separator:a2dd60e038c6395cd0041d97e606722e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a452b256f6841c6b61336866acfa75508"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a452b256f6841c6b61336866acfa75508">ToScene</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene)</td></tr>
 <tr class="memdesc:a452b256f6841c6b61336866acfa75508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
@@ -191,9 +191,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> (
 <tr class="memitem:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#abbbd6f8c0345901cb33a7eb32621a8ea">ToScenario</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Scenario)</td></tr>
 <tr class="memdesc:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
 <tr class="separator:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d5a2c262ea83fd18a6f08aaa233603a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a5d5a2c262ea83fd18a6f08aaa233603a">ToBranch</a> (const UDataTable *NewBranch)</td></tr>
-<tr class="memdesc:a5d5a2c262ea83fd18a6f08aaa233603a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets provided branch as active.  <br /></td></tr>
-<tr class="separator:a5d5a2c262ea83fd18a6f08aaa233603a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9929ed295ed425a431d7c827087acadd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a9929ed295ed425a431d7c827087acadd">ToNode</a> (const UDataTable *NewNode)</td></tr>
+<tr class="memdesc:a9929ed295ed425a431d7c827087acadd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets provided node as active.  <br /></td></tr>
+<tr class="separator:a9929ed295ed425a431d7c827087acadd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a829b30b4f7d5953ec7804077bb2b37f1"><td class="memItemLeft" align="right" valign="top"><a id="a829b30b4f7d5953ec7804077bb2b37f1" name="a829b30b4f7d5953ec7804077bb2b37f1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>DECLARE_MULTICAST_DELEGATE</b> (FOnNativeSceneStartEvent)</td></tr>
 <tr class="separator:a829b30b4f7d5953ec7804077bb2b37f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -238,7 +238,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aabdcec558ff71a30e1942ee7613b539e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa14da2d15e33c04955ab42802a55a5bf"><td class="memItemLeft" align="right" valign="top"><a id="aa14da2d15e33c04955ab42802a55a5bf" name="aa14da2d15e33c04955ab42802a55a5bf"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeOnInitialized</b> () override</td></tr>
-<tr class="memdesc:aa14da2d15e33c04955ab42802a55a5bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquires the first branch and initializes fields. <br /></td></tr>
+<tr class="memdesc:aa14da2d15e33c04955ab42802a55a5bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquires the first node and initializes fields. <br /></td></tr>
 <tr class="separator:aa14da2d15e33c04955ab42802a55a5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfa7a60848cfc45eceee6d791eca574f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#abfa7a60848cfc45eceee6d791eca574f">NativeConstruct</a> () override</td></tr>
 <tr class="memdesc:abfa7a60848cfc45eceee6d791eca574f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads assets and constructs the first <a class="el" href="struct_f_scenario.html">scene</a>.  <br /></td></tr>
@@ -275,12 +275,12 @@ Protected Attributes</h2></td></tr>
 TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ActiveSceneHandle</b></td></tr>
 <tr class="memdesc:a1dddf61f46621fd9b866c03879d62022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle for assets of the scene that are loaded into the memory. <br /></td></tr>
 <tr class="separator:a1dddf61f46621fd9b866c03879d62022"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5f3ed05c1e70030331977ba6b4e274"><td class="memItemLeft" align="right" valign="top">TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a7a5f3ed05c1e70030331977ba6b4e274">Branch</a></td></tr>
-<tr class="memdesc:a7a5f3ed05c1e70030331977ba6b4e274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Currently active Data table with scenes.  <br /></td></tr>
-<tr class="separator:a7a5f3ed05c1e70030331977ba6b4e274"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4db37b26410cf10612ad3dc170c933f"><td class="memItemLeft" align="right" valign="top">TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#ad4db37b26410cf10612ad3dc170c933f">Node</a></td></tr>
+<tr class="memdesc:ad4db37b26410cf10612ad3dc170c933f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Currently active Data table with scenes.  <br /></td></tr>
+<tr class="separator:ad4db37b26410cf10612ad3dc170c933f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4da859868e736f807bbf4408453ca8c2"><td class="memItemLeft" align="right" valign="top"><a id="a4da859868e736f807bbf4408453ca8c2" name="a4da859868e736f807bbf4408453ca8c2"></a>
 int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td></tr>
-<tr class="memdesc:a4da859868e736f807bbf4408453ca8c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the scene in the branch. <br /></td></tr>
+<tr class="memdesc:a4da859868e736f807bbf4408453ca8c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the scene in the node. <br /></td></tr>
 <tr class="separator:a4da859868e736f807bbf4408453ca8c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43cb9d6aa2a57fb029b41d79c43bc28c"><td class="memItemLeft" align="right" valign="top">TArray&lt; <a class="el" href="struct_f_scenario.html">FScenario</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a43cb9d6aa2a57fb029b41d79c43bc28c">ExhaustedScenes</a></td></tr>
 <tr class="memdesc:a43cb9d6aa2a57fb029b41d79c43bc28c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scenes that has been already seen in the game.  <br /></td></tr>
@@ -288,7 +288,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that loads, visualizes and connects <a class="el" href="struct_f_scenario.html">Scenarios</a> in the game. </p>
-<p>Visual Scene organizes branches of <a class="el" href="struct_f_scenario.html">Scenarios</a> into the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. Nodes of the tree are Data Tables, which can have any amount of <a class="el" href="struct_f_scenario.html">Scenarios</a>. Nodes are linked by <a class="el" href="class_u_visual_choice.html">Visual Choice</a> sprite that <b>should</b> reside in the last <a class="el" href="struct_f_scenario.html">Scenario</a>. Note that such linking is not enforced: you may place additional <a class="el" href="struct_f_scenario.html">Scenarios</a> after the scene with <a class="el" href="class_u_visual_choice.html">Visual Choice</a> or not add this sprite at all. Visual Scene operates on one node of tree at a time. It loads resources if they weren't already loaded, constructs requested <a class="el" href="class_u_visual_sprite.html">sprites</a>, provides interfaces to the data of the currently active <a class="el" href="struct_f_scenario.html">Scenario</a>, and can iterate over them forward and backward or jump to the exhausted (previously seen), <a class="el" href="struct_f_scenario.html">Scenario</a>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no limitations on amount of <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> or size of the branch. Switching to next or previous <a class="el" href="struct_f_scenario.html">Scenario</a> takes constant time (O(1)), random access of <a class="el" href="struct_f_scenario.html">Scenario</a> takes linear time (O(N)) and number of iterations grow with each new choice made by the player. </p>
+<p>Visual Scene organizes nodes of <a class="el" href="struct_f_scenario.html">Scenarios</a> into the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. Nodes of the tree are Data Tables, which can have any amount of <a class="el" href="struct_f_scenario.html">Scenarios</a>. Nodes are linked by <a class="el" href="class_u_visual_choice.html">Visual Choice</a> sprite that <b>should</b> reside in the last <a class="el" href="struct_f_scenario.html">Scenario</a>. Note that such linking is not enforced: you may place additional <a class="el" href="struct_f_scenario.html">Scenarios</a> after the scene with <a class="el" href="class_u_visual_choice.html">Visual Choice</a> or not add this sprite at all. Visual Scene operates on one node of tree at a time. It loads resources if they weren't already loaded, constructs requested <a class="el" href="class_u_visual_sprite.html">sprites</a>, provides interfaces to the data of the currently active <a class="el" href="struct_f_scenario.html">Scenario</a>, and can iterate over them forward and backward or jump to the exhausted (previously seen), <a class="el" href="struct_f_scenario.html">Scenario</a>. Visual Scene is designed to be efficient in both speed and memory, with priority given to the speed. There is no limitations on amount of <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> or size of the node. Switching to next or previous <a class="el" href="struct_f_scenario.html">Scenario</a> takes constant time (O(1)), random access of <a class="el" href="struct_f_scenario.html">Scenario</a> takes linear time (O(N)) and number of iterations grow with each new choice made by the player. </p>
 <div class="image">
 <img src="Tree_structure.png" alt=""/>
 </div>
@@ -661,30 +661,30 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 </div>
 </div>
-<a id="a5d5a2c262ea83fd18a6f08aaa233603a" name="a5d5a2c262ea83fd18a6f08aaa233603a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d5a2c262ea83fd18a6f08aaa233603a">&#9670;&#160;</a></span>ToBranch()</h2>
+<a id="a9929ed295ed425a431d7c827087acadd" name="a9929ed295ed425a431d7c827087acadd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9929ed295ed425a431d7c827087acadd">&#9670;&#160;</a></span>ToNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void UVisualScene::ToBranch </td>
+          <td class="memname">void UVisualScene::ToNode </td>
           <td>(</td>
           <td class="paramtype">const UDataTable *&#160;</td>
-          <td class="paramname"><em>NewBranch</em></td><td>)</td>
+          <td class="paramname"><em>NewNode</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets provided branch as active. </p>
+<p>Sets provided node as active. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Rows</td><td><a class="el" href="struct_f_scenario.html">Scenes</a> of the branch</td></tr>
+    <tr><td class="paramname">Rows</td><td><a class="el" href="struct_f_scenario.html">Scenes</a> of the node</td></tr>
   </table>
   </dd>
 </dl>
-<p><a class="el" href="class_u_visual_scene.html">Visual Scene</a> operates on one branch at a time. </p>
+<p><a class="el" href="class_u_visual_scene.html">Visual Scene</a> operates on one node at a time. </p>
 
 </div>
 </div>
@@ -770,31 +770,6 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 </div>
 </div>
-<a id="a7a5f3ed05c1e70030331977ba6b4e274" name="a7a5f3ed05c1e70030331977ba6b4e274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a5f3ed05c1e70030331977ba6b4e274">&#9670;&#160;</a></span>Branch</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TArray&lt;<a class="el" href="struct_f_scenario.html">FScenario</a>*&gt; UVisualScene::Branch</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Currently active Data table with scenes. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_f_scenario.html" title="A single scene or &quot;frame&quot; of the Visual Novel game.">FScenario</a></dd></dl>
-
-</div>
-</div>
 <a id="a761703d591f98632e05bfa35e6ed260c" name="a761703d591f98632e05bfa35e6ed260c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a761703d591f98632e05bfa35e6ed260c">&#9670;&#160;</a></span>Canvas</h2>
 
@@ -843,6 +818,31 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 <p>Scenes that has been already seen in the game. </p>
 <p>Only the scenes <b>past</b> the currently active scene are exhausted.</p>
 <p>Must be used only as a stack data structure, because scene might be restored and removed from the stack. In other words, when player returns back to the scene that was seen previously, or was exhausted, that scene is not considered exhausted anymore untill the player advances forward again. </p>
+
+</div>
+</div>
+<a id="ad4db37b26410cf10612ad3dc170c933f" name="ad4db37b26410cf10612ad3dc170c933f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4db37b26410cf10612ad3dc170c933f">&#9670;&#160;</a></span>Node</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TArray&lt;<a class="el" href="struct_f_scenario.html">FScenario</a>*&gt; UVisualScene::Node</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Currently active Data table with scenes. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_f_scenario.html" title="A single scene or &quot;frame&quot; of the Visual Novel game.">FScenario</a></dd></dl>
 
 </div>
 </div>

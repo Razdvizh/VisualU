@@ -21,16 +21,16 @@ var class_u_visual_scene =
     [ "NativeOnInitialized", "class_u_visual_scene.html#aa14da2d15e33c04955ab42802a55a5bf", null ],
     [ "PrintScenesData", "class_u_visual_scene.html#ae2dd010ae4ac29083f526975075c00f5", null ],
     [ "RebuildWidget", "class_u_visual_scene.html#aabdcec558ff71a30e1942ee7613b539e", null ],
-    [ "ToBranch", "class_u_visual_scene.html#a5d5a2c262ea83fd18a6f08aaa233603a", null ],
     [ "ToNextScene", "class_u_visual_scene.html#af0eabb48c37a6f8932787e2b0b1078d6", null ],
+    [ "ToNode", "class_u_visual_scene.html#a9929ed295ed425a431d7c827087acadd", null ],
     [ "ToPreviousScene", "class_u_visual_scene.html#a2dd60e038c6395cd0041d97e606722e0", null ],
     [ "ToScenario", "class_u_visual_scene.html#abbbd6f8c0345901cb33a7eb32621a8ea", null ],
     [ "ToScene", "class_u_visual_scene.html#a452b256f6841c6b61336866acfa75508", null ],
     [ "ActiveSceneHandle", "class_u_visual_scene.html#a1dddf61f46621fd9b866c03879d62022", null ],
     [ "Background", "class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5", null ],
     [ "BPScene", "class_u_visual_scene.html#a5a89558b21d32f73fb7ae110f9b6f59d", null ],
-    [ "Branch", "class_u_visual_scene.html#a7a5f3ed05c1e70030331977ba6b4e274", null ],
     [ "Canvas", "class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c", null ],
     [ "ExhaustedScenes", "class_u_visual_scene.html#a43cb9d6aa2a57fb029b41d79c43bc28c", null ],
+    [ "Node", "class_u_visual_scene.html#ad4db37b26410cf10612ad3dc170c933f", null ],
     [ "SceneIndex", "class_u_visual_scene.html#a4da859868e736f807bbf4408453ca8c2", null ]
 ];
