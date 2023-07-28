@@ -103,7 +103,7 @@ public:
 /// with normal Unreal pipeline for 2D games. Visual Image sets paper flipbook in a regular synchronous way unless <see cref="UVisualImage::SetFlipbookAsync"/>
 /// is called.
 /// </remarks>
-UCLASS()
+UCLASS(meta = (ToolTip = "Widget that can visualize sprite flipbooks either in animated or static state."))
 class VISUALU_API UVisualImage : public UWidget
 {
 	GENERATED_BODY()
@@ -123,7 +123,7 @@ protected:
 	/// <summary>
 	/// Implement property binding for <see cref="UVisualImage::Flipbook"/>.
 	/// </summary>
-	UPROPERTY()
+	UPROPERTY(meta = (ToolTip = "Implement property binding for Flipbook"))
 	FGetPaperFlipbook FlipbookDelegate;
 
 	/// <summary>
@@ -132,13 +132,13 @@ protected:
 	/// <remarks>
 	/// Note: would not be rendered if <see cref="UVisualImage::Flipbook"/> is None.
 	/// </remarks>
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetColorAndOpacity)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetColorAndOpacity, meta = (ToolTip = "Color and opacity of the Flipbook"))
 	FLinearColor ColorAndOpacity;
 
 	/// <summary>
 	/// Implement property binding for <see cref="UVisualImage::ColorAndOpacity"/>.
 	/// </summary>
-	UPROPERTY()
+	UPROPERTY(meta = (ToolTip = "Implement property binding for Color and Opacity"))
 	FGetLinearColor ColorAndOpacityDelegate;
 
 	/// <summary>
@@ -180,21 +180,21 @@ public:
 	/// Play animation sequence of paper flipbook or use <see cref="UVisualImage::FrameIndex"/> to display one frame.
 	/// </summary>
 	/// <param name="IsAnimated">Paper flipbook state</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Play animation sequence of the Flipbook or use FrameIndex to display one frame"))
 	void SetAnimate(bool IsAnimated);
 
 	/// <summary>
 	/// Set index of paper flipbook frame that should be visualized.
 	/// </summary>
 	/// <param name="Index">Paper flipbook's frame index</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set index of paper flipbook frame that should be visualized"))
 	void SetFrameIndex(int Index);
 
 	/// <summary>
 	/// Synchronously set paper flipbook.
 	/// </summary>
 	/// <param name="InFlipbook">Flipbook to visualize</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Synchronously set paper flipbook"))
 	void SetFlipbook(UPaperFlipbook* InFlipbook);
 
 	/// <summary>
@@ -207,29 +207,29 @@ public:
 	/// Asynchronously set paper flipbook.
 	/// </summary>
 	/// <param name="InFlipbook">Flipbook to visualize</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Asynchronously set paper flipbook"))
 	void SetFlipbookAsync(TSoftObjectPtr<UPaperFlipbook> InFlipbook);
 
 	/// <summary>
 	/// Release handle to paper flipbook resource.
 	/// It would also cancel loading of the asset if it is in progress.
 	/// </summary>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Release handle to paper flipbook resource"))
 	void CancelAsyncLoad();
 
 	/// <returns><c>true</c> if paper flipbook resource is not loaded yet.</returns>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Is Flipbook resource loading"))
 	bool IsFlipbookLoading() const;
 
 	/// <returns><c>true</c> if paper flipbook resource is loaded.</returns>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Is Flipbook resource loaded"))
 	bool IsFlipbookLoaded() const;
 
 	/// <summary>
 	/// Set color and opacity of paper flipbook.
 	/// </summary>
 	/// <param name="InColorAndOpacity">Desired color and opacity</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set Color and Opacity of the Flipbook"))
 	void SetColorAndOpacity(const FLinearColor& InColorAndOpacity);
 
 	/// <summary>
@@ -237,7 +237,7 @@ public:
 	/// </summary>
 	/// <param name="InDesiredScale">New scale of paper flipbook</param>
 	/// <seealso cref="UVisualImage::DesiredScale"/>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set scale of Flipbook"))
 	void SetDesiredScale(const FVector2D& InDesiredScale);
 
 	/// <summary>
@@ -245,40 +245,40 @@ public:
 	/// </summary>
 	/// <param name="InMirrorScale">New orientation of paper flipbook</param>
 	/// <seealso cref="UVisualImage::MirrorScale"/>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set orientation of Flipbook on X and Y axes"))
 	void SetMirrorScale(const FVector2D& InMirrorScale);
 
 	/// <returns>Displayed paper flipbook</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Displayed paper flipbook"))
 	FORCEINLINE UPaperFlipbook* GetFlipbook() const { return Flipbook; }
 
 	/// <returns><c>true</c> if animation sequence of paper flipbook is playing</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Is animation sequence of Flipbook playing"))
 	FORCEINLINE bool IsAnimated() const { return bAnimate; }
 
 	/// <summary>
 	/// Get index of paper flipbook frame that is currently displayed. Meaningless if <see cref="UVisualImage::bAnimate"/> is <c>true</c>.
 	/// <returns>Paper flipbook's frame index</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Get index of paper flipbook frame that is currently displayed. Meaningless if bAnimate is set to true"))
 	FORCEINLINE int GetFrameIndex() const { return FrameIndex; }
 
 	/// <returns>Color and opacity of paper flipbook</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Color and opacity of paper flipbook"))
 	FORCEINLINE FLinearColor GetColorAndOpacity() const { return ColorAndOpacity; }
 
 	/// <returns>Scale of paper flipbook</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Scale of paper flipbook"))
 	FORCEINLINE FVector2D GetDesiredScale() const { return DesiredScale; }
 
 	/// <returns>Orientation of paper flipbook</returns>
-	UFUNCTION(BlueprintGetter)
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Orientation of paper flipbook"))
 	FORCEINLINE FVector2D GetMirrorScale() const { return MirrorScale; }
 
 	/// <summary>
 	/// Get the visualized frame of paper flipbook.
 	/// </summary>
 	/// <returns>Currently displayed sprite</returns>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image")
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Get the visualized frame of paper flipbook."))
 	UPaperSprite* GetCurrentSprite() const;
 
 protected:

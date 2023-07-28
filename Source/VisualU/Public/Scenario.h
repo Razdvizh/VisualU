@@ -137,31 +137,31 @@ public:
 	/// <summary>
 	/// An author of the <see cref="FScenario::Line">Line</see>.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "An author of the Line"))
 	FText Author;
 
 	/// <summary>
 	/// A dialog line.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "A dialog line"))
 	FText Line;
 	
 	/// <summary>
 	/// Audio to play while the scene is displayed.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Audio to play while this Scenario is displayed"))
 	TSoftObjectPtr<USoundBase> Music;
 	
 	/// <summary>
 	/// Background of the scene.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "Scene")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "Scene", meta = (ToolTip = "Background of this Scenario"))
 	TSoftObjectPtr<UPaperFlipbook> BackgroundArt;
 
 	/// <summary>
 	/// Sprites that this scene has.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Sprites that this Scenario has"))
 	TArray<FSprite> SpritesParams;
 
 	const UDataTable* Owner;
