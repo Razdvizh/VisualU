@@ -32,33 +32,33 @@ public:
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> class to be constructed and visualized by <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite class to be constructed and visualized by Visual Scene"))
 	TSubclassOf<UVisualSprite> SpriteClass;
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> anchors in Canvas Panel.
 	/// </summary>
 	/// <seealso cref="FVisualAnchors"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite anchors in Canvas Panel"))
 	FVisualAnchors Anchors;
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> position in Canvas Panel.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite position in Canvas Panel"))
 	FVector2D Position;
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> Z coordinate (or layer) in Canvas Panel.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite's Z coordinate (a.k.a layer) in Canvas Panel"))
 	int32 ZOrder;
 
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
 	/// </summary>
 	/// <seealso cref="UVisualSprite::AssignVisualImageInfo"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside Visual Sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
 	/// <summary>
