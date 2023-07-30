@@ -194,7 +194,7 @@ FSlateBrush SVisualImage::ConvertFlipbookToBrush() const
 	if (Flipbook.Get())
 	{
 		UPaperSprite* CurrentSprite = GetCurrentSprite();
-		
+
 		checkSlow(CurrentSprite);
 
 		const FVector3d BoxSize = CurrentSprite->GetRenderBounds().GetBox().GetSize();
