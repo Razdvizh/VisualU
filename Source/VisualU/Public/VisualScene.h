@@ -123,7 +123,7 @@ public:
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> in front of the current one.</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene in front of the current one"))
 	bool CanAdvanceScene() const;
-
+	
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> behind the current one.</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene behind the current one"))
 	bool CanRetractScene() const;

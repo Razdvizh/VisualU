@@ -277,7 +277,7 @@ bool UVisualScene::CanAdvanceScene() const
 
 bool UVisualScene::CanRetractScene() const
 {
-	return Node.IsValidIndex(SceneIndex - 1);
+	return Node.IsValidIndex(SceneIndex - 1) || !ExhaustedScenes.IsEmpty();
 }
 
 bool UVisualScene::IsSceneExhausted(const FScenario* Scene) const
