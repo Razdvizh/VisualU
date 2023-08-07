@@ -2,7 +2,7 @@
 Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game
 
 # Setup
-Build the plugin for the Unreal Engine 5 project (should be also compatible with Unreal Engine 4 after recompiling)
+Build the plugin for the Unreal Engine 5 project
 
 ## Build Plugin using Unreal Automation Tool (Windows)
 1. Go to ```UE_5.0\Engine\Build\BatchFiles```
