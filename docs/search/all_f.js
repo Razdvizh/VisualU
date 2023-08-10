@@ -18,7 +18,7 @@ var searchData=
   ['setvisualimage_15',['SetVisualImage',['../class_s_visual_socket.html#aead9c8d38b1bdc83218c1bb9684add79',1,'SVisualSocket']]],
   ['setvisualscene_16',['SetVisualScene',['../class_u_visual_choice.html#a2b5f64977584d85f2de4c37102dd833f',1,'UVisualChoice']]],
   ['socketoffset_17',['SocketOffset',['../class_u_visual_socket.html#aefc9ede3b062d2e0f5855c9fa0d54bb1',1,'UVisualSocket']]],
-  ['spriteclass_18',['SpriteClass',['../struct_f_sprite.html#aacc2aff93984943a0840bce182408d16',1,'FSprite']]],
+  ['spriteclass_18',['SpriteClass',['../struct_f_sprite.html#ae692ae45e3b90c7afae286e41a1d6263',1,'FSprite']]],
   ['spriteinfo_19',['SpriteInfo',['../struct_f_sprite.html#a58df0d12f88a507c9a672e8872cd12a8',1,'FSprite']]],
   ['spritesparams_20',['SpritesParams',['../struct_f_scenario.html#a904a0a0f58e40723e3834ab874b86749',1,'FScenario']]],
   ['startupmodule_21',['StartupModule',['../class_f_visual_u_module.html#a7ef37b2c20d8cada28da5521fd5699a7',1,'FVisualUModule']]],

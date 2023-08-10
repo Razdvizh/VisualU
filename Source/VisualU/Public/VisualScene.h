@@ -15,6 +15,7 @@ class UVisualImage;
 class UObjectLibrary;
 class UVisualSceneComponent;
 class UWidgetBlueprintGeneratedClass;
+class UMaterialInterface;
 struct FAssetData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStartEvent);
@@ -71,11 +72,13 @@ public:
 	/// If no other handles to these assets exist, assets will be unloaded from memory.
 	/// </remarks>
 	void CancelSceneLoading();
-
+	
+	/// \todo let the user access this field through scenario
 	/// <returns><see cref="FScenario::Line">Line</see> of the current scene</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Line of the current scene"))
 	const FText GetLine() const;
 
+	/// \todo let the user access this field through scenario
 	/// <returns><see cref="FScenario::Author">Author</see> of the current scene</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Author of the current scene"))
 	const FText GetAuthor() const;
@@ -207,7 +210,7 @@ protected:
 	/// Blueprint class derived from Visual Scene.
 	/// </summary>
 	/// \attention Might be <c>nullptr</c> if there is no blueprint derived class
-	const UWidgetBlueprintGeneratedClass* BPScene;
+	TOptional<const UWidgetBlueprintGeneratedClass*> BPScene;
 
 	/// <summary>
 	/// Handle for assets of the scene that are loaded into the memory.
@@ -278,12 +281,14 @@ protected:
 	/// <returns><c>true</c> if at least one sprite was removed</returns>
 	bool ClearSprites();
 
+	/// \todo move this to the VisualUBlueprintStatics
 	/// <summary>
 	/// Outputs a friendly representation of scene data to the log.
 	/// </summary>
 	/// <param name="InScenesData">Data to print to the log</param>
 	void PrintScenesData(const TArray<FAssetData>& InScenesData) const;
 
+	/// \todo move this to the VisualUBlueprintStatics
 	/// <summary>
 	/// Gathers asset data of all Scenario Data Tables using Asset Registry.
 	/// </summary>

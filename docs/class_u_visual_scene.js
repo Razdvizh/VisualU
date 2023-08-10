@@ -28,7 +28,7 @@ var class_u_visual_scene =
     [ "ToScene", "class_u_visual_scene.html#a452b256f6841c6b61336866acfa75508", null ],
     [ "ActiveSceneHandle", "class_u_visual_scene.html#a1dddf61f46621fd9b866c03879d62022", null ],
     [ "Background", "class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5", null ],
-    [ "BPScene", "class_u_visual_scene.html#a5a89558b21d32f73fb7ae110f9b6f59d", null ],
+    [ "BPScene", "class_u_visual_scene.html#a10579c496fae17c2cd095e2aa7553c99", null ],
     [ "Canvas", "class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c", null ],
     [ "ExhaustedScenes", "class_u_visual_scene.html#a43cb9d6aa2a57fb029b41d79c43bc28c", null ],
     [ "Node", "class_u_visual_scene.html#ad4db37b26410cf10612ad3dc170c933f", null ],

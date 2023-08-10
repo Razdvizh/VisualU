@@ -3,6 +3,7 @@ var hierarchy =
     [ "FAnchors", null, [
       [ "FVisualAnchors", "struct_f_visual_anchors.html", null ]
     ] ],
+    [ "FBackground", "struct_f_background.html", null ],
     [ "FMargin", null, [
       [ "FVisualMargin", "struct_f_visual_margin.html", null ]
     ] ],
@@ -23,7 +24,14 @@ var hierarchy =
     [ "SScaleBox", null, [
       [ "SVisualSocket", "class_s_visual_socket.html", null ]
     ] ],
+    [ "UBlueprintFunctionLibrary", null, [
+      [ "UVisualUBlueprintStatics", "class_u_visual_u_blueprint_statics.html", null ]
+    ] ],
+    [ "UMaterialExpressionTextureSampleParameter2D", null, [
+      [ "UME_TextureSampleParameter2D", "class_u_m_e___texture_sample_parameter2_d.html", null ]
+    ] ],
     [ "UObject", null, [
+      [ "UResourceObjectProxy", "class_u_resource_object_proxy.html", null ],
       [ "UVisualUSettings", "class_u_visual_u_settings.html", null ]
     ] ],
     [ "URichTextBlock", null, [

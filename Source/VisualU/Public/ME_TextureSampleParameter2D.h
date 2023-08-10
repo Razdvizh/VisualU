@@ -8,6 +8,7 @@
 
 struct FPropertyChangedEvent;
 
+/// \todo refactor, naming is unclear
 /// <summary>
 /// Represents first or second sprite for transition animation.
 /// </summary>

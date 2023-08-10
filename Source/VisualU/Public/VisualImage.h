@@ -66,7 +66,7 @@ public:
 	virtual FString ToString() const
 	{
 		return FString::Printf(TEXT("Expression: %s Color and Opacity: %s Desired Scale: %s Mirror Scale: %s Animate: %s Frame Index: %d"),
-			*Expression.GetAssetName(),
+			!Expression.IsNull() ? *Expression.GetAssetName() : TEXT("None"),
 			*ColorAndOpacity.ToString(),
 			*DesiredScale.ToString(),
 			*MirrorScale.ToString(),

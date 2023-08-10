@@ -32,7 +32,7 @@ UVisualScene* UVisualScene::Get()
 
 UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), SceneIndex(0)
 {
-
+	//`BPScene` is not initialized on purpose, it should be not set by default
 }
 
 TSharedRef<SWidget> UVisualScene::RebuildWidget()
@@ -56,7 +56,10 @@ void UVisualScene::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	BPScene = GetWidgetTreeOwningClass();
+	if (GetWidgetTreeOwningClass() != nullptr)
+	{
+		BPScene = GetWidgetTreeOwningClass();
+	}
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
@@ -81,15 +84,18 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	if (UPaperFlipbook* BackgroundArt = Scene->BackgroundArt.Get())
+	if (UPaperFlipbook* BackgroundArt = Scene->Background.BackgroundArt.Get())
 	{
 		Background->SetFlipbook(BackgroundArt);
 	}
 	
-	PlaySound(Scene->Music.Get());
+	if (USoundBase* Music = Scene->Music.Get())
+	{
+		PlaySound(Music);
+	}
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
-		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass, SpriteData.SpriteClass->GetFName());
+		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
 		Sprite->AssignVisualImageInfo(SpriteData.SpriteInfo);
 		Canvas->AddChildToCanvas(Sprite);
 		UCanvasPanelSlot* const SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
