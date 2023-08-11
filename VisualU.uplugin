@@ -18,10 +18,15 @@
 		{
 			"Name": "VisualU",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
+			"LoadingPhase": "PreDefault",
 			"PlatformAllowList": [
 				"Win64"
 			]
+		},
+		{
+			"Name": "VisualUEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [

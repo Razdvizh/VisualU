@@ -11,7 +11,7 @@ DEFINE_LOG_CATEGORY(LogVisualU);
 void FVisualUModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-	SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings"));
+	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings"));
 	SettingsSection = SettingsModule->RegisterSettings(
 		TEXT("Project"),
 		TEXT("Plugins"),
@@ -23,8 +23,9 @@ void FVisualUModule::StartupModule()
 
 void FVisualUModule::ShutdownModule()
 {
-	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-	// we call this function before unloading the module.
+	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings"));
+	SettingsModule->UnregisterSettings(TEXT("Project"), TEXT("Plugins"), TEXT("VisualUSettings"));
+	SettingsSection.Reset();
 }
 
 const UVisualUSettings* FVisualUModule::GetVisualSettings() const

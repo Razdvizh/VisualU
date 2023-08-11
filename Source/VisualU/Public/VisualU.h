@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Modules\ModuleManager.h"
 
-class ISettingsModule;
 class ISettingsSection;
 class UVisualUSettings;
 
@@ -37,11 +36,6 @@ public:
 	const UVisualUSettings* GetVisualSettings() const;
 
 private:
-	/// <summary>
-	/// Interface to engine's settings system.
-	/// </summary>
-	ISettingsModule* SettingsModule;
-
 	/// <summary>
 	/// Represents the VisualU settings section.
 	/// </summary>
