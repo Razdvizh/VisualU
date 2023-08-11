@@ -16,11 +16,14 @@ void FVisualUEditorModule::StartupModule()
 }
 
 void FVisualUEditorModule::ShutdownModule()
-{
-	IAssetTools& AssetTools = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools").Get();
+{	
+	if (FModuleManager::Get().IsModuleLoaded((TEXT("AssetTools"))))
+	{
+		IAssetTools& AssetTools = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools").Get();
 
-	AssetTools.UnregisterAssetTypeActions(VisualPaperSpriteAssetTypeActions.ToSharedRef());
-	VisualPaperSpriteAssetTypeActions.Reset();
+		AssetTools.UnregisterAssetTypeActions(VisualPaperSpriteAssetTypeActions.ToSharedRef());
+		VisualPaperSpriteAssetTypeActions.Reset();
+	}
 }
 
 #undef LOCTEXT_NAMESPACE
