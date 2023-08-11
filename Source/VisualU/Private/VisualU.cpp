@@ -24,8 +24,11 @@ void FVisualUModule::StartupModule()
 void FVisualUModule::ShutdownModule()
 {
 	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings"));
-	SettingsModule->UnregisterSettings(TEXT("Project"), TEXT("Plugins"), TEXT("VisualUSettings"));
-	SettingsSection.Reset();
+	if (SettingsModule)
+	{
+		SettingsModule->UnregisterSettings(TEXT("Project"), TEXT("Plugins"), TEXT("VisualUSettings"));
+		SettingsSection.Reset();
+	}
 }
 
 const UVisualUSettings* FVisualUModule::GetVisualSettings() const
