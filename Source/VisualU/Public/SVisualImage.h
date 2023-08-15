@@ -91,6 +91,8 @@ protected:
 	FORCEINLINE int32 GetSpriteIndex() const { return SpriteIndex; }
 
 public:
+	///Declared as virtual so subclasses can override them, but these methods are statically dispatched in the base class and all must be implemented
+	
 	///ConvertToBrush implementations
 	virtual bool IsResourceValid() const;
 
