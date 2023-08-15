@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/ObjectMacros.h"
-#include "Components/Widget.h"
+#include "VisualImageBase.h"
 #include "Engine/StreamableManager.h"
+#include "InfoAssignable.h"
 #include "VisualImage.generated.h"
 
 class UPaperFlipbook;
@@ -19,21 +20,19 @@ class SVisualImage;
 /// <see cref="UVisualImage">Visual Image</see> does not contain this struct and does not reflect it in any way.
 /// </remarks>
 USTRUCT(BlueprintType)
-struct VISUALU_API FVisualImageInfo
+struct VISUALU_API FVisualImageInfo : public FVisualInfo
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FVisualImageInfo() : ColorAndOpacity(ForceInit), 
-		DesiredScale(ForceInit), 
+	FVisualImageInfo() : ColorAndOpacity(ForceInit),
+		DesiredScale(ForceInit),
 		MirrorScale(ForceInit),
 		bAnimate(false),
-		FrameIndex(0) 
+		FrameIndex(0)
 	{
 
 	}
-
-	virtual ~FVisualImageInfo() {}
 
 	/// <see cref="UVisualImage::Flipbook"/>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
@@ -63,7 +62,7 @@ public:
 	/// Get a string representation of all fields.
 	/// </summary>
 	/// <returns>String of all fields</returns>
-	virtual FString ToString() const
+	virtual FString ToString() const override
 	{
 		return FString::Printf(TEXT("Expression: %s Color and Opacity: %s Desired Scale: %s Mirror Scale: %s Animate: %s Frame Index: %d"),
 			!Expression.IsNull() ? *Expression.GetAssetName() : TEXT("None"),
@@ -104,7 +103,7 @@ public:
 /// is called.
 /// </remarks>
 UCLASS(meta = (ToolTip = "Widget that can visualize sprite flipbooks either in animated or static state."))
-class VISUALU_API UVisualImage : public UWidget
+class VISUALU_API UVisualImage : public UVisualImageBase
 {
 	GENERATED_BODY()
 
@@ -291,13 +290,6 @@ protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
 	/// <summary>
-	/// Loads <paramref name="SoftFlipbook"/> resource and calls <paramref name="AfterLoadDelegate"/> after loading is completed.
-	/// </summary>
-	/// <param name="SoftFlipbook">Paper flipbook to load</param>
-	/// <param name="AfterLoadDelegate">Delegate to call after loading</param>
-	virtual void AsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FStreamableDelegate AfterLoadDelegate);
-
-	/// <summary>
 	/// Convertion for property binding implementation.
 	/// </summary>
 	/// <param name="InFlipbook">non-const paper flipbook slate attribute</param>
@@ -306,6 +298,6 @@ protected:
 
 	PROPERTY_BINDING_IMPLEMENTATION(FSlateColor, ColorAndOpacity);
 
-private:
+protected:
 	TSharedPtr<SVisualImage> VisualImageSlate;
 };

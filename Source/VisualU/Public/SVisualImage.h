@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation\CurveSequence.h"
-#include "Widgets\SLeafWidget.h"
+#include "Animation/CurveSequence.h"
+#include "SVisualImageBase.h"
 
 class UPaperFlipbook;
 class UPaperSprite;
@@ -13,16 +13,17 @@ class UPaperSprite;
 /// Slate widget that displays sprite flipbooks.
 /// </summary>
 /// <seealso cref="UVisualImage"/>
-class VISUALU_API SVisualImage : public SLeafWidget
+class VISUALU_API SVisualImage : public SVisualImageBase<SVisualImage>
 {
-	SLATE_DECLARE_WIDGET(SVisualImage, SLeafWidget)
+
+	SLATE_DECLARE_WIDGET(SVisualImage, SVisualImageBase<SVisualImage>)
 
 public:
 	SLATE_BEGIN_ARGS(SVisualImage) : _Animate(false), _SpriteIndex(0) {}
 
 		SLATE_ARGUMENT(bool, Animate)
 
-		SLATE_ARGUMENT(int, SpriteIndex)
+		SLATE_ARGUMENT(int32, SpriteIndex)
 
 		SLATE_ATTRIBUTE(const UPaperFlipbook*, Flipbook)
 
@@ -42,7 +43,7 @@ public:
 
 	void SetAnimate(bool IsAnimated);
 
-	void SetSpriteIndex(int Index);
+	void SetSpriteIndex(int32 Index);
 
 	void SetFlipbook(UPaperFlipbook* InFlipbook);
 
@@ -67,17 +68,12 @@ public:
 	void SetMirrorScale(const FScale2D& InMirrorScale);
 
 	UPaperSprite* GetCurrentSprite() const;
-
-	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
-
+	
 #if WITH_ACCESSIBILITY
 	virtual TSharedRef<FSlateAccessibleWidget> CreateAccessibleWidget() override;
 #endif
 
 protected:
-	/** Converts currently displayed sprite to a SlateBrush and returns it*/
-	FSlateBrush ConvertFlipbookToBrush() const;
-
 	virtual FVector2D ComputeDesiredSize(float) const override;
 
 	virtual bool ComputeVolatility() const override;
@@ -92,7 +88,26 @@ protected:
 
 	FORCEINLINE bool GetAnimate() const { return bAnimate; }
 
-	FORCEINLINE int GetSpriteIndex() const { return SpriteIndex; }
+	FORCEINLINE int32 GetSpriteIndex() const { return SpriteIndex; }
+
+public:
+	///ConvertToBrush implementations
+	virtual bool IsResourceValid() const;
+
+	virtual UObject* GetFinalResource() const;
+
+	virtual const FVector2D GetImageSize() const;
+	///~ConvertToBrush implementations
+
+	///OnPaint implementations
+	virtual const FLinearColor GetFinalColorAndOpacity(const FWidgetStyle& InWidgetStyle) const;
+
+	virtual void PreSlateDrawElementExtension() const;
+
+	virtual FGeometry MakeCustomGeometry(const FGeometry& AllotedGeometry) const;
+	///~OnPaint implementations
+
+	virtual void PostSlateDrawElementExtension() const;
 
 private:
 	FCurveSequence CurveSequence;
@@ -107,5 +122,5 @@ private:
 
 	bool bAnimate;
 
-	int SpriteIndex;
+	int32 SpriteIndex;
 };

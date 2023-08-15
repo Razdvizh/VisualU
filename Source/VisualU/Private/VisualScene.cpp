@@ -64,7 +64,7 @@ void UVisualScene::NativeOnInitialized()
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(64)"), Node);
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(67)"), Node);
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
@@ -221,7 +221,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneEnd.Broadcast();
 
 	Node.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(218)"), Node);
+	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(224)"), Node);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -234,7 +234,7 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 	ExhaustedScenes.Push(Node.Last());
 
 	TArray<FScenario*> Rows;
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(231)"), Rows);
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(237)"), Rows);
 	Node = Rows;
 
 	OnSceneEnd.Broadcast();
@@ -328,7 +328,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(325)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(331)"), Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 

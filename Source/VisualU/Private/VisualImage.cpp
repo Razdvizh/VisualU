@@ -10,7 +10,7 @@
 
 #define LOCTEXT_NAMESPACE "Visual U"
 
-UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) : UVisualImageBase(ObjectInitializer)
 {
 	ColorAndOpacity = FLinearColor::White;
 	DesiredScale = FVector2D::One();
@@ -21,14 +21,14 @@ UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) : Super(
 
 void UVisualImage::ReleaseSlateResources(bool bReleaseChildren)
 {
-	Super::ReleaseSlateResources(bReleaseChildren);
+	UVisualImageBase::ReleaseSlateResources(bReleaseChildren);
 
 	VisualImageSlate.Reset();
 }
 
 void UVisualImage::SynchronizeProperties()
 {
-	Super::SynchronizeProperties();
+	UVisualImageBase::SynchronizeProperties();
 
 	TAttribute<FSlateColor> ColorAndOpacityAttribute = PROPERTY_BINDING(FSlateColor, ColorAndOpacity);
 	TAttribute<const UPaperFlipbook*> FlipbookAttribute = OPTIONAL_BINDING_CONVERT(UPaperFlipbook*, Flipbook, const UPaperFlipbook*, ToFlipbook);
@@ -91,29 +91,6 @@ void UVisualImage::SetFlipbook(UPaperFlipbook* InFlipbook)
 	}
 }
 
-void UVisualImage::AsyncLoad(TSoftObjectPtr<UPaperFlipbook> SoftFlipbook, FStreamableDelegate AfterLoadDelegate)
-{
-	CancelAsyncLoad();
-
-	if (SoftFlipbook.IsValid())
-	{
-		AfterLoadDelegate.ExecuteIfBound();
-		return;
-	}
-
-	TWeakObjectPtr<UVisualImage> WeakThis = TWeakObjectPtr<UVisualImage>(this);
-	const FSoftObjectPath FlipbookPath = SoftFlipbook.ToSoftObjectPath();
-
-	FlipbookHandle = UAssetManager::GetStreamableManager().RequestAsyncLoad(FlipbookPath, [WeakThis, AfterLoadDelegate]()
-	{
-		if (WeakThis.IsValid())
-		{	
-			AfterLoadDelegate.ExecuteIfBound();
-		}
-
-	}, FStreamableManager::AsyncLoadHighPriority);
-}
-
 void UVisualImage::CancelAsyncLoad()
 {
 	if (FlipbookHandle.IsValid())
@@ -139,7 +116,7 @@ bool UVisualImage::IsFlipbookLoaded() const
 	{
 		return FlipbookHandle->HasLoadCompleted();
 	}
-	
+
 	return false;
 }
 
@@ -149,14 +126,14 @@ void UVisualImage::SetFlipbookAsync(TSoftObjectPtr<UPaperFlipbook> InFlipbook)
 	FStreamableDelegate OnFlipbookLoaded{};
 
 	OnFlipbookLoaded.BindLambda([WeakThis, InFlipbook]()
-	{
-		if (UVisualImage* Pinned = WeakThis.Get())
 		{
-			Pinned->SetFlipbook(InFlipbook.Get());
-		}
-	});
+			if (UVisualImage* Pinned = WeakThis.Get())
+			{
+				Pinned->SetFlipbook(InFlipbook.Get());
+			}
+		});
 
-	AsyncLoad(InFlipbook, OnFlipbookLoaded);
+	FlipbookHandle = AsyncLoad(InFlipbook.ToSoftObjectPath(), OnFlipbookLoaded, FStreamableManager::AsyncLoadHighPriority);
 }
 
 void UVisualImage::SetColorAndOpacity(const FLinearColor& InColorAndOpacity)
@@ -190,7 +167,7 @@ void UVisualImage::SetMirrorScale(const FVector2D& InMirrorScale)
 }
 
 const UPaperFlipbook* UVisualImage::ToFlipbook(TAttribute<UPaperFlipbook*> InFlipbook) const
-{	
+{
 	Flipbook = InFlipbook.Get();
 
 	return Flipbook;
@@ -209,7 +186,7 @@ UPaperSprite* UVisualImage::GetCurrentSprite() const
 #if WITH_EDITOR
 const FText UVisualImage::GetPaletteCategory()
 {
-	return LOCTEXT("Visual U", "Visual U");
+	return LOCTEXT("VisualUCategory", "Visual U");
 }
 #endif
 
