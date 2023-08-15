@@ -97,72 +97,41 @@ inline int32 SVisualImageBase<DerivedT>::OnPaint(const FPaintArgs& Args, const F
 template<class DerivedT>
 inline bool SVisualImageBase<DerivedT>::IsResourceValid() const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		return DerivedThis->IsResourceValid();
-	}
-
-	return false;
+	return static_cast<const DerivedT*>(this)->IsResourceValid();
 }
 
 template<class DerivedT>
 inline UObject* SVisualImageBase<DerivedT>::GetFinalResource() const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		return DerivedThis->GetFinalResource();
-	}
-
-	return nullptr;
+	return static_cast<const DerivedT*>(this)->GetFinalResource();
 }
 
 template<class DerivedT>
 inline const FVector2D SVisualImageBase<DerivedT>::GetImageSize() const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		return DerivedThis->GetImageSize();
-	}
-
-	return FVector2D(ForceInitToZero);
+	return static_cast<const DerivedT*>(this)->GetImageSize();
 }
 
 template<class DerivedT>
 inline const FLinearColor SVisualImageBase<DerivedT>::GetFinalColorAndOpacity(const FWidgetStyle& InWidgetStyle) const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		return DerivedThis->GetFinalColorAndOpacity(InWidgetStyle);
-	}
-
-	return FLinearColor(InWidgetStyle.GetColorAndOpacityTint());
+	return static_cast<const DerivedT*>(this)->GetFinalColorAndOpacity(InWidgetStyle);
 }
 
 template<class DerivedT>
 inline void SVisualImageBase<DerivedT>::PreSlateDrawElementExtension() const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		DerivedThis->PreSlateDrawElementExtension();
-	}
+	static_cast<const DerivedT*>(this)->PreSlateDrawElementExtension();
 }
 
 template<class DerivedT>
 inline FGeometry SVisualImageBase<DerivedT>::MakeCustomGeometry(const FGeometry& AllotedGeometry) const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		return DerivedThis->MakeCustomGeometry(AllotedGeometry);
-	}
-
-	return AllotedGeometry;
+	return static_cast<const DerivedT*>(this)->MakeCustomGeometry(AllotedGeometry);
 }
 
 template<class DerivedT>
 inline void SVisualImageBase<DerivedT>::PostSlateDrawElementExtension() const
 {
-	if (const DerivedT* DerivedThis = static_cast<const DerivedT*>(this))
-	{
-		DerivedThis->PostSlateDrawElementExtension();
-	}
+	static_cast<const DerivedT*>(this)->PostSlateDrawElementExtension();
 }
