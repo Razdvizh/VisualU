@@ -5,8 +5,33 @@
 #include "CoreMinimal.h"
 #include "SVisualImage.h"
 
-class VISUALU_API SBackgroundVisualImage : public SVisualImage
+class UMaterialInstanceDynamic;
+class UPaperFlipbook;
+class UPaperSprite;
+class UTexture;
+
+class VISUALU_API SBackgroundVisualImage final : public SVisualImage
 {
+public:
+	SBackgroundVisualImage();
+
+	void SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, bool bShouldAnimateTarget);
+
+	void SetTransitionState(bool IsTransitioning);
+
+	FORCEINLINE bool IsTransitioning() const { return bIsTransitioning; }
+
 private:
-	virtual void PostSlateDrawElementExtension() const override final;
+	virtual UObject* GetFinalResource() const override;
+
+	UPaperSprite* GetTargetSprite() const;
+
+private:
+	UMaterialInstanceDynamic* Transition;
+
+	UPaperFlipbook* Target;
+
+	bool bIsTransitioning;
+
+	bool bIsTargetAnimated;
 };

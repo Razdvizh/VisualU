@@ -33,6 +33,5 @@ class IInfoAssignable
 public:
 	virtual void AssignInfo(const FVisualInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignInfo, );
 
-	template<typename InfoType>
-	void GetInfo(InfoType& OutInfo) const PURE_VIRTUAL(IInfoAssignable::GetInfo, );
+	virtual void GetInfo(FVisualInfo& OutInfo) const PURE_VIRTUAL(IInfoAssignable::GetInfo, );
 };

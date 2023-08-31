@@ -78,6 +78,8 @@ protected:
 
 	virtual bool ComputeVolatility() const override;
 
+	FORCEINLINE FCurveSequence* GetCurveSequence() { return &CurveSequence; }
+
 	FORCEINLINE TSlateAttributeRef<const UPaperFlipbook*> GetFlipbook() const { return TSlateAttributeRef<const UPaperFlipbook*>(AsShared(), Flipbook); }
 
 	FORCEINLINE TSlateAttributeRef<FSlateColor> GetColorAndOpacity() const { return TSlateAttributeRef<FSlateColor>(AsShared(), ColorAndOpacity); }

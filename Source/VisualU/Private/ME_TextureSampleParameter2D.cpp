@@ -3,13 +3,16 @@
 
 
 #include "ME_TextureSampleParameter2D.h"
-
-#define LOCTEXT_NAMESPACE "Visual U"
+#include "VisualUSettings.h"
 
 UME_TextureSampleParameter2D::UME_TextureSampleParameter2D(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer), bIsSecondTransition(false)
+	: Super(ObjectInitializer), 
+	bIsSecondTransition(false)
 {
-	ParameterName = TEXT("Transition 1");
+	const UVisualUSettings* VisualSettings = GetDefault<UVisualUSettings>();
+	ParameterName = VisualSettings->AParameterName;
+	AParameterName = VisualSettings->AParameterName;
+	BParameterName = VisualSettings->BParameterName;
 }
 
 #if WITH_EDITOR
@@ -19,26 +22,24 @@ UME_TextureSampleParameter2D::UME_TextureSampleParameter2D(const FObjectInitiali
 
 		if (bIsSecondTransition)
 		{
-			OutCaptions.Emplace(LOCTEXT("UME_TextureSampleParameter2D_SecondTransition", "Transition 2").ToString());
+			OutCaptions.Emplace(BParameterName.ToString());
 		}
 		else
 		{
-			OutCaptions.Emplace(LOCTEXT("UME_TextureSampleParameter2D_FirstTransition", "Transition 1").ToString());
+			OutCaptions.Emplace(AParameterName.ToString());
 		}
 	}
 	void UME_TextureSampleParameter2D::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 	{
 		if (bIsSecondTransition)
 		{
-			ParameterName = TEXT("Transition 2");
+			ParameterName = BParameterName;
 		}
 		else
 		{
-			ParameterName = TEXT("Transition 1");
+			ParameterName = AParameterName;
 		}
 
 		Super::PostEditChangeProperty(PropertyChangedEvent);
 	}
 #endif
-
-#undef LOCTEXT_NAMESPACE

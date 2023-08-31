@@ -16,13 +16,20 @@ class UObjectLibrary;
 class UVisualSceneComponent;
 class UWidgetBlueprintGeneratedClass;
 class UMaterialInterface;
+class UBackgroundVisualImage;
+class UWidgetAnimation;
+class UUMGSequencePlayer;
+class UMaterialInterface;
 struct FAssetData;
+struct FTimerHandle;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStartEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEndEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneTransitionEndedEvent);
 
 /// <summary>
 /// Class that loads, visualizes and connects <see cref="FScenario">Scenarios</see> in the game.
@@ -141,6 +148,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
 	void ToNextScene();
 
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
+	void TransitionToNextScene();
+
+	void TransitionToNextScene(UWidgetAnimation* DrivingAnim);
+
 	/// <summary>
 	/// Visualize the previous <see cref="FScenario">scene</see> in the node.
 	/// </summary>
@@ -154,6 +166,8 @@ public:
 	/// <returns><c>true</c> if scene was visualized</returns>
 	/// \warning Only use this method on <see cref="FScenario">scenes</see> that was already seen by the player.
 	bool ToScene(const FScenario* Scene);
+
+	const FScenario* GetSceneAt(int32 Index);
 
 	/// <summary>
 	/// Jump to any exhausted scene.
@@ -192,11 +206,20 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
 
+	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	FOnSceneTransitionEndedEvent OnSceneTransitionEnded;
+
+	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneTransitionEndedEvent);
+	FOnNativeSceneTransitionEndedEvent OnNativeSceneTransitionEnded;
+
 protected:
+	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
+	UWidgetAnimation* Transition;
+
 	/// <summary>
 	/// Internal widget for scene background.
 	/// </summary>
-	UVisualImage* Background;
+	UBackgroundVisualImage* Background;
 
 	/// <summary>
 	/// Internal widget for scene canvas panel.
@@ -295,10 +318,18 @@ protected:
 	/// <param name="OutData">Array to be filled with data</param>
 	void GetScenesData(TArray<FAssetData>& OutData) const;
 
+	void PlayTransition(UWidgetAnimation* DrivingAnim);
+
+	void StopTransition() const;
+
 private:
 	void ConstructScene();
 
 	void LoadAndConstruct();
 
 	void SetCurrentScene(const FScenario* Scene);
+
+	FTimerHandle TransitionHandle;
+
+	FTimerDelegate OnTransitionEnd;
 };

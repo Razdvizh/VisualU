@@ -23,6 +23,10 @@ class VISUALU_API UME_TextureSampleParameter2D : public UMaterialExpressionTextu
 	UPROPERTY(EditAnywhere, Category = "Visual U")
 	bool bIsSecondTransition;
 
+	FName AParameterName;
+
+	FName BParameterName;
+
 #if WITH_EDITOR
 	virtual void GetCaption(TArray<FString>& OutCaptions) const override;
 

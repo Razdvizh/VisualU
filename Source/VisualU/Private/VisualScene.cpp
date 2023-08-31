@@ -13,9 +13,16 @@
 #include "VisualDefaults.h"
 #include "VisualSprite.h"
 #include "VisualImage.h"
+#include "BackgroundVisualImage.h"
+#include "Materials/MaterialInterface.h"
+#include "TransitionMaterialProxy.h"
+#include "TimerManager.h"
 #include "VisualUSettings.h"
 #include "Sound/SoundCue.h"
 #include "PaperFlipbook.h"
+
+//keep this below zero to avoid artifacts
+constexpr float TRANSITION_THRESHOLD = -0.005f;
 
 UVisualScene* UVisualScene::Get()
 {
@@ -30,9 +37,12 @@ UVisualScene* UVisualScene::Get()
 	return nullptr;
 }
 
-UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), SceneIndex(0)
+UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer) 
+	: Super(ObjectInitializer), 
+	SceneIndex(0),
+	BPScene()
 {
-	//`BPScene` is not initialized on purpose, it should be not set by default
+	OnNativeSceneTransitionEnded.AddUFunction(this, TEXT("ToNextScene"));
 }
 
 TSharedRef<SWidget> UVisualScene::RebuildWidget()
@@ -42,7 +52,7 @@ TSharedRef<SWidget> UVisualScene::RebuildWidget()
 
 	TSharedRef<SWidget> VisualSceneSlate = Super::RebuildWidget();
 
-	Background = WidgetTree->ConstructWidget<UVisualImage>(UVisualImage::StaticClass(), TEXT("Background"));
+	Background = WidgetTree->ConstructWidget<UBackgroundVisualImage>(UBackgroundVisualImage::StaticClass(), TEXT("Background"));
 	Canvas->AddChildToCanvas(Background);
 	UCanvasPanelSlot* const BackgroundSlot = Cast<UCanvasPanelSlot>(Background->Slot);
 	check(BackgroundSlot);
@@ -64,7 +74,7 @@ void UVisualScene::NativeOnInitialized()
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(67)"), Node);
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(77)"), Node);
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
@@ -83,16 +93,17 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 	check(Scene);
 
 	ClearSprites();
-
+	
 	if (UPaperFlipbook* BackgroundArt = Scene->Background.BackgroundArt.Get())
 	{
 		Background->SetFlipbook(BackgroundArt);
 	}
-	
+
 	if (USoundBase* Music = Scene->Music.Get())
 	{
 		PlaySound(Music);
 	}
+
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
 		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
@@ -159,6 +170,24 @@ void UVisualScene::ToNextScene()
 	OnNativeSceneStart.Broadcast();
 }
 
+void UVisualScene::TransitionToNextScene()
+{
+	if (ensureAlwaysMsgf(Transition, TEXT("Transition-driving animation is not found. Animation name should be \"Transition\" ")))
+	{
+		TransitionToNextScene(Transition);
+	}
+}
+
+void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
+{
+	ClearSprites();
+
+	if (!Background->IsTransitioning())
+	{
+		PlayTransition(DrivingAnim);
+	}
+}
+
 void UVisualScene::ToPreviousScene()
 {
 	if (!CanRetractScene())
@@ -210,6 +239,12 @@ bool UVisualScene::ToScene(const FScenario* Scene)
 	return isFound;
 }
 
+const FScenario* UVisualScene::GetSceneAt(int32 Index)
+{
+	check(Node.IsValidIndex(Index));
+	return Node[Index];
+}
+
 bool UVisualScene::ToScenario(const FScenario& Scenario)
 {
 	return ToScene(&Scenario);
@@ -220,8 +255,9 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
+	//\todo Check if Node resetting is necessary
 	Node.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(224)"), Node);
+	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(260)"), Node);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -233,8 +269,9 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 {
 	ExhaustedScenes.Push(Node.Last());
 
+	//\todo Check if Node resetting is necessary
 	TArray<FScenario*> Rows;
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(237)"), Rows);
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(274)"), Rows);
 	Node = Rows;
 
 	OnSceneEnd.Broadcast();
@@ -245,6 +282,31 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+}
+
+void UVisualScene::PlayTransition(UWidgetAnimation* DrivingAnim)
+{
+	checkf(DrivingAnim, TEXT("Attempted to start transition with invalid animation"));
+	const FScenario* CurrentScene = GetCurrentScene();
+	const TSoftObjectPtr<UMaterialInterface> SoftTransitionMaterial = CurrentScene->Background.TransitionMaterial;
+	if (!SoftTransitionMaterial.IsNull() && CanAdvanceScene())
+	{
+		const FScenario* NextScene = GetSceneAt(SceneIndex + 1);
+		bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArt.IsNull(), TEXT("You are trying to transition to an empty background"));
+		if (bIsTransitionPossible)
+		{
+			UPaperFlipbook* NextFlipbook = NextScene->Background.BackgroundArt.LoadSynchronous();
+			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.IsValid() ? SoftTransitionMaterial.Get() : SoftTransitionMaterial.LoadSynchronous();
+			UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
+			DynamicTransitionMaterial->SetFlags(RF_Transient);
+			
+			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
+			PlayAnimation(DrivingAnim, 0.f, 1, EUMGSequencePlayMode::Forward, 1.f, true);
+
+			OnTransitionEnd.BindUObject(this, &UVisualScene::StopTransition);
+			GetWorld()->GetTimerManager().SetTimer(TransitionHandle, OnTransitionEnd, DrivingAnim->GetEndTime() + TRANSITION_THRESHOLD, false);
+		}
+	}
 }
 
 void UVisualScene::CancelSceneLoading()
@@ -328,7 +390,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(331)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(393)"), Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 
@@ -361,6 +423,14 @@ void UVisualScene::GetScenesData(TArray<FAssetData>& OutData) const
 	{
 		AssetRegistryModule->Get().GetAssets(Filter, OutData);
 	}
+}
+
+void UVisualScene::StopTransition() const
+{
+	Background->SetTransitionState(false);
+
+	OnSceneTransitionEnded.Broadcast();
+	OnNativeSceneTransitionEnded.Broadcast();
 }
 
 void UVisualScene::ConstructScene()

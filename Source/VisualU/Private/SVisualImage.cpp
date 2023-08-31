@@ -165,11 +165,6 @@ bool SVisualImage::ComputeVolatility() const
 	return Super::ComputeVolatility() || CurveSequence.IsPlaying() || bAnimate;
 }
 
-//int32 SVisualImage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
-//{
-//	return Super::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
-//}
-
 bool SVisualImage::IsResourceValid() const
 {
 	return Flipbook.Get() != nullptr;

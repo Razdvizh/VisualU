@@ -58,4 +58,10 @@ public:
 	/// </summary>
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "A character which, in a pair, would enclose a metacharacter"))
 	FString PairCharacter;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transitions")
+	FName AParameterName;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transitions")
+	FName BParameterName;
 };

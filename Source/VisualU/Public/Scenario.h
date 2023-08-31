@@ -285,6 +285,7 @@ public:
 		}
 	}
 
+	/// \todo check if it can be made blueprintable
 	/// <summary>
 	/// Checks whether or not this scene has at least one <see cref="UVisualChoice">Visual Choice</see>.
 	/// </summary>
