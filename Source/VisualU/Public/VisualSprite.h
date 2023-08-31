@@ -34,7 +34,7 @@ public:
 	/// the down most will be the last). It will continue assigning fields in this manner until there is no <see cref="UVisualImage">Visual images</see> 
 	/// in the tree. Any extra <c>FVisualImageInfo</c>s will be ignored.
 	/// </remarks>
-	/// \image html AssignVisualInfo_default.png
+	/// \image html AssignSpriteInfo_default.png
 	UFUNCTION(BlueprintCallable, Category = "Visual Sprite", meta = (ToolTip = "Set the desired fields for the Visual images that this Visual Sprite has."))
-	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo);
+	virtual void AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo);
 };

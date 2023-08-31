@@ -107,7 +107,7 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
 		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
-		Sprite->AssignVisualImageInfo(SpriteData.SpriteInfo);
+		Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
 		Canvas->AddChildToCanvas(Sprite);
 		UCanvasPanelSlot* const SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
 		SpriteSlot->SetZOrder(SpriteData.ZOrder);
@@ -424,7 +424,6 @@ void UVisualScene::StopTransition() const
 {
 	Background->SetTransitionState(false);
 
-	OnSceneTransitionEnded.Broadcast();
 	OnNativeSceneTransitionEnded.Broadcast();
 }
 

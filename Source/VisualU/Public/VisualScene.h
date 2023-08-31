@@ -29,8 +29,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEndEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneTransitionEndedEvent);
-
 /// <summary>
 /// Class that loads, visualizes and connects <see cref="FScenario">Scenarios</see> in the game.
 /// </summary>
@@ -198,9 +196,6 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
-
-	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
-	FOnSceneTransitionEndedEvent OnSceneTransitionEnded;
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneTransitionEndedEvent);
 	FOnNativeSceneTransitionEndedEvent OnNativeSceneTransitionEnded;

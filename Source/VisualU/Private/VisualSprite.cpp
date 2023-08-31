@@ -13,7 +13,7 @@ UVisualSprite::UVisualSprite(const FObjectInitializer& ObjectInitializer) : Supe
 
 }
 
-void UVisualSprite::AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo)
+void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
 	if (InInfo.IsEmpty())
 	{

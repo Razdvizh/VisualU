@@ -28,7 +28,7 @@ public:
 	void SetVisualScene(UVisualScene* Scene);
 	
 	/// \copydoc UVisualSprite
-	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo) override;
+	virtual void AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo) override;
 
 	/// <summary>
 	/// Sets the provided node as active for operations inside the <see cref="UVisualScene">Visual Scene</see>.
