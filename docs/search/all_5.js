@@ -8,8 +8,10 @@ var searchData=
   ['frameindex_5',['FrameIndex',['../struct_f_visual_image_info.html#ad519ce6516a1b84ff031a5adc9c9d5a6',1,'FVisualImageInfo::FrameIndex'],['../class_u_visual_image.html#ab45c874fa35b2539fde66814a1f16d28',1,'UVisualImage::FrameIndex']]],
   ['fscenario_6',['FScenario',['../struct_f_scenario.html',1,'']]],
   ['fsprite_7',['FSprite',['../struct_f_sprite.html',1,'']]],
-  ['fvisualanchors_8',['FVisualAnchors',['../struct_f_visual_anchors.html',1,'']]],
-  ['fvisualimageinfo_9',['FVisualImageInfo',['../struct_f_visual_image_info.html',1,'']]],
-  ['fvisualmargin_10',['FVisualMargin',['../struct_f_visual_margin.html',1,'']]],
-  ['fvisualumodule_11',['FVisualUModule',['../class_f_visual_u_module.html',1,'']]]
+  ['ftransitionmaterialproxy_8',['FTransitionMaterialProxy',['../class_f_transition_material_proxy.html',1,'']]],
+  ['fvisualanchors_9',['FVisualAnchors',['../struct_f_visual_anchors.html',1,'']]],
+  ['fvisualimageinfo_10',['FVisualImageInfo',['../struct_f_visual_image_info.html',1,'']]],
+  ['fvisualinfo_11',['FVisualInfo',['../struct_f_visual_info.html',1,'']]],
+  ['fvisualmargin_12',['FVisualMargin',['../struct_f_visual_margin.html',1,'']]],
+  ['fvisualumodule_13',['FVisualUModule',['../class_f_visual_u_module.html',1,'']]]
 ];

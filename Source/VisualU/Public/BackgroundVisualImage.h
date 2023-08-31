@@ -22,12 +22,10 @@ public:
 
 	UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable)
 	void SetTransitionState(bool IsTransitioning);
 	
 	bool IsTransitioning() const;
 
-	UFUNCTION(BlueprintCallable)
 	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, bool bShouldAnimateTarget);
 
 protected:

@@ -128,10 +128,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaa36ac1089e04212b3769fac572348c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#aaa36ac1089e04212b3769fac572348c0">CancelSceneLoading</a> ()</td></tr>
 <tr class="memdesc:aaa36ac1089e04212b3769fac572348c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases the handle for the assets of the current scene.  <br /></td></tr>
 <tr class="separator:aaa36ac1089e04212b3769fac572348c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a743db65b9231769bc1c373d113ad1b29"><td class="memItemLeft" align="right" valign="top">const FText&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a743db65b9231769bc1c373d113ad1b29">GetLine</a> () const</td></tr>
-<tr class="separator:a743db65b9231769bc1c373d113ad1b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25ad081fed284162dc3d254e85b08b09"><td class="memItemLeft" align="right" valign="top">const FText&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a25ad081fed284162dc3d254e85b08b09">GetAuthor</a> () const</td></tr>
-<tr class="separator:a25ad081fed284162dc3d254e85b08b09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b7bf1263893c0c49246f84265b399ed"><td class="memItemLeft" align="right" valign="top"><a id="a5b7bf1263893c0c49246f84265b399ed" name="a5b7bf1263893c0c49246f84265b399ed"></a>
 const <a class="el" href="struct_f_scenario.html">FScenario</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>GetCurrentScene</b> () const</td></tr>
 <tr class="memdesc:a5b7bf1263893c0c49246f84265b399ed"><td class="mdescLeft">&#160;</td><td class="mdescRight"><dl class="section return"><dt>Returns</dt><dd>Currently visualized <a class="el" href="struct_f_scenario.html">scene</a></dd></dl>
@@ -145,6 +141,9 @@ const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;&#160;</td>
 <tr class="memitem:ac89ba6d5e967db9f24bf0416ea1e5d9b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#ac89ba6d5e967db9f24bf0416ea1e5d9b">IsWithChoice</a> () const</td></tr>
 <tr class="memdesc:ac89ba6d5e967db9f24bf0416ea1e5d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not currently visualized scene has a <a class="el" href="class_u_visual_choice.html">choice sprite</a>.  <br /></td></tr>
 <tr class="separator:ac89ba6d5e967db9f24bf0416ea1e5d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87db93cc335bce2bd2025752a5f6ab82"><td class="memItemLeft" align="right" valign="top"><a id="a87db93cc335bce2bd2025752a5f6ab82" name="a87db93cc335bce2bd2025752a5f6ab82"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsWithTransition</b> () const</td></tr>
+<tr class="separator:a87db93cc335bce2bd2025752a5f6ab82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad70088bc7bda76c09ebb747dab406867"><td class="memItemLeft" align="right" valign="top"><a id="ad70088bc7bda76c09ebb747dab406867" name="ad70088bc7bda76c09ebb747dab406867"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsSceneLoading</b> () const</td></tr>
 <tr class="memdesc:ad70088bc7bda76c09ebb747dab406867"><td class="mdescLeft">&#160;</td><td class="mdescRight"><dl class="section return"><dt>Returns</dt><dd><code>true</code> if loading of assets is still in progress</dd></dl>
@@ -175,6 +174,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsSceneLoaded</b> () 
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ToNextScene</b> ()</td></tr>
 <tr class="memdesc:af0eabb48c37a6f8932787e2b0b1078d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize the next <a class="el" href="struct_f_scenario.html">scene</a> in the node. <br /></td></tr>
 <tr class="separator:af0eabb48c37a6f8932787e2b0b1078d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd9683634f1eb2dbc70931586fb2828e"><td class="memItemLeft" align="right" valign="top"><a id="acd9683634f1eb2dbc70931586fb2828e" name="acd9683634f1eb2dbc70931586fb2828e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>TransitionToNextScene</b> ()</td></tr>
+<tr class="separator:acd9683634f1eb2dbc70931586fb2828e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae64fb03f85c64094d7060e5a5ad9fe2b"><td class="memItemLeft" align="right" valign="top"><a id="ae64fb03f85c64094d7060e5a5ad9fe2b" name="ae64fb03f85c64094d7060e5a5ad9fe2b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>TransitionToNextScene</b> (UWidgetAnimation *DrivingAnim)</td></tr>
+<tr class="separator:ae64fb03f85c64094d7060e5a5ad9fe2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dd60e038c6395cd0041d97e606722e0"><td class="memItemLeft" align="right" valign="top"><a id="a2dd60e038c6395cd0041d97e606722e0" name="a2dd60e038c6395cd0041d97e606722e0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> ()</td></tr>
 <tr class="memdesc:a2dd60e038c6395cd0041d97e606722e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize the previous <a class="el" href="struct_f_scenario.html">scene</a> in the node. <br /></td></tr>
@@ -182,6 +187,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> (
 <tr class="memitem:a452b256f6841c6b61336866acfa75508"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a452b256f6841c6b61336866acfa75508">ToScene</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene)</td></tr>
 <tr class="memdesc:a452b256f6841c6b61336866acfa75508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
 <tr class="separator:a452b256f6841c6b61336866acfa75508"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa93824b3f7d1c5a815f54a7a27a4fa4"><td class="memItemLeft" align="right" valign="top"><a id="aaa93824b3f7d1c5a815f54a7a27a4fa4" name="aaa93824b3f7d1c5a815f54a7a27a4fa4"></a>
+const <a class="el" href="struct_f_scenario.html">FScenario</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>GetSceneAt</b> (int32 Index)</td></tr>
+<tr class="separator:aaa93824b3f7d1c5a815f54a7a27a4fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#abbbd6f8c0345901cb33a7eb32621a8ea">ToScenario</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Scenario)</td></tr>
 <tr class="memdesc:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
 <tr class="separator:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,6 +205,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> (
 <tr class="memitem:a36c390a0124d5d483467c591951666fd"><td class="memItemLeft" align="right" valign="top"><a id="a36c390a0124d5d483467c591951666fd" name="a36c390a0124d5d483467c591951666fd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>DECLARE_MULTICAST_DELEGATE</b> (FOnNativeSceneLoadedEvent)</td></tr>
 <tr class="separator:a36c390a0124d5d483467c591951666fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81fc7ccc4e6c1d77cc6ac1e8b93899d7"><td class="memItemLeft" align="right" valign="top"><a id="a81fc7ccc4e6c1d77cc6ac1e8b93899d7" name="a81fc7ccc4e6c1d77cc6ac1e8b93899d7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>DECLARE_MULTICAST_DELEGATE</b> (FOnNativeSceneTransitionEndedEvent)</td></tr>
+<tr class="separator:a81fc7ccc4e6c1d77cc6ac1e8b93899d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -224,11 +235,17 @@ FOnSceneLoadedEvent&#160;</td><td class="memItemRight" valign="bottom"><b>OnScen
 <tr class="memitem:a42b381803c1d018c416b024a430c3f5a"><td class="memItemLeft" align="right" valign="top"><a id="a42b381803c1d018c416b024a430c3f5a" name="a42b381803c1d018c416b024a430c3f5a"></a>
 FOnNativeSceneLoadedEvent&#160;</td><td class="memItemRight" valign="bottom"><b>OnNativeSceneLoaded</b></td></tr>
 <tr class="separator:a42b381803c1d018c416b024a430c3f5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23ee82ffa873864235b95a3683367517"><td class="memItemLeft" align="right" valign="top"><a id="a23ee82ffa873864235b95a3683367517" name="a23ee82ffa873864235b95a3683367517"></a>
+FOnSceneTransitionEndedEvent&#160;</td><td class="memItemRight" valign="bottom"><b>OnSceneTransitionEnded</b></td></tr>
+<tr class="separator:a23ee82ffa873864235b95a3683367517"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a362d20376f336b413db17732d915d0c9"><td class="memItemLeft" align="right" valign="top"><a id="a362d20376f336b413db17732d915d0c9" name="a362d20376f336b413db17732d915d0c9"></a>
+FOnNativeSceneTransitionEndedEvent&#160;</td><td class="memItemRight" valign="bottom"><b>OnNativeSceneTransitionEnded</b></td></tr>
+<tr class="separator:a362d20376f336b413db17732d915d0c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:aabdcec558ff71a30e1942ee7613b539e"><td class="memItemLeft" align="right" valign="top">virtual TSharedRef&lt; SWidget &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#aabdcec558ff71a30e1942ee7613b539e">RebuildWidget</a> () override</td></tr>
-<tr class="memdesc:aabdcec558ff71a30e1942ee7613b539e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs <a class="el" href="class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5" title="Internal widget for scene background.">UVisualScene::Background</a> and <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>.  <br /></td></tr>
+<tr class="memdesc:aabdcec558ff71a30e1942ee7613b539e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs <a class="el" href="class_u_visual_scene.html#a63592050313d95f75055c76cb1541ecc" title="Internal widget for scene background.">UVisualScene::Background</a> and <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>.  <br /></td></tr>
 <tr class="separator:aabdcec558ff71a30e1942ee7613b539e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa14da2d15e33c04955ab42802a55a5bf"><td class="memItemLeft" align="right" valign="top"><a id="aa14da2d15e33c04955ab42802a55a5bf" name="aa14da2d15e33c04955ab42802a55a5bf"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeOnInitialized</b> () override</td></tr>
@@ -252,13 +269,22 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeOnIniti
 <tr class="memitem:abfa981f87162f8ad79ae5bdd716076fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#abfa981f87162f8ad79ae5bdd716076fe">GetScenesData</a> (TArray&lt; FAssetData &gt; &amp;OutData) const</td></tr>
 <tr class="memdesc:abfa981f87162f8ad79ae5bdd716076fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gathers asset data of all Scenario Data Tables using Asset Registry.  <br /></td></tr>
 <tr class="separator:abfa981f87162f8ad79ae5bdd716076fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fe395b8e36109171e83c7ee45a8845f"><td class="memItemLeft" align="right" valign="top"><a id="a8fe395b8e36109171e83c7ee45a8845f" name="a8fe395b8e36109171e83c7ee45a8845f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>PlayTransition</b> (UWidgetAnimation *DrivingAnim)</td></tr>
+<tr class="separator:a8fe395b8e36109171e83c7ee45a8845f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1d34587d10be09bfb7adf5a1af790d3"><td class="memItemLeft" align="right" valign="top"><a id="aa1d34587d10be09bfb7adf5a1af790d3" name="aa1d34587d10be09bfb7adf5a1af790d3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>StopTransition</b> () const</td></tr>
+<tr class="separator:aa1d34587d10be09bfb7adf5a1af790d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:af1024e42eda045fc887a091ad91536a5"><td class="memItemLeft" align="right" valign="top"><a id="af1024e42eda045fc887a091ad91536a5" name="af1024e42eda045fc887a091ad91536a5"></a>
-<a class="el" href="class_u_visual_image.html">UVisualImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>Background</b></td></tr>
-<tr class="memdesc:af1024e42eda045fc887a091ad91536a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal widget for scene background. <br /></td></tr>
-<tr class="separator:af1024e42eda045fc887a091ad91536a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33d829aa8ca8f461256186033a327aaf"><td class="memItemLeft" align="right" valign="top"><a id="a33d829aa8ca8f461256186033a327aaf" name="a33d829aa8ca8f461256186033a327aaf"></a>
+UWidgetAnimation *&#160;</td><td class="memItemRight" valign="bottom"><b>Transition</b></td></tr>
+<tr class="separator:a33d829aa8ca8f461256186033a327aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63592050313d95f75055c76cb1541ecc"><td class="memItemLeft" align="right" valign="top"><a id="a63592050313d95f75055c76cb1541ecc" name="a63592050313d95f75055c76cb1541ecc"></a>
+<a class="el" href="class_u_background_visual_image.html">UBackgroundVisualImage</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>Background</b></td></tr>
+<tr class="memdesc:a63592050313d95f75055c76cb1541ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal widget for scene background. <br /></td></tr>
+<tr class="separator:a63592050313d95f75055c76cb1541ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a761703d591f98632e05bfa35e6ed260c"><td class="memItemLeft" align="right" valign="top">UCanvasPanel *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c">Canvas</a></td></tr>
 <tr class="memdesc:a761703d591f98632e05bfa35e6ed260c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal widget for scene canvas panel.  <br /></td></tr>
 <tr class="separator:a761703d591f98632e05bfa35e6ed260c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -401,44 +427,6 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 </div>
 </div>
-<a id="a25ad081fed284162dc3d254e85b08b09" name="a25ad081fed284162dc3d254e85b08b09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25ad081fed284162dc3d254e85b08b09">&#9670;&#160;</a></span>GetAuthor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const FText UVisualScene::GetAuthor </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>let the user access this field through scenario <dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_f_scenario.html#aa19a22eb73a6621702d111cd47bb6295">Author</a> of the current scene</dd></dl>
-</dd></dl>
-
-</div>
-</div>
-<a id="a743db65b9231769bc1c373d113ad1b29" name="a743db65b9231769bc1c373d113ad1b29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a743db65b9231769bc1c373d113ad1b29">&#9670;&#160;</a></span>GetLine()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const FText UVisualScene::GetLine </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>let the user access this field through scenario <dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_f_scenario.html#acff637bca9811d06a4e7074401881754">Line</a> of the current scene</dd></dl>
-</dd></dl>
-
-</div>
-</div>
 <a id="abfa981f87162f8ad79ae5bdd716076fe" name="abfa981f87162f8ad79ae5bdd716076fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abfa981f87162f8ad79ae5bdd716076fe">&#9670;&#160;</a></span>GetScenesData()</h2>
 
@@ -464,7 +452,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div><div class="memdoc">
 
 <p>Gathers asset data of all Scenario Data Tables using Asset Registry. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>move this to the VisualUBlueprintStatics </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>move this to the VisualUBlueprintStatics </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">OutData</td><td>Array to be filled with data</td></tr>
@@ -656,7 +644,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div><div class="memdoc">
 
 <p>Outputs a friendly representation of scene data to the log. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>move this to the VisualUBlueprintStatics </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>move this to the VisualUBlueprintStatics </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">InScenesData</td><td>Data to print to the log</td></tr>
@@ -689,7 +677,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </table>
 </div><div class="memdoc">
 
-<p>Constructs <a class="el" href="class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5" title="Internal widget for scene background.">UVisualScene::Background</a> and <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>. </p>
+<p>Constructs <a class="el" href="class_u_visual_scene.html#a63592050313d95f75055c76cb1541ecc" title="Internal widget for scene background.">UVisualScene::Background</a> and <a class="el" href="class_u_visual_scene.html#a761703d591f98632e05bfa35e6ed260c" title="Internal widget for scene canvas panel.">UVisualScene::Canvas</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>Underlying slate widget</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Do not add any widgets to the Widget tree. </dd></dl>
 
@@ -825,7 +813,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div><div class="memdoc">
 
 <p>Internal widget for scene canvas panel. </p>
-<p>All <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> and <a class="el" href="class_u_visual_scene.html#af1024e42eda045fc887a091ad91536a5" title="Internal widget for scene background.">UVisualScene::Background</a> are children of this panel widget. </p>
+<p>All <a class="el" href="class_u_visual_sprite.html">Visual Sprites</a> and <a class="el" href="class_u_visual_scene.html#a63592050313d95f75055c76cb1541ecc" title="Internal widget for scene background.">UVisualScene::Background</a> are children of this panel widget. </p>
 
 </div>
 </div>

@@ -10,6 +10,5 @@ var searchData=
   ['clearsprites_7',['ClearSprites',['../class_u_visual_scene.html#a141810adab4d2c16a2fb15ce11650879',1,'UVisualScene']]],
   ['colorandopacity_8',['ColorAndOpacity',['../struct_f_visual_image_info.html#ade9016ed50378903d2ce419b368a706e',1,'FVisualImageInfo::ColorAndOpacity'],['../class_u_visual_image.html#a608a5a0dcec36f660fc09c29d4bf1396',1,'UVisualImage::ColorAndOpacity']]],
   ['colorandopacitydelegate_9',['ColorAndOpacityDelegate',['../class_u_visual_image.html#ab260f494159af5eb2c19d7c2d1469e7d',1,'UVisualImage']]],
-  ['constructscene_10',['ConstructScene',['../class_u_visual_scene.html#a22140df659c7bc6725436d84e6ff85dc',1,'UVisualScene']]],
-  ['convertflipbooktobrush_11',['ConvertFlipbookToBrush',['../class_s_visual_image.html#aec46ba143ab8cd7a8c6b539c7cc289f2',1,'SVisualImage']]]
+  ['constructscene_10',['ConstructScene',['../class_u_visual_scene.html#a22140df659c7bc6725436d84e6ff85dc',1,'UVisualScene']]]
 ];

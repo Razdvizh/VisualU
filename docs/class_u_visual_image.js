@@ -1,6 +1,5 @@
 var class_u_visual_image =
 [
-    [ "AsyncLoad", "class_u_visual_image.html#a49310aa237ab3015000489d6ef5fb0b1", null ],
     [ "CancelAsyncLoad", "class_u_visual_image.html#aff2c18c582102ae219d1416446d1d2e4", null ],
     [ "GetColorAndOpacity", "class_u_visual_image.html#a922a46f495a6118ffd4a721fb039bc9f", null ],
     [ "GetCurrentSprite", "class_u_visual_image.html#af00874e90a3f303f82dae8b157d8c154", null ],

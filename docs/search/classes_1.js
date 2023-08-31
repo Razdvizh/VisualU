@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['svisualimage_0',['SVisualImage',['../class_s_visual_image.html',1,'']]],
-  ['svisualsocket_1',['SVisualSocket',['../class_s_visual_socket.html',1,'']]]
+  ['iasyncloadable_0',['IAsyncLoadable',['../class_i_async_loadable.html',1,'']]],
+  ['iinfoassignable_1',['IInfoAssignable',['../class_i_info_assignable.html',1,'']]]
 ];
