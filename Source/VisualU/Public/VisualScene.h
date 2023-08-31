@@ -79,16 +79,6 @@ public:
 	/// If no other handles to these assets exist, assets will be unloaded from memory.
 	/// </remarks>
 	void CancelSceneLoading();
-	
-	/// \todo let the user access this field through scenario
-	/// <returns><see cref="FScenario::Line">Line</see> of the current scene</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Line of the current scene"))
-	const FText GetLine() const;
-
-	/// \todo let the user access this field through scenario
-	/// <returns><see cref="FScenario::Author">Author</see> of the current scene</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Author of the current scene"))
-	const FText GetAuthor() const;
 
 	/// <returns>Currently visualized <see cref="FScenario">scene</see></returns>
 	const FScenario* GetCurrentScene() const;
@@ -103,6 +93,9 @@ public:
 	/// <returns><c>true</c> if current scene has a <see cref="UVisualChoice">choice</see></returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
 	bool IsWithChoice() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario")
+	bool IsWithTransition() const;
 
 	/// <returns><c>true</c> if loading of assets is still in progress</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))

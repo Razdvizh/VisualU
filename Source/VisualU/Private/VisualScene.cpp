@@ -301,7 +301,7 @@ void UVisualScene::PlayTransition(UWidgetAnimation* DrivingAnim)
 			DynamicTransitionMaterial->SetFlags(RF_Transient);
 			
 			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
-			PlayAnimation(DrivingAnim, 0.f, 1, EUMGSequencePlayMode::Forward, 1.f, true);
+			PlayAnimation(DrivingAnim, /*StartAtTime=*/0.f, /*LoopsToPlay=*/1, EUMGSequencePlayMode::Forward, /*PlaybackSpeed=*/1.f, /*RestoreState=*/true);
 
 			OnTransitionEnd.BindUObject(this, &UVisualScene::StopTransition);
 			GetWorld()->GetTimerManager().SetTimer(TransitionHandle, OnTransitionEnd, DrivingAnim->GetEndTime() + TRANSITION_THRESHOLD, false);
@@ -358,16 +358,6 @@ bool UVisualScene::IsScenarioExhausted(const FScenario& Scenario) const
 	return IsSceneExhausted(&Scenario);
 }
 
-const FText UVisualScene::GetLine() const
-{
-	return Node[SceneIndex]->Line;
-}
-
-const FText UVisualScene::GetAuthor() const
-{
-	return Node[SceneIndex]->Author;
-}
-
 const FScenario* UVisualScene::GetCurrentScene() const
 {
 	return Node[SceneIndex];
@@ -381,6 +371,11 @@ const FScenario& UVisualScene::GetCurrentScenario() const
 bool UVisualScene::IsWithChoice() const
 {
 	return GetCurrentScene()->hasChoice();
+}
+
+bool UVisualScene::IsWithTransition() const
+{
+	return GetCurrentScene()->hasTransition();
 }
 
 void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
