@@ -8,6 +8,7 @@
 #include "VisualDefaults.h"
 #include "VisualImage.h"
 #include "VisualChoice.h"
+#include "InfoAssignable.h"
 #include "Scenario.generated.h"
 
 class UPaperFlipbook;
@@ -19,7 +20,7 @@ class USoundCue;
 /// in the <see cref="UVisualScene">Visual Scene</see>.
 /// </summary>
 USTRUCT(BlueprintType)
-struct VISUALU_API FSprite
+struct FSprite
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -52,6 +53,9 @@ public:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite's Z coordinate (a.k.a layer) in Canvas Panel"))
 	int32 ZOrder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	FString TransitionAnimationName;
 
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
@@ -109,7 +113,7 @@ public:
 /// Polymorphic struct that describes what background to display and what effect to use for transition.
 /// </summary>
 USTRUCT(BlueprintType)
-struct VISUALU_API FBackground
+struct FBackground
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -320,7 +324,16 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(323)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(327)"), Rows);
 		Rows.Find(this, Index);
 	}
+};
+
+USTRUCT(BlueprintType)
+struct FScenarioInfo : public FVisualInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+	FScenario Scenario; //\todo Add fields
 };

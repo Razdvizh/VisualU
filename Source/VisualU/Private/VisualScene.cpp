@@ -385,7 +385,7 @@ void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(393)"), Rows);
+		DataTable->GetAllRows(TEXT("VisualScene.cpp(388)"), Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 

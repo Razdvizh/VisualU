@@ -20,7 +20,7 @@ class SVisualImage;
 /// <see cref="UVisualImage">Visual Image</see> does not contain this struct and does not reflect it in any way.
 /// </remarks>
 USTRUCT(BlueprintType)
-struct VISUALU_API FVisualImageInfo : public FVisualInfo
+struct FVisualImageInfo : public FVisualInfo
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -35,27 +35,27 @@ public:
 	}
 
 	/// <see cref="UVisualImage::Flipbook"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	TSoftObjectPtr<UPaperFlipbook> Expression;
 
 	/// <see cref="UVisualImage::ColorAndOpacity"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	FLinearColor ColorAndOpacity;
 
 	/// <see cref="UVisualImage::DesiredScale"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	FVector2D DesiredScale;
 
 	/// <see cref="UVisualImage::MirrorScale"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	FVector2D MirrorScale;
 
 	/// <see cref="UVisualImage::bAnimate"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	bool bAnimate;
 
 	/// <see cref="UVisualImage::FrameIndex"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	int32 FrameIndex;
 
 	/// <summary>

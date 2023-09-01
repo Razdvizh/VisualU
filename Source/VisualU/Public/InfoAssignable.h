@@ -6,6 +6,10 @@
 #include "UObject/Interface.h"
 #include "InfoAssignable.generated.h"
 
+struct FVisualImageInfo;
+struct FScenarioInfo;
+struct FVisualBackgroundImageInfo;
+
 USTRUCT(BlueprintInternalUseOnly)
 struct FVisualInfo
 {
@@ -31,7 +35,10 @@ class IInfoAssignable
 
 		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void AssignInfo(const FVisualInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignInfo, );
+	virtual void AssignVisualImageInfo(const FVisualImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualImageInfo, );
 
-	virtual void GetInfo(FVisualInfo& OutInfo) const PURE_VIRTUAL(IInfoAssignable::GetInfo, );
+	virtual void AssignScenarioInfo(const FScenarioInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignScenarioInfo, );
+
+	virtual void AssignVisualBackgroundImageInfo(const FVisualBackgroundImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualBackgroundImageInfo, );
+
 };

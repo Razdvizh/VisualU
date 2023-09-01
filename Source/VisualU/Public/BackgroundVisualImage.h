@@ -12,7 +12,15 @@ class UMaterialInstanceDynamic;
 class UPaperFlipbook;
 class UTexture;
 
-UCLASS(NotBlueprintable)
+USTRUCT(BlueprintType)
+struct FVisualBackgroundImageInfo : public FVisualImageInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	//\todo add fields
+};
+
+UCLASS()
 class UBackgroundVisualImage final : public UVisualImage
 {
 	GENERATED_BODY()
