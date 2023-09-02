@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VisualScene.h"
-#include "AssetRegistryModule.h"
 #include "Engine/StreamableManager.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/TextBlock.h"
@@ -38,9 +37,11 @@ UVisualScene* UVisualScene::Get()
 }
 
 UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer) 
-	: Super(ObjectInitializer), 
-	SceneIndex(0),
-	BPScene()
+	: Super(ObjectInitializer),
+	Transition(nullptr),
+	Background(nullptr),
+	Canvas(nullptr),
+	SceneIndex(0)
 {
 	OnNativeSceneTransitionEnded.AddUFunction(this, TEXT("ToNextScene"));
 }
@@ -66,15 +67,11 @@ void UVisualScene::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	if (GetWidgetTreeOwningClass() != nullptr)
-	{
-		BPScene = GetWidgetTreeOwningClass();
-	}
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(77)"), Node);
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(72)"), Node);
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
@@ -254,10 +251,13 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 {
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
+	
+	if (Scene->Owner != GetSceneAt(0)->Owner)
+	{
+		Node.Empty();
+		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(258)"), Node);
+	}
 
-	//\todo Check if Node resetting is necessary
-	Node.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(260)"), Node);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -269,10 +269,8 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 {
 	ExhaustedScenes.Push(Node.Last());
 
-	//\todo Check if Node resetting is necessary
-	TArray<FScenario*> Rows;
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(274)"), Rows);
-	Node = Rows;
+	Node.Empty();
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(273)"), Node);
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
@@ -376,48 +374,6 @@ bool UVisualScene::IsWithChoice() const
 bool UVisualScene::IsWithTransition() const
 {
 	return GetCurrentScene()->hasTransition();
-}
-
-void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
-{
-	for (const auto& Asset : InScenesData)
-	{
-		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
-		TArray<FScenario*> Rows;
-
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(388)"), Rows);
-
-		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
-
-		int cnt = 0;
-		for (const auto Row : Rows)
-		{
-			cnt++;
-			UE_LOG(LogVisualU, Warning, TEXT("\tRow %d"), cnt);
-			Row->PrintLog();
-			UE_LOG(LogVisualU, Warning, TEXT("================================================="));
-		}
-	}
-}
-
-void UVisualScene::GetScenesData(TArray<FAssetData>& OutData) const
-{
-	FAssetRegistryModule* AssetRegistryModule = &FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-
-	FARFilter Filter;
-
-	const FName Name = UDataTable::StaticClass()->GetFName();
-	const FName Key = TEXT("RowStructure");
-	const FString Value = TEXT("Scenario");
-
-	Filter.ClassNames.Add(Name);
-	Filter.bIncludeOnlyOnDiskAssets = true;
-	Filter.TagsAndValues.AddUnique(Key, Value);
-
-	if (IsInGameThread())
-	{
-		AssetRegistryModule->Get().GetAssets(Filter, OutData);
-	}
 }
 
 void UVisualScene::StopTransition() const

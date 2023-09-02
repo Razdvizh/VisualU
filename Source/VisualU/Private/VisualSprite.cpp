@@ -10,7 +10,6 @@
 
 UVisualSprite::UVisualSprite(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
 }
 
 void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
@@ -26,7 +25,7 @@ void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 	for (i = j = 0; i < ChildWidgets.Num(); i++)
 	{
 		UWidget* Child = ChildWidgets[i];
-		if (Child->IsA<UVisualImage>())
+		if (Child->IsA<UVisualImage>()) //< Maybe use higher level of abstraction a.k.a UVisualImageBase?
 		{
 			UVisualImage* ChildImage = Cast<UVisualImage>(Child);
 			FVisualImageInfo VisualImageInfo = InInfo[j];

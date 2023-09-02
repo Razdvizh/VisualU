@@ -160,7 +160,7 @@ struct VISUALU_API FScenario : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FScenario() {}
+	FScenario() : Owner(nullptr), Index(0) {}
 
 	/// <summary>
 	/// An author of the <see cref="FScenario::Line">Line</see>.

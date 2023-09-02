@@ -35,8 +35,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 /// <remarks>
 /// Visual Scene organizes nodes of <see cref="FScenario">Scenarios</see> into
 /// the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. 
-/// Nodes of the tree are Data Tables, which can have any amount
-/// of <see cref="FScenario">Scenarios</see>. Nodes are linked by <see cref="UVisualChoice">Visual Choice</see> sprite that **should** reside in the last
+/// Nodes of the tree are Data Tables, which should have at least one
+/// <see cref="FScenario">Scenario</see>. Nodes are linked by <see cref="UVisualChoice">Visual Choice</see> sprite that **should** reside in the last
 /// <see cref="FScenario">Scenario</see>. Note that such linking is not enforced: you may place additional <see cref="FScenario">Scenarios</see> after
 /// the scene with <see cref="UVisualChoice">Visual Choice</see> or not add this sprite at all. Visual Scene operates on one node of tree at a time.
 /// It loads resources if they weren't already loaded, constructs requested <see cref="UVisualSprite">sprites</see>, provides interfaces to the data of
@@ -170,12 +170,14 @@ public:
 	bool ToScenario(const FScenario& Scenario);
 
 	/// <summary>
-	/// Sets provided node as active.
+	/// Sets provided node as active and visualizes the first <see cref="FScenario">Scenario in the node</see>
 	/// </summary>
 	/// <param name="Rows"><see cref="FScenario">Scenes</see> of the node</param>
 	/// <remarks>
-	/// <see cref="UVisualScene">Visual Scene</see> operates on one node at a time.
+	/// <see cref="UVisualScene">Visual Scene</see> operates on only one node at a time, 
+	/// information about previous nodes is saved on <see cref="FScenario">Scenario level</see>
 	/// </remarks>
+	/// \attention Avoid passing the same node as the currently active one 
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Sets provided node as active"))
 	void ToNode(const UDataTable* NewNode);
 
@@ -216,12 +218,6 @@ protected:
 	/// All <see cref="UVisualSprite">Visual Sprites</see> and <see cref="UVisualScene::Background"/> are children of this panel widget.
 	/// </remarks>
 	UCanvasPanel* Canvas;
-
-	/// <summary>
-	/// Blueprint class derived from Visual Scene.
-	/// </summary>
-	/// \attention Might be <c>nullptr</c> if there is no blueprint derived class
-	TOptional<const UWidgetBlueprintGeneratedClass*> BPScene;
 
 	/// <summary>
 	/// Handle for assets of the scene that are loaded into the memory.
@@ -291,20 +287,6 @@ protected:
 	/// </summary>
 	/// <returns><c>true</c> if at least one sprite was removed</returns>
 	bool ClearSprites();
-
-	/// \todo move this to the VisualUBlueprintStatics
-	/// <summary>
-	/// Outputs a friendly representation of scene data to the log.
-	/// </summary>
-	/// <param name="InScenesData">Data to print to the log</param>
-	void PrintScenesData(const TArray<FAssetData>& InScenesData) const;
-
-	/// \todo move this to the VisualUBlueprintStatics
-	/// <summary>
-	/// Gathers asset data of all Scenario Data Tables using Asset Registry.
-	/// </summary>
-	/// <param name="OutData">Array to be filled with data</param>
-	void GetScenesData(TArray<FAssetData>& OutData) const;
 
 	void PlayTransition(UWidgetAnimation* DrivingAnim);
 
