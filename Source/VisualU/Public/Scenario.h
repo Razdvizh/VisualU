@@ -25,7 +25,7 @@ struct FSprite
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FSprite() : Anchors(ForceInit), Position(ForceInit), ZOrder(0) {}
+	FSprite() : Anchors(FVisualAnchors::BottomLeft), Position(ForceInit), ZOrder(0) {}
 
 	virtual ~FSprite() {}
 

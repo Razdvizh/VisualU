@@ -25,9 +25,9 @@ struct FVisualImageInfo : public FVisualInfo
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FVisualImageInfo() : ColorAndOpacity(ForceInit),
-		DesiredScale(ForceInit),
-		MirrorScale(ForceInit),
+	FVisualImageInfo() : ColorAndOpacity(1, 1, 1, 1),
+		DesiredScale(1, 1),
+		MirrorScale(1, 1),
 		bAnimate(false),
 		FrameIndex(0)
 	{
@@ -43,11 +43,11 @@ public:
 	FLinearColor ColorAndOpacity;
 
 	/// <see cref="UVisualImage::DesiredScale"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info", meta = (Delta = 0.25f, UIMin = 0, ClampMin = 0, AllowPreserveRatio))
 	FVector2D DesiredScale;
 
 	/// <see cref="UVisualImage::MirrorScale"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info", meta = (Delta = 1.f, UIMin = -1, UIMax = 1, ClampMin = -1, ClampMax = 1))
 	FVector2D MirrorScale;
 
 	/// <see cref="UVisualImage::bAnimate"/>
@@ -55,7 +55,7 @@ public:
 	bool bAnimate;
 
 	/// <see cref="UVisualImage::FrameIndex"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info", meta = (EditCondition = "!bAnimate", EditConditionHides))
 	int32 FrameIndex;
 
 	virtual void Accept(IInfoAssignable* Visitor) const override

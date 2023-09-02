@@ -23,6 +23,7 @@ public:
 	FVisualAnchors(float UniformAnchors) : Super(UniformAnchors) {}
 	FVisualAnchors(float Horizontal, float Vertical) : Super(Horizontal, Vertical) {}
 	FVisualAnchors(float MinX, float MinY, float MaxX, float MaxY) : Super(MinX, MinY, MaxX, MaxY) {}
+	FVisualAnchors(const FAnchors& Other) { Minimum = Other.Minimum; Maximum = Other.Maximum; }
 
 	inline static const FAnchors Default = FAnchors();
 	inline static const FAnchors FullScreen = FAnchors(0, 0, 1, 1);
