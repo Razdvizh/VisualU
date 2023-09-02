@@ -5,20 +5,13 @@
 #include "CoreMinimal.h"
 #include "VisualImage.h"
 #include "UObject/ObjectMacros.h"
+#include "InfoAssignable.h"
 #include "BackgroundVisualImage.generated.h"
 
 class SBackgroundVisualImage;
 class UMaterialInstanceDynamic;
 class UPaperFlipbook;
 class UTexture;
-
-USTRUCT(BlueprintType)
-struct FVisualBackgroundImageInfo : public FVisualImageInfo
-{
-	GENERATED_USTRUCT_BODY()
-
-	//\todo add fields
-};
 
 UCLASS()
 class UBackgroundVisualImage final : public UVisualImage

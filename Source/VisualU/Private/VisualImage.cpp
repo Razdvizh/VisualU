@@ -51,6 +51,16 @@ TSharedRef<SWidget> UVisualImage::RebuildWidget()
 	return VisualImageSlate.ToSharedRef();
 }
 
+void UVisualImage::AssignVisualImageInfo(const FVisualImageInfo& InInfo)
+{
+	SetFlipbookAsync(InInfo.Expression);
+	SetColorAndOpacity(InInfo.ColorAndOpacity);
+	SetDesiredScale(InInfo.DesiredScale);
+	SetMirrorScale(InInfo.MirrorScale);
+	SetAnimate(InInfo.bAnimate);
+	SetFrameIndex(InInfo.FrameIndex);
+}
+
 void UVisualImage::SetAnimate(bool IsAnimated)
 {
 	bAnimate = IsAnimated;

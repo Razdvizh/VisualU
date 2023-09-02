@@ -58,6 +58,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	int32 FrameIndex;
 
+	virtual void Accept(IInfoAssignable* Visitor) const override
+	{
+		Visitor->AssignVisualImageInfo(*this);
+	}
+
 	/// <summary>
 	/// Get a string representation of all fields.
 	/// </summary>
@@ -174,6 +179,8 @@ protected:
 
 public:
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
+
+	virtual void AssignVisualImageInfo(const FVisualImageInfo& InInfo) override;
 
 	/// <summary>
 	/// Play animation sequence of paper flipbook or use <see cref="UVisualImage::FrameIndex"/> to display one frame.

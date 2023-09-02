@@ -328,12 +328,3 @@ private:
 		Rows.Find(this, Index);
 	}
 };
-
-USTRUCT(BlueprintType)
-struct FScenarioInfo : public FVisualInfo
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-	FScenario Scenario; //\todo Add fields
-};

@@ -31,13 +31,7 @@ void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 			UVisualImage* ChildImage = Cast<UVisualImage>(Child);
 			FVisualImageInfo VisualImageInfo = InInfo[j];
 
-			/// \todo let the child image decide how to set its info
-			ChildImage->SetFlipbookAsync(VisualImageInfo.Expression);
-			ChildImage->SetColorAndOpacity(VisualImageInfo.ColorAndOpacity);
-			ChildImage->SetDesiredScale(VisualImageInfo.DesiredScale);
-			ChildImage->SetMirrorScale(VisualImageInfo.MirrorScale);
-			ChildImage->SetAnimate(VisualImageInfo.bAnimate);
-			ChildImage->SetFrameIndex(VisualImageInfo.FrameIndex);
+			ChildImage->AssignVisualImageInfo(VisualImageInfo);
 			j++;
 		}
 	}

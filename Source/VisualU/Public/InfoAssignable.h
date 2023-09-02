@@ -10,19 +10,6 @@ struct FVisualImageInfo;
 struct FScenarioInfo;
 struct FVisualBackgroundImageInfo;
 
-USTRUCT(BlueprintInternalUseOnly)
-struct FVisualInfo
-{
-	GENERATED_USTRUCT_BODY()
-
-	FVisualInfo() {};
-	virtual ~FVisualInfo() {};
-
-	virtual FString ToString() const PURE_VIRTUAL(FVisualInfo::ToString, return FString(););
-};
-
-
-
 UINTERFACE(MinimalAPI)
 class UInfoAssignable : public UInterface
 {
@@ -37,8 +24,17 @@ class IInfoAssignable
 public:
 	virtual void AssignVisualImageInfo(const FVisualImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualImageInfo, );
 
-	virtual void AssignScenarioInfo(const FScenarioInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignScenarioInfo, );
+};
 
-	virtual void AssignVisualBackgroundImageInfo(const FVisualBackgroundImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualBackgroundImageInfo, );
+USTRUCT(BlueprintInternalUseOnly)
+struct FVisualInfo
+{
+	GENERATED_USTRUCT_BODY()
 
+	FVisualInfo() {};
+	virtual ~FVisualInfo() {};
+
+	virtual void Accept(IInfoAssignable* Visitor) const PURE_VIRTUAL(FVisualInfo::Accept, );
+
+	virtual FString ToString() const PURE_VIRTUAL(FVisualInfo::ToString, return FString(););
 };
