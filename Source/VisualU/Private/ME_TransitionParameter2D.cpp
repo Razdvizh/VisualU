@@ -2,10 +2,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ME_TextureSampleParameter2D.h"
+#include "ME_TransitionParameter2D.h"
 #include "VisualUSettings.h"
 
-UME_TextureSampleParameter2D::UME_TextureSampleParameter2D(const FObjectInitializer& ObjectInitializer)
+UME_TransitionParameter2D::UME_TransitionParameter2D(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer), 
 	bIsSecondTransition(false)
 {
@@ -16,7 +16,7 @@ UME_TextureSampleParameter2D::UME_TextureSampleParameter2D(const FObjectInitiali
 }
 
 #if WITH_EDITOR
-	void UME_TextureSampleParameter2D::GetCaption(TArray<FString>& OutCaptions) const
+	void UME_TransitionParameter2D::GetCaption(TArray<FString>& OutCaptions) const
 	{
 		OutCaptions.Emplace(TEXT("Background Transition"));
 
@@ -29,7 +29,7 @@ UME_TextureSampleParameter2D::UME_TextureSampleParameter2D(const FObjectInitiali
 			OutCaptions.Emplace(AParameterName.ToString());
 		}
 	}
-	void UME_TextureSampleParameter2D::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+	void UME_TransitionParameter2D::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 	{
 		if (bIsSecondTransition)
 		{

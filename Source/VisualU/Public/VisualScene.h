@@ -12,8 +12,7 @@
 class UTextBlock;
 class UCanvasPanel;
 class UVisualImage;
-class UObjectLibrary;
-class UVisualSceneComponent;
+class UCanvasPanelSlot;
 class UWidgetBlueprintGeneratedClass;
 class UMaterialInterface;
 class UBackgroundVisualImage;
@@ -199,9 +198,6 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
 
-	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneTransitionEndedEvent);
-	FOnNativeSceneTransitionEndedEvent OnNativeSceneTransitionEnded;
-
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
 	UWidgetAnimation* Transition;
@@ -246,6 +242,9 @@ protected:
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
 
+	DECLARE_MULTICAST_DELEGATE(FOnSceneTransitionEndedEvent);
+	FOnSceneTransitionEndedEvent OnSceneTransitionEnded;
+
 protected:
 	/// <summary>
 	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.
@@ -287,6 +286,10 @@ protected:
 	/// </summary>
 	/// <returns><c>true</c> if at least one sprite was removed</returns>
 	bool ClearSprites();
+
+	UVisualSprite* IsSpritePresent(const TSoftClassPtr<UVisualSprite> SpriteClass) const;
+
+	void InvalidateSprites(const TArray<FSprite>& NewSprites);
 
 	void PlayTransition(UWidgetAnimation* DrivingAnim);
 

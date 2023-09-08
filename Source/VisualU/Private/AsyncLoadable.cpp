@@ -9,7 +9,7 @@
 
 TSharedPtr<FStreamableHandle> IAsyncLoadable::AsyncLoad(const FSoftObjectPath& ObjectPath, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)
 {
-	if (ObjectPath.ResolveObject())
+	if (ObjectPath == nullptr || ObjectPath.ResolveObject())
 	{
 		AfterLoadDelegate.ExecuteIfBound();
 		return nullptr;

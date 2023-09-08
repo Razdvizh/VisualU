@@ -25,13 +25,14 @@ struct FVisualImageInfo : public FVisualInfo
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FVisualImageInfo() : ColorAndOpacity(1, 1, 1, 1),
+	FVisualImageInfo()
+		: Expression(),
+		ColorAndOpacity(1, 1, 1, 1),
 		DesiredScale(1, 1),
 		MirrorScale(1, 1),
 		bAnimate(false),
 		FrameIndex(0)
 	{
-
 	}
 
 	/// <see cref="UVisualImage::Flipbook"/>
@@ -55,7 +56,7 @@ public:
 	bool bAnimate;
 
 	/// <see cref="UVisualImage::FrameIndex"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info", meta = (EditCondition = "!bAnimate", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	int32 FrameIndex;
 
 	virtual void Accept(IInfoAssignable* Visitor) const override
@@ -114,6 +115,8 @@ class VISUALU_API UVisualImage : public UVisualImageBase
 
 public:
 	UVisualImage(const FObjectInitializer& ObjectInitializer);
+
+	~UVisualImage();
 
 	DECLARE_DYNAMIC_DELEGATE_RetVal(UPaperFlipbook*, FGetPaperFlipbook);
 

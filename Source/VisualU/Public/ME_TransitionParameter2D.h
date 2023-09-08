@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
-#include "ME_TextureSampleParameter2D.generated.h"
+#include "ME_TransitionParameter2D.generated.h"
 
 struct FPropertyChangedEvent;
 
-/// \todo refactor, naming is unclear
 /// <summary>
 /// Represents first or second sprite for transition animation.
 /// </summary>
@@ -16,7 +15,7 @@ struct FPropertyChangedEvent;
 /// \todo Add documentation
 /// </remarks>
 UCLASS()
-class VISUALU_API UME_TextureSampleParameter2D : public UMaterialExpressionTextureSampleParameter2D
+class VISUALU_API UME_TransitionParameter2D : public UMaterialExpressionTextureSampleParameter2D
 {
 	GENERATED_UCLASS_BODY()
 

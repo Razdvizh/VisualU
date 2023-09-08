@@ -55,12 +55,15 @@ public:
 	int32 ZOrder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
-	FString TransitionAnimationName;
+	FString AppearAnimationName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
+	FString DisappearAnimationName;
 
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
 	/// </summary>
-	/// <seealso cref="UVisualSprite::AssignVisualImageInfo"/>
+	/// <seealso cref="UVisualSprite::AssignSpriteInfo"/>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside Visual Sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
@@ -324,7 +327,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(327)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(330)"), Rows);
 		Rows.Find(this, Index);
 	}
 };

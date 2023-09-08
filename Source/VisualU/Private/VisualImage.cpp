@@ -10,7 +10,9 @@
 
 #define LOCTEXT_NAMESPACE "Visual U"
 
-UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) : UVisualImageBase(ObjectInitializer)
+UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) 
+	: UVisualImageBase(ObjectInitializer),
+	Flipbook(nullptr)
 {
 	ColorAndOpacity = FLinearColor::White;
 	DesiredScale = FVector2D::One();
@@ -19,10 +21,18 @@ UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) : UVisua
 	FrameIndex = 0;
 }
 
+UVisualImage::~UVisualImage()
+{
+	Flipbook = nullptr;
+	CancelAsyncLoad();
+}
+
 void UVisualImage::ReleaseSlateResources(bool bReleaseChildren)
 {
 	UVisualImageBase::ReleaseSlateResources(bReleaseChildren);
-
+	
+	Flipbook = nullptr;
+	CancelAsyncLoad();
 	VisualImageSlate.Reset();
 }
 
@@ -136,12 +146,12 @@ void UVisualImage::SetFlipbookAsync(TSoftObjectPtr<UPaperFlipbook> InFlipbook)
 	FStreamableDelegate OnFlipbookLoaded{};
 
 	OnFlipbookLoaded.BindLambda([WeakThis, InFlipbook]()
+	{
+		if (UVisualImage* Pinned = WeakThis.Get())
 		{
-			if (UVisualImage* Pinned = WeakThis.Get())
-			{
-				Pinned->SetFlipbook(InFlipbook.Get());
-			}
-		});
+			Pinned->SetFlipbook(InFlipbook.Get());
+		}
+	});
 
 	FlipbookHandle = AsyncLoad(InFlipbook.ToSoftObjectPath(), OnFlipbookLoaded, FStreamableManager::AsyncLoadHighPriority);
 }

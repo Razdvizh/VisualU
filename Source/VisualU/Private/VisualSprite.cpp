@@ -12,12 +12,15 @@ UVisualSprite::UVisualSprite(const FObjectInitializer& ObjectInitializer) : Supe
 {
 }
 
+void UVisualSprite::ReleaseSlateResources(bool bReleaseChildren)
+{
+	Super::ReleaseSlateResources(bReleaseChildren);
+}
+
 void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	if (InInfo.IsEmpty())
-	{
-		return;
-	}
+	bool bIsEmpty = InInfo.IsEmpty();
+
 	TArray<UWidget*> ChildWidgets;
 	WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);
 
@@ -28,7 +31,16 @@ void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 		if (Child->IsA<UVisualImage>()) //< Maybe use higher level of abstraction a.k.a UVisualImageBase?
 		{
 			UVisualImage* ChildImage = Cast<UVisualImage>(Child);
-			FVisualImageInfo VisualImageInfo = InInfo[j];
+			FVisualImageInfo VisualImageInfo;
+			if (bIsEmpty)
+			{
+				VisualImageInfo = FVisualImageInfo();
+			}
+			else
+			{
+				checkf(InInfo.IsValidIndex(j), TEXT("There was less SpriteInfo than the sprite widget requires. You must provide an info for each Visual Image in the sprite"));
+				VisualImageInfo = InInfo[j];
+			}
 
 			ChildImage->AssignVisualImageInfo(VisualImageInfo);
 			j++;

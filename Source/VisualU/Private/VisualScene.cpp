@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VisualScene.h"
 #include "Engine/StreamableManager.h"
@@ -43,7 +43,7 @@ UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer)
 	Canvas(nullptr),
 	SceneIndex(0)
 {
-	OnNativeSceneTransitionEnded.AddUFunction(this, TEXT("ToNextScene"));
+	OnSceneTransitionEnded.AddUFunction(this, TEXT("ToNextScene"));
 }
 
 TSharedRef<SWidget> UVisualScene::RebuildWidget()
@@ -54,11 +54,11 @@ TSharedRef<SWidget> UVisualScene::RebuildWidget()
 	TSharedRef<SWidget> VisualSceneSlate = Super::RebuildWidget();
 
 	Background = WidgetTree->ConstructWidget<UBackgroundVisualImage>(UBackgroundVisualImage::StaticClass(), TEXT("Background"));
-	Canvas->AddChildToCanvas(Background);
-	UCanvasPanelSlot* const BackgroundSlot = Cast<UCanvasPanelSlot>(Background->Slot);
+	UCanvasPanelSlot* const BackgroundSlot = Canvas->AddChildToCanvas(Background);
 	check(BackgroundSlot);
 	BackgroundSlot->SetAnchors(FVisualAnchors::FullScreen);
 	BackgroundSlot->SetOffsets(FVisualMargin::Zero);
+	BackgroundSlot->SetZOrder(INT_MIN);
 
 	return VisualSceneSlate;
 }
@@ -89,8 +89,8 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 {
 	check(Scene);
 
-	ClearSprites();
-	
+	InvalidateSprites(Scene->SpritesParams);
+
 	if (UPaperFlipbook* BackgroundArt = Scene->Background.BackgroundArt.Get())
 	{
 		Background->SetFlipbook(BackgroundArt);
@@ -103,10 +103,20 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
-		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
+		UVisualSprite* Sprite = IsSpritePresent(SpriteData.SpriteClass);
+		UCanvasPanelSlot* SpriteSlot;
+		if (Sprite)
+		{
+			SpriteSlot = StaticCast<UCanvasPanelSlot*>(Sprite->Slot);
+		}
+		else
+		{
+			Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
+			SpriteSlot = Canvas->AddChildToCanvas(Sprite);
+		}
+
 		Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
-		Canvas->AddChildToCanvas(Sprite);
-		UCanvasPanelSlot* const SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
+		
 		SpriteSlot->SetZOrder(SpriteData.ZOrder);
 		SpriteSlot->SetAnchors(SpriteData.Anchors);
 		SpriteSlot->SetAutoSize(true);
@@ -177,8 +187,6 @@ void UVisualScene::TransitionToNextScene()
 
 void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
 {
-	ClearSprites();
-
 	if (!Background->IsTransitioning())
 	{
 		PlayTransition(DrivingAnim);
@@ -255,7 +263,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
-		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(258)"), Node);
+		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(266)"), Node);
 	}
 
 	SceneIndex = Scene->Index;
@@ -270,7 +278,7 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 	ExhaustedScenes.Push(Node.Last());
 
 	Node.Empty();
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(273)"), Node);
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(281)"), Node);
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
@@ -380,7 +388,7 @@ void UVisualScene::StopTransition() const
 {
 	Background->SetTransitionState(false);
 
-	OnNativeSceneTransitionEnded.Broadcast();
+	OnSceneTransitionEnded.Broadcast();
 }
 
 void UVisualScene::ConstructScene()
@@ -391,9 +399,9 @@ void UVisualScene::ConstructScene()
 bool UVisualScene::ClearSprites()
 {
 	bool bRemoved = false;
-	const int32 NumSprites = Canvas->GetChildrenCount();
+	const int32 NumChildren = Canvas->GetChildrenCount();
 	//Widget at index 0 is the Background, we want to keep it
-	for (int32 i = 1; i < NumSprites; i++)
+	for (int32 i = 1; i < NumChildren; i++)
 	{
 		if (Canvas->RemoveChildAt(i))
 		{
@@ -402,4 +410,48 @@ bool UVisualScene::ClearSprites()
 	}
 	
 	return bRemoved;
+}
+
+UVisualSprite* UVisualScene::IsSpritePresent(const TSoftClassPtr<UVisualSprite> SpriteClass) const
+{
+	if (SpriteClass.IsValid())
+	{
+		const int32 NumChildren = Canvas->GetChildrenCount();
+		for (int32 i = 1; i < NumChildren; i++)
+		{
+			UWidget* Child = Canvas->GetChildAt(i);
+			if (Child->GetClass() == SpriteClass.Get())
+			{
+				return Cast<UVisualSprite>(Child);
+			}
+		}
+	}
+
+	return false;
+}
+
+void UVisualScene::InvalidateSprites(const TArray<FSprite>& NewSprites)
+{
+	for (int32 i = 1; i < Canvas->GetChildrenCount(); i++)
+	{
+		UWidget* ChildSprite = Canvas->GetChildAt(i);
+		bool bIsFound = false;
+		for (const auto& SpriteData : NewSprites)
+		{
+			const TSoftClassPtr<UVisualSprite> SpriteClass = SpriteData.SpriteClass;
+			if (SpriteClass.IsValid())
+			{
+				if (ChildSprite->GetClass() == SpriteClass.Get())
+				{
+					bIsFound = true;
+					break;
+				}
+			}
+		}
+		if (!bIsFound)
+		{
+			Canvas->RemoveChild(ChildSprite);
+			i--;
+		}
+	}
 }
