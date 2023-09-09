@@ -124,15 +124,15 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>OnPostDataImp
 <tr class="memitem:a7642dd7689a8004329cca6f327a442d3"><td class="memItemLeft" align="right" valign="top"><a id="a7642dd7689a8004329cca6f327a442d3" name="a7642dd7689a8004329cca6f327a442d3"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>OnDataTableChanged</b> (const UDataTable *InDataTable, const FName InRowName) override</td></tr>
 <tr class="separator:a7642dd7689a8004329cca6f327a442d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd65e06f861c7cc41313a8e52da622e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_scenario.html#acd65e06f861c7cc41313a8e52da622e0">GetDataToLoad</a> (TArray&lt; FSoftObjectPath &gt; &amp;Out) const</td></tr>
+<tr class="memdesc:acd65e06f861c7cc41313a8e52da622e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supplies assets that should be loaded into the memory.  <br /></td></tr>
+<tr class="separator:acd65e06f861c7cc41313a8e52da622e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc614fc429d419fe0b92776241b6265d"><td class="memItemLeft" align="right" valign="top"><a id="acc614fc429d419fe0b92776241b6265d" name="acc614fc429d419fe0b92776241b6265d"></a>
 FORCEINLINE bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Other)</td></tr>
 <tr class="separator:acc614fc429d419fe0b92776241b6265d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a634d5ccb479db83b186811dfb52147cd"><td class="memItemLeft" align="right" valign="top"><a id="a634d5ccb479db83b186811dfb52147cd" name="a634d5ccb479db83b186811dfb52147cd"></a>
 FORCEINLINE bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Other)</td></tr>
 <tr class="separator:a634d5ccb479db83b186811dfb52147cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd65e06f861c7cc41313a8e52da622e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_scenario.html#acd65e06f861c7cc41313a8e52da622e0">GetDataToLoad</a> (TArray&lt; FSoftObjectPath &gt; &amp;Out) const</td></tr>
-<tr class="memdesc:acd65e06f861c7cc41313a8e52da622e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supplies assets that should be loaded into the memory.  <br /></td></tr>
-<tr class="separator:acd65e06f861c7cc41313a8e52da622e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16d988174296f6c14fdb935f4c52a3e4"><td class="memItemLeft" align="right" valign="top"><a id="a16d988174296f6c14fdb935f4c52a3e4" name="a16d988174296f6c14fdb935f4c52a3e4"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PrintLog</b> () const</td></tr>
 <tr class="memdesc:a16d988174296f6c14fdb935f4c52a3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints all content of the scene to <a class="el" href="class_visual_u.html">VisualU</a> log. <br /></td></tr>
@@ -140,6 +140,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PrintLog</b> 
 <tr class="memitem:a043a961ffac8abb6c7cd5146b9f69acf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_scenario.html#a043a961ffac8abb6c7cd5146b9f69acf">hasChoice</a> () const</td></tr>
 <tr class="memdesc:a043a961ffac8abb6c7cd5146b9f69acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether or not this scene has at least one <a class="el" href="class_u_visual_choice.html">Visual Choice</a>.  <br /></td></tr>
 <tr class="separator:a043a961ffac8abb6c7cd5146b9f69acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cbe5dcb32e2c9d5e495c58436f7989b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_scenario.html#a9cbe5dcb32e2c9d5e495c58436f7989b">hasTransition</a> () const</td></tr>
+<tr class="memdesc:a9cbe5dcb32e2c9d5e495c58436f7989b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether or not this scene background has valid <a class="el" href="struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8" title="Transition to play on background when switching to the next scene.">FBackground::TransitionMaterial</a> assigned.  <br /></td></tr>
+<tr class="separator:a9cbe5dcb32e2c9d5e495c58436f7989b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -155,10 +158,10 @@ FText&#160;</td><td class="memItemRight" valign="bottom"><b>Line</b></td></tr>
 TSoftObjectPtr&lt; USoundBase &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Music</b></td></tr>
 <tr class="memdesc:a388101d815b318c3ed5843f9add67917"><td class="mdescLeft">&#160;</td><td class="mdescRight">Audio to play while the scene is displayed. <br /></td></tr>
 <tr class="separator:a388101d815b318c3ed5843f9add67917"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e6aba367fb6cc891acd4b02db39e554"><td class="memItemLeft" align="right" valign="top"><a id="a2e6aba367fb6cc891acd4b02db39e554" name="a2e6aba367fb6cc891acd4b02db39e554"></a>
-TSoftObjectPtr&lt; UPaperFlipbook &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>BackgroundArt</b></td></tr>
-<tr class="memdesc:a2e6aba367fb6cc891acd4b02db39e554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background of the scene. <br /></td></tr>
-<tr class="separator:a2e6aba367fb6cc891acd4b02db39e554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeeefb9b24401ce5f8dfbd17840d248d7"><td class="memItemLeft" align="right" valign="top"><a id="aeeefb9b24401ce5f8dfbd17840d248d7" name="aeeefb9b24401ce5f8dfbd17840d248d7"></a>
+<a class="el" href="struct_f_background.html">FBackground</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Background</b></td></tr>
+<tr class="memdesc:aeeefb9b24401ce5f8dfbd17840d248d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background to display. <br /></td></tr>
+<tr class="separator:aeeefb9b24401ce5f8dfbd17840d248d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a904a0a0f58e40723e3834ab874b86749"><td class="memItemLeft" align="right" valign="top"><a id="a904a0a0f58e40723e3834ab874b86749" name="a904a0a0f58e40723e3834ab874b86749"></a>
 TArray&lt; <a class="el" href="struct_f_sprite.html">FSprite</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>SpritesParams</b></td></tr>
 <tr class="memdesc:a904a0a0f58e40723e3834ab874b86749"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprites that this scene has. <br /></td></tr>
@@ -236,6 +239,34 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>Index</b></td></tr>
 
 <p>Checks whether or not this scene has at least one <a class="el" href="class_u_visual_choice.html">Visual Choice</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if scene has <a class="el" href="class_u_visual_choice.html">Visual Choice</a></dd></dl>
+
+</div>
+</div>
+<a id="a9cbe5dcb32e2c9d5e495c58436f7989b" name="a9cbe5dcb32e2c9d5e495c58436f7989b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cbe5dcb32e2c9d5e495c58436f7989b">&#9670;&#160;</a></span>hasTransition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FScenario::hasTransition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether or not this scene background has valid <a class="el" href="struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8" title="Transition to play on background when switching to the next scene.">FBackground::TransitionMaterial</a> assigned. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if scene background has valid <a class="el" href="struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8" title="Transition to play on background when switching to the next scene.">FBackground::TransitionMaterial</a></dd></dl>
 
 </div>
 </div>

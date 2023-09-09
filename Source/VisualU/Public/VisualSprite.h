@@ -7,6 +7,10 @@
 #include "VisualImage.h"
 #include "VisualSprite.generated.h"
 
+class UWidgetBlueprintGeneratedClass;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpriteBeginRemoveEvent);
+
 /// <summary>
 /// Base class for widgets that represent sprites that will be visualized by <see cref="UVisualScene">Visual Scene</see>.
 /// </summary>
@@ -24,6 +28,9 @@ class VISUALU_API UVisualSprite : public UUserWidget
 public:
 	UVisualSprite(const FObjectInitializer& ObjectInitializer);
 
+	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
+
+	///\todo add the same member function but for UViusalSocket
 	/// <summary>
 	/// Set the desired fields for the <see cref="UVisualImage">Visual images</see> that this Visual Sprite has.
 	/// </summary>
@@ -34,7 +41,10 @@ public:
 	/// the down most will be the last). It will continue assigning fields in this manner until there is no <see cref="UVisualImage">Visual images</see> 
 	/// in the tree. Any extra <c>FVisualImageInfo</c>s will be ignored.
 	/// </remarks>
-	/// \image html AssignVisualInfo_default.png
+	/// \image html AssignSpriteInfo_default.png
 	UFUNCTION(BlueprintCallable, Category = "Visual Sprite", meta = (ToolTip = "Set the desired fields for the Visual images that this Visual Sprite has."))
-	virtual void AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo);
+	virtual void AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo);
+
+	UPROPERTY(BlueprintAssignable, Category = "Visual Sprite|Events")
+	FOnSpriteBeginRemoveEvent OnSpriteBeginRemove;
 };

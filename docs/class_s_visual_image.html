@@ -113,8 +113,12 @@ $(document).ready(function(){initNavTree('class_s_visual_image.html',''); initRe
 Inheritance diagram for SVisualImage:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="class_s_visual_image.png" alt=""/>
- </div></div>
+  <img src="class_s_visual_image.png" usemap="#SVisualImage_map" alt=""/>
+  <map id="SVisualImage_map" name="SVisualImage_map">
+<area href="class_s_visual_image_base.html" alt="SVisualImageBase&lt; SVisualImage &gt;" shape="rect" coords="0,56,216,80"/>
+<area href="class_s_background_visual_image.html" title="Slate visual image that supports transition effects through material." alt="SBackgroundVisualImage" shape="rect" coords="0,168,216,192"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -130,9 +134,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateSequence</b> ()
 <tr class="memitem:aeb08ae4db9575570ec4d120fcc3fb355"><td class="memItemLeft" align="right" valign="top"><a id="aeb08ae4db9575570ec4d120fcc3fb355" name="aeb08ae4db9575570ec4d120fcc3fb355"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAnimate</b> (bool IsAnimated)</td></tr>
 <tr class="separator:aeb08ae4db9575570ec4d120fcc3fb355"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98678e1f22111648656ee493a0f6a688"><td class="memItemLeft" align="right" valign="top"><a id="a98678e1f22111648656ee493a0f6a688" name="a98678e1f22111648656ee493a0f6a688"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetSpriteIndex</b> (int Index)</td></tr>
-<tr class="separator:a98678e1f22111648656ee493a0f6a688"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afce33d41ede87802e56cb6fb0bf08b1c"><td class="memItemLeft" align="right" valign="top"><a id="afce33d41ede87802e56cb6fb0bf08b1c" name="afce33d41ede87802e56cb6fb0bf08b1c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetSpriteIndex</b> (int32 Index)</td></tr>
+<tr class="separator:afce33d41ede87802e56cb6fb0bf08b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a803dde7b662d15c2ed6c34a6b0ff926a"><td class="memItemLeft" align="right" valign="top"><a id="a803dde7b662d15c2ed6c34a6b0ff926a" name="a803dde7b662d15c2ed6c34a6b0ff926a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetFlipbook</b> (UPaperFlipbook *InFlipbook)</td></tr>
 <tr class="separator:a803dde7b662d15c2ed6c34a6b0ff926a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,22 +173,40 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMirrorScale</b> (c
 <tr class="memitem:a7ebb1062a8770189485012453b190e6f"><td class="memItemLeft" align="right" valign="top"><a id="a7ebb1062a8770189485012453b190e6f" name="a7ebb1062a8770189485012453b190e6f"></a>
 UPaperSprite *&#160;</td><td class="memItemRight" valign="bottom"><b>GetCurrentSprite</b> () const</td></tr>
 <tr class="separator:a7ebb1062a8770189485012453b190e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a086f23d992b2558b5bd86cd0373f80"><td class="memItemLeft" align="right" valign="top"><a id="a9a086f23d992b2558b5bd86cd0373f80" name="a9a086f23d992b2558b5bd86cd0373f80"></a>
-virtual int32&#160;</td><td class="memItemRight" valign="bottom"><b>OnPaint</b> (const FPaintArgs &amp;Args, const FGeometry &amp;AllottedGeometry, const FSlateRect &amp;MyCullingRect, FSlateWindowElementList &amp;OutDrawElements, int32 LayerId, const FWidgetStyle &amp;InWidgetStyle, bool bParentEnabled) const override</td></tr>
-<tr class="separator:a9a086f23d992b2558b5bd86cd0373f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca243a2448edd8b15e81e9bb1526715a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_visual_image.html#aca243a2448edd8b15e81e9bb1526715a">IsResourceValid</a> () const</td></tr>
+<tr class="memdesc:aca243a2448edd8b15e81e9bb1526715a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declared as virtual so subclasses can override them, but these methods are statically dispatched in the base class and all must be implemented.  <br /></td></tr>
+<tr class="separator:aca243a2448edd8b15e81e9bb1526715a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac192ec384b71e9c026cee6f7860ed6af"><td class="memItemLeft" align="right" valign="top"><a id="ac192ec384b71e9c026cee6f7860ed6af" name="ac192ec384b71e9c026cee6f7860ed6af"></a>
+virtual UObject *&#160;</td><td class="memItemRight" valign="bottom"><b>GetFinalResource</b> () const</td></tr>
+<tr class="separator:ac192ec384b71e9c026cee6f7860ed6af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3076e26d7fa7f22468e2815793338036"><td class="memItemLeft" align="right" valign="top"><a id="a3076e26d7fa7f22468e2815793338036" name="a3076e26d7fa7f22468e2815793338036"></a>
+virtual const FVector2D&#160;</td><td class="memItemRight" valign="bottom"><b>GetImageSize</b> () const</td></tr>
+<tr class="separator:a3076e26d7fa7f22468e2815793338036"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a143303cc099713f10eb4556c65629cd7"><td class="memItemLeft" align="right" valign="top">virtual const FLinearColor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_visual_image.html#a143303cc099713f10eb4556c65629cd7">GetFinalColorAndOpacity</a> (const FWidgetStyle &amp;InWidgetStyle) const</td></tr>
+<tr class="memdesc:a143303cc099713f10eb4556c65629cd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">~ConvertToBrush implementations  <br /></td></tr>
+<tr class="separator:a143303cc099713f10eb4556c65629cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9affd4e583b9af30d71e296d5b28ab42"><td class="memItemLeft" align="right" valign="top"><a id="a9affd4e583b9af30d71e296d5b28ab42" name="a9affd4e583b9af30d71e296d5b28ab42"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PreSlateDrawElementExtension</b> () const</td></tr>
+<tr class="separator:a9affd4e583b9af30d71e296d5b28ab42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a6de8778f47541e84d76640b96e1baa"><td class="memItemLeft" align="right" valign="top"><a id="a5a6de8778f47541e84d76640b96e1baa" name="a5a6de8778f47541e84d76640b96e1baa"></a>
+virtual FGeometry&#160;</td><td class="memItemRight" valign="bottom"><b>MakeCustomGeometry</b> (const FGeometry &amp;AllotedGeometry) const</td></tr>
+<tr class="separator:a5a6de8778f47541e84d76640b96e1baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9672ce74666debebbd2289f53136a42"><td class="memItemLeft" align="right" valign="top"><a id="af9672ce74666debebbd2289f53136a42" name="af9672ce74666debebbd2289f53136a42"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PostSlateDrawElementExtension</b> () const</td></tr>
+<tr class="memdesc:af9672ce74666debebbd2289f53136a42"><td class="mdescLeft">&#160;</td><td class="mdescRight">~OnPaint implementations <br /></td></tr>
+<tr class="separator:af9672ce74666debebbd2289f53136a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:aec46ba143ab8cd7a8c6b539c7cc289f2"><td class="memItemLeft" align="right" valign="top"><a id="aec46ba143ab8cd7a8c6b539c7cc289f2" name="aec46ba143ab8cd7a8c6b539c7cc289f2"></a>
-FSlateBrush&#160;</td><td class="memItemRight" valign="bottom"><b>ConvertFlipbookToBrush</b> () const</td></tr>
-<tr class="memdesc:aec46ba143ab8cd7a8c6b539c7cc289f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts currently displayed sprite to a SlateBrush and returns it. <br /></td></tr>
-<tr class="separator:aec46ba143ab8cd7a8c6b539c7cc289f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19e795e98177ac11103576c943d92c9f"><td class="memItemLeft" align="right" valign="top"><a id="a19e795e98177ac11103576c943d92c9f" name="a19e795e98177ac11103576c943d92c9f"></a>
 virtual FVector2D&#160;</td><td class="memItemRight" valign="bottom"><b>ComputeDesiredSize</b> (float) const override</td></tr>
 <tr class="separator:a19e795e98177ac11103576c943d92c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac8ba105ff77a961f8bbf450c5b2d253"><td class="memItemLeft" align="right" valign="top"><a id="aac8ba105ff77a961f8bbf450c5b2d253" name="aac8ba105ff77a961f8bbf450c5b2d253"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>ComputeVolatility</b> () const override</td></tr>
 <tr class="separator:aac8ba105ff77a961f8bbf450c5b2d253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11ccce24a0c04af01938b53800450edf"><td class="memItemLeft" align="right" valign="top"><a id="a11ccce24a0c04af01938b53800450edf" name="a11ccce24a0c04af01938b53800450edf"></a>
+FORCEINLINE FCurveSequence *&#160;</td><td class="memItemRight" valign="bottom"><b>GetCurveSequence</b> ()</td></tr>
+<tr class="separator:a11ccce24a0c04af01938b53800450edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ce1dc6f8c3c9d0077f671a4e8e6de2f"><td class="memItemLeft" align="right" valign="top"><a id="a0ce1dc6f8c3c9d0077f671a4e8e6de2f" name="a0ce1dc6f8c3c9d0077f671a4e8e6de2f"></a>
 FORCEINLINE TSlateAttributeRef&lt; const UPaperFlipbook * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetFlipbook</b> () const</td></tr>
 <tr class="separator:a0ce1dc6f8c3c9d0077f671a4e8e6de2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,14 +222,101 @@ FORCEINLINE TSlateAttributeRef&lt; FVector2D &gt;&#160;</td><td class="memItemRi
 <tr class="memitem:a6fc318eba0c1668b2442518bb510236f"><td class="memItemLeft" align="right" valign="top"><a id="a6fc318eba0c1668b2442518bb510236f" name="a6fc318eba0c1668b2442518bb510236f"></a>
 FORCEINLINE bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetAnimate</b> () const</td></tr>
 <tr class="separator:a6fc318eba0c1668b2442518bb510236f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41e382eea1c090bdac5707bbe0449f59"><td class="memItemLeft" align="right" valign="top"><a id="a41e382eea1c090bdac5707bbe0449f59" name="a41e382eea1c090bdac5707bbe0449f59"></a>
-FORCEINLINE int&#160;</td><td class="memItemRight" valign="bottom"><b>GetSpriteIndex</b> () const</td></tr>
-<tr class="separator:a41e382eea1c090bdac5707bbe0449f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a01ce6620849850b4e5e42971751903"><td class="memItemLeft" align="right" valign="top"><a id="a9a01ce6620849850b4e5e42971751903" name="a9a01ce6620849850b4e5e42971751903"></a>
+FORCEINLINE int32&#160;</td><td class="memItemRight" valign="bottom"><b>GetSpriteIndex</b> () const</td></tr>
+<tr class="separator:a9a01ce6620849850b4e5e42971751903"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_s_visual_image_base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_s_visual_image_base')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_s_visual_image_base.html">SVisualImageBase&lt; SVisualImage &gt;</a></td></tr>
+<tr class="memitem:a61ff0f8ce68665113aa21f328431be7d inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+virtual FSlateBrush&#160;</td><td class="memItemRight" valign="bottom"><b>ConvertToBrush</b> () const final</td></tr>
+<tr class="separator:a61ff0f8ce68665113aa21f328431be7d inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e24ef9ab5c07fced51bcdd73a026e3f inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+virtual int32&#160;</td><td class="memItemRight" valign="bottom"><b>OnPaint</b> (const FPaintArgs &amp;Args, const FGeometry &amp;AllottedGeometry, const FSlateRect &amp;MyCullingRect, FSlateWindowElementList &amp;OutDrawElements, int32 LayerId, const FWidgetStyle &amp;InWidgetStyle, bool bParentEnabled) const override final</td></tr>
+<tr class="separator:a1e24ef9ab5c07fced51bcdd73a026e3f inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a827a66ffd886cf66ddd835343b23f369 inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsResourceValid</b> () const</td></tr>
+<tr class="memdesc:a827a66ffd886cf66ddd835343b23f369 inherit pro_methods_class_s_visual_image_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">ConvertToBrush step methods. <br /></td></tr>
+<tr class="separator:a827a66ffd886cf66ddd835343b23f369 inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bf80a3b26ab4a8209202938cc73d6a4 inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+UObject *&#160;</td><td class="memItemRight" valign="bottom"><b>GetFinalResource</b> () const</td></tr>
+<tr class="separator:a5bf80a3b26ab4a8209202938cc73d6a4 inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35d3405bc0f5d2213c9bc38b02c6e490 inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+const FVector2D&#160;</td><td class="memItemRight" valign="bottom"><b>GetImageSize</b> () const</td></tr>
+<tr class="separator:a35d3405bc0f5d2213c9bc38b02c6e490 inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5756615ae9a0437e200f62c194e42dc inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">const FLinearColor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_visual_image_base.html#ad5756615ae9a0437e200f62c194e42dc">GetFinalColorAndOpacity</a> (const FWidgetStyle &amp;InWidgetStyle) const</td></tr>
+<tr class="memdesc:ad5756615ae9a0437e200f62c194e42dc inherit pro_methods_class_s_visual_image_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">~ConvertToBrush step methods  <br /></td></tr>
+<tr class="separator:ad5756615ae9a0437e200f62c194e42dc inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace06885e33a507858a66a79b29d954ec inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>PreSlateDrawElementExtension</b> () const</td></tr>
+<tr class="separator:ace06885e33a507858a66a79b29d954ec inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbab3e3688c45b041e89da19ceb8709b inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+FGeometry&#160;</td><td class="memItemRight" valign="bottom"><b>MakeCustomGeometry</b> (const FGeometry &amp;AllotedGeometry) const</td></tr>
+<tr class="separator:adbab3e3688c45b041e89da19ceb8709b inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a66a97364c6c1e9046d2ebb6c5bfd77 inherit pro_methods_class_s_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>PostSlateDrawElementExtension</b> () const</td></tr>
+<tr class="separator:a3a66a97364c6c1e9046d2ebb6c5bfd77 inherit pro_methods_class_s_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Slate widget that displays sprite flipbooks. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_u_visual_image.html" title="Widget that can visualize sprite flipbooks either in animated or static state.">UVisualImage</a></dd></dl>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a143303cc099713f10eb4556c65629cd7" name="a143303cc099713f10eb4556c65629cd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a143303cc099713f10eb4556c65629cd7">&#9670;&#160;</a></span>GetFinalColorAndOpacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const FLinearColor SVisualImage::GetFinalColorAndOpacity </td>
+          <td>(</td>
+          <td class="paramtype">const FWidgetStyle &amp;&#160;</td>
+          <td class="paramname"><em>InWidgetStyle</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>~ConvertToBrush implementations </p>
+<p>OnPaint implementations </p>
+
+</div>
+</div>
+<a id="aca243a2448edd8b15e81e9bb1526715a" name="aca243a2448edd8b15e81e9bb1526715a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca243a2448edd8b15e81e9bb1526715a">&#9670;&#160;</a></span>IsResourceValid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SVisualImage::IsResourceValid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Declared as virtual so subclasses can override them, but these methods are statically dispatched in the base class and all must be implemented. </p>
+<p>ConvertToBrush implementations </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>SVisualImage.h</li>
 <li>SVisualImage.cpp</li>
 </ul>

@@ -114,8 +114,14 @@ $(document).ready(function(){initNavTree('class_u_visual_image.html',''); initRe
 Inheritance diagram for UVisualImage:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="class_u_visual_image.png" alt=""/>
- </div></div>
+  <img src="class_u_visual_image.png" usemap="#UVisualImage_map" alt=""/>
+  <map id="UVisualImage_map" name="UVisualImage_map">
+<area href="class_u_visual_image_base.html" title="Base class for custom UMG widgets that serve as FSlateBrush containers." alt="UVisualImageBase" shape="rect" coords="166,56,322,80"/>
+<area href="class_i_async_loadable.html" title="Indicates use and support for asynchronous asset loading." alt="IAsyncLoadable" shape="rect" coords="166,0,322,24"/>
+<area href="class_i_info_assignable.html" title="Interface that allows classes to take data from Visual Info structures." alt="IInfoAssignable" shape="rect" coords="332,0,488,24"/>
+<area href="class_u_background_visual_image.html" title="Visual image that supports transition effects through material." alt="UBackgroundVisualImage" shape="rect" coords="166,168,322,192"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -128,6 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9dd44871f750cd252615cd50637811a5"><td class="memItemLeft" align="right" valign="top"><a id="a9dd44871f750cd252615cd50637811a5" name="a9dd44871f750cd252615cd50637811a5"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>ReleaseSlateResources</b> (bool bReleaseChildren) override</td></tr>
 <tr class="separator:a9dd44871f750cd252615cd50637811a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff0d87016a2a8064ba64fd180d223fa8"><td class="memItemLeft" align="right" valign="top"><a id="aff0d87016a2a8064ba64fd180d223fa8" name="aff0d87016a2a8064ba64fd180d223fa8"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>AssignVisualImageInfo</b> (const <a class="el" href="struct_f_visual_image_info.html">FVisualImageInfo</a> &amp;InInfo) override</td></tr>
+<tr class="separator:aff0d87016a2a8064ba64fd180d223fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4e2b1c4b2537ea19a3e3e1b1f37958a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#af4e2b1c4b2537ea19a3e3e1b1f37958a">SetAnimate</a> (bool <a class="el" href="class_u_visual_image.html#acdd0ce9a1161c9e938e66580928aff61">IsAnimated</a>)</td></tr>
 <tr class="memdesc:af4e2b1c4b2537ea19a3e3e1b1f37958a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Play animation sequence of paper flipbook or use <a class="el" href="class_u_visual_image.html#ab45c874fa35b2539fde66814a1f16d28" title="Index of the flipbook&#39;s frame that must be rendered.">UVisualImage::FrameIndex</a> to display one frame.  <br /></td></tr>
 <tr class="separator:af4e2b1c4b2537ea19a3e3e1b1f37958a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,6 +205,10 @@ FORCEINLINE FVector2D&#160;</td><td class="memItemRight" valign="bottom"><b>GetM
 <tr class="memitem:af00874e90a3f303f82dae8b157d8c154"><td class="memItemLeft" align="right" valign="top">UPaperSprite *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#af00874e90a3f303f82dae8b157d8c154">GetCurrentSprite</a> () const</td></tr>
 <tr class="memdesc:af00874e90a3f303f82dae8b157d8c154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the visualized frame of paper flipbook.  <br /></td></tr>
 <tr class="separator:af00874e90a3f303f82dae8b157d8c154"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_i_async_loadable"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_i_async_loadable')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_i_async_loadable.html">IAsyncLoadable</a></td></tr>
+<tr class="memitem:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="memItemLeft" align="right" valign="top">virtual TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_async_loadable.html#a8ed4aab927d226d00cf68d177c1f405f">AsyncLoad</a> (const FSoftObjectPath &amp;ObjectPath, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)</td></tr>
+<tr class="memdesc:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously load asset from disk.  <br /></td></tr>
+<tr class="separator:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -205,15 +218,16 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SynchronizePr
 <tr class="memitem:afe6c8bf95c7337a088ac903b36e42536"><td class="memItemLeft" align="right" valign="top"><a id="afe6c8bf95c7337a088ac903b36e42536" name="afe6c8bf95c7337a088ac903b36e42536"></a>
 virtual TSharedRef&lt; SWidget &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>RebuildWidget</b> () override</td></tr>
 <tr class="separator:afe6c8bf95c7337a088ac903b36e42536"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49310aa237ab3015000489d6ef5fb0b1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#a49310aa237ab3015000489d6ef5fb0b1">AsyncLoad</a> (TSoftObjectPtr&lt; UPaperFlipbook &gt; SoftFlipbook, FStreamableDelegate AfterLoadDelegate)</td></tr>
-<tr class="memdesc:a49310aa237ab3015000489d6ef5fb0b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads <em>SoftFlipbook</em>  resource and calls <em>AfterLoadDelegate</em>  after loading is completed.  <br /></td></tr>
-<tr class="separator:a49310aa237ab3015000489d6ef5fb0b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65aefccf789bac9a43c5667886240b63"><td class="memItemLeft" align="right" valign="top">const UPaperFlipbook *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#a65aefccf789bac9a43c5667886240b63">ToFlipbook</a> (TAttribute&lt; UPaperFlipbook * &gt; InFlipbook) const</td></tr>
 <tr class="memdesc:a65aefccf789bac9a43c5667886240b63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convertion for property binding implementation.  <br /></td></tr>
 <tr class="separator:a65aefccf789bac9a43c5667886240b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba9433b16bcae329db6f11b6ad2bbf8b"><td class="memItemLeft" align="right" valign="top"><a id="aba9433b16bcae329db6f11b6ad2bbf8b" name="aba9433b16bcae329db6f11b6ad2bbf8b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>PROPERTY_BINDING_IMPLEMENTATION</b> (FSlateColor, <a class="el" href="class_u_visual_image.html#a608a5a0dcec36f660fc09c29d4bf1396">ColorAndOpacity</a>)</td></tr>
 <tr class="separator:aba9433b16bcae329db6f11b6ad2bbf8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_u_visual_image_base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_u_visual_image_base')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_u_visual_image_base.html">UVisualImageBase</a></td></tr>
+<tr class="memitem:af9cb3714f867095d34bcd4b4504ce35a inherit pro_methods_class_u_visual_image_base"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>UVisualImageBase</b> (const FObjectInitializer &amp;ObjectInitializer)</td></tr>
+<tr class="separator:af9cb3714f867095d34bcd4b4504ce35a inherit pro_methods_class_u_visual_image_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -249,56 +263,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bAnimate</b></td></tr
 TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FlipbookHandle</b></td></tr>
 <tr class="memdesc:a1a4ebf5de4e731576b4b2c5afd35e418"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle of paper flipbook resource. <br /></td></tr>
 <tr class="separator:a1a4ebf5de4e731576b4b2c5afd35e418"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab233653f890d0bdc7c20ff7685d96f8e"><td class="memItemLeft" align="right" valign="top"><a id="ab233653f890d0bdc7c20ff7685d96f8e" name="ab233653f890d0bdc7c20ff7685d96f8e"></a>
+TSharedPtr&lt; <a class="el" href="class_s_visual_image.html">SVisualImage</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>VisualImageSlate</b></td></tr>
+<tr class="separator:ab233653f890d0bdc7c20ff7685d96f8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Widget that can visualize sprite flipbooks either in animated or static state. </p>
 <p>UPaperFlipbook class is provided by Paper2D built-in plugin in order to reuse existing assets and make <a class="el" href="class_visual_u.html">VisualU</a> compatible with normal Unreal pipeline for 2D games. Visual Image sets paper flipbook in a regular synchronous way unless <a class="el" href="class_u_visual_image.html#ab521042e57ee30ae475cfe999a9831f6" title="Asynchronously set paper flipbook.">UVisualImage::SetFlipbookAsync</a> is called. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a49310aa237ab3015000489d6ef5fb0b1" name="a49310aa237ab3015000489d6ef5fb0b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49310aa237ab3015000489d6ef5fb0b1">&#9670;&#160;</a></span>AsyncLoad()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UVisualImage::AsyncLoad </td>
-          <td>(</td>
-          <td class="paramtype">TSoftObjectPtr&lt; UPaperFlipbook &gt;&#160;</td>
-          <td class="paramname"><em>SoftFlipbook</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">FStreamableDelegate&#160;</td>
-          <td class="paramname"><em>AfterLoadDelegate</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Loads <em>SoftFlipbook</em>  resource and calls <em>AfterLoadDelegate</em>  after loading is completed. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">SoftFlipbook</td><td>Paper flipbook to load</td></tr>
-    <tr><td class="paramname">AfterLoadDelegate</td><td>Delegate to call after loading</td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="aff2c18c582102ae219d1416446d1d2e4" name="aff2c18c582102ae219d1416446d1d2e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff2c18c582102ae219d1416446d1d2e4">&#9670;&#160;</a></span>CancelAsyncLoad()</h2>
 

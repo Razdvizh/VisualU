@@ -12,10 +12,15 @@
 class UTextBlock;
 class UCanvasPanel;
 class UVisualImage;
-class UObjectLibrary;
-class UVisualSceneComponent;
+class UCanvasPanelSlot;
 class UWidgetBlueprintGeneratedClass;
+class UMaterialInterface;
+class UBackgroundVisualImage;
+class UWidgetAnimation;
+class UUMGSequencePlayer;
+class UMaterialInterface;
 struct FAssetData;
+struct FTimerHandle;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStartEvent);
 
@@ -23,14 +28,18 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEndEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneTransitionStartedEvent);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneTransitionEndedEvent);
+
 /// <summary>
 /// Class that loads, visualizes and connects <see cref="FScenario">Scenarios</see> in the game.
 /// </summary>
 /// <remarks>
 /// Visual Scene organizes nodes of <see cref="FScenario">Scenarios</see> into
 /// the non-threaded tree structure, allowing gameplay designers create multiple ways to complete the game. 
-/// Nodes of the tree are Data Tables, which can have any amount
-/// of <see cref="FScenario">Scenarios</see>. Nodes are linked by <see cref="UVisualChoice">Visual Choice</see> sprite that **should** reside in the last
+/// Nodes of the tree are Data Tables, which should have at least one
+/// <see cref="FScenario">Scenario</see>. Nodes are linked by <see cref="UVisualChoice">Visual Choice</see> sprite that **should** reside in the last
 /// <see cref="FScenario">Scenario</see>. Note that such linking is not enforced: you may place additional <see cref="FScenario">Scenarios</see> after
 /// the scene with <see cref="UVisualChoice">Visual Choice</see> or not add this sprite at all. Visual Scene operates on one node of tree at a time.
 /// It loads resources if they weren't already loaded, constructs requested <see cref="UVisualSprite">sprites</see>, provides interfaces to the data of
@@ -72,14 +81,6 @@ public:
 	/// </remarks>
 	void CancelSceneLoading();
 
-	/// <returns><see cref="FScenario::Line">Line</see> of the current scene</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Line of the current scene"))
-	const FText GetLine() const;
-
-	/// <returns><see cref="FScenario::Author">Author</see> of the current scene</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Author of the current scene"))
-	const FText GetAuthor() const;
-
 	/// <returns>Currently visualized <see cref="FScenario">scene</see></returns>
 	const FScenario* GetCurrentScene() const;
 
@@ -93,6 +94,9 @@ public:
 	/// <returns><c>true</c> if current scene has a <see cref="UVisualChoice">choice</see></returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
 	bool IsWithChoice() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario")
+	bool IsWithTransition() const;
 
 	/// <returns><c>true</c> if loading of assets is still in progress</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
@@ -123,7 +127,7 @@ public:
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> in front of the current one.</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene in front of the current one"))
 	bool CanAdvanceScene() const;
-
+	
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> behind the current one.</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene behind the current one"))
 	bool CanRetractScene() const;
@@ -139,6 +143,18 @@ public:
 	void ToNextScene();
 
 	/// <summary>
+	/// Transition with <see cref="UVisualScene::Transition">animation</see> to the next <see cref="FScenario">scene</see> in the node. 
+	/// </summary>
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
+	void TransitionToNextScene();
+
+	/// <summary>
+	/// Transition with provided animation to the next <see cref="FScenario">scene</see> in the node.
+	/// </summary>
+	/// <param name="DrivingAnim">Animation to drive transition</param>
+	void TransitionToNextScene(UWidgetAnimation* DrivingAnim);
+
+	/// <summary>
 	/// Visualize the previous <see cref="FScenario">scene</see> in the node.
 	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
@@ -152,6 +168,8 @@ public:
 	/// \warning Only use this method on <see cref="FScenario">scenes</see> that was already seen by the player.
 	bool ToScene(const FScenario* Scene);
 
+	const FScenario* GetSceneAt(int32 Index);
+
 	/// <summary>
 	/// Jump to any exhausted scene.
 	/// </summary>
@@ -162,12 +180,14 @@ public:
 	bool ToScenario(const FScenario& Scenario);
 
 	/// <summary>
-	/// Sets provided node as active.
+	/// Sets provided node as active and visualizes the first <see cref="FScenario">Scenario in the node</see>
 	/// </summary>
 	/// <param name="Rows"><see cref="FScenario">Scenes</see> of the node</param>
 	/// <remarks>
-	/// <see cref="UVisualScene">Visual Scene</see> operates on one node at a time.
+	/// <see cref="UVisualScene">Visual Scene</see> operates on only one node at a time, 
+	/// information about previous nodes is saved on <see cref="FScenario">Scenario level</see>
 	/// </remarks>
+	/// \attention Avoid passing the same node as the currently active one 
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Sets provided node as active"))
 	void ToNode(const UDataTable* NewNode);
 
@@ -189,11 +209,33 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
 
+	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	FOnSceneTransitionStartedEvent OnSceneTransitionStarted;
+
+	DECLARE_MULTICAST_DELEGATE(FOnNativeTransitionStartedEvent);
+	FOnNativeTransitionStartedEvent OnNativeSceneTransitionStarted;
+
+	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	FOnSceneTransitionEndedEvent OnSceneTransitionEnded;
+
+	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneTransitionEndedEvent);
+	FOnNativeSceneTransitionEndedEvent OnNativeSceneTransitionEnded;
+
 protected:
+	/// <summary>
+	/// Animation used to drive transitions between <see cref="FScenario">scenes</see>.
+	/// </summary>
+	/// <remarks>
+	/// It can safely animate any parameters of the widgets or materials.
+	/// Transition ends when this animation ends.
+	/// </remarks>
+	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
+	UWidgetAnimation* Transition;
+
 	/// <summary>
 	/// Internal widget for scene background.
 	/// </summary>
-	UVisualImage* Background;
+	UBackgroundVisualImage* Background;
 
 	/// <summary>
 	/// Internal widget for scene canvas panel.
@@ -202,12 +244,6 @@ protected:
 	/// All <see cref="UVisualSprite">Visual Sprites</see> and <see cref="UVisualScene::Background"/> are children of this panel widget.
 	/// </remarks>
 	UCanvasPanel* Canvas;
-
-	/// <summary>
-	/// Blueprint class derived from Visual Scene.
-	/// </summary>
-	/// \attention Might be <c>nullptr</c> if there is no blueprint derived class
-	const UWidgetBlueprintGeneratedClass* BPScene;
 
 	/// <summary>
 	/// Handle for assets of the scene that are loaded into the memory.
@@ -279,16 +315,18 @@ protected:
 	bool ClearSprites();
 
 	/// <summary>
-	/// Outputs a friendly representation of scene data to the log.
+	/// Play, if possible, uninterruptible transition to the next scene with specified <see cref="FBackground::TransitionMaterial">Transition Material</see>
 	/// </summary>
-	/// <param name="InScenesData">Data to print to the log</param>
-	void PrintScenesData(const TArray<FAssetData>& InScenesData) const;
+	/// <param name="DrivingAnim">Animation that represents duration of the transition</param>
+	void PlayTransition(UWidgetAnimation* DrivingAnim);
 
 	/// <summary>
-	/// Gathers asset data of all Scenario Data Tables using Asset Registry.
+	/// Stops rendering of the transition.
 	/// </summary>
-	/// <param name="OutData">Array to be filled with data</param>
-	void GetScenesData(TArray<FAssetData>& OutData) const;
+	/// <remarks>
+	/// Called by <see cref="UVisualScene::PlayTransition"/> after the end of driving animation
+	/// </remarks>
+	void StopTransition() const;
 
 private:
 	void ConstructScene();
@@ -296,4 +334,8 @@ private:
 	void LoadAndConstruct();
 
 	void SetCurrentScene(const FScenario* Scene);
+
+	FTimerHandle TransitionHandle;
+
+	FTimerDelegate OnTransitionEnd;
 };

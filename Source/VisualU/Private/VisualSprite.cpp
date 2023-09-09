@@ -10,34 +10,32 @@
 
 UVisualSprite::UVisualSprite(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
 }
 
-void UVisualSprite::AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo)
+void UVisualSprite::ReleaseSlateResources(bool bReleaseChildren)
 {
-	if (InInfo.IsEmpty())
-	{
-		return;
-	}
-	TArray<UWidget*> ChildWidgets;
-	WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);
+	Super::ReleaseSlateResources(bReleaseChildren);
+}
 
-	int i, j;
-	for (i = j = 0; i < ChildWidgets.Num(); i++)
+void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
+{
+	if (ensureAlwaysMsgf(!InInfo.IsEmpty(), TEXT("%s: Attempt to assign empty SpriteInfo, appearance will be compromised")))
 	{
-		UWidget* Child = ChildWidgets[i];
-		if (Child->IsA<UVisualImage>())
+		TArray<UWidget*> ChildWidgets;
+		WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);
+
+		int i, j;
+		for (i = j = 0; i < ChildWidgets.Num(); i++)
 		{
-			UVisualImage* ChildImage = Cast<UVisualImage>(Child);
-			FVisualImageInfo VisualImageInfo = InInfo[j];
-
-			ChildImage->SetFlipbookAsync(VisualImageInfo.Expression);
-			ChildImage->SetColorAndOpacity(VisualImageInfo.ColorAndOpacity);
-			ChildImage->SetDesiredScale(VisualImageInfo.DesiredScale);
-			ChildImage->SetMirrorScale(VisualImageInfo.MirrorScale);
-			ChildImage->SetAnimate(VisualImageInfo.bAnimate);
-			ChildImage->SetFrameIndex(VisualImageInfo.FrameIndex);
-			j++;
+			UWidget* Child = ChildWidgets[i];
+			if (Child->IsA<UVisualImage>()) //< Maybe use higher level of abstraction a.k.a UVisualImageBase?
+			{
+				UVisualImage* ChildImage = Cast<UVisualImage>(Child);
+				checkf(InInfo.IsValidIndex(j), TEXT("There was less SpriteInfo than the sprite widget requires. You must provide an info for each Visual Image in the sprite"));
+				const FVisualImageInfo& VisualImageInfo = InInfo[j];
+				ChildImage->AssignVisualImageInfo(VisualImageInfo);
+				j++;
+			}
 		}
 	}
 }

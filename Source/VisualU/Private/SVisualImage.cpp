@@ -2,14 +2,15 @@
 
 
 #include "SVisualImage.h"
-#include "Widgets\Images\SImage.h"
-#include "Animation\CurveSequence.h"
+#include "Widgets/Images/SImage.h"
+#include "Animation/CurveSequence.h"
 #include "PaperFlipbook.h"
-#include "Rendering\DrawElements.h"
+#include "Rendering/DrawElements.h"
 #include "PaperSprite.h"
 #include "VisualDefaults.h"
+#include "Engine/Texture2D.h"
 #if WITH_ACCESSIBILITY
-#include "Widgets\Accessibility\SlateCoreAccessibleWidgets.h"
+#include "Widgets/Accessibility/SlateCoreAccessibleWidgets.h"
 #endif
 
 SLATE_IMPLEMENT_WIDGET(SVisualImage)
@@ -22,9 +23,9 @@ void SVisualImage::PrivateRegisterAttributes(FSlateAttributeInitializer& Attribu
 }
 
 SVisualImage::SVisualImage() : Flipbook(*this),
-	ColorAndOpacity(*this, FLinearColor(ForceInit)), 
-	CustomDesiredScale(*this, FVector2D(ForceInitToZero)), 
-	MirrorScale(*this, FVector2D(ForceInitToZero))
+ColorAndOpacity(*this, FLinearColor(ForceInit)),
+CustomDesiredScale(*this),
+MirrorScale(*this, FVector2D(ForceInitToZero))
 {
 	SetCanTick(false);
 	bCanSupportFocus = false;
@@ -73,7 +74,7 @@ void SVisualImage::SetAnimate(bool IsAnimated)
 	bAnimate = IsAnimated;
 }
 
-void SVisualImage::SetSpriteIndex(int Index)
+void SVisualImage::SetSpriteIndex(int32 Index)
 {
 	SpriteIndex = Index;
 }
@@ -154,8 +155,8 @@ UPaperSprite* SVisualImage::GetCurrentSprite() const
 
 FVector2D SVisualImage::ComputeDesiredSize(float) const
 {
-	const FSlateBrush Brush = ConvertFlipbookToBrush();
-	
+	const FSlateBrush Brush = ConvertToBrush();
+
 	return CustomDesiredScale.Get().IsSet() ? CustomDesiredScale.Get().GetValue() * Brush.GetImageSize() : Brush.GetImageSize();
 }
 
@@ -164,49 +165,45 @@ bool SVisualImage::ComputeVolatility() const
 	return Super::ComputeVolatility() || CurveSequence.IsPlaying() || bAnimate;
 }
 
-int32 SVisualImage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
+bool SVisualImage::IsResourceValid() const
 {
-	const FSlateBrush Brush = ConvertFlipbookToBrush();
-
-	const FLinearColor FinalColorAndOpacity = FLinearColor(InWidgetStyle.GetColorAndOpacityTint() * ColorAndOpacity.Get().GetColor(InWidgetStyle) * Brush.GetTint(InWidgetStyle));
-	const FVector2D ScaleToApply = MirrorScale.Get();
-
-	if (Brush.GetResourceObject() != nullptr)
-	{
-		if (ScaleToApply != FVector2D(1, 1) && ScaleToApply.X != 0 && ScaleToApply.Y != 0)
-		{
-			const FGeometry MirroredGeometry = AllottedGeometry.MakeChild(FSlateRenderTransform(FScale2D(ScaleToApply)));
-			FSlateDrawElement::MakeBox(OutDrawElements, LayerId, MirroredGeometry.ToPaintGeometry(), &Brush, ESlateDrawEffect::None, FinalColorAndOpacity);
-		}
-		else
-		{
-			FSlateDrawElement::MakeBox(OutDrawElements, LayerId, AllottedGeometry.ToPaintGeometry(), &Brush, ESlateDrawEffect::None, FinalColorAndOpacity);
-		}
-	}
-
-	return LayerId;
+	return Flipbook.Get() != nullptr;
 }
 
-FSlateBrush SVisualImage::ConvertFlipbookToBrush() const
+UObject* SVisualImage::GetFinalResource() const
 {
-	FSlateBrush Brush = FSlateBrush();
+	return GetCurrentSprite();
+}
 
-	if (Flipbook.Get())
+const FVector2D SVisualImage::GetImageSize() const
+{
+	const FVector3d BoxSize = GetCurrentSprite()->GetRenderBounds().GetBox().GetSize();
+
+	return FVector2D(BoxSize.X, BoxSize.Z);
+}
+
+const FLinearColor SVisualImage::GetFinalColorAndOpacity(const FWidgetStyle& InWidgetStyle) const
+{
+	return FLinearColor(InWidgetStyle.GetColorAndOpacityTint() * ColorAndOpacity.ToAttribute(*this).Get().GetColor(InWidgetStyle) * ConvertToBrush().GetTint(InWidgetStyle));
+}
+
+void SVisualImage::PreSlateDrawElementExtension() const
+{
+	//No op
+}
+
+FGeometry SVisualImage::MakeCustomGeometry(const FGeometry& AllotedGeometry) const
+{
+	const FVector2D ScaleToApply = MirrorScale.Get();
+	if (ScaleToApply != FVector2D(1, 1) && ScaleToApply.X != 0 && ScaleToApply.Y != 0)
 	{
-		UPaperSprite* CurrentSprite = GetCurrentSprite();
-		
-		checkSlow(CurrentSprite);
-
-		const FVector3d BoxSize = CurrentSprite->GetRenderBounds().GetBox().GetSize();
-
-		const FVector2D ImageSize = FVector2D(BoxSize.X, BoxSize.Z);
-
-		Brush.SetResourceObject(CurrentSprite);
-		Brush.ImageSize = ImageSize;
-		Brush.ImageType = ESlateBrushImageType::FullColor;
-		Brush.DrawAs = ESlateBrushDrawType::Image;
-		Brush.Tiling = ESlateBrushTileType::NoTile;
-		Brush.TintColor = FSlateColor(FLinearColor::White);
+		return AllotedGeometry.MakeChild(FSlateRenderTransform(FScale2D(ScaleToApply)));
 	}
-	return Brush;
+
+	return AllotedGeometry;
+}
+
+void SVisualImage::PostSlateDrawElementExtension() const
+{
+	//No op
 }

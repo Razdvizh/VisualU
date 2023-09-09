@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['assignvisualimageinfo_0',['AssignVisualImageInfo',['../class_u_visual_choice.html#a4619ab6ad9aa9d3cdf31482d492c3c94',1,'UVisualChoice::AssignVisualImageInfo()'],['../class_u_visual_sprite.html#a833263c579b77f4fa8a1755fd252e3bf',1,'UVisualSprite::AssignVisualImageInfo()']]],
-  ['asyncload_1',['AsyncLoad',['../class_u_visual_image.html#a49310aa237ab3015000489d6ef5fb0b1',1,'UVisualImage']]]
+  ['assignspriteinfo_0',['AssignSpriteInfo',['../class_u_visual_choice.html#a4c9674ebf395d0f9a618be6c678d5491',1,'UVisualChoice::AssignSpriteInfo()'],['../class_u_visual_sprite.html#a0fa01c9d6eb5b9f12cb49715384bf07f',1,'UVisualSprite::AssignSpriteInfo()']]],
+  ['asyncload_1',['AsyncLoad',['../class_i_async_loadable.html#a8ed4aab927d226d00cf68d177c1f405f',1,'IAsyncLoadable']]]
 ];

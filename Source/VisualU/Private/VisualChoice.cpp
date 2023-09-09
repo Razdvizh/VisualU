@@ -16,9 +16,9 @@ void UVisualChoice::SetVisualScene(UVisualScene* Scene)
 	VisualScene = Scene;
 }
 
-void UVisualChoice::AssignVisualImageInfo(const TArray<FVisualImageInfo>& InInfo)
+void UVisualChoice::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	Super::AssignVisualImageInfo(InInfo);
+	Super::AssignSpriteInfo(InInfo);
 }
 
 void UVisualChoice::NativeOnInitialized()

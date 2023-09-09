@@ -1,7 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VisualScene.h"
-#include "AssetRegistryModule.h"
 #include "Engine/StreamableManager.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/TextBlock.h"
@@ -13,9 +12,21 @@
 #include "VisualDefaults.h"
 #include "VisualSprite.h"
 #include "VisualImage.h"
+#include "BackgroundVisualImage.h"
+#include "Materials/MaterialInterface.h"
+#include "TransitionMaterialProxy.h"
+#include "TimerManager.h"
 #include "VisualUSettings.h"
 #include "Sound/SoundCue.h"
 #include "PaperFlipbook.h"
+
+/// <summary>
+/// Difference between visual and logical ends of the transition.
+/// </summary>
+/// <remarks>
+/// Keep it below zero to avoid transition artifacts.
+/// </remarks>
+constexpr float TRANSITION_THRESHOLD = -0.005f;
 
 UVisualScene* UVisualScene::Get()
 {
@@ -24,16 +35,20 @@ UVisualScene* UVisualScene::Get()
 		if (Itr->IsInViewport())
 		{
 			return *Itr;
-			break;
 		}
 	}
 	
 	return nullptr;
 }
 
-UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), SceneIndex(0)
+UVisualScene::UVisualScene(const FObjectInitializer& ObjectInitializer) 
+	: Super(ObjectInitializer),
+	Transition(nullptr),
+	Background(nullptr),
+	Canvas(nullptr),
+	SceneIndex(0)
 {
-
+	OnNativeSceneTransitionEnded.AddUFunction(this, TEXT("ToNextScene"));
 }
 
 TSharedRef<SWidget> UVisualScene::RebuildWidget()
@@ -43,12 +58,12 @@ TSharedRef<SWidget> UVisualScene::RebuildWidget()
 
 	TSharedRef<SWidget> VisualSceneSlate = Super::RebuildWidget();
 
-	Background = WidgetTree->ConstructWidget<UVisualImage>(UVisualImage::StaticClass(), TEXT("Background"));
-	Canvas->AddChildToCanvas(Background);
-	UCanvasPanelSlot* const BackgroundSlot = Cast<UCanvasPanelSlot>(Background->Slot);
+	Background = WidgetTree->ConstructWidget<UBackgroundVisualImage>(UBackgroundVisualImage::StaticClass(), TEXT("Background"));
+	UCanvasPanelSlot* const BackgroundSlot = Canvas->AddChildToCanvas(Background);
 	check(BackgroundSlot);
 	BackgroundSlot->SetAnchors(FVisualAnchors::FullScreen);
 	BackgroundSlot->SetOffsets(FVisualMargin::Zero);
+	BackgroundSlot->SetZOrder(INT_MIN);
 
 	return VisualSceneSlate;
 }
@@ -57,12 +72,11 @@ void UVisualScene::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	BPScene = GetWidgetTreeOwningClass();
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(65)"), Node);
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(74)"), Node);
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
@@ -82,18 +96,22 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	if (UPaperFlipbook* BackgroundArt = Scene->BackgroundArt.Get())
+	if (UPaperFlipbook* BackgroundArt = Scene->Background.BackgroundArt.Get())
 	{
 		Background->SetFlipbook(BackgroundArt);
 	}
-	
-	PlaySound(Scene->Music.Get());
+
+	if (USoundBase* Music = Scene->Music.Get())
+	{
+		PlaySound(Music);
+	}
+
 	for (const auto& SpriteData : Scene->SpritesParams)
 	{
-		UVisualSprite* const Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass, SpriteData.SpriteClass->GetFName());
-		Sprite->AssignVisualImageInfo(SpriteData.SpriteInfo);
-		Canvas->AddChildToCanvas(Sprite);
-		UCanvasPanelSlot* const SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
+		UVisualSprite* Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
+		Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
+		
+		UCanvasPanelSlot* SpriteSlot = Canvas->AddChildToCanvas(Sprite);
 		SpriteSlot->SetZOrder(SpriteData.ZOrder);
 		SpriteSlot->SetAnchors(SpriteData.Anchors);
 		SpriteSlot->SetAutoSize(true);
@@ -154,6 +172,35 @@ void UVisualScene::ToNextScene()
 	OnNativeSceneStart.Broadcast();
 }
 
+void UVisualScene::TransitionToNextScene()
+{
+	if (ensureAlwaysMsgf(Transition, TEXT("Transition-driving animation is not found. Animation name should be \"Transition\" ")))
+	{
+		TransitionToNextScene(Transition);
+	}
+}
+
+void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
+{
+	OnSceneTransitionStarted.Broadcast();
+	OnNativeSceneTransitionStarted.Broadcast();
+
+	const int32 NumChildren = Canvas->GetChildrenCount();
+	for (int32 i = 1; i < NumChildren; i++)
+	{
+		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Canvas->GetChildAt(i)))
+		{
+			Sprite->OnSpriteBeginRemove.Broadcast();
+		}
+	}
+
+	if (!Background->IsTransitioning())
+
+	{
+		PlayTransition(DrivingAnim);
+	}
+}
+
 void UVisualScene::ToPreviousScene()
 {
 	if (!CanRetractScene())
@@ -205,6 +252,12 @@ bool UVisualScene::ToScene(const FScenario* Scene)
 	return isFound;
 }
 
+const FScenario* UVisualScene::GetSceneAt(int32 Index)
+{
+	check(Node.IsValidIndex(Index));
+	return Node[Index];
+}
+
 bool UVisualScene::ToScenario(const FScenario& Scenario)
 {
 	return ToScene(&Scenario);
@@ -214,9 +267,13 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 {
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
+	
+	if (Scene->Owner != GetSceneAt(0)->Owner)
+	{
+		Node.Empty();
+		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(266)"), Node);
+	}
 
-	Node.Empty();
-	Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(219)"), Node);
 	SceneIndex = Scene->Index;
 	LoadAndConstruct();
 
@@ -228,9 +285,8 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 {
 	ExhaustedScenes.Push(Node.Last());
 
-	TArray<FScenario*> Rows;
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(232)"), Rows);
-	Node = Rows;
+	Node.Empty();
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(284)"), Node);
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
@@ -240,6 +296,31 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+}
+
+void UVisualScene::PlayTransition(UWidgetAnimation* DrivingAnim)
+{
+	checkf(DrivingAnim, TEXT("Attempted to start transition with invalid animation"));
+	const FScenario* CurrentScene = GetCurrentScene();
+	const TSoftObjectPtr<UMaterialInterface> SoftTransitionMaterial = CurrentScene->Background.TransitionMaterial;
+	if (!SoftTransitionMaterial.IsNull() && CanAdvanceScene())
+	{
+		const FScenario* NextScene = GetSceneAt(SceneIndex + 1);
+		bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArt.IsNull(), TEXT("You are trying to transition to an empty background"));
+		if (bIsTransitionPossible)
+		{
+			UPaperFlipbook* NextFlipbook = NextScene->Background.BackgroundArt.LoadSynchronous();
+			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.IsValid() ? SoftTransitionMaterial.Get() : SoftTransitionMaterial.LoadSynchronous();
+			UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
+			DynamicTransitionMaterial->SetFlags(RF_Transient);
+			
+			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
+			PlayAnimation(DrivingAnim, /*StartAtTime=*/0.f, /*LoopsToPlay=*/1, EUMGSequencePlayMode::Forward, /*PlaybackSpeed=*/1.f, /*RestoreState=*/true);
+
+			OnTransitionEnd.BindUObject(this, &UVisualScene::StopTransition);
+			GetWorld()->GetTimerManager().SetTimer(TransitionHandle, OnTransitionEnd, DrivingAnim->GetEndTime() + TRANSITION_THRESHOLD, false);
+		}
+	}
 }
 
 void UVisualScene::CancelSceneLoading()
@@ -278,7 +359,7 @@ bool UVisualScene::CanAdvanceScene() const
 
 bool UVisualScene::CanRetractScene() const
 {
-	return Node.IsValidIndex(SceneIndex - 1);
+	return Node.IsValidIndex(SceneIndex - 1) || !ExhaustedScenes.IsEmpty();
 }
 
 bool UVisualScene::IsSceneExhausted(const FScenario* Scene) const
@@ -289,16 +370,6 @@ bool UVisualScene::IsSceneExhausted(const FScenario* Scene) const
 bool UVisualScene::IsScenarioExhausted(const FScenario& Scenario) const
 {
 	return IsSceneExhausted(&Scenario);
-}
-
-const FText UVisualScene::GetLine() const
-{
-	return Node[SceneIndex]->Line;
-}
-
-const FText UVisualScene::GetAuthor() const
-{
-	return Node[SceneIndex]->Author;
 }
 
 const FScenario* UVisualScene::GetCurrentScene() const
@@ -316,46 +387,17 @@ bool UVisualScene::IsWithChoice() const
 	return GetCurrentScene()->hasChoice();
 }
 
-void UVisualScene::PrintScenesData(const TArray<FAssetData>& InScenesData) const
+bool UVisualScene::IsWithTransition() const
 {
-	for (const auto& Asset : InScenesData)
-	{
-		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
-		TArray<FScenario*> Rows;
-
-		DataTable->GetAllRows(TEXT("VisualScene.cpp(326)"), Rows);
-
-		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
-
-		int cnt = 0;
-		for (const auto Row : Rows)
-		{
-			cnt++;
-			UE_LOG(LogVisualU, Warning, TEXT("\tRow %d"), cnt);
-			Row->PrintLog();
-			UE_LOG(LogVisualU, Warning, TEXT("================================================="));
-		}
-	}
+	return GetCurrentScene()->hasTransition();
 }
 
-void UVisualScene::GetScenesData(TArray<FAssetData>& OutData) const
+void UVisualScene::StopTransition() const
 {
-	FAssetRegistryModule* AssetRegistryModule = &FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+	Background->SetTransitionState(false);
 
-	FARFilter Filter;
-
-	const FName Name = UDataTable::StaticClass()->GetFName();
-	const FName Key = TEXT("RowStructure");
-	const FString Value = TEXT("Scenario");
-
-	Filter.ClassNames.Add(Name);
-	Filter.bIncludeOnlyOnDiskAssets = true;
-	Filter.TagsAndValues.AddUnique(Key, Value);
-
-	if (IsInGameThread())
-	{
-		AssetRegistryModule->Get().GetAssets(Filter, OutData);
-	}
+	OnSceneTransitionEnded.Broadcast();
+	OnNativeSceneTransitionEnded.Broadcast();
 }
 
 void UVisualScene::ConstructScene()
@@ -366,13 +408,14 @@ void UVisualScene::ConstructScene()
 bool UVisualScene::ClearSprites()
 {
 	bool bRemoved = false;
-	const int32 NumSprites = Canvas->GetChildrenCount();
+	const int32 NumChildren = Canvas->GetChildrenCount();
 	//Widget at index 0 is the Background, we want to keep it
-	for (int32 i = 1; i < NumSprites; i++)
+	for (int32 i = 1; i < NumChildren; i++)
 	{
 		if (Canvas->RemoveChildAt(i))
 		{
 			bRemoved = true;
+			i--;
 		}
 	}
 	

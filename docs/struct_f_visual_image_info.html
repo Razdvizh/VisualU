@@ -109,12 +109,24 @@ $(document).ready(function(){initNavTree('struct_f_visual_image_info.html',''); 
  <a href="struct_f_visual_image_info.html#details">More...</a></p>
 
 <p><code>#include &lt;VisualU/Public/VisualImage.h&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for FVisualImageInfo:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="struct_f_visual_image_info.png" usemap="#FVisualImageInfo_map" alt=""/>
+  <map id="FVisualImageInfo_map" name="FVisualImageInfo_map">
+<area href="struct_f_visual_info.html" title="Base struct for Visual Info system." alt="FVisualInfo" shape="rect" coords="0,0,109,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8b129873dcaaa31a8eda23ca467af776"><td class="memItemLeft" align="right" valign="top">virtual FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_visual_image_info.html#a8b129873dcaaa31a8eda23ca467af776">ToString</a> () const</td></tr>
-<tr class="memdesc:a8b129873dcaaa31a8eda23ca467af776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a string representation of all fields.  <br /></td></tr>
-<tr class="separator:a8b129873dcaaa31a8eda23ca467af776"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76b8fefabbb8297d65470f2373caa35e"><td class="memItemLeft" align="right" valign="top"><a id="a76b8fefabbb8297d65470f2373caa35e" name="a76b8fefabbb8297d65470f2373caa35e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Accept</b> (<a class="el" href="class_i_info_assignable.html">IInfoAssignable</a> *Visitor) const override</td></tr>
+<tr class="separator:a76b8fefabbb8297d65470f2373caa35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22384b4ec4c8d8685757624663116212"><td class="memItemLeft" align="right" valign="top">virtual FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_visual_image_info.html#a22384b4ec4c8d8685757624663116212">ToString</a> () const override</td></tr>
+<tr class="memdesc:a22384b4ec4c8d8685757624663116212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a string representation of all fields.  <br /></td></tr>
+<tr class="separator:a22384b4ec4c8d8685757624663116212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d35404da317228bdb94650b4e9fb3de"><td class="memItemLeft" align="right" valign="top"><a id="a5d35404da317228bdb94650b4e9fb3de" name="a5d35404da317228bdb94650b4e9fb3de"></a>
 FORCEINLINE bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="struct_f_visual_image_info.html">FVisualImageInfo</a> &amp;Other)</td></tr>
 <tr class="separator:a5d35404da317228bdb94650b4e9fb3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,13 +160,17 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bAnimate</b></td></tr
 int32&#160;</td><td class="memItemRight" valign="bottom"><b>FrameIndex</b></td></tr>
 <tr class="memdesc:ad519ce6516a1b84ff031a5adc9c9d5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_u_visual_image.html#ab45c874fa35b2539fde66814a1f16d28" title="Index of the flipbook&#39;s frame that must be rendered.">UVisualImage::FrameIndex</a> <br /></td></tr>
 <tr class="separator:ad519ce6516a1b84ff031a5adc9c9d5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_struct_f_visual_info"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_struct_f_visual_info')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="struct_f_visual_info.html">FVisualInfo</a></td></tr>
+<tr class="memitem:a7325c2f51f9b2598526049bf5ec733c8 inherit pub_attribs_struct_f_visual_info"><td class="memItemLeft" align="right" valign="top">
+virtual void virtual Accept(<a class="el" href="class_i_info_assignable.html">IInfoAssignable</a> *Visitor) const PURE_VIRTUAL(<a class="el" href="struct_f_visual_info.html">FVisualInfo</a> FStrin&#160;</td><td class="memItemRight" valign="bottom"><b>ToString</b> )() const PURE_VIRTUAL(<a class="el" href="struct_f_visual_info.html">FVisualInfo</a></td></tr>
+<tr class="separator:a7325c2f51f9b2598526049bf5ec733c8 inherit pub_attribs_struct_f_visual_info"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct with all fields that affect appearance of <a class="el" href="class_u_visual_image.html">Visual Image</a>. </p>
 <p><a class="el" href="class_u_visual_image.html">Visual Image</a> does not contain this struct and does not reflect it in any way. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8b129873dcaaa31a8eda23ca467af776" name="a8b129873dcaaa31a8eda23ca467af776"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b129873dcaaa31a8eda23ca467af776">&#9670;&#160;</a></span>ToString()</h2>
+<a id="a22384b4ec4c8d8685757624663116212" name="a22384b4ec4c8d8685757624663116212"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22384b4ec4c8d8685757624663116212">&#9670;&#160;</a></span>ToString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -171,7 +187,7 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>FrameIndex</b></td><
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

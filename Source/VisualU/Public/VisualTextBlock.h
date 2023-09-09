@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/RichTextBlock.h"
+#include "VisualUSettings.h"
 #include "VisualTextBlock.generated.h"
 
 class UVisualUSettings;

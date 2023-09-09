@@ -2,17 +2,17 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "VisualU.h"
-#include "Engine\DataTable.h"
+#include "Engine/DataTable.h"
 #include "VisualSprite.h"
 #include "VisualDefaults.h"
 #include "VisualImage.h"
 #include "VisualChoice.h"
+#include "InfoAssignable.h"
 #include "Scenario.generated.h"
 
 class UPaperFlipbook;
-class UWidgetAnimation;
+class UMaterialInterface;
 class USoundCue;
 
 /// <summary>
@@ -20,12 +20,12 @@ class USoundCue;
 /// in the <see cref="UVisualScene">Visual Scene</see>.
 /// </summary>
 USTRUCT(BlueprintType)
-struct VISUALU_API FSprite
+struct FSprite
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FSprite() : Anchors(ForceInit), Position(ForceInit), ZOrder(0) {}
+	FSprite() : Anchors(FVisualAnchors::BottomLeft), Position(ForceInit), ZOrder(0) {}
 
 	virtual ~FSprite() {}
 
@@ -33,7 +33,7 @@ public:
 	/// <see cref="UVisualSprite">Visual Sprite</see> class to be constructed and visualized by <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite class to be constructed and visualized by Visual Scene"))
-	TSubclassOf<UVisualSprite> SpriteClass;
+	TSoftClassPtr<UVisualSprite> SpriteClass;
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> anchors in Canvas Panel.
@@ -57,7 +57,7 @@ public:
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
 	/// </summary>
-	/// <seealso cref="UVisualSprite::AssignVisualImageInfo"/>
+	/// <seealso cref="UVisualSprite::AssignSpriteInfo"/>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside Visual Sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
@@ -66,7 +66,7 @@ public:
 	/// </summary>
 	virtual void PrintLog() const
 	{
-		UE_LOG(LogVisualU, Warning, TEXT("Sprite Class: %s"), SpriteClass ? *SpriteClass->GetFName().ToString() : TEXT("None"));
+		UE_LOG(LogVisualU, Warning, TEXT("Sprite Class: %s"), !SpriteClass.IsNull() ? *SpriteClass->GetFName().ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("Anchors: %s"), *Anchors.ToString());
 		UE_LOG(LogVisualU, Warning, TEXT("Position: %s"), *Position.ToString());
 		UE_LOG(LogVisualU, Warning, TEXT("Z order: %d"), ZOrder);
@@ -107,6 +107,32 @@ public:
 };
 
 /// <summary>
+/// Polymorphic struct that describes what background to display and what effect to use for transition.
+/// </summary>
+USTRUCT(BlueprintType)
+struct FBackground
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FBackground() {}
+
+	virtual ~FBackground() {}
+
+	/// <summary>
+	/// Background Art of the scene.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Background Art of this Scenario"))
+	TSoftObjectPtr<UPaperFlipbook> BackgroundArt;
+
+	/// <summary>
+	/// Transition to play on background when switching to the next scene.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Transition to play on background when switching to the next scene"))
+	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
+};
+
+/// <summary>
 /// A single scene or "frame" of the Visual Novel game.
 /// </summary>
 /// <remarks>
@@ -128,11 +154,10 @@ public:
 USTRUCT(BlueprintType)
 struct VISUALU_API FScenario : public FTableRowBase
 {
-
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FScenario() {}
+	FScenario() : Owner(nullptr), Index(0) {}
 
 	/// <summary>
 	/// An author of the <see cref="FScenario::Line">Line</see>.
@@ -153,10 +178,10 @@ public:
 	TSoftObjectPtr<USoundBase> Music;
 	
 	/// <summary>
-	/// Background of the scene.
+	/// Background to display.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "Scene", meta = (ToolTip = "Background of this Scenario"))
-	TSoftObjectPtr<UPaperFlipbook> BackgroundArt;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Background to display"))
+	FBackground Background;
 
 	/// <summary>
 	/// Sprites that this scene has.
@@ -178,11 +203,44 @@ public:
 		Intrusive(InDataTable);
 	}
 
+	/// <summary>
+	/// Supplies assets that should be loaded into the memory.
+	/// Note: these assets might be already loaded.
+	/// </summary>
+	/// <param name="Out">Array to be filled with data that should be loaded</param>
+	/// <remarks>
+	/// Method will empty <paramref name="Out"/> array.
+	/// </remarks>
+	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
+	{
+		if (!Background.BackgroundArt.IsNull())
+		{
+			Out.Emplace(Background.BackgroundArt.ToSoftObjectPath());
+		}
+		if (!Music.IsNull())
+		{
+			Out.Emplace(Music.ToSoftObjectPath());
+		}
+		if (!Background.TransitionMaterial.IsNull())
+		{
+			Out.Emplace(Background.TransitionMaterial.ToSoftObjectPath());
+		}
+		for (const auto& SpriteParam : SpritesParams)
+		{
+			Out.Emplace(SpriteParam.SpriteClass.ToSoftObjectPath());
+			for (const auto& Info : SpriteParam.SpriteInfo)
+			{
+				Out.Emplace(Info.Expression.ToSoftObjectPath());
+			}
+		}
+	}
+
 	FORCEINLINE bool operator== (const FScenario& Other)
 	{
 		if (Author.CompareTo(Other.Author)
 			&& Line.CompareTo(Other.Line)
-			&& BackgroundArt.GetAssetName() == Other.BackgroundArt.GetAssetName()
+			&& Background.BackgroundArt.GetAssetName() == Other.Background.BackgroundArt.GetAssetName()
+			&& Background.TransitionMaterial.GetAssetName() == Other.Background.TransitionMaterial.GetAssetName()
 			&& Music.GetAssetName() == Other.Music.GetAssetName())
 		{
 			int i = 0;
@@ -206,31 +264,6 @@ public:
 	}
 
 	/// <summary>
-	/// Supplies assets that should be loaded into the memory.
-	/// Note: these assets might be already loaded.
-	/// </summary>
-	/// <param name="Out">Array to be filled with data that should be loaded</param>
-	/// <remarks>
-	/// Method will empty <paramref name="Out"/> array.
-	/// </remarks>
-	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
-	{
-		Out.Empty();
-		Out.Emplace(BackgroundArt.ToSoftObjectPath());
-		if (!Music.IsNull())
-		{
-			Out.Emplace(Music.ToSoftObjectPath());
-		}
-		for (const auto& SpriteParam : SpritesParams)
-		{
-			for (const auto& Info : SpriteParam.SpriteInfo)
-			{
-				Out.Emplace(Info.Expression.ToSoftObjectPath());
-			}
-		}
-	}
-
-	/// <summary>
 	/// Prints all content of the scene to VisualU log.
 	/// </summary>
 	virtual void PrintLog() const
@@ -238,7 +271,8 @@ public:
 		UE_LOG(LogVisualU, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("\tBackground Art: %s"), !BackgroundArt.IsNull() ? *BackgroundArt.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Warning, TEXT("\tBackground Art: %s"), !Background.BackgroundArt.IsNull() ? *Background.BackgroundArt.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Warning, TEXT("\tTransition Material: %s"), !Background.TransitionMaterial.IsNull() ? *Background.TransitionMaterial.GetAssetName() : TEXT("None"));
 
 		if (!SpritesParams.IsEmpty())
 		{
@@ -262,7 +296,7 @@ public:
 		{
 			for (const auto& SpriteParam : SpritesParams)
 			{
-				if (SpriteParam.SpriteClass->IsChildOf<UVisualChoice>())
+				if (!SpriteParam.SpriteClass.IsNull() && SpriteParam.SpriteClass->IsChildOf<UVisualChoice>())
 				{
 					return true;
 				}
@@ -270,6 +304,15 @@ public:
 		}
 		
 		return false;
+	}
+
+	/// <summary>
+	/// Checks whether or not this scene background has valid <see cref="FBackground::TransitionMaterial"/> assigned.
+	/// </summary>
+	/// <returns><c>true</c> if scene background has valid <see cref="FBackground::TransitionMaterial"/></returns>
+	inline bool hasTransition() const
+	{
+		return !Background.TransitionMaterial.IsNull();
 	}
 
 private:
@@ -282,7 +325,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(285)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(328)"), Rows);
 		Rows.Find(this, Index);
 	}
 };
