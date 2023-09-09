@@ -16,6 +16,13 @@ class UInfoAssignable : public UInterface
 	GENERATED_BODY()
 };
 
+/// <summary>
+/// Interface that allows classes to take data from <see cref="FVisualInfo">Visual Info</see> structures.
+/// Classes can assign data from multiple structures.
+/// </summary>
+/// <remarks>
+/// Use <see cref="IInfoAssignable::AssignVisualImageInfo"/> as an example when adding function for custom <see cref="FVisualInfo">Visual Info</see> struct.
+/// </remarks> 
 class IInfoAssignable
 {
 	GENERATED_BODY()
@@ -26,6 +33,17 @@ public:
 
 };
 
+/// <summary>
+/// Base struct for Visual Info system. 
+/// </summary>
+/// <remarks>
+/// Represents certain data which other classes can retrieve through <see cref="IInfoAssignable"/> interface.
+/// To create custom Visual Info struct:
+/// -# Create a struct that inherits from <c>FVisualInfo</c>
+/// -# Add desired fields
+/// -# Override <c>Accept</c> function to implement Visitor pattern (see <see cref="FVisualImageInfo::Acept"/> for example) 
+/// -# Override <c>ToString</c> function if needed
+/// Check <see cref="FVisualImageInfo"/>
 USTRUCT(BlueprintInternalUseOnly)
 struct FVisualInfo
 {

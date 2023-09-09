@@ -180,6 +180,15 @@ void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
 	OnSceneTransitionStarted.Broadcast();
 	OnNativeSceneTransitionStarted.Broadcast();
 
+	const int32 NumChildren = Canvas->GetChildrenCount();
+	for (int32 i = 1; i < NumChildren; i++)
+	{
+		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Canvas->GetChildAt(i)))
+		{
+			Sprite->OnSpriteBeginRemove.Broadcast();
+		}
+	}
+
 	if (!Background->IsTransitioning())
 	{
 		PlayTransition(DrivingAnim);
