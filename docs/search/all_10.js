@@ -8,5 +8,7 @@ var searchData=
   ['toscenario_5',['ToScenario',['../class_u_visual_scene.html#abbbd6f8c0345901cb33a7eb32621a8ea',1,'UVisualScene']]],
   ['toscene_6',['ToScene',['../class_u_visual_scene.html#a452b256f6841c6b61336866acfa75508',1,'UVisualScene']]],
   ['tostring_7',['ToString',['../struct_f_visual_anchors.html#ad8bfdc4f37a8022848c07f19b222949a',1,'FVisualAnchors::ToString()'],['../struct_f_visual_margin.html#a299d62f4fe58483a4ab0863c520c8fb4',1,'FVisualMargin::ToString()'],['../struct_f_visual_image_info.html#a22384b4ec4c8d8685757624663116212',1,'FVisualImageInfo::ToString()']]],
-  ['transitionmaterial_8',['TransitionMaterial',['../struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8',1,'FBackground']]]
+  ['transition_8',['Transition',['../class_u_visual_scene.html#a33d829aa8ca8f461256186033a327aaf',1,'UVisualScene']]],
+  ['transitionmaterial_9',['TransitionMaterial',['../struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8',1,'FBackground']]],
+  ['transitiontonextscene_10',['TransitionToNextScene',['../class_u_visual_scene.html#acd9683634f1eb2dbc70931586fb2828e',1,'UVisualScene::TransitionToNextScene()'],['../class_u_visual_scene.html#ae64fb03f85c64094d7060e5a5ad9fe2b',1,'UVisualScene::TransitionToNextScene(UWidgetAnimation *DrivingAnim)']]]
 ];

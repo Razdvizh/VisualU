@@ -10,6 +10,10 @@ class UPaperFlipbook;
 class UPaperSprite;
 class SVisualImage;
 
+/// <summary>
+/// Slate base class for custom widgets that serve as FSlateBrush containers.
+/// </summary>
+/// <typeparam name="DerivedT">Subclass which derives directly from SVisualImageBase</typeparam>
 template<class DerivedT>
 class VISUALU_API SVisualImageBase : public SLeafWidget
 {

@@ -1,4 +1,4 @@
 var class_u_visual_sprite =
 [
-    [ "AssignVisualImageInfo", "class_u_visual_sprite.html#a833263c579b77f4fa8a1755fd252e3bf", null ]
+    [ "AssignSpriteInfo", "class_u_visual_sprite.html#a0fa01c9d6eb5b9f12cb49715384bf07f", null ]
 ];

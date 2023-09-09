@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VisualU: Member List</title>
+<title>VisualU: UME_TransitionParameter2D Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('class_u_visual_choice.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('class_u_m_e___transition_parameter2_d.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,26 +97,34 @@ $(document).ready(function(){initNavTree('class_u_visual_choice.html',''); initR
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">UVisualChoice Member List</div></div>
+  <div class="summary">
+<a href="class_u_m_e___transition_parameter2_d-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">UME_TransitionParameter2D Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="class_u_visual_choice.html">UVisualChoice</a>, including all inherited members.</p>
-<table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="class_u_visual_choice.html#a4c9674ebf395d0f9a618be6c678d5491">AssignSpriteInfo</a>(const TArray&lt; FVisualImageInfo &gt; &amp;InInfo) override</td><td class="entry"><a class="el" href="class_u_visual_choice.html">UVisualChoice</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_u_visual_choice.html#a5da86727ff53ed28c96b70a0e4e9a6a4">Choose</a>(const UDataTable *Node) const</td><td class="entry"><a class="el" href="class_u_visual_choice.html">UVisualChoice</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>NativeOnInitialized</b>() override (defined in <a class="el" href="class_u_visual_choice.html">UVisualChoice</a>)</td><td class="entry"><a class="el" href="class_u_visual_choice.html">UVisualChoice</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>OnSpriteBeginRemove</b> (defined in <a class="el" href="class_u_visual_sprite.html">UVisualSprite</a>)</td><td class="entry"><a class="el" href="class_u_visual_sprite.html">UVisualSprite</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ReleaseSlateResources</b>(bool bReleaseChildren) override (defined in <a class="el" href="class_u_visual_sprite.html">UVisualSprite</a>)</td><td class="entry"><a class="el" href="class_u_visual_sprite.html">UVisualSprite</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_u_visual_choice.html#a2b5f64977584d85f2de4c37102dd833f">SetVisualScene</a>(UVisualScene *Scene)</td><td class="entry"><a class="el" href="class_u_visual_choice.html">UVisualChoice</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>UVisualChoice</b>(const FObjectInitializer &amp;ObjectInitializer) (defined in <a class="el" href="class_u_visual_choice.html">UVisualChoice</a>)</td><td class="entry"><a class="el" href="class_u_visual_choice.html">UVisualChoice</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>UVisualSprite</b>(const FObjectInitializer &amp;ObjectInitializer) (defined in <a class="el" href="class_u_visual_sprite.html">UVisualSprite</a>)</td><td class="entry"><a class="el" href="class_u_visual_sprite.html">UVisualSprite</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_u_visual_choice.html#a32bf407e73d06f767cd962e42fbf84ee">VisualScene</a></td><td class="entry"><a class="el" href="class_u_visual_choice.html">UVisualChoice</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-</table></div><!-- contents -->
+<p>Material node for transition materials.  
+ <a href="class_u_m_e___transition_parameter2_d.html#details">More...</a></p>
+
+<p><code>#include &lt;VisualU/Public/ME_TransitionParameter2D.h&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for UME_TransitionParameter2D:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_u_m_e___transition_parameter2_d.png" alt=""/>
+ </div></div>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Material node for transition materials. </p>
+<p>Represents either first (currently rendered), or second (final target) sprite in the material asset which serves as transition effect. Parameters are immutable in the node and can only be switched by UME_TransitionParameter2D::bIsSecondTransition. Parameter names, however can be changed in the <a class="el" href="">Visual Settings</a> for all transition parameter nodes. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>ME_TransitionParameter2D.h</li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><a class="el" href="class_u_m_e___transition_parameter2_d.html">UME_TransitionParameter2D</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

@@ -20,7 +20,12 @@
 #include "Sound/SoundCue.h"
 #include "PaperFlipbook.h"
 
-//keep this below zero to avoid artifacts
+/// <summary>
+/// Difference between visual and logical ends of the transition.
+/// </summary>
+/// <remarks>
+/// Keep it below zero to avoid transition artifacts.
+/// </remarks>
 constexpr float TRANSITION_THRESHOLD = -0.005f;
 
 UVisualScene* UVisualScene::Get()
@@ -190,6 +195,7 @@ void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
 	}
 
 	if (!Background->IsTransitioning())
+
 	{
 		PlayTransition(DrivingAnim);
 	}
@@ -280,7 +286,7 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 	ExhaustedScenes.Push(Node.Last());
 
 	Node.Empty();
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(281)"), Node);
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(284)"), Node);
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();

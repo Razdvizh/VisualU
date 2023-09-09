@@ -306,6 +306,10 @@ public:
 		return false;
 	}
 
+	/// <summary>
+	/// Checks whether or not this scene background has valid <see cref="FBackground::TransitionMaterial"/> assigned.
+	/// </summary>
+	/// <returns><c>true</c> if scene background has valid <see cref="FBackground::TransitionMaterial"/></returns>
 	inline bool hasTransition() const
 	{
 		return !Background.TransitionMaterial.IsNull();
@@ -321,7 +325,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(330)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(328)"), Rows);
 		Rows.Find(this, Index);
 	}
 };

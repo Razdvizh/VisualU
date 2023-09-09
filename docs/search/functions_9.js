@@ -14,7 +14,9 @@ var searchData=
   ['setmirrorscale_11',['SetMirrorScale',['../class_u_visual_image.html#a4fb5ca0a805ae2d85d5c7190b08c2f57',1,'UVisualImage']]],
   ['setsocketoffset_12',['SetSocketOffset',['../class_u_visual_socket.html#a53d91700333dc9ff157fa5d4f0b4a32d',1,'UVisualSocket']]],
   ['settext_13',['SetText',['../class_u_visual_text_block.html#ac7b47052414bc7625f7cf8a8e5f3d6bb',1,'UVisualTextBlock']]],
-  ['setvisualimage_14',['SetVisualImage',['../class_s_visual_socket.html#aead9c8d38b1bdc83218c1bb9684add79',1,'SVisualSocket']]],
-  ['setvisualscene_15',['SetVisualScene',['../class_u_visual_choice.html#a2b5f64977584d85f2de4c37102dd833f',1,'UVisualChoice']]],
-  ['startupmodule_16',['StartupModule',['../class_f_visual_u_module.html#a7ef37b2c20d8cada28da5521fd5699a7',1,'FVisualUModule']]]
+  ['settransitionstate_14',['SetTransitionState',['../class_u_background_visual_image.html#aef80431f1327c054572f91cc47eee6ec',1,'UBackgroundVisualImage']]],
+  ['setvisualimage_15',['SetVisualImage',['../class_s_visual_socket.html#aead9c8d38b1bdc83218c1bb9684add79',1,'SVisualSocket']]],
+  ['setvisualscene_16',['SetVisualScene',['../class_u_visual_choice.html#a2b5f64977584d85f2de4c37102dd833f',1,'UVisualChoice']]],
+  ['startupmodule_17',['StartupModule',['../class_f_visual_u_module.html#a7ef37b2c20d8cada28da5521fd5699a7',1,'FVisualUModule']]],
+  ['stoptransition_18',['StopTransition',['../class_u_visual_scene.html#aa1d34587d10be09bfb7adf5a1af790d3',1,'UVisualScene']]]
 ];

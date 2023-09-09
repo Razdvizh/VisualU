@@ -142,9 +142,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
 	void ToNextScene();
 
+	/// <summary>
+	/// Transition with <see cref="UVisualScene::Transition">animation</see> to the next <see cref="FScenario">scene</see> in the node. 
+	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
 	void TransitionToNextScene();
 
+	/// <summary>
+	/// Transition with provided animation to the next <see cref="FScenario">scene</see> in the node.
+	/// </summary>
+	/// <param name="DrivingAnim">Animation to drive transition</param>
 	void TransitionToNextScene(UWidgetAnimation* DrivingAnim);
 
 	/// <summary>
@@ -215,6 +222,13 @@ public:
 	FOnNativeSceneTransitionEndedEvent OnNativeSceneTransitionEnded;
 
 protected:
+	/// <summary>
+	/// Animation used to drive transitions between <see cref="FScenario">scenes</see>.
+	/// </summary>
+	/// <remarks>
+	/// It can safely animate any parameters of the widgets or materials.
+	/// Transition ends when this animation ends.
+	/// </remarks>
 	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
 	UWidgetAnimation* Transition;
 
@@ -300,8 +314,18 @@ protected:
 	/// <returns><c>true</c> if at least one sprite was removed</returns>
 	bool ClearSprites();
 
+	/// <summary>
+	/// Play, if possible, uninterruptible transition to the next scene with specified <see cref="FBackground::TransitionMaterial">Transition Material</see>
+	/// </summary>
+	/// <param name="DrivingAnim">Animation that represents duration of the transition</param>
 	void PlayTransition(UWidgetAnimation* DrivingAnim);
 
+	/// <summary>
+	/// Stops rendering of the transition.
+	/// </summary>
+	/// <remarks>
+	/// Called by <see cref="UVisualScene::PlayTransition"/> after the end of driving animation
+	/// </remarks>
 	void StopTransition() const;
 
 private:

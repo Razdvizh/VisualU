@@ -116,10 +116,10 @@ Inheritance diagram for UVisualImage:</div>
  <div class="center">
   <img src="class_u_visual_image.png" usemap="#UVisualImage_map" alt=""/>
   <map id="UVisualImage_map" name="UVisualImage_map">
-<area href="class_u_visual_image_base.html" alt="UVisualImageBase" shape="rect" coords="166,56,322,80"/>
-<area href="class_i_async_loadable.html" alt="IAsyncLoadable" shape="rect" coords="166,0,322,24"/>
-<area href="class_i_info_assignable.html" alt="IInfoAssignable" shape="rect" coords="332,0,488,24"/>
-<area href="class_u_background_visual_image.html" alt="UBackgroundVisualImage" shape="rect" coords="166,168,322,192"/>
+<area href="class_u_visual_image_base.html" title="Base class for custom UMG widgets that serve as FSlateBrush containers." alt="UVisualImageBase" shape="rect" coords="166,56,322,80"/>
+<area href="class_i_async_loadable.html" title="Indicates use and support for asynchronous asset loading." alt="IAsyncLoadable" shape="rect" coords="166,0,322,24"/>
+<area href="class_i_info_assignable.html" title="Interface that allows classes to take data from Visual Info structures." alt="IInfoAssignable" shape="rect" coords="332,0,488,24"/>
+<area href="class_u_background_visual_image.html" title="Visual image that supports transition effects through material." alt="UBackgroundVisualImage" shape="rect" coords="166,168,322,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -134,6 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9dd44871f750cd252615cd50637811a5"><td class="memItemLeft" align="right" valign="top"><a id="a9dd44871f750cd252615cd50637811a5" name="a9dd44871f750cd252615cd50637811a5"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>ReleaseSlateResources</b> (bool bReleaseChildren) override</td></tr>
 <tr class="separator:a9dd44871f750cd252615cd50637811a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff0d87016a2a8064ba64fd180d223fa8"><td class="memItemLeft" align="right" valign="top"><a id="aff0d87016a2a8064ba64fd180d223fa8" name="aff0d87016a2a8064ba64fd180d223fa8"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>AssignVisualImageInfo</b> (const <a class="el" href="struct_f_visual_image_info.html">FVisualImageInfo</a> &amp;InInfo) override</td></tr>
+<tr class="separator:aff0d87016a2a8064ba64fd180d223fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4e2b1c4b2537ea19a3e3e1b1f37958a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_image.html#af4e2b1c4b2537ea19a3e3e1b1f37958a">SetAnimate</a> (bool <a class="el" href="class_u_visual_image.html#acdd0ce9a1161c9e938e66580928aff61">IsAnimated</a>)</td></tr>
 <tr class="memdesc:af4e2b1c4b2537ea19a3e3e1b1f37958a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Play animation sequence of paper flipbook or use <a class="el" href="class_u_visual_image.html#ab45c874fa35b2539fde66814a1f16d28" title="Index of the flipbook&#39;s frame that must be rendered.">UVisualImage::FrameIndex</a> to display one frame.  <br /></td></tr>
 <tr class="separator:af4e2b1c4b2537ea19a3e3e1b1f37958a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,8 +206,8 @@ FORCEINLINE FVector2D&#160;</td><td class="memItemRight" valign="bottom"><b>GetM
 <tr class="memdesc:af00874e90a3f303f82dae8b157d8c154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the visualized frame of paper flipbook.  <br /></td></tr>
 <tr class="separator:af00874e90a3f303f82dae8b157d8c154"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_i_async_loadable"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_i_async_loadable')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_i_async_loadable.html">IAsyncLoadable</a></td></tr>
-<tr class="memitem:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="memItemLeft" align="right" valign="top">
-virtual TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>AsyncLoad</b> (const FSoftObjectPath &amp;ObjectPath, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)</td></tr>
+<tr class="memitem:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="memItemLeft" align="right" valign="top">virtual TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_async_loadable.html#a8ed4aab927d226d00cf68d177c1f405f">AsyncLoad</a> (const FSoftObjectPath &amp;ObjectPath, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)</td></tr>
+<tr class="memdesc:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously load asset from disk.  <br /></td></tr>
 <tr class="separator:a8ed4aab927d226d00cf68d177c1f405f inherit pub_methods_class_i_async_loadable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>

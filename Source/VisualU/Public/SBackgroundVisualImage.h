@@ -10,6 +10,9 @@ class UPaperFlipbook;
 class UPaperSprite;
 class UTexture;
 
+/// <summary>
+/// Slate visual image that supports transition effects through material.
+/// </summary>
 class VISUALU_API SBackgroundVisualImage final : public SVisualImage
 {
 public:

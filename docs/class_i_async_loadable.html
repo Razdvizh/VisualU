@@ -103,24 +103,85 @@ $(document).ready(function(){initNavTree('class_i_async_loadable.html',''); init
   <div class="headertitle"><div class="title">IAsyncLoadable Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Indicates use and support for asynchronous asset loading.  
+ <a href="class_i_async_loadable.html#details">More...</a></p>
+
+<p><code>#include &lt;VisualU/Public/AsyncLoadable.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for IAsyncLoadable:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="class_i_async_loadable.png" usemap="#IAsyncLoadable_map" alt=""/>
   <map id="IAsyncLoadable_map" name="IAsyncLoadable_map">
-<area href="class_u_visual_image_base.html" alt="UVisualImageBase" shape="rect" coords="0,56,156,80"/>
+<area href="class_u_visual_image_base.html" title="Base class for custom UMG widgets that serve as FSlateBrush containers." alt="UVisualImageBase" shape="rect" coords="0,56,156,80"/>
 <area href="class_u_visual_image.html" title="Widget that can visualize sprite flipbooks either in animated or static state." alt="UVisualImage" shape="rect" coords="0,112,156,136"/>
-<area href="class_u_background_visual_image.html" alt="UBackgroundVisualImage" shape="rect" coords="0,168,156,192"/>
+<area href="class_u_background_visual_image.html" title="Visual image that supports transition effects through material." alt="UBackgroundVisualImage" shape="rect" coords="0,168,156,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8ed4aab927d226d00cf68d177c1f405f"><td class="memItemLeft" align="right" valign="top"><a id="a8ed4aab927d226d00cf68d177c1f405f" name="a8ed4aab927d226d00cf68d177c1f405f"></a>
-virtual TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>AsyncLoad</b> (const FSoftObjectPath &amp;ObjectPath, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)</td></tr>
+<tr class="memitem:a8ed4aab927d226d00cf68d177c1f405f"><td class="memItemLeft" align="right" valign="top">virtual TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_i_async_loadable.html#a8ed4aab927d226d00cf68d177c1f405f">AsyncLoad</a> (const FSoftObjectPath &amp;ObjectPath, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)</td></tr>
+<tr class="memdesc:a8ed4aab927d226d00cf68d177c1f405f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously load asset from disk.  <br /></td></tr>
 <tr class="separator:a8ed4aab927d226d00cf68d177c1f405f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Indicates use and support for asynchronous asset loading. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8ed4aab927d226d00cf68d177c1f405f" name="a8ed4aab927d226d00cf68d177c1f405f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ed4aab927d226d00cf68d177c1f405f">&#9670;&#160;</a></span>AsyncLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TSharedPtr&lt; FStreamableHandle &gt; IAsyncLoadable::AsyncLoad </td>
+          <td>(</td>
+          <td class="paramtype">const FSoftObjectPath &amp;&#160;</td>
+          <td class="paramname"><em>ObjectPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FStreamableDelegate&#160;</td>
+          <td class="paramname"><em>AfterLoadDelegate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TAsyncLoadPriority&#160;</td>
+          <td class="paramname"><em>Priority</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Asynchronously load asset from disk. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ObjectPath</td><td>Path to the asset that should be loaded</td></tr>
+    <tr><td class="paramname">AfterLoadDelegate</td><td>Delegate to call after asset is loaded. Note: it will be called if asset is already in memory</td></tr>
+    <tr><td class="paramname">Priority</td><td>Priority for async loading</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Handle to the loaded asset. When handle gone, asset is released.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>AsyncLoadable.h</li>
 <li>AsyncLoadable.cpp</li>

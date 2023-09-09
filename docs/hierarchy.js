@@ -50,13 +50,10 @@ var hierarchy =
       [ "UInfoAssignable", "class_u_info_assignable.html", null ]
     ] ],
     [ "UMaterialExpressionTextureSampleParameter2D", null, [
-      [ "UME_TextureSampleParameter2D", "class_u_m_e___texture_sample_parameter2_d.html", null ]
+      [ "UME_TransitionParameter2D", "class_u_m_e___transition_parameter2_d.html", null ]
     ] ],
     [ "UObject", null, [
       [ "UVisualUSettings", "class_u_visual_u_settings.html", null ]
-    ] ],
-    [ "UPaperSprite", null, [
-      [ "UVisualPaperSprite", "class_u_visual_paper_sprite.html", null ]
     ] ],
     [ "URichTextBlock", null, [
       [ "UVisualTextBlock", "class_u_visual_text_block.html", null ]

@@ -59,9 +59,21 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "A character which, in a pair, would enclose a metacharacter"))
 	FString PairCharacter;
 
+	/// <summary>
+	/// First parameter name for <see cref="UME_TransitionParameter2D"/> nodes.
+	/// </summary>
+	/// <remarks>
+	/// Transition begins with this sprite.
+	/// </remarks>
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transitions")
 	FName AParameterName;
 
+	/// <summary>
+	/// Second parameter name for <see cref="UME_TransitionParameter2D"/> nodes.
+	/// </summary>
+	/// <remarks>
+	/// Transition ends with this sprite.
+	/// </remarks>
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transitions")
 	FName BParameterName;
 };

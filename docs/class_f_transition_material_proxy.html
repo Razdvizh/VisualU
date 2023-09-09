@@ -103,13 +103,67 @@ $(document).ready(function(){initNavTree('class_f_transition_material_proxy.html
   <div class="headertitle"><div class="title">FTransitionMaterialProxy Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Proxy object for dynamic material designated for transition effect rendering.  
+ <a href="class_f_transition_material_proxy.html#details">More...</a></p>
+
+<p><code>#include &lt;VisualU/Public/TransitionMaterialProxy.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac7df810d4b2edf61ea402de7f58da4d2"><td class="memItemLeft" align="right" valign="top"><a id="ac7df810d4b2edf61ea402de7f58da4d2" name="ac7df810d4b2edf61ea402de7f58da4d2"></a>
-static UMaterialInstanceDynamic *&#160;</td><td class="memItemRight" valign="bottom"><b>GetTransitionMaterial</b> (UMaterialInstanceDynamic *MaterialToChange, const TMap&lt; FName, UTexture * &gt; &amp;Params)</td></tr>
+<tr class="memitem:ac7df810d4b2edf61ea402de7f58da4d2"><td class="memItemLeft" align="right" valign="top">static UMaterialInstanceDynamic *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_f_transition_material_proxy.html#ac7df810d4b2edf61ea402de7f58da4d2">GetTransitionMaterial</a> (UMaterialInstanceDynamic *MaterialToChange, const TMap&lt; FName, UTexture * &gt; &amp;Params)</td></tr>
+<tr class="memdesc:ac7df810d4b2edf61ea402de7f58da4d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies given parameters to the provided dynamic material.  <br /></td></tr>
 <tr class="separator:ac7df810d4b2edf61ea402de7f58da4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Proxy object for dynamic material designated for transition effect rendering. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac7df810d4b2edf61ea402de7f58da4d2" name="ac7df810d4b2edf61ea402de7f58da4d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7df810d4b2edf61ea402de7f58da4d2">&#9670;&#160;</a></span>GetTransitionMaterial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">UMaterialInstanceDynamic * FTransitionMaterialProxy::GetTransitionMaterial </td>
+          <td>(</td>
+          <td class="paramtype">UMaterialInstanceDynamic *&#160;</td>
+          <td class="paramname"><em>MaterialToChange</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const TMap&lt; FName, UTexture * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Params</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Applies given parameters to the provided dynamic material. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">MaterialToChange</td><td>Material that should render transition</td></tr>
+    <tr><td class="paramname">Params</td><td>Parameters to apply</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Altered dynamic material</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>TransitionMaterialProxy.h</li>
 <li>TransitionMaterialProxy.cpp</li>
