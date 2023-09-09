@@ -54,12 +54,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite's Z coordinate (a.k.a layer) in Canvas Panel"))
 	int32 ZOrder;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
-	FString AppearAnimationName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite")
-	FString DisappearAnimationName;
-
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
 	/// </summary>

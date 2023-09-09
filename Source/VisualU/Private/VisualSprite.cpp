@@ -19,31 +19,23 @@ void UVisualSprite::ReleaseSlateResources(bool bReleaseChildren)
 
 void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	bool bIsEmpty = InInfo.IsEmpty();
-
-	TArray<UWidget*> ChildWidgets;
-	WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);
-
-	int i, j;
-	for (i = j = 0; i < ChildWidgets.Num(); i++)
+	if (ensureAlwaysMsgf(!InInfo.IsEmpty(), TEXT("%s: Attempt to assign empty SpriteInfo, appearance will be compromised")))
 	{
-		UWidget* Child = ChildWidgets[i];
-		if (Child->IsA<UVisualImage>()) //< Maybe use higher level of abstraction a.k.a UVisualImageBase?
-		{
-			UVisualImage* ChildImage = Cast<UVisualImage>(Child);
-			FVisualImageInfo VisualImageInfo;
-			if (bIsEmpty)
-			{
-				VisualImageInfo = FVisualImageInfo();
-			}
-			else
-			{
-				checkf(InInfo.IsValidIndex(j), TEXT("There was less SpriteInfo than the sprite widget requires. You must provide an info for each Visual Image in the sprite"));
-				VisualImageInfo = InInfo[j];
-			}
+		TArray<UWidget*> ChildWidgets;
+		WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);
 
-			ChildImage->AssignVisualImageInfo(VisualImageInfo);
-			j++;
+		int i, j;
+		for (i = j = 0; i < ChildWidgets.Num(); i++)
+		{
+			UWidget* Child = ChildWidgets[i];
+			if (Child->IsA<UVisualImage>()) //< Maybe use higher level of abstraction a.k.a UVisualImageBase?
+			{
+				UVisualImage* ChildImage = Cast<UVisualImage>(Child);
+				checkf(InInfo.IsValidIndex(j), TEXT("There was less SpriteInfo than the sprite widget requires. You must provide an info for each Visual Image in the sprite"));
+				const FVisualImageInfo& VisualImageInfo = InInfo[j];
+				ChildImage->AssignVisualImageInfo(VisualImageInfo);
+				j++;
+			}
 		}
 	}
 }

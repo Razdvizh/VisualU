@@ -28,6 +28,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEndEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoadedEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneTransitionStartedEvent);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneTransitionEndedEvent);
+
 /// <summary>
 /// Class that loads, visualizes and connects <see cref="FScenario">Scenarios</see> in the game.
 /// </summary>
@@ -198,6 +202,18 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoadedEvent);
 	FOnNativeSceneLoadedEvent OnNativeSceneLoaded;
 
+	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	FOnSceneTransitionStartedEvent OnSceneTransitionStarted;
+
+	DECLARE_MULTICAST_DELEGATE(FOnNativeTransitionStartedEvent);
+	FOnNativeTransitionStartedEvent OnNativeSceneTransitionStarted;
+
+	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	FOnSceneTransitionEndedEvent OnSceneTransitionEnded;
+
+	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneTransitionEndedEvent);
+	FOnNativeSceneTransitionEndedEvent OnNativeSceneTransitionEnded;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
 	UWidgetAnimation* Transition;
@@ -242,9 +258,6 @@ protected:
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
 
-	DECLARE_MULTICAST_DELEGATE(FOnSceneTransitionEndedEvent);
-	FOnSceneTransitionEndedEvent OnSceneTransitionEnded;
-
 protected:
 	/// <summary>
 	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.
@@ -286,10 +299,6 @@ protected:
 	/// </summary>
 	/// <returns><c>true</c> if at least one sprite was removed</returns>
 	bool ClearSprites();
-
-	UVisualSprite* IsSpritePresent(const TSoftClassPtr<UVisualSprite> SpriteClass) const;
-
-	void InvalidateSprites(const TArray<FSprite>& NewSprites);
 
 	void PlayTransition(UWidgetAnimation* DrivingAnim);
 
