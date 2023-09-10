@@ -6,7 +6,9 @@
 #include "Scenario.h"
 #include "VisualScene.h"
 
-UVisualChoice::UVisualChoice(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UVisualChoice::UVisualChoice(const FObjectInitializer& ObjectInitializer) 
+	: Super(ObjectInitializer),
+	VisualScene(nullptr)
 {
 	
 }
@@ -18,12 +20,10 @@ void UVisualChoice::SetVisualScene(UVisualScene* Scene)
 
 void UVisualChoice::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	Super::AssignSpriteInfo(InInfo);
-}
-
-void UVisualChoice::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
+	if (!InInfo.IsEmpty())
+	{
+		Super::AssignSpriteInfo(InInfo);
+	}
 }
 
 void UVisualChoice::Choose(const UDataTable* Node) const

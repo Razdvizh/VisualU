@@ -94,9 +94,17 @@ public:
 	/// <returns><c>true</c> if current scene has a <see cref="UVisualChoice">choice</see></returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
 	bool IsWithChoice() const;
-
+	
+	/// <summary>
+	/// Whether or not currently visualized scene has a <see cref="FBackground::TransitionMaterial">transition material</see>.
+	/// </summary>
+	/// <returns><c>true</c> if current scene has a <see cref="UVisualChoice">choice</see></returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario")
 	bool IsWithTransition() const;
+
+	/// <returns><c>true</c> if the transition is in progress</returns>
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control")
+	bool IsTransitioning() const;
 
 	/// <returns><c>true</c> if loading of assets is still in progress</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
@@ -168,6 +176,11 @@ public:
 	/// \warning Only use this method on <see cref="FScenario">scenes</see> that was already seen by the player.
 	bool ToScene(const FScenario* Scene);
 
+	/// <summary>
+	/// Get scene in the node.
+	/// </summary>
+	/// <param name="Index">Index of the scene</param>
+	/// <returns>valid Scenario</returns>
 	const FScenario* GetSceneAt(int32 Index);
 
 	/// <summary>

@@ -38,8 +38,6 @@ public:
 	void Choose(const UDataTable* Node) const;
 
 protected:
-	virtual void NativeOnInitialized() override;
-	
 	/// <summary>
 	/// Pointer to the active <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>

@@ -141,9 +141,14 @@ const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;&#160;</td>
 <tr class="memitem:ac89ba6d5e967db9f24bf0416ea1e5d9b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#ac89ba6d5e967db9f24bf0416ea1e5d9b">IsWithChoice</a> () const</td></tr>
 <tr class="memdesc:ac89ba6d5e967db9f24bf0416ea1e5d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not currently visualized scene has a <a class="el" href="class_u_visual_choice.html">choice sprite</a>.  <br /></td></tr>
 <tr class="separator:ac89ba6d5e967db9f24bf0416ea1e5d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87db93cc335bce2bd2025752a5f6ab82"><td class="memItemLeft" align="right" valign="top"><a id="a87db93cc335bce2bd2025752a5f6ab82" name="a87db93cc335bce2bd2025752a5f6ab82"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsWithTransition</b> () const</td></tr>
+<tr class="memitem:a87db93cc335bce2bd2025752a5f6ab82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a87db93cc335bce2bd2025752a5f6ab82">IsWithTransition</a> () const</td></tr>
+<tr class="memdesc:a87db93cc335bce2bd2025752a5f6ab82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not currently visualized scene has a <a class="el" href="struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8">transition material</a>.  <br /></td></tr>
 <tr class="separator:a87db93cc335bce2bd2025752a5f6ab82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06c4a604eb6253b78919b823a0630b61"><td class="memItemLeft" align="right" valign="top"><a id="a06c4a604eb6253b78919b823a0630b61" name="a06c4a604eb6253b78919b823a0630b61"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsTransitioning</b> () const</td></tr>
+<tr class="memdesc:a06c4a604eb6253b78919b823a0630b61"><td class="mdescLeft">&#160;</td><td class="mdescRight"><dl class="section return"><dt>Returns</dt><dd><code>true</code> if the transition is in progress</dd></dl>
+<br /></td></tr>
+<tr class="separator:a06c4a604eb6253b78919b823a0630b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad70088bc7bda76c09ebb747dab406867"><td class="memItemLeft" align="right" valign="top"><a id="ad70088bc7bda76c09ebb747dab406867" name="ad70088bc7bda76c09ebb747dab406867"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsSceneLoading</b> () const</td></tr>
 <tr class="memdesc:ad70088bc7bda76c09ebb747dab406867"><td class="mdescLeft">&#160;</td><td class="mdescRight"><dl class="section return"><dt>Returns</dt><dd><code>true</code> if loading of assets is still in progress</dd></dl>
@@ -188,8 +193,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ToPreviousScene</b> (
 <tr class="memitem:a452b256f6841c6b61336866acfa75508"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#a452b256f6841c6b61336866acfa75508">ToScene</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene)</td></tr>
 <tr class="memdesc:a452b256f6841c6b61336866acfa75508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
 <tr class="separator:a452b256f6841c6b61336866acfa75508"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa93824b3f7d1c5a815f54a7a27a4fa4"><td class="memItemLeft" align="right" valign="top"><a id="aaa93824b3f7d1c5a815f54a7a27a4fa4" name="aaa93824b3f7d1c5a815f54a7a27a4fa4"></a>
-const <a class="el" href="struct_f_scenario.html">FScenario</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>GetSceneAt</b> (int32 Index)</td></tr>
+<tr class="memitem:aaa93824b3f7d1c5a815f54a7a27a4fa4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="struct_f_scenario.html">FScenario</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#aaa93824b3f7d1c5a815f54a7a27a4fa4">GetSceneAt</a> (int32 Index)</td></tr>
+<tr class="memdesc:aaa93824b3f7d1c5a815f54a7a27a4fa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get scene in the node.  <br /></td></tr>
 <tr class="separator:aaa93824b3f7d1c5a815f54a7a27a4fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_visual_scene.html#abbbd6f8c0345901cb33a7eb32621a8ea">ToScenario</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Scenario)</td></tr>
 <tr class="memdesc:abbbd6f8c0345901cb33a7eb32621a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jump to any exhausted scene.  <br /></td></tr>
@@ -428,6 +433,33 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 
 </div>
 </div>
+<a id="aaa93824b3f7d1c5a815f54a7a27a4fa4" name="aaa93824b3f7d1c5a815f54a7a27a4fa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa93824b3f7d1c5a815f54a7a27a4fa4">&#9670;&#160;</a></span>GetSceneAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="struct_f_scenario.html">FScenario</a> * UVisualScene::GetSceneAt </td>
+          <td>(</td>
+          <td class="paramtype">int32&#160;</td>
+          <td class="paramname"><em>Index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get scene in the node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Index</td><td>Index of the scene</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>valid Scenario</dd></dl>
+
+</div>
+</div>
 <a id="ac90b01fe845386d9b650ad1b04ae3fe8" name="ac90b01fe845386d9b650ad1b04ae3fe8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac90b01fe845386d9b650ad1b04ae3fe8">&#9670;&#160;</a></span>IsScenarioExhausted()</h2>
 
@@ -501,6 +533,26 @@ int32&#160;</td><td class="memItemRight" valign="bottom"><b>SceneIndex</b></td><
 </div><div class="memdoc">
 
 <p>Whether or not currently visualized scene has a <a class="el" href="class_u_visual_choice.html">choice sprite</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if current scene has a <a class="el" href="class_u_visual_choice.html">choice</a></dd></dl>
+
+</div>
+</div>
+<a id="a87db93cc335bce2bd2025752a5f6ab82" name="a87db93cc335bce2bd2025752a5f6ab82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87db93cc335bce2bd2025752a5f6ab82">&#9670;&#160;</a></span>IsWithTransition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualScene::IsWithTransition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether or not currently visualized scene has a <a class="el" href="struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8">transition material</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if current scene has a <a class="el" href="class_u_visual_choice.html">choice</a></dd></dl>
 
 </div>
