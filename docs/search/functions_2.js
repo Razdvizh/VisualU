@@ -15,7 +15,8 @@ var searchData=
   ['getimagedesiredposition_12',['GetImageDesiredPosition',['../class_u_visual_socket.html#a1b43bf9b3f3238348fa214617dd00078',1,'UVisualSocket']]],
   ['getlinewidth_13',['GetLineWidth',['../class_u_visual_text_block.html#ab4d361dc2e9d8b6b59c2b1f853491535',1,'UVisualTextBlock']]],
   ['getmirrorscale_14',['GetMirrorScale',['../class_u_visual_image.html#a5ff702bc2aab4b0403fd4cc37447b8a1',1,'UVisualImage']]],
-  ['getsocketoffset_15',['GetSocketOffset',['../class_u_visual_socket.html#aa0e2693bc82bc17874cc02f66a3599c4',1,'UVisualSocket']]],
-  ['gettransitionmaterial_16',['GetTransitionMaterial',['../class_f_transition_material_proxy.html#ac7df810d4b2edf61ea402de7f58da4d2',1,'FTransitionMaterialProxy']]],
-  ['getvisualsettings_17',['GetVisualSettings',['../class_f_visual_u_module.html#a9cd8644744ced00ca99c58b48521ce57',1,'FVisualUModule']]]
+  ['getsceneat_15',['GetSceneAt',['../class_u_visual_scene.html#aaa93824b3f7d1c5a815f54a7a27a4fa4',1,'UVisualScene']]],
+  ['getsocketoffset_16',['GetSocketOffset',['../class_u_visual_socket.html#aa0e2693bc82bc17874cc02f66a3599c4',1,'UVisualSocket']]],
+  ['gettransitionmaterial_17',['GetTransitionMaterial',['../class_f_transition_material_proxy.html#ac7df810d4b2edf61ea402de7f58da4d2',1,'FTransitionMaterialProxy']]],
+  ['getvisualsettings_18',['GetVisualSettings',['../class_f_visual_u_module.html#a9cd8644744ced00ca99c58b48521ce57',1,'FVisualUModule']]]
 ];

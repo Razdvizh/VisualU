@@ -76,7 +76,7 @@ void UVisualScene::NativeOnInitialized()
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(74)"), Node);
+	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(79)"), Node);
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
@@ -195,7 +195,6 @@ void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
 	}
 
 	if (!Background->IsTransitioning())
-
 	{
 		PlayTransition(DrivingAnim);
 	}
@@ -271,7 +270,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
-		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(266)"), Node);
+		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(273)"), Node);
 	}
 
 	SceneIndex = Scene->Index;
@@ -286,7 +285,7 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 	ExhaustedScenes.Push(Node.Last());
 
 	Node.Empty();
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(284)"), Node);
+	NewNode->GetAllRows(TEXT("VisualScene.cpp(288)"), Node);
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
@@ -359,7 +358,7 @@ bool UVisualScene::CanAdvanceScene() const
 
 bool UVisualScene::CanRetractScene() const
 {
-	return Node.IsValidIndex(SceneIndex - 1) || !ExhaustedScenes.IsEmpty();
+	return Node.IsValidIndex(SceneIndex - 1);
 }
 
 bool UVisualScene::IsSceneExhausted(const FScenario* Scene) const
@@ -390,6 +389,11 @@ bool UVisualScene::IsWithChoice() const
 bool UVisualScene::IsWithTransition() const
 {
 	return GetCurrentScene()->hasTransition();
+}
+
+bool UVisualScene::IsTransitioning() const
+{
+	return Background->IsTransitioning();
 }
 
 void UVisualScene::StopTransition() const

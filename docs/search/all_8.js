@@ -13,6 +13,7 @@ var searchData=
   ['issceneexhausted_10',['IsSceneExhausted',['../class_u_visual_scene.html#a99b75ac337033ac66661aed6702ab45f',1,'UVisualScene']]],
   ['issceneloaded_11',['IsSceneLoaded',['../class_u_visual_scene.html#a63f73ef00de5a44bc3f59b501ee43b3c',1,'UVisualScene']]],
   ['issceneloading_12',['IsSceneLoading',['../class_u_visual_scene.html#ad70088bc7bda76c09ebb747dab406867',1,'UVisualScene']]],
-  ['istransitioning_13',['IsTransitioning',['../class_u_background_visual_image.html#a573e1e49c3652720380586ef003edc70',1,'UBackgroundVisualImage']]],
-  ['iswithchoice_14',['IsWithChoice',['../class_u_visual_scene.html#ac89ba6d5e967db9f24bf0416ea1e5d9b',1,'UVisualScene']]]
+  ['istransitioning_13',['IsTransitioning',['../class_u_background_visual_image.html#a573e1e49c3652720380586ef003edc70',1,'UBackgroundVisualImage::IsTransitioning()'],['../class_u_visual_scene.html#a06c4a604eb6253b78919b823a0630b61',1,'UVisualScene::IsTransitioning() const']]],
+  ['iswithchoice_14',['IsWithChoice',['../class_u_visual_scene.html#ac89ba6d5e967db9f24bf0416ea1e5d9b',1,'UVisualScene']]],
+  ['iswithtransition_15',['IsWithTransition',['../class_u_visual_scene.html#a87db93cc335bce2bd2025752a5f6ab82',1,'UVisualScene']]]
 ];
