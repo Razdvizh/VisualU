@@ -6,8 +6,11 @@
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Engine/DataTable.h"
 #include "Animation/UMGSequencePlayer.h"
+#include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetBlueprintGeneratedClass.h"
+#include "TimerManager.h"
 #include "Scenario.h"
 #include "VisualDefaults.h"
 #include "VisualSprite.h"
@@ -76,7 +79,7 @@ void UVisualScene::NativeOnInitialized()
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 	check(FirstDataTable);
 	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
-	FirstDataTable->GetAllRows(TEXT("VisualScene.cpp(79)"), Node);
+	FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
@@ -270,7 +273,7 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
-		Scene->Owner->GetAllRows(TEXT("VisualScene.cpp(273)"), Node);
+		Scene->Owner->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
 
 	SceneIndex = Scene->Index;
@@ -285,7 +288,7 @@ void UVisualScene::ToNode(const UDataTable* NewNode)
 	ExhaustedScenes.Push(Node.Last());
 
 	Node.Empty();
-	NewNode->GetAllRows(TEXT("VisualScene.cpp(288)"), Node);
+	NewNode->GetAllRows(UE_SOURCE_LOCATION, Node);
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();

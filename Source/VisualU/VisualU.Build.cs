@@ -41,6 +41,7 @@ public class VisualU : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UMG",
+				"UnrealEd"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

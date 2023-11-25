@@ -4,7 +4,7 @@
 #include "VisualUBlueprintStatics.h"
 #include "PaperSprite.h"
 #include "Scenario.h"
-#include "AssetRegistryModule.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 
 UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 {
@@ -20,8 +20,8 @@ void UVisualUBlueprintStatics::PrintScenesData()
 	{
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
-
-		DataTable->GetAllRows(TEXT("VisualUBlueprintStatics.cpp(24)"), Rows);
+		
+		DataTable->GetAllRows(UE_SOURCE_LOCATION, Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 

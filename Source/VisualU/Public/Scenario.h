@@ -132,6 +132,47 @@ public:
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
 };
 
+USTRUCT(BlueprintType)
+struct FScenarioVisualInfo : public FVisualInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+		/// <summary>
+		/// <see cref="FScenario::Author"/>
+		/// </summary>
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+		FText Author;
+
+	/// <summary>
+	/// <see cref="FScenario::Line"/>
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+		FText Line;
+
+	/// <summary>
+	/// <see cref="FScenario::Music"/>
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+		TSoftObjectPtr<USoundBase> Music;
+
+	/// <summary>
+	/// <see cref="FScenario::Background"/>
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+		FBackground Background;
+
+	/// <summary>
+	/// <see cref="FScenario::SpritesParams"/>
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+		TArray<FSprite> SpritesParams;
+
+	virtual void Accept(IInfoAssignable* Visitor) const override
+	{
+		Visitor->AssignScenarioVisualInfo(*this);
+	}
+};
+
 /// <summary>
 /// A single scene or "frame" of the Visual Novel game.
 /// </summary>
@@ -152,7 +193,7 @@ public:
 /// <seealso cref="FSprite"/>
 /// <seealso cref="UVisualScene"/>
 USTRUCT(BlueprintType)
-struct VISUALU_API FScenario : public FTableRowBase
+struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -313,6 +354,15 @@ public:
 	inline bool hasTransition() const
 	{
 		return !Background.TransitionMaterial.IsNull();
+	}
+
+	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& Info) override
+	{
+		Author = Info.Author;
+		Line = Info.Line;
+		Music = Info.Music;
+		Background = Info.Background;
+		SpritesParams = Info.SpritesParams;
 	}
 
 private:

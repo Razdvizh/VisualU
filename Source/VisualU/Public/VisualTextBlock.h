@@ -8,7 +8,7 @@
 #include "VisualTextBlock.generated.h"
 
 class UVisualUSettings;
-
+///\todo change this to regular dynamic multicast delegate
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnActionEncounteredSignature, UVisualTextBlock, OnActionEncountered, const EVisualTextAction, Action);
 
 /// <summary>

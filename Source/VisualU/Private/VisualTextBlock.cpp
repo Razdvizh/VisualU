@@ -3,16 +3,17 @@
 
 #include "VisualTextBlock.h"
 #include "VisualUSettings.h"
-#include "Modules\ModuleManager.h"
+#include "Modules/ModuleManager.h"
 #include "VisualU.h"
-#include "Framework\Application\SlateApplication.h"
-#include "Widgets\Text\SRichTextBlock.h"
-#include "Components\PanelSlot.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Widgets/Text/SRichTextBlock.h"
+#include "Components/PanelSlot.h"
 #include "TimerManager.h"
 
 #define LOCTEXT_NAMESPACE "Visual U"
 
-UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer),
+UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) 
+	: Super(ObjectInitializer),
 	LineWidth(2),
 	CurrentString(),
 	TextString(),
@@ -22,8 +23,7 @@ UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) 
 	bDisplayInstantly(false)
 
 {
-	FVisualUModule* VisualUModule = &FModuleManager::LoadModuleChecked<FVisualUModule>(TEXT("VisualU"));
-	VisualUSettings = VisualUModule->GetVisualSettings();
+	VisualUSettings = GetDefault<UVisualUSettings>();
 }
 
 void UVisualTextBlock::SetText(const FText& InText)

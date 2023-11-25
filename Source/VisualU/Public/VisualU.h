@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Modules\ModuleManager.h"
+#include "Modules/ModuleManager.h"
 
 class ISettingsSection;
 class UVisualUSettings;
@@ -30,10 +30,12 @@ public:
 
 	/// <summary>
 	/// Getter for the <see cref="UVisualUSettings"/>.
-	/// Might be <c>nullptr</c> if called before the module is loaded.
+	/// Might be <c>nullptr</c> if called before the module is loaded. Editor only.
 	/// </summary>
 	/// <returns>VisualU Settings</returns>
+#if WITH_EDITOR
 	const UVisualUSettings* GetVisualSettings() const;
+#endif
 
 private:
 	/// <summary>
@@ -42,5 +44,7 @@ private:
 	/// <remarks>
 	/// Owner of the <see cref="UVisualUSettings"/>.
 	/// </remarks>
+#if WITH_EDITOR
 	TSharedPtr<ISettingsSection> SettingsSection;
+#endif
 };

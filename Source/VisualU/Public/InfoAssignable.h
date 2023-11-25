@@ -7,8 +7,7 @@
 #include "InfoAssignable.generated.h"
 
 struct FVisualImageInfo;
-struct FScenarioInfo;
-struct FVisualBackgroundImageInfo;
+struct FScenarioVisualInfo;
 
 UINTERFACE(MinimalAPI)
 class UInfoAssignable : public UInterface
@@ -30,6 +29,8 @@ class IInfoAssignable
 		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void AssignVisualImageInfo(const FVisualImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualImageInfo, );
+
+	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignScenarioVisualInfo, );
 
 };
 

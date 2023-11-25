@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AssetRegistryModule.h"
 #include "Blueprint/UserWidget.h"
 #include "Scenario.h"
-#include "Engine/AssetManager.h"
 #include "VisualScene.generated.h"
 
 class UTextBlock;
