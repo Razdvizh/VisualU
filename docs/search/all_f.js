@@ -22,7 +22,7 @@ var searchData=
   ['socketoffset_19',['SocketOffset',['../class_u_visual_socket.html#aefc9ede3b062d2e0f5855c9fa0d54bb1',1,'UVisualSocket']]],
   ['spriteclass_20',['SpriteClass',['../struct_f_sprite.html#ae692ae45e3b90c7afae286e41a1d6263',1,'FSprite']]],
   ['spriteinfo_21',['SpriteInfo',['../struct_f_sprite.html#a58df0d12f88a507c9a672e8872cd12a8',1,'FSprite']]],
-  ['spritesparams_22',['SpritesParams',['../struct_f_scenario.html#a904a0a0f58e40723e3834ab874b86749',1,'FScenario']]],
+  ['spritesparams_22',['SpritesParams',['../struct_f_scenario_visual_info.html#a7f94086bbd7639450ac995f941b389b8',1,'FScenarioVisualInfo::SpritesParams'],['../struct_f_scenario.html#a904a0a0f58e40723e3834ab874b86749',1,'FScenario::SpritesParams']]],
   ['startupmodule_23',['StartupModule',['../class_f_visual_u_module.html#a7ef37b2c20d8cada28da5521fd5699a7',1,'FVisualUModule']]],
   ['stoptransition_24',['StopTransition',['../class_u_visual_scene.html#aa1d34587d10be09bfb7adf5a1af790d3',1,'UVisualScene']]],
   ['svisualimage_25',['SVisualImage',['../class_s_visual_image.html',1,'']]],

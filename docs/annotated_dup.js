@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "FBackground", "struct_f_background.html", "struct_f_background" ],
     [ "FScenario", "struct_f_scenario.html", "struct_f_scenario" ],
+    [ "FScenarioVisualInfo", "struct_f_scenario_visual_info.html", "struct_f_scenario_visual_info" ],
     [ "FSprite", "struct_f_sprite.html", "struct_f_sprite" ],
     [ "FTransitionMaterialProxy", "class_f_transition_material_proxy.html", null ],
     [ "FVisualAnchors", "struct_f_visual_anchors.html", "struct_f_visual_anchors" ],
@@ -20,6 +21,7 @@ var annotated_dup =
     [ "UInfoAssignable", "class_u_info_assignable.html", null ],
     [ "UME_TransitionParameter2D", "class_u_m_e___transition_parameter2_d.html", null ],
     [ "UVisualChoice", "class_u_visual_choice.html", "class_u_visual_choice" ],
+    [ "UVisualChoiceSubsystem", "class_u_visual_choice_subsystem.html", null ],
     [ "UVisualImage", "class_u_visual_image.html", "class_u_visual_image" ],
     [ "UVisualImageBase", "class_u_visual_image_base.html", null ],
     [ "UVisualScene", "class_u_visual_scene.html", "class_u_visual_scene" ],

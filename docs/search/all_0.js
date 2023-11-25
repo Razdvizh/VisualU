@@ -6,5 +6,5 @@ var searchData=
   ['aparametername_3',['AParameterName',['../class_u_visual_u_settings.html#ab3a4ac1a265201fa54b4e1b1bc7af876',1,'UVisualUSettings']]],
   ['assignspriteinfo_4',['AssignSpriteInfo',['../class_u_visual_choice.html#a4c9674ebf395d0f9a618be6c678d5491',1,'UVisualChoice::AssignSpriteInfo()'],['../class_u_visual_sprite.html#a0fa01c9d6eb5b9f12cb49715384bf07f',1,'UVisualSprite::AssignSpriteInfo()']]],
   ['asyncload_5',['AsyncLoad',['../class_i_async_loadable.html#a8ed4aab927d226d00cf68d177c1f405f',1,'IAsyncLoadable']]],
-  ['author_6',['Author',['../struct_f_scenario.html#aa19a22eb73a6621702d111cd47bb6295',1,'FScenario']]]
+  ['author_6',['Author',['../struct_f_scenario_visual_info.html#a7ea710486827beae35fd219dfb4925e2',1,'FScenarioVisualInfo::Author'],['../struct_f_scenario.html#aa19a22eb73a6621702d111cd47bb6295',1,'FScenario::Author']]]
 ];

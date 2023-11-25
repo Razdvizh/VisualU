@@ -13,6 +13,7 @@ var hierarchy =
     ] ],
     [ "FTransitionMaterialProxy", "class_f_transition_material_proxy.html", null ],
     [ "FVisualInfo", "struct_f_visual_info.html", [
+      [ "FScenarioVisualInfo", "struct_f_scenario_visual_info.html", null ],
       [ "FVisualImageInfo", "struct_f_visual_image_info.html", null ]
     ] ],
     [ "IAsyncLoadable", "class_i_async_loadable.html", [
@@ -23,6 +24,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "IInfoAssignable", "class_i_info_assignable.html", [
+      [ "FScenario", "struct_f_scenario.html", null ],
       [ "UVisualImageBase", "class_u_visual_image_base.html", null ]
     ] ],
     [ "IModuleInterface", null, [
@@ -44,6 +46,9 @@ var hierarchy =
     ] ],
     [ "UBlueprintFunctionLibrary", null, [
       [ "UVisualUBlueprintStatics", "class_u_visual_u_blueprint_statics.html", null ]
+    ] ],
+    [ "UGameInstanceSubsystem", null, [
+      [ "UVisualChoiceSubsystem", "class_u_visual_choice_subsystem.html", null ]
     ] ],
     [ "UInterface", null, [
       [ "UAsyncLoadable", "class_u_async_loadable.html", null ],

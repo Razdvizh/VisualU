@@ -113,8 +113,11 @@ $(document).ready(function(){initNavTree('struct_f_scenario.html',''); initResiz
 Inheritance diagram for FScenario:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="struct_f_scenario.png" alt=""/>
- </div></div>
+  <img src="struct_f_scenario.png" usemap="#FScenario_map" alt=""/>
+  <map id="FScenario_map" name="FScenario_map">
+<area href="class_i_info_assignable.html" title="Interface that allows classes to take data from Visual Info structures." alt="IInfoAssignable" shape="rect" coords="113,0,216,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -143,6 +146,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PrintLog</b> 
 <tr class="memitem:a9cbe5dcb32e2c9d5e495c58436f7989b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_scenario.html#a9cbe5dcb32e2c9d5e495c58436f7989b">hasTransition</a> () const</td></tr>
 <tr class="memdesc:a9cbe5dcb32e2c9d5e495c58436f7989b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether or not this scene background has valid <a class="el" href="struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8" title="Transition to play on background when switching to the next scene.">FBackground::TransitionMaterial</a> assigned.  <br /></td></tr>
 <tr class="separator:a9cbe5dcb32e2c9d5e495c58436f7989b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d0fa0965979e37388178e998672d6f4"><td class="memItemLeft" align="right" valign="top"><a id="a3d0fa0965979e37388178e998672d6f4" name="a3d0fa0965979e37388178e998672d6f4"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>AssignScenarioVisualInfo</b> (const <a class="el" href="struct_f_scenario_visual_info.html">FScenarioVisualInfo</a> &amp;Info) override</td></tr>
+<tr class="separator:a3d0fa0965979e37388178e998672d6f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
