@@ -351,7 +351,7 @@ public:
 	/// Checks whether or not this scene background has valid <see cref="FBackground::TransitionMaterial"/> assigned.
 	/// </summary>
 	/// <returns><c>true</c> if scene background has valid <see cref="FBackground::TransitionMaterial"/></returns>
-	inline bool hasTransition() const
+	inline bool HasTransition() const
 	{
 		return !Background.TransitionMaterial.IsNull();
 	}

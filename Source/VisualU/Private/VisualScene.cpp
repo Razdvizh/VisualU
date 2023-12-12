@@ -391,7 +391,7 @@ bool UVisualScene::IsWithChoice() const
 
 bool UVisualScene::IsWithTransition() const
 {
-	return GetCurrentScene()->hasTransition();
+	return GetCurrentScene()->HasTransition();
 }
 
 bool UVisualScene::IsTransitioning() const
