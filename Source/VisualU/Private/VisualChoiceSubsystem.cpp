@@ -8,11 +8,3 @@
 UVisualChoiceSubsystem::UVisualChoiceSubsystem() : Super()
 {
 }
-
-void UVisualChoiceSubsystem::ChooseScenarioVariantByName(UDataTable* Node, FName ScenarioName, const FScenarioVisualInfo& ScenarioVariant)
-{
-	if (FScenario* Scenario = Node->FindRow<FScenario>(ScenarioName, TEXT("VisualChoiceSubsystem.cpp(20)")))
-	{
-		Scenario->AssignScenarioVisualInfo(ScenarioVariant);
-	}
-}

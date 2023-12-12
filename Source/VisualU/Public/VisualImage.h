@@ -207,12 +207,6 @@ public:
 	void SetFlipbook(UPaperFlipbook* InFlipbook);
 
 	/// <summary>
-	/// Synchronously set paper flipbook.
-	/// </summary>
-	/// <param name="InFlipbook">Flipbook to visualize</param>
-	void SetFlipbook(TObjectPtr<UPaperFlipbook> InFlipbook);
-
-	/// <summary>
 	/// Asynchronously set paper flipbook.
 	/// </summary>
 	/// <param name="InFlipbook">Flipbook to visualize</param>

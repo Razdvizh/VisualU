@@ -13,19 +13,7 @@
 #include "Widgets/Accessibility/SlateCoreAccessibleWidgets.h"
 #endif
 
-SLATE_IMPLEMENT_WIDGET(SVisualImage)
-void SVisualImage::PrivateRegisterAttributes(FSlateAttributeInitializer& AttributeInitializer)
-{
-	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Flipbook"), Flipbook, EInvalidateWidgetReason::LayoutAndVolatility);
-	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Color and Opacity"), ColorAndOpacity, EInvalidateWidgetReason::Paint);
-	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Custom Desired Scale"), CustomDesiredScale, EInvalidateWidgetReason::Layout);
-	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Mirror Scale"), MirrorScale, EInvalidateWidgetReason::Paint);
-}
-
-SVisualImage::SVisualImage() : Flipbook(*this),
-ColorAndOpacity(*this, FLinearColor(ForceInit)),
-CustomDesiredScale(*this),
-MirrorScale(*this, FVector2D(ForceInitToZero))
+SVisualImage::SVisualImage()
 {
 	SetCanTick(false);
 	bCanSupportFocus = false;
@@ -37,10 +25,10 @@ void SVisualImage::Construct(const FArguments& Args)
 {
 	bAnimate = Args._Animate;
 	SpriteIndex = Args._SpriteIndex;
-	ColorAndOpacity.Assign(*this, Args._ColorAndOpacity);
-	CustomDesiredScale.Assign(*this, Args._CustomDesiredScale);
-	Flipbook.Assign(*this, Args._Flipbook);
-	MirrorScale.Assign(*this, Args._MirrorScale);
+	ColorAndOpacity = Args._ColorAndOpacity;
+	CustomDesiredScale = Args._CustomDesiredScale;
+	Flipbook = Args._Flipbook;
+	MirrorScale = Args._MirrorScale;
 
 	UpdateSequence();
 }
@@ -81,63 +69,63 @@ void SVisualImage::SetSpriteIndex(int32 Index)
 
 void SVisualImage::SetFlipbook(UPaperFlipbook* InFlipbook)
 {
-	Flipbook.Set(*this, InFlipbook);
+	SetFlipbook(TAttribute<const UPaperFlipbook*>(InFlipbook));
 
 	UpdateSequence();
 }
 
-void SVisualImage::SetFlipbook(TAttribute<const UPaperFlipbook*> InFlipbook)
+void SVisualImage::SetFlipbook(const TAttribute<const UPaperFlipbook*>& InFlipbook)
 {
-	Flipbook.Assign(*this, MoveTemp(InFlipbook));
+	SetAttribute(Flipbook, InFlipbook, EInvalidateWidgetReason::PaintAndVolatility);
 
 	UpdateSequence();
 }
 
-void SVisualImage::SetColorAndOpacity(TAttribute<FSlateColor> InColorAndOpacity)
+void SVisualImage::SetColorAndOpacity(const TAttribute<FSlateColor>& InColorAndOpacity)
 {
-	ColorAndOpacity.Assign(*this, MoveTemp(InColorAndOpacity));
+	SetAttribute(ColorAndOpacity, InColorAndOpacity, EInvalidateWidgetReason::Paint);
 }
 
 void SVisualImage::SetColorAndOpacity(const FLinearColor& InLinearColor)
 {
-	ColorAndOpacity.Set(*this, FSlateColor(InLinearColor));
+	SetColorAndOpacity(TAttribute<FSlateColor>(FSlateColor(InLinearColor)));
 }
 
 void SVisualImage::SetColorAndOpacity(const FSlateColor& InSlateColor)
 {
-	ColorAndOpacity.Set(*this, InSlateColor);
+	SetColorAndOpacity(TAttribute<FSlateColor>(InSlateColor));
 }
 
 void SVisualImage::SetDesiredScale(TAttribute<TOptional<FVector2D>> InDesiredScale)
 {
-	CustomDesiredScale.Assign(*this, MoveTemp(InDesiredScale));
+	SetAttribute(CustomDesiredScale, InDesiredScale, EInvalidateWidgetReason::Layout);
 }
 
 void SVisualImage::SetDesiredScale(TOptional<FVector2D> InDesiredScale)
 {
-	CustomDesiredScale.Set(*this, InDesiredScale);
+	SetDesiredScale(TAttribute<TOptional<FVector2D>>(InDesiredScale));
 }
 
 void SVisualImage::SetDesiredScale(const FVector2D& InDesiredSize)
 {
-	CustomDesiredScale.Set(*this, TOptional<FVector2D>(InDesiredSize));
+	SetDesiredScale(TAttribute<TOptional<FVector2D>>(TOptional<FVector2D>(InDesiredSize)));
 }
 
 void SVisualImage::SetMirrorScale(TAttribute<FVector2D> InMirrorScale)
 {
-	MirrorScale.Assign(*this, MoveTemp(InMirrorScale));
+	SetAttribute(MirrorScale, InMirrorScale, EInvalidateWidgetReason::Paint);
 }
 
 void SVisualImage::SetMirrorScale(const FVector2D& InMirrorScale)
 {
-	MirrorScale.Set(*this, InMirrorScale);
+	SetMirrorScale(TAttribute<FVector2D>(InMirrorScale));
 }
 
 void SVisualImage::SetMirrorScale(const FScale2D& InMirrorScale)
 {
 	const FVector2D Scale = FVector2D(InMirrorScale.GetVector());
 
-	MirrorScale.Set(*this, Scale);
+	SetMirrorScale(TAttribute<FVector2D>(Scale));
 }
 
 UPaperSprite* SVisualImage::GetCurrentSprite() const
@@ -161,7 +149,7 @@ FVector2D SVisualImage::ComputeDesiredSize(float) const
 
 bool SVisualImage::ComputeVolatility() const
 {
-	return Super::ComputeVolatility() || CurveSequence.IsPlaying() || bAnimate;
+	return  SVisualImageBase::ComputeVolatility() || CurveSequence.IsPlaying() || bAnimate;
 }
 
 bool SVisualImage::IsResourceValid() const
@@ -176,14 +164,14 @@ UObject* SVisualImage::GetFinalResource() const
 
 const FVector2D SVisualImage::GetImageSize() const
 {
-	const FVector3d BoxSize = GetCurrentSprite()->GetRenderBounds().GetBox().GetSize();
+	const FVector BoxSize = GetCurrentSprite()->GetRenderBounds().GetBox().GetSize();
 
 	return FVector2D(BoxSize.X, BoxSize.Z);
 }
 
 const FLinearColor SVisualImage::GetFinalColorAndOpacity(const FWidgetStyle& InWidgetStyle) const
 {
-	return FLinearColor(InWidgetStyle.GetColorAndOpacityTint() * ColorAndOpacity.ToAttribute(*this).Get().GetColor(InWidgetStyle) * ConvertToBrush().GetTint(InWidgetStyle));
+	return FLinearColor(InWidgetStyle.GetColorAndOpacityTint() * ColorAndOpacity.Get().GetColor(InWidgetStyle) * ConvertToBrush().GetTint(InWidgetStyle));
 }
 
 void SVisualImage::PreSlateDrawElementExtension() const

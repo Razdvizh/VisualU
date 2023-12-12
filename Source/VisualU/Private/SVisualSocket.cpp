@@ -23,7 +23,7 @@ int32 SVisualSocket::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGe
 {
 	if (VisualImage && VisualImage->GetFlipbook())
 	{
-		const FVector3d BoxSize = VisualImage->GetCurrentSprite()->GetRenderBounds().GetBox().GetSize();
+		const FVector BoxSize = VisualImage->GetCurrentSprite()->GetRenderBounds().GetBox().GetSize();
 		const FVector2D ImageSize = FVector2D(BoxSize.X, BoxSize.Z);
 		const FVector2D NewSocketOffset = FVector2D((ImageDesiredPosition.X - ImageSize.X / 2) / ImageSize.X, (ImageDesiredPosition.Y - ImageSize.Y / 2) / ImageSize.Y);
 		SocketPosition = NewSocketOffset;

@@ -7,7 +7,6 @@
 #include "VisualChoiceSubsystem.generated.h"
 
 class UDataTable;
-struct FScenarioVisualInfo;
 
 /// \todo add async loading for data table assets
 UCLASS()
@@ -17,8 +16,5 @@ class VISUALU_API UVisualChoiceSubsystem : public UGameInstanceSubsystem
 
 public:
 	UVisualChoiceSubsystem();
-
-	UFUNCTION(BlueprintCallable, Category = "Visual Choice Subsystem")
-	void ChooseScenarioVariantByName(UDataTable* Node, FName ScenarioName, const FScenarioVisualInfo& ScenarioVariant);
 
 };

@@ -70,7 +70,7 @@ public:
 		UE_LOG(LogVisualU, Warning, TEXT("Anchors: %s"), *Anchors.ToString());
 		UE_LOG(LogVisualU, Warning, TEXT("Position: %s"), *Position.ToString());
 		UE_LOG(LogVisualU, Warning, TEXT("Z order: %d"), ZOrder);
-		if (!SpriteInfo.IsEmpty())
+		if (SpriteInfo.Num() > 0)
 		{
 			int cnt = 0;
 			for (const auto& Info : SpriteInfo)
@@ -132,47 +132,6 @@ public:
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
 };
 
-USTRUCT(BlueprintType)
-struct FScenarioVisualInfo : public FVisualInfo
-{
-	GENERATED_USTRUCT_BODY()
-
-		/// <summary>
-		/// <see cref="FScenario::Author"/>
-		/// </summary>
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		FText Author;
-
-	/// <summary>
-	/// <see cref="FScenario::Line"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		FText Line;
-
-	/// <summary>
-	/// <see cref="FScenario::Music"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		TSoftObjectPtr<USoundBase> Music;
-
-	/// <summary>
-	/// <see cref="FScenario::Background"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		FBackground Background;
-
-	/// <summary>
-	/// <see cref="FScenario::SpritesParams"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		TArray<FSprite> SpritesParams;
-
-	virtual void Accept(IInfoAssignable* Visitor) const override
-	{
-		Visitor->AssignScenarioVisualInfo(*this);
-	}
-};
-
 /// <summary>
 /// A single scene or "frame" of the Visual Novel game.
 /// </summary>
@@ -193,7 +152,7 @@ struct FScenarioVisualInfo : public FVisualInfo
 /// <seealso cref="FSprite"/>
 /// <seealso cref="UVisualScene"/>
 USTRUCT(BlueprintType)
-struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
+struct VISUALU_API FScenario : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -211,13 +170,13 @@ public:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "A dialog line"))
 	FText Line;
-	
+
 	/// <summary>
 	/// Audio to play while the scene is displayed.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Audio to play while this Scenario is displayed"))
 	TSoftObjectPtr<USoundBase> Music;
-	
+
 	/// <summary>
 	/// Background to display.
 	/// </summary>
@@ -315,7 +274,7 @@ public:
 		UE_LOG(LogVisualU, Warning, TEXT("\tBackground Art: %s"), !Background.BackgroundArt.IsNull() ? *Background.BackgroundArt.GetAssetName() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("\tTransition Material: %s"), !Background.TransitionMaterial.IsNull() ? *Background.TransitionMaterial.GetAssetName() : TEXT("None"));
 
-		if (!SpritesParams.IsEmpty())
+		if (SpritesParams.Num() > 0)
 		{
 			int cnt = 0;
 			for (const auto& SpriteParam : SpritesParams)
@@ -333,7 +292,7 @@ public:
 	/// <returns><c>true</c> if scene has <see cref="UVisualChoice">Visual Choice</see></returns>
 	inline bool HasChoice() const
 	{
-		if (!SpritesParams.IsEmpty())
+		if (SpritesParams.Num() > 0)
 		{
 			for (const auto& SpriteParam : SpritesParams)
 			{
@@ -343,7 +302,7 @@ public:
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -356,15 +315,6 @@ public:
 		return !Background.TransitionMaterial.IsNull();
 	}
 
-	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& Info) override
-	{
-		Author = Info.Author;
-		Line = Info.Line;
-		Music = Info.Music;
-		Background = Info.Background;
-		SpritesParams = Info.SpritesParams;
-	}
-
 private:
 	/// \internal
 	/// <summary>
@@ -375,7 +325,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(328)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(378)"), Rows);
 		Rows.Find(this, Index);
 	}
 };

@@ -20,7 +20,7 @@ void UVisualChoice::SetVisualScene(UVisualScene* Scene)
 
 void UVisualChoice::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	if (!InInfo.IsEmpty())
+	if (InInfo.Num() > 0)
 	{
 		Super::AssignSpriteInfo(InInfo);
 	}

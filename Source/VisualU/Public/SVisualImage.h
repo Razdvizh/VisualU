@@ -16,8 +16,6 @@ class UPaperSprite;
 class VISUALU_API SVisualImage : public SVisualImageBase<SVisualImage>
 {
 
-	SLATE_DECLARE_WIDGET(SVisualImage, SVisualImageBase<SVisualImage>)
-
 public:
 	SLATE_BEGIN_ARGS(SVisualImage) : _Animate(false), _SpriteIndex(0) {}
 
@@ -47,9 +45,9 @@ public:
 
 	void SetFlipbook(UPaperFlipbook* InFlipbook);
 
-	void SetFlipbook(TAttribute<const UPaperFlipbook*> InFlipbook);
+	void SetFlipbook(const TAttribute<const UPaperFlipbook*>& InFlipbook);
 
-	void SetColorAndOpacity(TAttribute<FSlateColor> InColorAndOpacity);
+	void SetColorAndOpacity(const TAttribute<FSlateColor>& InColorAndOpacity);
 
 	void SetColorAndOpacity(const FLinearColor& InLinearColor);
 
@@ -80,14 +78,6 @@ protected:
 
 	FORCEINLINE FCurveSequence* GetCurveSequence() { return &CurveSequence; }
 
-	FORCEINLINE TSlateAttributeRef<const UPaperFlipbook*> GetFlipbook() const { return TSlateAttributeRef<const UPaperFlipbook*>(AsShared(), Flipbook); }
-
-	FORCEINLINE TSlateAttributeRef<FSlateColor> GetColorAndOpacity() const { return TSlateAttributeRef<FSlateColor>(AsShared(), ColorAndOpacity); }
-
-	FORCEINLINE TSlateAttributeRef<TOptional<FVector2D>> GetDesiredScale() const { return TSlateAttributeRef<TOptional<FVector2D>>(AsShared(), CustomDesiredScale); }
-
-	FORCEINLINE TSlateAttributeRef<FVector2D> GetMirrorScale() const { return TSlateAttributeRef<FVector2D>(AsShared(), MirrorScale); }
-
 	FORCEINLINE bool GetAnimate() const { return bAnimate; }
 
 	FORCEINLINE int32 GetSpriteIndex() const { return SpriteIndex; }
@@ -116,13 +106,13 @@ public:
 private:
 	FCurveSequence CurveSequence;
 
-	TSlateAttribute<const UPaperFlipbook*> Flipbook;
+	TAttribute<const UPaperFlipbook*> Flipbook;
 
-	TSlateAttribute<FSlateColor> ColorAndOpacity;
+	TAttribute<FSlateColor> ColorAndOpacity;
 
-	TSlateAttribute<TOptional<FVector2D>> CustomDesiredScale;
+	TAttribute<TOptional<FVector2D>> CustomDesiredScale;
 
-	TSlateAttribute<FVector2D> MirrorScale;
+	TAttribute<FVector2D> MirrorScale;
 
 	bool bAnimate;
 

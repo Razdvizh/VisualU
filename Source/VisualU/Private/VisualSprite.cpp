@@ -19,7 +19,7 @@ void UVisualSprite::ReleaseSlateResources(bool bReleaseChildren)
 
 void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 {
-	if (ensureAlwaysMsgf(!InInfo.IsEmpty(), TEXT("%s: Attempt to assign empty SpriteInfo, appearance will be compromised")))
+	if (ensureAlwaysMsgf(InInfo.Num() > 0, TEXT("%s: Attempt to assign empty SpriteInfo, appearance will be compromised")))
 	{
 		TArray<UWidget*> ChildWidgets;
 		WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);

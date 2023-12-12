@@ -21,7 +21,7 @@ void UVisualUBlueprintStatics::PrintScenesData()
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 		
-		DataTable->GetAllRows(UE_SOURCE_LOCATION, Rows);
+		DataTable->GetAllRows(TEXT("VisualUBlueprintStatics.cpp(24)"), Rows);
 
 		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
 

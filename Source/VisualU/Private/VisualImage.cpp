@@ -15,8 +15,8 @@ UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer)
 	Flipbook(nullptr)
 {
 	ColorAndOpacity = FLinearColor::White;
-	DesiredScale = FVector2D::One();
-	MirrorScale = FVector2D::One();
+	DesiredScale = FVector2D::UnitVector;
+	MirrorScale = FVector2D::UnitVector;
 	bAnimate = false;
 	FrameIndex = 0;
 }
@@ -88,16 +88,6 @@ void UVisualImage::SetFrameIndex(int Index)
 	if (VisualImageSlate.IsValid())
 	{
 		VisualImageSlate->SetSpriteIndex(Index);
-	}
-}
-
-void UVisualImage::SetFlipbook(TObjectPtr<UPaperFlipbook> InFlipbook)
-{
-	Flipbook = InFlipbook;
-
-	if (VisualImageSlate.IsValid())
-	{
-		VisualImageSlate->SetFlipbook(Flipbook);
 	}
 }
 
