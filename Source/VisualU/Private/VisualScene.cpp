@@ -386,7 +386,7 @@ const FScenario& UVisualScene::GetCurrentScenario() const
 
 bool UVisualScene::IsWithChoice() const
 {
-	return GetCurrentScene()->hasChoice();
+	return GetCurrentScene()->HasChoice();
 }
 
 bool UVisualScene::IsWithTransition() const

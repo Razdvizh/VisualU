@@ -142,8 +142,7 @@ void SVisualImage::SetMirrorScale(const FScale2D& InMirrorScale)
 
 UPaperSprite* SVisualImage::GetCurrentSprite() const
 {
-	const UPaperFlipbook* PaperFlipbook = Flipbook.Get();
-	if (PaperFlipbook)
+	if (const UPaperFlipbook* PaperFlipbook = Flipbook.Get())
 	{
 		check(PaperFlipbook->IsValidKeyFrameIndex(SpriteIndex));
 		UPaperSprite* CurrentSprite = bAnimate ? PaperFlipbook->GetSpriteAtTime(CurveSequence.GetSequenceTime()) : PaperFlipbook->GetSpriteAtFrame(SpriteIndex);

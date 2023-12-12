@@ -331,7 +331,7 @@ public:
 	/// Checks whether or not this scene has at least one <see cref="UVisualChoice">Visual Choice</see>.
 	/// </summary>
 	/// <returns><c>true</c> if scene has <see cref="UVisualChoice">Visual Choice</see></returns>
-	inline bool hasChoice() const
+	inline bool HasChoice() const
 	{
 		if (!SpritesParams.IsEmpty())
 		{
