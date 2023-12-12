@@ -375,7 +375,7 @@ private:
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;
-		InDataTable->GetAllRows(TEXT("Scenario.h(328)"), Rows);
+		InDataTable->GetAllRows(TEXT("Scenario.h(378)"), Rows);
 		Rows.Find(this, Index);
 	}
 };
