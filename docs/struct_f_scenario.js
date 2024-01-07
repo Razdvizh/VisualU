@@ -1,8 +1,8 @@
 var struct_f_scenario =
 [
     [ "GetDataToLoad", "struct_f_scenario.html#acd65e06f861c7cc41313a8e52da622e0", null ],
-    [ "hasChoice", "struct_f_scenario.html#a043a961ffac8abb6c7cd5146b9f69acf", null ],
-    [ "hasTransition", "struct_f_scenario.html#a9cbe5dcb32e2c9d5e495c58436f7989b", null ],
+    [ "HasChoice", "struct_f_scenario.html#a92e73e2d4004acd57beb35393dbc5369", null ],
+    [ "HasTransition", "struct_f_scenario.html#a4c08bdf223c01bfc66dfbaa1f30d4b4c", null ],
     [ "PrintLog", "struct_f_scenario.html#a16d988174296f6c14fdb935f4c52a3e4", null ],
     [ "Author", "struct_f_scenario.html#aa19a22eb73a6621702d111cd47bb6295", null ],
     [ "Background", "struct_f_scenario.html#aeeefb9b24401ce5f8dfbd17840d248d7", null ],
