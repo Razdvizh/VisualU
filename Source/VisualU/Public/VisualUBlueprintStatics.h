@@ -9,7 +9,7 @@
 class UPaperSprite;
 
 ///<summary>
-/// Provides useful functionality that is missing in the Blueprints
+/// Provides useful functionality that is missing in the Blueprints.
 ///</summary>
 UCLASS()
 class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary

@@ -42,11 +42,12 @@ void UVisualUBlueprintStatics::GetScenesData(TArray<FAssetData>& OutData)
 
 	FARFilter Filter;
 
-	const FName Name = UDataTable::StaticClass()->GetFName();
+	const FName AssetName = UDataTable::StaticClass()->GetFName();
+	const FName PackageName = UDataTable::StaticClass()->GetPackage()->GetFName();
 	const FName Key = TEXT("RowStructure");
 	const FString Value = TEXT("Scenario");
 
-	Filter.ClassNames.Add(Name);
+	Filter.ClassPaths.Add(FTopLevelAssetPath(PackageName, AssetName));
 	Filter.bIncludeOnlyOnDiskAssets = true;
 	Filter.TagsAndValues.AddUnique(Key, Value);
 

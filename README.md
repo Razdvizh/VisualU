@@ -1,11 +1,11 @@
 # VisualU
-Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game.
+Plugin for Unreal Engine 5.3 that brings core functionality for a widget-based visual novel game.
 
 # Setup
-Build the plugin for the Unreal Engine 5.x project
+Build the plugin for the Unreal Engine 5.3.x project
 
 ## Build Plugin using Unreal Automation Tool (Windows)
-1. Go to ```UE_5.0\Engine\Build\BatchFiles```.
+1. Go to ```<engine_directory>\Engine\Build\BatchFiles```.
 2. Type ```powershell``` into File Explorer's address tab.
 3. In the opened Powershell window, type the following command: ```./RunUAT.bat BuildPlugin -plugin="<path_to_plugin>\VisualU.uplugin" -package="C:\Users\$Env:Username\Desktop\Package"```
 4. Packaged plugin can be saved to any other folder, Desktop is used for example purposes.

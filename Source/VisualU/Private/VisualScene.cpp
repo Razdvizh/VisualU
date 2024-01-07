@@ -2,6 +2,7 @@
 
 #include "VisualScene.h"
 #include "Engine/StreamableManager.h"
+#include "Engine/AssetManager.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
