@@ -41,17 +41,8 @@ public class VisualU : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UMG",
-				"UnrealEd"
+                "AssetRegistry"
 				// ... add private dependencies that you statically link with here ...	
-			}
-			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
-			new string[]
-			{
-				// ... add any modules that your module loads dynamically here ...
-				"AssetRegistry",
 			}
 			);
 	}

@@ -57,7 +57,7 @@ inline FSlateBrush SVisualImageBase<DerivedT>::ConvertToBrush() const
 
 	if (IsResourceValid()) //step 1 - Is Resource Valid
 	{
-		UObject* FinalResource = GetFinalResource(); //step 2(opt.) - Get Final Resource
+		UObject* FinalResource = GetFinalResource(); //step 2 - Get Final Resource
 
 		checkSlow(FinalResource); // < body
 
@@ -79,13 +79,13 @@ inline int32 SVisualImageBase<DerivedT>::OnPaint(const FPaintArgs& Args, const F
 {
 	const FSlateBrush Brush = ConvertToBrush(); //step 1 - Get FSlateBrush
 
-	const FLinearColor FinalColorAndOpacity = GetFinalColorAndOpacity(InWidgetStyle); //step 2(opt.) - Get Color And Opacity
+	const FLinearColor FinalColorAndOpacity = GetFinalColorAndOpacity(InWidgetStyle); //step 2(opt.) - Get Color And Opacity TODO: Make optional
 
 	if (Brush.GetResourceObject() != nullptr) // < Body
 	{
 		PreSlateDrawElementExtension();
 
-		const FGeometry CustomGeometry = MakeCustomGeometry(AllottedGeometry); //step 3(opt.) Make Custom Gemoetry
+		const FGeometry CustomGeometry = MakeCustomGeometry(AllottedGeometry); //step 3(opt.) Make Custom Gemoetry TODO: Make optional
 		FSlateDrawElement::MakeBox(OutDrawElements, LayerId, CustomGeometry.ToPaintGeometry(), &Brush, ESlateDrawEffect::None, FinalColorAndOpacity);
 
 		PostSlateDrawElementExtension();
