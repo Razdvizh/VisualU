@@ -69,6 +69,7 @@ void UVisualTextBlock::SetText(const FText& InText)
 
 	if (TextString.IsValidIndex(CurrCharCnt))
 	{
+		CurrentString = FString();
 		GetWorld()->GetTimerManager().SetTimer(CharacterDelayTimer, CharacterDelayDelegate, CharacterAppearanceDelay, true);
 		bIsAppearingText = true;
 	}

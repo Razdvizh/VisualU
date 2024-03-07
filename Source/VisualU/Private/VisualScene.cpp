@@ -126,8 +126,11 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene)
 {
 	check(Scene);
-	if (UnloadScene) CancelSceneLoading();
-	
+	if (UnloadScene)
+	{
+		CancelSceneLoading();
+	}
+
 	TArray<FSoftObjectPath> DataToLoad;
 	
 	Scene->GetDataToLoad(DataToLoad);
