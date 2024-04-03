@@ -1,5 +1,6 @@
 # VisualU
 Plugin for Unreal Engine 4.27 that brings core functionality for a widget-based visual novel game.
+![VisualU](https://github.com/Razdvizh/VisualU/assets/114196034/1b0a7f38-5461-4cd8-82f2-964f26b78e50)
 
 # Setup
 Build the plugin for the Unreal Engine 4.27 project
