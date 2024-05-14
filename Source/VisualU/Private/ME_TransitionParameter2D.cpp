@@ -13,6 +13,7 @@ UME_TransitionParameter2D::UME_TransitionParameter2D(const FObjectInitializer& O
 	ParameterName = VisualSettings->AParameterName;
 	AParameterName = VisualSettings->AParameterName;
 	BParameterName = VisualSettings->BParameterName;
+	SamplerSource = ESamplerSourceMode::SSM_Wrap_WorldGroupSettings;
 }
 
 #if WITH_EDITOR

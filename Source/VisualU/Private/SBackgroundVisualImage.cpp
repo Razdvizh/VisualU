@@ -23,7 +23,7 @@ void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMate
 {
 	Target = TargetFlipbook;
 	Transition = TransitionMaterial;
-
+	
 	if (Target && bShouldAnimateTarget)
 	{
 		GetCurveSequence()->AddCurve(0.f, Target->GetTotalDuration());
@@ -36,6 +36,7 @@ void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMate
 void SBackgroundVisualImage::SetTransitionState(bool IsTransitioning)
 {
 	bIsTransitioning = IsTransitioning;
+	UpdateSequence();
 }
 
 UObject* SBackgroundVisualImage::GetFinalResource() const

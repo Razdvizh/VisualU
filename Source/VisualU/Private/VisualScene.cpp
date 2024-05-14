@@ -30,7 +30,7 @@
 /// <remarks>
 /// Keep it below zero to avoid transition artifacts.
 /// </remarks>
-constexpr float TRANSITION_THRESHOLD = -0.005f;
+constexpr float TRANSITION_THRESHOLD = -SMALL_NUMBER;
 
 UVisualScene* UVisualScene::Get()
 {
@@ -100,9 +100,9 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	if (UPaperFlipbook* BackgroundArt = Scene->Background.BackgroundArt.Get())
+	if (!Scene->Background.BackgroundArt.IsPending() && !Scene->Background.TransitionMaterial.IsPending())
 	{
-		Background->SetFlipbook(BackgroundArt);
+		Background->SetFlipbook(Scene->Background.BackgroundArt.Get());
 	}
 
 	if (USoundBase* Music = Scene->Music.Get())
@@ -114,7 +114,7 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 	{
 		UVisualSprite* Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
 		Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
-		
+
 		UCanvasPanelSlot* SpriteSlot = Canvas->AddChildToCanvas(Sprite);
 		SpriteSlot->SetZOrder(SpriteData.ZOrder);
 		SpriteSlot->SetAnchors(SpriteData.Anchors);
@@ -145,6 +145,14 @@ void UVisualScene::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLo
 			Pinned->OnNativeSceneLoaded.Broadcast();
 		}
 	}, FStreamableManager::DefaultAsyncLoadPriority);
+}
+
+void UVisualScene::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+	if (Transition == Animation)
+	{
+		StopTransition();
+	}
 }
 
 void UVisualScene::LoadAndConstruct()
@@ -230,10 +238,10 @@ void UVisualScene::ToPreviousScene()
 
 bool UVisualScene::ToScene(const FScenario* Scene)
 {
-	bool isFound = false;
+	bool bIsFound = false;
 	if (Node[0]->Owner == Scene->Owner)
 	{
-		isFound = true;
+		bIsFound = true;
 	}
 	else
 	{
@@ -243,19 +251,19 @@ bool UVisualScene::ToScene(const FScenario* Scene)
 			if (ExhaustedScenes[i]->Owner == Scene->Owner)
 			{
 				ExhaustedScenes.Pop();
-				isFound = true;
+				bIsFound = true;
 				break;
 			}
 			ExhaustedScenes.Pop();
 		}
 	}
 	
-	if (isFound)
+	if (bIsFound)
 	{
 		SetCurrentScene(Scene);
 	}
 
-	return isFound;
+	return bIsFound;
 }
 
 const FScenario* UVisualScene::GetSceneAt(int32 Index)
@@ -312,19 +320,16 @@ void UVisualScene::PlayTransition(UWidgetAnimation* DrivingAnim)
 	if (!SoftTransitionMaterial.IsNull() && CanAdvanceScene())
 	{
 		const FScenario* NextScene = GetSceneAt(SceneIndex + 1);
-		bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArt.IsNull(), TEXT("You are trying to transition to an empty background"));
+		const bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArt.IsNull(), TEXT("You are trying to transition to an empty background"));
 		if (bIsTransitionPossible)
 		{
 			UPaperFlipbook* NextFlipbook = NextScene->Background.BackgroundArt.LoadSynchronous();
-			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.IsValid() ? SoftTransitionMaterial.Get() : SoftTransitionMaterial.LoadSynchronous();
+			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.LoadSynchronous();
 			UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
-			DynamicTransitionMaterial->SetFlags(RF_Transient);
+			DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
 			
 			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
-			PlayAnimation(DrivingAnim, /*StartAtTime=*/0.f, /*LoopsToPlay=*/1, EUMGSequencePlayMode::Forward, /*PlaybackSpeed=*/1.f, /*RestoreState=*/true);
-
-			OnTransitionEnd.BindUObject(this, &UVisualScene::StopTransition);
-			GetWorld()->GetTimerManager().SetTimer(TransitionHandle, OnTransitionEnd, DrivingAnim->GetEndTime() + TRANSITION_THRESHOLD, false);
+			PlayAnimationForward(DrivingAnim, 1.f, true);
 		}
 	}
 }

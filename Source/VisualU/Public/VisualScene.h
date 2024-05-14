@@ -319,6 +319,8 @@ protected:
 	/// <param name="UnloadScene">Whether or not to release the handle. <c>true</c> by default</param>
 	virtual void LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene = true);
 
+	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
+
 	/// <summary>
 	/// Removes all <see cref="UVisualSprite">Visual Sprites</see> from <see cref="UVisualScene::Canvas"/>.
 	/// </summary>
@@ -345,8 +347,4 @@ private:
 	void LoadAndConstruct();
 
 	void SetCurrentScene(const FScenario* Scene);
-
-	FTimerHandle TransitionHandle;
-
-	FTimerDelegate OnTransitionEnd;
 };

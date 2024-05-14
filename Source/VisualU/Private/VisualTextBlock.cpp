@@ -48,19 +48,19 @@ void UVisualTextBlock::SetText(const FText& InText)
 	}
 
 	/**Pre-wrap text in advance for proper runtime appearance*/
-	const TCHAR newline = 10;
-	const TCHAR whitespace = 32;
+	const TCHAR Newline = 10;
+	const TCHAR Whitespace = 32;
 	for (int32 i = 1; i < TextString.GetCharArray().Num(); i++)
 	{
 		if (i % LineWidth == 0)
 		{
-			int32 localCharIndex = i;
-			while (TextString.IsValidIndex(localCharIndex) && TextString[localCharIndex] != whitespace)
+			int32 LocalCharIndex = i;
+			while (TextString.IsValidIndex(LocalCharIndex) && TextString[LocalCharIndex] != Whitespace)
 			{
-				localCharIndex--;
+				LocalCharIndex--;
 			}
-			TextString.InsertAt(localCharIndex, newline);
-			TextString.RemoveAt(localCharIndex + 1);
+			TextString.InsertAt(LocalCharIndex, Newline);
+			TextString.RemoveAt(LocalCharIndex + 1);
 		}
 	}
 
