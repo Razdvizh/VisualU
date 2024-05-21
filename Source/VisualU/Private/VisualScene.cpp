@@ -405,10 +405,11 @@ bool UVisualScene::IsTransitioning() const
 
 void UVisualScene::StopTransition() const
 {
-	Background->SetTransitionState(false);
-
 	OnSceneTransitionEnded.Broadcast();
 	OnNativeSceneTransitionEnded.Broadcast();
+
+	Background->SetFlipbook(GetCurrentScene()->Background.BackgroundArt.LoadSynchronous());
+	Background->SetTransitionState(false);
 }
 
 void UVisualScene::ConstructScene()
