@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "VisualRenderer.generated.h"
+#include "UObject/NoExportTypes.h"
+#include "VisualSpriteProxy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class VISUALU_API UVisualRenderer : public UUserWidget
+class VISUALU_API UVisualSpriteProxy : public UObject
 {
 	GENERATED_BODY()
 	

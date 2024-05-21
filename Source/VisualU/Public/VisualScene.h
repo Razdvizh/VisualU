@@ -246,6 +246,7 @@ protected:
 	/// <summary>
 	/// Internal widget for scene background.
 	/// </summary>
+	UPROPERTY(BlueprintReadOnly)
 	UBackgroundVisualImage* Background;
 
 	/// <summary>

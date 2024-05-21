@@ -100,7 +100,7 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	if (!Scene->Background.BackgroundArt.IsPending() && !Scene->Background.TransitionMaterial.IsPending())
+	if (!Scene->Background.BackgroundArt.IsNull())
 	{
 		Background->SetFlipbook(Scene->Background.BackgroundArt.Get());
 	}
@@ -410,10 +410,11 @@ bool UVisualScene::IsTransitioning() const
 
 void UVisualScene::StopTransition() const
 {
-	Background->SetTransitionState(false);
-
 	OnSceneTransitionEnded.Broadcast();
 	OnNativeSceneTransitionEnded.Broadcast();
+
+	Background->SetFlipbook(GetCurrentScene()->Background.BackgroundArt.LoadSynchronous());
+	Background->SetTransitionState(false);
 }
 
 void UVisualScene::ConstructScene()
