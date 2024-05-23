@@ -1,3 +1,5 @@
+This is an archived branch that uses different approach for background transitions together with an attempt for sprite caching.
+
 # VisualU
 Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game
 
