@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
 #include "Scenario.h"
+#include "Templates/SubclassOf.h"
 #include "VisualController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStart);
@@ -14,25 +14,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoaded);
 
 class UVisualRenderer;
+class APlayerController;
+struct FStreamableHandle;
 
 /**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
  */
-UCLASS()
-class VISUALU_API AVisualController : public APlayerController
+UCLASS(Blueprintable)
+class VISUALU_API UVisualController : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	AVisualController();
-
-	/// <summary>
-	/// Releases the handle for the assets of the current scene.
-	/// </summary>
-	/// <remarks>
-	/// If no other handles to these assets exist, assets will be unloaded from memory.
-	/// </remarks>
-	void CancelSceneLoading();
+	UVisualController();
 
 	/// <returns>Currently visualized <see cref="FScenario">scene</see></returns>
 	const FScenario* GetCurrentScene() const;
@@ -48,9 +42,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
 	bool IsWithChoice() const;
 
+	/// <summary>
+	/// Releases the handle for the assets of the current scene.
+	/// </summary>
+	/// <remarks>
+	/// If no other handles to these assets exist, assets will be unloaded from memory.
+	/// </remarks>
+	void CancelCurrentScene();
+
 	/// <returns><c>true</c> if loading of assets is still in progress</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
-	bool IsSceneLoading() const;
+	bool IsCurrentSceneLoading() const;
+
+	/// <returns><c>true</c> if assets of the current <see cref="FScenario">scene</see> are already loaded</returns>
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Are assets of the current Scene loaded"))
+	bool IsCurrentSceneLoaded() const;
 
 	/// <summary>
 	/// Whether or not the <paramref name="Scene"/> is exhausted.
@@ -81,10 +87,6 @@ public:
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> behind the current one.</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene behind the current one"))
 	bool CanRetractScene() const;
-
-	/// <returns><c>true</c> if assets of the current <see cref="FScenario">scene</see> are already loaded</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Are assets of the current Scene loaded"))
-	bool IsSceneLoaded() const;
 
 	/// <summary>
 	/// Visualize the next <see cref="FScenario">scene</see> in the node.
@@ -134,6 +136,30 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Sets provided node as active"))
 	void ToNode(const UDataTable* NewNode);
 
+	/*
+	* Construct underlying widget and add it to the player screen. Will show currently selected scene.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	void Visualize(APlayerController* OwningController, int32 ZOrder = 0);
+
+	/*
+	* Destroy underlying widget.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	void Discard();
+
+	/*
+	* Make underlying widget visible.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	void Show();
+
+	/*
+	* Make underlying widget collapsed.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	void Hide();
+
 	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
 	FOnSceneStart OnSceneStart;
 
@@ -152,18 +178,24 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoaded);
 	FOnNativeSceneLoaded OnNativeSceneLoaded;
 
+	TSubclassOf<UVisualRenderer> RendererClass;
+
 protected:
-	virtual void BeginPlay() override;
 	/// <summary>
 	/// Loads assets of the <paramref name="Scene"/> into the memory.
 	/// </summary>
 	/// <param name="Scene">Scenario whose assets should be loaded</param>
 	/// <param name="AfterLoadDelegate">Delegate that would be executed after assets are loaded</param>
-	/// <param name="UnloadScene">Whether or not to release the handle. <c>true</c> by default</param>
-	virtual void LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate, bool UnloadScene = true);
+	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene);
+
+	void LoadScene(const FScenario* Scene);
+
+	void PrepareScenes(bool bIsForward = true);
 
 private:
 	void SetCurrentScene(const FScenario* Scene);
+
+	void FallbackQueue(bool bIsForward = true);
 
 private:
 	UPROPERTY()
@@ -185,6 +217,18 @@ private:
 	/// </summary>
 	int32 SceneIndex;
 
+	/*
+	* How many following scenarios will be loaded. 
+	* e.g. for value of 5: 5(or how much is left in the node) scenarios after current scene will be loaded asynchronously.
+	*/
+	int32 ScenesToLoad;
+
+	/*
+	* Handles for resources of the following scenarios.
+	* Number of elements always less or equal to ScenesToLoad.
+	*/
+	TQueue<TSharedPtr<FStreamableHandle>> SceneHandles;
+
 	/// <summary>
 	/// Scenes that has been already seen in the game.
 	/// Only the scenes **past** the currently active scene are exhausted.
@@ -195,6 +239,4 @@ private:
 	/// is not considered exhausted anymore untill the player advances forward again.
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
-	
-	bool bDrawOnBeginPlay;
 };

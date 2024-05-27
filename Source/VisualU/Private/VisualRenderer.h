@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Scenario.h"
 #include "VisualRenderer.generated.h"
 
 class UBackgroundVisualImage;
@@ -20,6 +21,8 @@ class VISUALU_API UVisualRenderer : public UUserWidget
 public:
 	UVisualRenderer(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void DrawScene(const FScenario* Scene);
+
 protected:
 	/// <summary>
 	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.
@@ -27,6 +30,8 @@ protected:
 	/// <returns>Underlying slate widget</returns>
 	/// \warning Do not add any widgets to the Widget tree.
 	virtual TSharedRef<SWidget> RebuildWidget() override;
+
+	bool ClearSprites();
 
 protected:
 	/// <summary>
@@ -42,6 +47,7 @@ protected:
 	/// <summary>
 	/// Internal widget for scene background.
 	/// </summary>
+	UPROPERTY()
 	UBackgroundVisualImage* Background;
 
 	/// <summary>
@@ -50,6 +56,7 @@ protected:
 	/// <remarks>
 	/// All <see cref="UVisualSprite">Visual Sprites</see> and <see cref="UVisualScene::Background"/> are children of this panel widget.
 	/// </remarks>
+	UPROPERTY()
 	UCanvasPanel* Canvas;
 	
 };
