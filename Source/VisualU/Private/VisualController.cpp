@@ -90,6 +90,7 @@ void UVisualController::PrepareScenes(bool bIsForward)
 			}
 		}
 
+		FallbackQueue();
 		return;
 	}
 
@@ -101,6 +102,8 @@ void UVisualController::PrepareScenes(bool bIsForward)
 	}
 
 	SceneHandles.Dequeue(ActiveSceneHandle);
+
+	FallbackQueue(bIsForward);
 }
 
 void UVisualController::ToNextScene()
@@ -117,7 +120,6 @@ void UVisualController::ToNextScene()
 
 	SceneIndex += 1;
 	PrepareScenes();
-	FallbackQueue();
 	Renderer->DrawScene(GetCurrentScene());
 
 	OnSceneStart.Broadcast();
@@ -140,7 +142,6 @@ void UVisualController::ToPreviousScene()
 
 	SceneIndex -= 1;
 	PrepareScenes(false);
-	FallbackQueue(false);
 	Renderer->DrawScene(GetCurrentScene());
 
 	OnSceneStart.Broadcast();
@@ -149,6 +150,7 @@ void UVisualController::ToPreviousScene()
 
 bool UVisualController::ToScene(const FScenario* Scene)
 {
+	check(Scene);
 	bool bIsFound = false;
 	if (Node[0]->Owner == Scene->Owner)
 	{
@@ -171,6 +173,7 @@ bool UVisualController::ToScene(const FScenario* Scene)
 
 	if (bIsFound)
 	{
+		SceneHandles.Empty();
 		SetCurrentScene(Scene);
 	}
 
@@ -190,16 +193,19 @@ bool UVisualController::ToScenario(const FScenario& Scenario)
 
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
+	check(Scene);
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
+		SceneHandles.Empty();
 		Scene->Owner->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
 
 	SceneIndex = Scene->Index;
+	PrepareScenes();
 	Renderer->DrawScene(GetCurrentScene());
 
 	OnSceneStart.Broadcast();
@@ -212,7 +218,7 @@ void UVisualController::FallbackQueue(bool bIsForward)
 	{
 		LoadScene(GetCurrentScene());
 	}
-	if ((bIsForward && !CanAdvanceScene()) || (!bIsForward && !CanRetractScene()))
+	else if ((bIsForward && !CanAdvanceScene()) || (!bIsForward && !CanRetractScene()))
 	{
 		SceneHandles.Dequeue(ActiveSceneHandle);
 	}
@@ -220,15 +226,21 @@ void UVisualController::FallbackQueue(bool bIsForward)
 
 void UVisualController::ToNode(const UDataTable* NewNode)
 {
+	check(NewNode);
 	ExhaustedScenes.Push(Node.Last());
 
 	Node.Empty();
 	NewNode->GetAllRows(UE_SOURCE_LOCATION, Node);
 
+	checkf(!Node.IsEmpty(), TEXT("Trying to jump to empty Data Table! - %s"), *NewNode->GetFName().ToString());
+
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
+	SceneHandles.Empty();
+
 	SceneIndex = 0;
+	PrepareScenes();
 	Renderer->DrawScene(GetCurrentScene());
 
 	OnSceneStart.Broadcast();
@@ -243,7 +255,6 @@ void UVisualController::Visualize(APlayerController* OwningController, int32 ZOr
 		Renderer = CreateWidget<UVisualRenderer>(OwningController, RendererClass);
 	}
 	Renderer->AddToPlayerScreen(ZOrder);
-	LoadScene(GetCurrentScene());
 	PrepareScenes();
 	Renderer->DrawScene(GetCurrentScene());
 }
