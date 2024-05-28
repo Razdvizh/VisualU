@@ -9,11 +9,13 @@
 
 class UBackgroundVisualImage;
 class UCanvasPanel;
+class UWidgetAnimation;
+class UMaterialParameterCollection;
 
 /**
  * Responsible for visualizing data from `FScenario`.
  */
-UCLASS()
+UCLASS(NotBlueprintable)
 class VISUALU_API UVisualRenderer : public UUserWidget
 {
 	GENERATED_BODY()
@@ -23,6 +25,8 @@ public:
 
 	virtual void DrawScene(const FScenario* Scene);
 
+	void PlayTransition(const FScenario* From, const FScenario* To);
+
 protected:
 	/// <summary>
 	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.
@@ -31,9 +35,11 @@ protected:
 	/// \warning Do not add any widgets to the Widget tree.
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
+	virtual void NativeConstruct() override;
+
 	bool ClearSprites();
 
-protected:
+private:
 	/// <summary>
 	/// Animation used to drive transitions between <see cref="FScenario">scenes</see>.
 	/// </summary>
@@ -41,8 +47,11 @@ protected:
 	/// It can safely animate any parameters of the widgets or materials.
 	/// Transition ends when this animation ends.
 	/// </remarks>
-	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
+	UPROPERTY(Transient)
 	UWidgetAnimation* Transition;
+
+	UPROPERTY()
+	TSoftObjectPtr<UMaterialParameterCollection> ParameterCollection;
 
 	/// <summary>
 	/// Internal widget for scene background.

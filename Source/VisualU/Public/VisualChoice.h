@@ -8,6 +8,7 @@
 
 class UDataTable;
 class UVisualScene;
+class UVisualController;
 
 /// <summary>
 /// Sprite that represents a choice between nodes.
@@ -34,8 +35,11 @@ public:
 	/// Sets the provided node as active for operations inside the <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>
 	/// <param name="node">node to operate on</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Choice", meta = (ToolTip = "Sets the provided node as active for operations inside Visual Secne"))
-	void Choose(const UDataTable* Node) const;
+	UFUNCTION(BlueprintCallable, Category = "Visual Choice", meta = (DisplayName = "Choose", DeprecatedFunction, DeprecationMessage = "Visual Scene usage is deprecated, and this function relies on it. Use overloaded version that takes Visual Controller instead.", ToolTip = "Sets the provided node as active for operations inside Visual Secne"))
+	void Choose_DEPRECATED(const UDataTable* Node) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Choice")
+	void Choose(UVisualController* Controller, const UDataTable* Node) const;
 
 protected:
 	/// <summary>

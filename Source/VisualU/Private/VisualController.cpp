@@ -90,7 +90,7 @@ void UVisualController::PrepareScenes(bool bIsForward)
 			}
 		}
 
-		FallbackQueue();
+		AssertCurrentSceneLoad();
 		return;
 	}
 
@@ -103,7 +103,7 @@ void UVisualController::PrepareScenes(bool bIsForward)
 
 	SceneHandles.Dequeue(ActiveSceneHandle);
 
-	FallbackQueue(bIsForward);
+	AssertCurrentSceneLoad(bIsForward);
 }
 
 void UVisualController::ToNextScene()
@@ -118,10 +118,11 @@ void UVisualController::ToNextScene()
 
 	CancelCurrentScene();
 
+	//Renderer->PlayTransition(GetCurrentScene(), GetSceneAt(SceneIndex + 1));
 	SceneIndex += 1;
 	PrepareScenes();
 	Renderer->DrawScene(GetCurrentScene());
-
+	
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
 }
@@ -212,7 +213,7 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualController::FallbackQueue(bool bIsForward)
+void UVisualController::AssertCurrentSceneLoad(bool bIsForward)
 {
 	if (SceneHandles.IsEmpty() || SceneHandles.Peek()->Get()->IsLoadingInProgress())
 	{
@@ -274,6 +275,16 @@ void UVisualController::Hide()
 {
 	check(Renderer);
 	Renderer->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UVisualController::SetNumScenesToLoad(int32 Num)
+{
+	if (Num > 100)
+	{
+		UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scenario loading, it might have a significant impact on performance."), Num);
+	}
+
+	ScenesToLoad = Num;
 }
 
 bool UVisualController::IsWithChoice() const

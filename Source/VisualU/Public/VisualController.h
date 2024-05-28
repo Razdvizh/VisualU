@@ -20,7 +20,7 @@ struct FStreamableHandle;
 /**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
  */
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType, EditInlineNew)
 class VISUALU_API UVisualController : public UObject
 {
 	GENERATED_BODY()
@@ -32,14 +32,14 @@ public:
 	const FScenario* GetCurrentScene() const;
 
 	/// <returns>Currently visualized <see cref="FScenario"/></returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Currently visualized Scenario"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario", meta = (ToolTip = "Currently visualized Scenario"))
 	const FScenario& GetCurrentScenario() const;
 
 	/// <summary>
 	/// Whether or not currently visualized scene has a <see cref="UVisualChoice">choice sprite</see>.
 	/// </summary>
 	/// <returns><c>true</c> if current scene has a <see cref="UVisualChoice">choice</see></returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
 	bool IsWithChoice() const;
 
 	/// <summary>
@@ -51,11 +51,11 @@ public:
 	void CancelCurrentScene();
 
 	/// <returns><c>true</c> if loading of assets is still in progress</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
 	bool IsCurrentSceneLoading() const;
 
 	/// <returns><c>true</c> if assets of the current <see cref="FScenario">scene</see> are already loaded</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Scenario|Instantiation", meta = (ToolTip = "Are assets of the current Scene loaded"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario|Instantiation", meta = (ToolTip = "Are assets of the current Scene loaded"))
 	bool IsCurrentSceneLoaded() const;
 
 	/// <summary>
@@ -77,27 +77,27 @@ public:
 	/// <remarks>
 	/// <see cref="FScenario">Scenario</see> is considered exhausted when it was already seen by the player.
 	/// </remarks>
-	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Visual Scene|Scenario", meta = (ToolTip = "Whether or not provided Scenario is exhausted"))
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Visual Controller|Scenario", meta = (ToolTip = "Whether or not provided Scenario is exhausted"))
 	bool IsScenarioExhausted(const FScenario& Scenario) const;
 
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> in front of the current one.</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene in front of the current one"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Is there a Scene in front of the current one"))
 	bool CanAdvanceScene() const;
 
 	/// <returns><c>true</c> if there is a <see cref="FScenario">scene</see> behind the current one.</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Is there a Scene behind the current one"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Is there a Scene behind the current one"))
 	bool CanRetractScene() const;
 
 	/// <summary>
 	/// Visualize the next <see cref="FScenario">scene</see> in the node.
 	/// </summary>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
 	void ToNextScene();
 
 	/// <summary>
 	/// Visualize the previous <see cref="FScenario">scene</see> in the node.
 	/// </summary>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
 	void ToPreviousScene();
 
 	/// <summary>
@@ -121,7 +121,7 @@ public:
 	/// <param name="Scene"><see cref="FScenario">scenario</see> to visualize</param>
 	/// <returns><c>true</c> if scenario was visualized</returns>
 	/// \warning Only use this method on <see cref="FScenario">scenarios</see> that was already seen by the player.
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Jump to any exhausted Scene"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Jump to any exhausted Scene"))
 	bool ToScenario(const FScenario& Scenario);
 
 	/// <summary>
@@ -129,50 +129,56 @@ public:
 	/// </summary>
 	/// <param name="Rows"><see cref="FScenario">Scenes</see> of the node</param>
 	/// <remarks>
-	/// <see cref="UVisualScene">Visual Scene</see> operates on only one node at a time, 
+	/// <see cref="UVisualScene">Visual Controller</see> operates on only one node at a time, 
 	/// information about previous nodes is saved on <see cref="FScenario">Scenario level</see>
 	/// </remarks>
 	/// \attention Avoid passing the same node as the currently active one 
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Flow control", meta = (ToolTip = "Sets provided node as active"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Sets provided node as active"))
 	void ToNode(const UDataTable* NewNode);
 
 	/*
 	* Construct underlying widget and add it to the player screen. Will show currently selected scene.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Visualize(APlayerController* OwningController, int32 ZOrder = 0);
 
 	/*
 	* Destroy underlying widget.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Discard();
 
 	/*
 	* Make underlying widget visible.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Show();
 
 	/*
 	* Make underlying widget collapsed.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene|Controller")
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Hide();
 
-	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "SetNumScenariosToLoad"))
+	void SetNumScenesToLoad(int32 Num);
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "GetNumScenariosToLoad"))
+	FORCEINLINE int32 GetNumScenesToLoad() const { return ScenesToLoad; };
+
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneStart OnSceneStart;
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneStart);
 	FOnNativeSceneStart OnNativeSceneStart;
 
-	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneEnd OnSceneEnd;
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneEnd);
 	FOnNativeSceneEnd OnNativeSceneEnd;
 
-	UPROPERTY(BlueprintAssignable, Category = "Visual Scene|Events")
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneLoaded OnSceneLoaded;
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoaded);
@@ -195,7 +201,7 @@ protected:
 private:
 	void SetCurrentScene(const FScenario* Scene);
 
-	void FallbackQueue(bool bIsForward = true);
+	void AssertCurrentSceneLoad(bool bIsForward = true);
 
 private:
 	UPROPERTY()
@@ -221,6 +227,7 @@ private:
 	* How many following scenarios will be loaded. 
 	* e.g. for value of 5: 5(or how much is left in the node) scenarios after current scene will be loaded asynchronously.
 	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (DisplayName = "ScenariosToLoad", AllowPrivateAccess = true))
 	int32 ScenesToLoad;
 
 	/*

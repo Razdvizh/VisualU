@@ -47,6 +47,9 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene", meta = (ToolTip = "Data Table that contains the first scenario"))
 	TSoftObjectPtr<UDataTable> FirstDataTable;
 
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene", meta = (ToolTip = "Data Table that contains the first scenario"))
+	TSoftObjectPtr<class UMaterialParameterCollection> MPC;
+
 	/// <summary>
 	/// A mapping of the metacharacter and the corresponding action that <see cref="UVisualTextBlock">Visual Text Block</see> should take.
 	/// </summary>

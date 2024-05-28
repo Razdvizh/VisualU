@@ -41,7 +41,9 @@ public class VisualU : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UMG",
-                "AssetRegistry"
+                "AssetRegistry",
+				"MovieScene",
+                "MovieSceneTracks"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

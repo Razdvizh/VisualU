@@ -26,8 +26,12 @@ void UVisualChoice::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 	}
 }
 
-void UVisualChoice::Choose(const UDataTable* Node) const
+void UVisualChoice::Choose_DEPRECATED(const UDataTable* Node) const
 {
 	checkf(VisualScene, TEXT("Visual Scene is invalid. Use SetVisualScene() first"));
 	VisualScene->ToNode(Node);
+}
+
+void UVisualChoice::Choose(UVisualController* Controller, const UDataTable* Node) const
+{
 }
