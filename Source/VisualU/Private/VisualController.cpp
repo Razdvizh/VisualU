@@ -14,14 +14,14 @@ static TAutoConsoleVariable<bool> CVarDebugDeferredSceneLoading
 (
 	TEXT("VisualU.DebugDefferedSceneLoading"),
 	false,
-	TEXT("bool. Displays information about asset loading of future FScenarios"),
+	TEXT("bool. Displays status of asset loading of future scenarios."),
 	ECVF_Cheat
 );
-static TAutoConsoleVariable<bool> CVarEditorStallThreadForLoading //todo: make this a float and use the value to determine for how long to sleep.
+static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
 (
 	TEXT("VisualU.EditorStallThreadForLoading"),
-	false,
-	TEXT("bool. Editor only. Sleeps process during next scene loading to give GC time to catch up."),
+	0.f,
+	TEXT("Editor only. Has effect when > 0.f. Sleeps process for specified amount of time during next scene loading to give GC time to catch up."),
 	ECVF_Cheat
 );
 #endif
@@ -240,10 +240,7 @@ void UVisualController::AssertNextSceneLoad(EVisualControllerNodeDirection Direc
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
 
 	#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITOR
-	if (CVarEditorStallThreadForLoading.GetValueOnAnyThread())
-	{
-		FPlatformProcess::Sleep(0.1f);
-	}
+	FPlatformProcess::Sleep(CVarEditorStallThreadForLoading.GetValueOnAnyThread());
 	#endif
 }
 
@@ -322,6 +319,11 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 	}
 
 	ScenesToLoad = Num;
+}
+
+void UVisualController::SetPlayTransitions(bool bShouldPlay)
+{
+	bPlayTransitions = bShouldPlay;
 }
 
 bool UVisualController::IsWithChoice() const

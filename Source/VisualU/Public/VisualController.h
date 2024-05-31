@@ -177,6 +177,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "GetNumScenariosToLoad"))
 	FORCEINLINE int32 GetNumScenesToLoad() const { return ScenesToLoad; };
 
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
+	void SetPlayTransitions(bool bShouldPlay);
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
+	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
+
 	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneStart OnSceneStart;
 
@@ -265,7 +271,7 @@ private:
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Widget", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
 	bool bPlayTransitions;
 
 };

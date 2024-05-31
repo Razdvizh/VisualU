@@ -151,7 +151,7 @@ void UVisualRenderer::NativeOnInitialized()
 ;
 			const FName ParameterName = Collection->ScalarParameters[0].ParameterName;
 			const FFrameTime EndFrame = EndTime * TickResolution;
-			
+
 			Track->AddSection(*ParameterSection);
 			Track->MPC = Collection;
 			Track->AddScalarParameterKey(ParameterName, FFrameNumber(1), 0.f);
