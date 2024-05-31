@@ -49,7 +49,7 @@ UVisualController::UVisualController()
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 }
 
-TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene)
+TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
 {
 	check(Scene);
 
@@ -57,18 +57,10 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario*
 
 	Scene->GetDataToLoad(DataToLoad);
 
-	TWeakObjectPtr<UVisualController> WeakThis = TWeakObjectPtr<UVisualController>(this);
-	return UAssetManager::GetStreamableManager().RequestAsyncLoad(DataToLoad, [WeakThis]()
-	{
-		if (UVisualController* Pinned = WeakThis.Get())
-		{
-			Pinned->OnSceneLoaded.Broadcast();
-			Pinned->OnNativeSceneLoaded.Broadcast();
-		}
-	}, FStreamableManager::DefaultAsyncLoadPriority);
+	return UAssetManager::GetStreamableManager().RequestAsyncLoad(DataToLoad, AfterLoadDelegate, FStreamableManager::DefaultAsyncLoadPriority);
 }
 
-TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scene)
+TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
 {
 	check(Scene);
 
@@ -78,8 +70,7 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scen
 
 	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, false);
 
-	OnSceneLoaded.Broadcast();
-	OnNativeSceneLoaded.Broadcast();
+	AfterLoadDelegate.ExecuteIfBound();
 
 	return Handle;
 }
@@ -338,26 +329,6 @@ void UVisualController::CancelNextScene()
 		NextSceneHandle->CancelHandle();
 		NextSceneHandle.Reset();
 	}
-}
-
-bool UVisualController::IsCurrentSceneLoading() const
-{
-	if (NextSceneHandle.IsValid())
-	{
-		return NextSceneHandle->IsLoadingInProgress();
-	}
-
-	return false;
-}
-
-bool UVisualController::IsCurrentSceneLoaded() const
-{
-	if (NextSceneHandle.IsValid())
-	{
-		return NextSceneHandle->HasLoadCompleted();
-	}
-
-	return false;
 }
 
 bool UVisualController::CanAdvanceScene() const

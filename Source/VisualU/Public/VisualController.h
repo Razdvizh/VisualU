@@ -11,8 +11,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStart);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEnd);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneLoaded);
-
 class UVisualRenderer;
 class APlayerController;
 struct FStreamableHandle;
@@ -60,14 +58,6 @@ public:
 	/// If no other handles to these assets exist, assets will be unloaded from memory.
 	/// </remarks>
 	void CancelNextScene();
-
-	/// <returns><c>true</c> if loading of assets is still in progress</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
-	bool IsCurrentSceneLoading() const;
-
-	/// <returns><c>true</c> if assets of the current <see cref="FScenario">scene</see> are already loaded</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario|Instantiation", meta = (ToolTip = "Are assets of the current Scene loaded"))
-	bool IsCurrentSceneLoaded() const;
 
 	/// <summary>
 	/// Whether or not the <paramref name="Scene"/> is exhausted.
@@ -182,25 +172,35 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
 	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
-
+	
+	/**
+	* Called when Visual Controller has switched to a different scenario.
+	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneStart OnSceneStart;
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneStart);
+	/**
+	* Called when Visual Controller has switched to a different scenario.
+	*/
 	FOnNativeSceneStart OnNativeSceneStart;
 
+	/**
+	* Called when Visual Controller begins switching to a different scenario.
+	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneEnd OnSceneEnd;
 
 	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneEnd);
+	/**
+	* Called when Visual Controller begins switching to a different scenario.
+	*/
 	FOnNativeSceneEnd OnNativeSceneEnd;
 
-	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
-	FOnSceneLoaded OnSceneLoaded;
-
-	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneLoaded);
-	FOnNativeSceneLoaded OnNativeSceneLoaded;
-
+	/**
+	* Class of underlying widget that is controlled by this Visual Controller.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Widget")
 	TSubclassOf<UVisualRenderer> RendererClass;
 
 protected:
@@ -209,9 +209,9 @@ protected:
 	/// </summary>
 	/// <param name="Scene">Scenario whose assets should be loaded</param>
 	/// <param name="AfterLoadDelegate">Delegate that would be executed after assets are loaded</param>
-	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene);
+	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
-	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene);
+	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
 	void PrepareScenes(ENodeDirection Direction = ENodeDirection::Forward);
 
@@ -221,15 +221,21 @@ protected:
 	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
 private:
+	/**
+	* Switch Visual Controller to the specified scenario, potentially switching node as well.
+	*/
 	void SetCurrentScene(const FScenario* Scene);
 
+	/**
+	* Guarantees that the next requested scenario assets will be loaded.
+	* @param Direction determines what is the next scenario e.g. controller going back to the beginning or forward towards the end of the node.
+	*/
 	void AssertNextSceneLoad(ENodeDirection Direction = ENodeDirection::Forward);
 
 private:
 	UPROPERTY()
 	UVisualRenderer* Renderer;
 
-	/// todo: Make this NextSceneHandle, active scene assets will be always loaded as there is hard references to them, while the NextSceneHandle might be
 	/// useful for various tasks, transition for example.
 	/// <summary>
 	/// Handle for assets of the scene that are loaded into the memory.
@@ -249,14 +255,14 @@ private:
 
 	/*
 	* How many following scenarios will be loaded. 
-	* e.g. for value of 5: 5(or how much is left in the node) scenarios after current scene will be loaded asynchronously.
+	* @note for value of 5: 5(or how much is left in the node) scenarios after current scene will be loaded asynchronously.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (DisplayName = "ScenariosToLoad", AllowPrivateAccess = true))
 	int32 ScenesToLoad;
 
 	/*
 	* Handles for resources of the following scenarios.
-	* Number of elements always less or equal to ScenesToLoad.
+	* @note Number of elements always less or equal to ScenesToLoad.
 	*/
 	TQueue<TSharedPtr<FStreamableHandle>> SceneHandles;
 
@@ -271,7 +277,7 @@ private:
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
 	bool bPlayTransitions;
 
 };
