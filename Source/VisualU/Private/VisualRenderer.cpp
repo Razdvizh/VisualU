@@ -35,10 +35,10 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 {
 	check(Scene);
 
-	ForEachSprite([](UVisualSprite* Sprite) 
+	ForEachSprite([&](UVisualSprite* Sprite) 
 	{
 		Sprite->OnSpriteDisappear.Broadcast();
-		Sprite->RemoveFromParent();
+		Canvas->RemoveChild(Sprite);
 	});
 
 	if (UPaperFlipbook* const BackgroundArt = Scene->Background.BackgroundArt.Get())
@@ -183,11 +183,10 @@ void UVisualRenderer::OnAnimationFinished_Implementation(const UWidgetAnimation*
 
 void UVisualRenderer::ForEachSprite(TFunction<void(UVisualSprite* Sprite)> Action)
 {
-	const int32 NumChildren = Canvas->GetChildrenCount();
-	//Widget at 0 is the Background
-	for (int32 i = 1; i < NumChildren; i++)
+	TArray<UWidget*> Children = Canvas->GetAllChildren();
+	for (auto& Child : Children)
 	{
-		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Canvas->GetChildAt(i)))
+		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Child))
 		{
 			Action(Sprite);
 		}

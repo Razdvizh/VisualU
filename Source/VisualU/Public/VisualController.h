@@ -257,7 +257,7 @@ private:
 	* How many following scenarios will be loaded. 
 	* @note for value of 5: 5(or how much is left in the node) scenarios after current scene will be loaded asynchronously.
 	*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (DisplayName = "ScenariosToLoad", AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (DisplayName = "Num Scenarios to Load", AllowPrivateAccess = true))
 	int32 ScenesToLoad;
 
 	/*
