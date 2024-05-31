@@ -109,7 +109,7 @@ void UVisualController::PrepareScenes(ENodeDirection Direction)
 
 void UVisualController::ToNextScene()
 {
-	if (!CanAdvanceScene())
+	if (!CanAdvanceScene() || Renderer->IsTransitionInProgress())
 	{
 		return;
 	}
@@ -162,6 +162,10 @@ void UVisualController::ToPreviousScene()
 bool UVisualController::ToScene(const FScenario* Scene)
 {
 	check(Scene);
+	if (Renderer->IsTransitionInProgress())
+	{
+		return false;
+	}
 	bool bIsFound = false;
 	if (Node[0]->Owner == Scene->Owner)
 	{
@@ -204,6 +208,10 @@ bool UVisualController::ToScenario(const FScenario& Scenario)
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
 	check(Scene);
+	if (Renderer->IsTransitionInProgress())
+	{
+		return;
+	}
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
@@ -238,6 +246,10 @@ void UVisualController::AssertNextSceneLoad(EVisualControllerNodeDirection Direc
 void UVisualController::ToNode(const UDataTable* NewNode)
 {
 	check(NewNode);
+	if (Renderer->IsTransitionInProgress())
+	{
+		return;
+	}
 	ExhaustedScenes.Push(Node.Last());
 
 	Node.Empty();
@@ -262,7 +274,7 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 
 bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
 {
-	if (bPlayTransitions)
+	if (bPlayTransitions && !Renderer->IsTransitionInProgress())
 	{
 		check(Renderer);
 		return Renderer->TryDrawTransition(From, To);

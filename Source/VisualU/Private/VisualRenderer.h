@@ -26,6 +26,8 @@ public:
 
 	virtual void DrawScene(const FScenario* Scene);
 
+	bool IsTransitionInProgress() const;
+
 	bool TryDrawTransition(const FScenario* From, const FScenario* To);
 
 protected:

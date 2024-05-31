@@ -69,11 +69,20 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 	}
 }
 
+bool UVisualRenderer::IsTransitionInProgress() const
+{
+	check(Background);
+	return Background->IsTransitioning();
+}
+
 bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* To)
 {
 	check(From);
 	check(To);
-	const bool bIsTransitionPossible = To->Background.BackgroundArt.IsValid() && From->Background.TransitionMaterial.IsValid();
+	const bool bIsTransitionPossible = To->Background.BackgroundArt.IsValid() &&
+		From->Background.TransitionMaterial.IsValid() &&
+		!Background->IsTransitioning();
+
 	if (bIsTransitionPossible)
 	{
 		UPaperFlipbook* NextFlipbook = To->Background.BackgroundArt.Get();
