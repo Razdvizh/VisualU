@@ -6,6 +6,7 @@
 #include "VisualUSettings.generated.h"
 
 class UDataTable;
+class UMaterialParameterCollection;
 
 /// <summary>
 /// Actions supported by <see cref="UVisualTextBlock">Visual Text Block</see>.
@@ -44,11 +45,14 @@ public:
 	/// if the Data Table is empty, the assertion will be triggered.
 	/// </remarks>
 	/// <seealso cref="FScenario"/>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene", meta = (ToolTip = "Data Table that contains the first scenario"))
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller", meta = (ToolTip = "Data Table that contains the first scenario"))
 	TSoftObjectPtr<UDataTable> FirstDataTable;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene", meta = (ToolTip = "Data Table that contains the first scenario"))
-	TSoftObjectPtr<class UMaterialParameterCollection> MPC;
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (DisplayName = "Transition Material Parameter Collection", ToolTip = "First scalar parameter from this collection will be used to indicate progress of transition for materials."))
+	TSoftObjectPtr<UMaterialParameterCollection> TransitionMPC;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration of the transition between scenarios."))
+	float TransitionDuration;
 
 	/// <summary>
 	/// A mapping of the metacharacter and the corresponding action that <see cref="UVisualTextBlock">Visual Text Block</see> should take.

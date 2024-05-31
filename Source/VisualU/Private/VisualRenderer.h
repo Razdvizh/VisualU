@@ -8,6 +8,7 @@
 #include "VisualRenderer.generated.h"
 
 class UBackgroundVisualImage;
+class UVisualSprite;
 class UCanvasPanel;
 class UWidgetAnimation;
 class UMaterialParameterCollection;
@@ -25,7 +26,7 @@ public:
 
 	virtual void DrawScene(const FScenario* Scene);
 
-	void PlayTransition(const FScenario* From, const FScenario* To);
+	bool TryDrawTransition(const FScenario* From, const FScenario* To);
 
 protected:
 	/// <summary>
@@ -35,9 +36,11 @@ protected:
 	/// \warning Do not add any widgets to the Widget tree.
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
-	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
 
-	bool ClearSprites();
+	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
+
+	void ForEachSprite(TFunction<void(UVisualSprite* Sprite)> Action);
 
 private:
 	/// <summary>
@@ -50,8 +53,7 @@ private:
 	UPROPERTY(Transient)
 	UWidgetAnimation* Transition;
 
-	UPROPERTY()
-	TSoftObjectPtr<UMaterialParameterCollection> ParameterCollection;
+	const FScenario* FinalScene;
 
 	/// <summary>
 	/// Internal widget for scene background.

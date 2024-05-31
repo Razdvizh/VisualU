@@ -10,44 +10,75 @@
 #include "TransitionMaterialProxy.h"
 #include "Animation/CurveSequence.h"
 
+SLATE_IMPLEMENT_WIDGET(SBackgroundVisualImage)
+void SBackgroundVisualImage::PrivateRegisterAttributes(FSlateAttributeInitializer& AttributeInitializer)
+{
+	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Target"), Target, EInvalidateWidgetReason::LayoutAndVolatility);
+	SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, TEXT("Transition"), Transition, EInvalidateWidgetReason::Paint);
+}
+
 SBackgroundVisualImage::SBackgroundVisualImage() 
 	: SVisualImage(), 
-	Transition(nullptr),
-	Target(nullptr),
+	Transition(*this),
+	Target(*this),
 	bIsTransitioning(false),
 	bIsTargetAnimated(false)
 {
 }
 
+void SBackgroundVisualImage::Construct(const FArguments& Args)
+{
+	bIsTransitioning = Args._IsTransitioning;
+	bIsTargetAnimated = Args._IsTargetAnimated;
+	Transition.Assign(*this, Args._Transition);
+	Target.Assign(*this, Args._Target);
+}
+
 void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, bool bShouldAnimateTarget)
 {
-	Target = TargetFlipbook;
-	Transition = TransitionMaterial;
-	
-	if (Target && bShouldAnimateTarget)
+	Target.Set(*this, TargetFlipbook);
+	Transition.Set(*this, TransitionMaterial);
+
+	if (Target.Get() && bShouldAnimateTarget)
 	{
-		GetCurveSequence()->AddCurve(0.f, Target->GetTotalDuration());
+		GetCurveSequence()->AddCurve(0.f, Target.Get()->GetTotalDuration());
 	}
 
 	bIsTransitioning = true;
 	bIsTargetAnimated = bShouldAnimateTarget;
 }
 
-void SBackgroundVisualImage::SetTransitionState(bool IsTransitioning)
+void SBackgroundVisualImage::StopTransition()
 {
-	bIsTransitioning = IsTransitioning;
+	bIsTransitioning = false;
 	UpdateSequence();
+}
+
+void SBackgroundVisualImage::AddReferencedObjects(FReferenceCollector& Collector)
+{
+	Super::AddReferencedObjects(Collector);
+	
+	UMaterialInstanceDynamic* TransitionPtr = Transition.Get();
+	Collector.AddReferencedObject(TransitionPtr);
+
+	UPaperFlipbook* TargetPtr = Target.Get();
+	Collector.AddReferencedObject(TargetPtr);
+}
+
+FString SBackgroundVisualImage::GetReferencerName() const
+{
+	return TEXT("SBackgroundVisualImage");
 }
 
 UObject* SBackgroundVisualImage::GetFinalResource() const
 {
-	if (bIsTransitioning && Transition)
+	if (bIsTransitioning && Transition.Get())
 	{
 		const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 		TMap<FName, UTexture*> Params;
 		Params.Add(VisualUSettings->AParameterName, GetCurrentSprite()->GetBakedTexture());
 		Params.Add(VisualUSettings->BParameterName, GetTargetSprite()->GetBakedTexture());
-		return FTransitionMaterialProxy::GetTransitionMaterial(Transition, Params);
+		return FTransitionMaterialProxy::GetTransitionMaterial(Transition.Get(), Params);
 	}
 
 	return GetCurrentSprite();
@@ -55,9 +86,9 @@ UObject* SBackgroundVisualImage::GetFinalResource() const
 
 UPaperSprite* SBackgroundVisualImage::GetTargetSprite() const
 {
-	if (Target)
+	if (UPaperFlipbook* TargetFlipbook = Target.Get())
 	{
-		UPaperSprite* CurrentSprite = bIsTargetAnimated ? Target->GetSpriteAtTime(const_cast<SBackgroundVisualImage*>(this)->GetCurveSequence()->GetSequenceTime()) : Target->GetSpriteAtFrame(0);
+		UPaperSprite* CurrentSprite = bIsTargetAnimated ? TargetFlipbook->GetSpriteAtTime(const_cast<SBackgroundVisualImage*>(this)->GetCurveSequence()->GetSequenceTime()) : TargetFlipbook->GetSpriteAtFrame(0);
 		return CurrentSprite;
 	}
 

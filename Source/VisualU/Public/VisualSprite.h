@@ -9,7 +9,9 @@
 
 class UWidgetBlueprintGeneratedClass;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpriteBeginRemoveEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpriteDisappear);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpriteAppear);
 
 /// <summary>
 /// Base class for widgets that represent sprites that will be visualized by <see cref="UVisualScene">Visual Scene</see>.
@@ -46,5 +48,8 @@ public:
 	virtual void AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo);
 
 	UPROPERTY(BlueprintAssignable, Category = "Visual Sprite|Events")
-	FOnSpriteBeginRemoveEvent OnSpriteBeginRemove;
+	FOnSpriteDisappear OnSpriteDisappear;
+
+	UPROPERTY(BlueprintAssignable, Category = "Visual Sprite|Events")
+	FOnSpriteAppear OnSpriteAppear;
 };

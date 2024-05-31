@@ -6,6 +6,7 @@
 
 UMaterialInstanceDynamic* FTransitionMaterialProxy::GetTransitionMaterial(UMaterialInstanceDynamic* MaterialToChange, const TMap<FName, UTexture*>& Params)
 {
+    check(MaterialToChange);
     for (auto It = Params.CreateConstIterator(); It; ++It)
     {
         MaterialToChange->SetTextureParameterValue(It.Key(), It.Value());

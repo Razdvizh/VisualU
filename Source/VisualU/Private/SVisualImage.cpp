@@ -164,6 +164,17 @@ bool SVisualImage::ComputeVolatility() const
 	return Super::ComputeVolatility() || CurveSequence.IsPlaying() || bAnimate;
 }
 
+void SVisualImage::AddReferencedObjects(FReferenceCollector& Collector)
+{
+	const UPaperFlipbook* FlipbookPtr = Flipbook.Get();
+	Collector.AddReferencedObject(FlipbookPtr);
+}
+
+FString SVisualImage::GetReferencerName() const
+{
+	return TEXT("SVisualImage");
+}
+
 bool SVisualImage::IsResourceValid() const
 {
 	return Flipbook.Get() != nullptr;

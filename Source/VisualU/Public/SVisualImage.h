@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Animation/CurveSequence.h"
 #include "SVisualImageBase.h"
+#include "UObject/GCObject.h"
 
 class UPaperFlipbook;
 class UPaperSprite;
@@ -13,7 +14,7 @@ class UPaperSprite;
 /// Slate widget that displays sprite flipbooks.
 /// </summary>
 /// <seealso cref="UVisualImage"/>
-class VISUALU_API SVisualImage : public SVisualImageBase<SVisualImage>
+class VISUALU_API SVisualImage : public SVisualImageBase<SVisualImage>, public FGCObject
 {
 
 	SLATE_DECLARE_WIDGET(SVisualImage, SVisualImageBase<SVisualImage>)
@@ -91,6 +92,10 @@ protected:
 	FORCEINLINE bool GetAnimate() const { return bAnimate; }
 
 	FORCEINLINE int32 GetSpriteIndex() const { return SpriteIndex; }
+
+	virtual void AddReferencedObjects(FReferenceCollector& Collector) override;
+
+	virtual FString GetReferencerName() const override;
 
 public:
 	///Declared as virtual so subclasses can override them, but these methods are statically dispatched in the base class and all must be implemented

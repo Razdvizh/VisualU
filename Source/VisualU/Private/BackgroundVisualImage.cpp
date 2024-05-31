@@ -16,11 +16,11 @@ UBackgroundVisualImage::UBackgroundVisualImage(const FObjectInitializer& ObjectI
 {
 }
 
-void UBackgroundVisualImage::SetTransitionState(bool IsTransitioning)
+void UBackgroundVisualImage::StopTransition()
 {
 	if (VisualImageSlate.IsValid())
 	{
-		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->SetTransitionState(IsTransitioning);
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->StopTransition();
 	}
 }
 

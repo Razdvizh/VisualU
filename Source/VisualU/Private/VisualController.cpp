@@ -14,7 +14,14 @@ static TAutoConsoleVariable<bool> CVarDebugDeferredSceneLoading
 (
 	TEXT("VisualU.DebugDefferedSceneLoading"),
 	false,
-	TEXT("Displays information about asset loading of future FScenarios"),
+	TEXT("bool. Displays information about asset loading of future FScenarios"),
+	ECVF_Cheat
+);
+static TAutoConsoleVariable<bool> CVarEditorStallThreadForLoading //todo: make this a float and use the value to determine for how long to sleep.
+(
+	TEXT("VisualU.EditorStallThreadForLoading"),
+	false,
+	TEXT("bool. Editor only. Sleeps process during next scene loading to give GC time to catch up."),
 	ECVF_Cheat
 );
 #endif
@@ -23,12 +30,13 @@ UVisualController::UVisualController()
 	: Super(),
 	RendererClass(UVisualRenderer::StaticClass()),
 	Renderer(nullptr),
-	ActiveSceneHandle(nullptr),
+	NextSceneHandle(nullptr),
 	Node(),
 	SceneIndex(0),
 	ScenesToLoad(5),
 	SceneHandles(),
-	ExhaustedScenes()
+	ExhaustedScenes(),
+	bPlayTransitions(true)
 {
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 
@@ -60,7 +68,7 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario*
 	}, FStreamableManager::DefaultAsyncLoadPriority);
 }
 
-void UVisualController::LoadScene(const FScenario* Scene)
+TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scene)
 {
 	check(Scene);
 
@@ -68,42 +76,44 @@ void UVisualController::LoadScene(const FScenario* Scene)
 
 	Scene->GetDataToLoad(DataToLoad);
 
-	ActiveSceneHandle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, false);
+	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, false);
 
 	OnSceneLoaded.Broadcast();
 	OnNativeSceneLoaded.Broadcast();
+
+	return Handle;
 }
 
-void UVisualController::PrepareScenes(bool bIsForward)
+void UVisualController::PrepareScenes(ENodeDirection Direction)
 {
-	if (SceneHandles.IsEmpty())
+	if (ScenesToLoad > 0)
 	{
-		for (int32 i = 1; i <= ScenesToLoad; i++)
+		if (SceneHandles.IsEmpty())
 		{
-			const int32 u = bIsForward ? i : -i;
-			if (Node.IsValidIndex(SceneIndex + u))
+			for (int32 i = 1; i <= ScenesToLoad; i++)
 			{
-				const FScenario* Scene = GetSceneAt(SceneIndex + u);
-				TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(Scene);
+				const int32 u = Direction == ENodeDirection::Forward ? i : -i;
+				if (Node.IsValidIndex(SceneIndex + u))
+				{
+					const FScenario* Scene = GetSceneAt(SceneIndex + u);
+					TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(Scene);
 
-				SceneHandles.Enqueue(SceneHandle);
+					SceneHandles.Enqueue(SceneHandle);
+				}
 			}
+
+			return;
 		}
 
-		AssertCurrentSceneLoad();
-		return;
+		const int32 NextIndex = SceneIndex + (Direction == ENodeDirection::Forward ? (ScenesToLoad + 1) : -(ScenesToLoad + 1));
+		if (Node.IsValidIndex(NextIndex))
+		{
+			TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(GetSceneAt(NextIndex));
+			SceneHandles.Enqueue(MoveTemp(SceneHandle));
+		}
+
+		SceneHandles.Dequeue(NextSceneHandle);
 	}
-
-	const int32 NextIndex = SceneIndex + (bIsForward ? (ScenesToLoad - 1) : -(ScenesToLoad - 1));
-	if (Node.IsValidIndex(NextIndex))
-	{
-		TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(GetSceneAt(NextIndex));
-		SceneHandles.Enqueue(MoveTemp(SceneHandle));
-	}
-
-	SceneHandles.Dequeue(ActiveSceneHandle);
-
-	AssertCurrentSceneLoad(bIsForward);
 }
 
 void UVisualController::ToNextScene()
@@ -112,16 +122,21 @@ void UVisualController::ToNextScene()
 	{
 		return;
 	}
-
+	
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
-	CancelCurrentScene();
-
-	//Renderer->PlayTransition(GetCurrentScene(), GetSceneAt(SceneIndex + 1));
-	SceneIndex += 1;
 	PrepareScenes();
-	Renderer->DrawScene(GetCurrentScene());
+	AssertNextSceneLoad();
+
+	SceneIndex += 1;
+
+	if (!TryPlayTransition(GetSceneAt(SceneIndex - 1), GetCurrentScene()))
+	{
+		Renderer->DrawScene(GetCurrentScene());
+	}
+
+	CancelNextScene();
 	
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
@@ -141,9 +156,13 @@ void UVisualController::ToPreviousScene()
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
+	PrepareScenes(ENodeDirection::Backward);
+	AssertNextSceneLoad(ENodeDirection::Backward);
+
 	SceneIndex -= 1;
-	PrepareScenes(false);
 	Renderer->DrawScene(GetCurrentScene());
+	
+	CancelNextScene();
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
@@ -174,7 +193,6 @@ bool UVisualController::ToScene(const FScenario* Scene)
 
 	if (bIsFound)
 	{
-		SceneHandles.Empty();
 		SetCurrentScene(Scene);
 	}
 
@@ -201,28 +219,32 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
-		SceneHandles.Empty();
 		Scene->Owner->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
+	
+	SceneHandles.Empty();
+	CancelNextScene();
 
 	SceneIndex = Scene->Index;
-	PrepareScenes();
+	LoadScene(GetCurrentScene());
 	Renderer->DrawScene(GetCurrentScene());
+	PrepareScenes();
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualController::AssertCurrentSceneLoad(bool bIsForward)
+void UVisualController::AssertNextSceneLoad(EVisualControllerNodeDirection Direction)
 {
-	if (SceneHandles.IsEmpty() || SceneHandles.Peek()->Get()->IsLoadingInProgress())
+	const int32 NextSceneIndex = SceneIndex + (Direction == ENodeDirection::Forward ? 1 : -1);
+	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
+
+	#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITOR
+	if (CVarEditorStallThreadForLoading.GetValueOnAnyThread())
 	{
-		LoadScene(GetCurrentScene());
+		FPlatformProcess::Sleep(0.1f);
 	}
-	else if ((bIsForward && !CanAdvanceScene()) || (!bIsForward && !CanRetractScene()))
-	{
-		SceneHandles.Dequeue(ActiveSceneHandle);
-	}
+	#endif
 }
 
 void UVisualController::ToNode(const UDataTable* NewNode)
@@ -239,13 +261,26 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	OnNativeSceneEnd.Broadcast();
 
 	SceneHandles.Empty();
+	CancelNextScene();
 
 	SceneIndex = 0;
-	PrepareScenes();
+	LoadScene(GetCurrentScene());
 	Renderer->DrawScene(GetCurrentScene());
+	PrepareScenes();
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+}
+
+bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
+{
+	if (bPlayTransitions)
+	{
+		check(Renderer);
+		return Renderer->TryDrawTransition(From, To);
+	}
+
+	return false;
 }
 
 void UVisualController::Visualize(APlayerController* OwningController, int32 ZOrder)
@@ -255,9 +290,11 @@ void UVisualController::Visualize(APlayerController* OwningController, int32 ZOr
 		checkf(OwningController, TEXT("Supplied PlayerController is invalid."));
 		Renderer = CreateWidget<UVisualRenderer>(OwningController, RendererClass);
 	}
+
+	LoadScene(GetCurrentScene());
 	Renderer->AddToPlayerScreen(ZOrder);
-	PrepareScenes();
 	Renderer->DrawScene(GetCurrentScene());
+	PrepareScenes();
 }
 
 void UVisualController::Discard()
@@ -281,7 +318,7 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 {
 	if (Num > 100)
 	{
-		UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scenario loading, it might have a significant impact on performance."), Num);
+		UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
 	}
 
 	ScenesToLoad = Num;
@@ -292,20 +329,20 @@ bool UVisualController::IsWithChoice() const
 	return GetCurrentScene()->HasChoice();
 }
 
-void UVisualController::CancelCurrentScene()
+void UVisualController::CancelNextScene()
 {
-	if (ActiveSceneHandle.IsValid())
+	if (NextSceneHandle.IsValid())
 	{
-		ActiveSceneHandle->CancelHandle();
-		ActiveSceneHandle.Reset();
+		NextSceneHandle->CancelHandle();
+		NextSceneHandle.Reset();
 	}
 }
 
 bool UVisualController::IsCurrentSceneLoading() const
 {
-	if (ActiveSceneHandle.IsValid())
+	if (NextSceneHandle.IsValid())
 	{
-		return ActiveSceneHandle->IsLoadingInProgress();
+		return NextSceneHandle->IsLoadingInProgress();
 	}
 
 	return false;
@@ -313,9 +350,9 @@ bool UVisualController::IsCurrentSceneLoading() const
 
 bool UVisualController::IsCurrentSceneLoaded() const
 {
-	if (ActiveSceneHandle.IsValid())
+	if (NextSceneHandle.IsValid())
 	{
-		return ActiveSceneHandle->HasLoadCompleted();
+		return NextSceneHandle->HasLoadCompleted();
 	}
 
 	return false;

@@ -18,7 +18,6 @@ public class VisualU : ModuleRules
 		PrivateIncludePaths.AddRange(
 			new string[] {
 				// ... add other private include paths required here ...
-				"VisualU/"
 			}
 			);
 			
@@ -26,7 +25,6 @@ public class VisualU : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
 				"Paper2D",
 				// ... add other public dependencies that you statically link with here ...
 			}
@@ -36,7 +34,8 @@ public class VisualU : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"CoreUObject",
+                "Core",
+                "CoreUObject",
 				"Engine",
 				"Slate",
 				"SlateCore",

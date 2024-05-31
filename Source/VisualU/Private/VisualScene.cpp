@@ -205,7 +205,7 @@ void UVisualScene::TransitionToNextScene(UWidgetAnimation* DrivingAnim)
 	{
 		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Canvas->GetChildAt(i)))
 		{
-			Sprite->OnSpriteBeginRemove.Broadcast();
+			Sprite->OnSpriteDisappear.Broadcast();
 		}
 	}
 
@@ -414,7 +414,7 @@ void UVisualScene::StopTransition() const
 	OnNativeSceneTransitionEnded.Broadcast();
 
 	Background->SetFlipbook(GetCurrentScene()->Background.BackgroundArt.LoadSynchronous());
-	Background->SetTransitionState(false);
+	Background->StopTransition();
 }
 
 void UVisualScene::ConstructScene()

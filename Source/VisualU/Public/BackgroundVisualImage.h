@@ -34,7 +34,7 @@ public:
 	/// Called with <c>false</c> when driving animation ends.
 	/// </remarks>
 	/// <param name="IsTransitioning">New state of the Background Visual Image</param>
-	void SetTransitionState(bool IsTransitioning);
+	void StopTransition();
 	
 	/// <returns>Whether or not background is in transiton process</returns>
 	bool IsTransitioning() const;

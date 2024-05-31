@@ -18,6 +18,17 @@ class APlayerController;
 struct FStreamableHandle;
 
 /**
+* Describes direction in which scenes "flow" - current scene is expected to change either to the next(forward) or previous(backward) scene in the node.
+*/
+enum class EVisualControllerNodeDirection : int8
+{
+	Backward = -1,
+	Forward = 1
+};
+
+typedef EVisualControllerNodeDirection ENodeDirection;
+
+/**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew)
@@ -48,7 +59,7 @@ public:
 	/// <remarks>
 	/// If no other handles to these assets exist, assets will be unloaded from memory.
 	/// </remarks>
-	void CancelCurrentScene();
+	void CancelNextScene();
 
 	/// <returns><c>true</c> if loading of assets is still in progress</returns>
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario|Instantiation", meta = (ToolTip = "Is loading of assets is still in progress"))
@@ -136,25 +147,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Sets provided node as active"))
 	void ToNode(const UDataTable* NewNode);
 
-	/*
+	/**
 	* Construct underlying widget and add it to the player screen. Will show currently selected scene.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Visualize(APlayerController* OwningController, int32 ZOrder = 0);
 
-	/*
+	/**
 	* Destroy underlying widget.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Discard();
 
-	/*
+	/**
 	* Make underlying widget visible.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Show();
 
-	/*
+	/**
 	* Make underlying widget collapsed.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
@@ -194,23 +205,30 @@ protected:
 	/// <param name="AfterLoadDelegate">Delegate that would be executed after assets are loaded</param>
 	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene);
 
-	void LoadScene(const FScenario* Scene);
+	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene);
 
-	void PrepareScenes(bool bIsForward = true);
+	void PrepareScenes(ENodeDirection Direction = ENodeDirection::Forward);
+
+	/**
+	* Requests Renderer to display transition animation.
+	*/
+	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
 private:
 	void SetCurrentScene(const FScenario* Scene);
 
-	void AssertCurrentSceneLoad(bool bIsForward = true);
+	void AssertNextSceneLoad(ENodeDirection Direction = ENodeDirection::Forward);
 
 private:
 	UPROPERTY()
 	UVisualRenderer* Renderer;
 
+	/// todo: Make this NextSceneHandle, active scene assets will be always loaded as there is hard references to them, while the NextSceneHandle might be
+	/// useful for various tasks, transition for example.
 	/// <summary>
 	/// Handle for assets of the scene that are loaded into the memory.
 	/// </summary>
-	TSharedPtr<FStreamableHandle> ActiveSceneHandle;
+	TSharedPtr<FStreamableHandle> NextSceneHandle;
 
 	/// <summary>
 	/// Currently active Data table with scenes.
@@ -246,4 +264,8 @@ private:
 	/// is not considered exhausted anymore untill the player advances forward again.
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Widget", meta = (AllowPrivateAccess = true))
+	bool bPlayTransitions;
+
 };

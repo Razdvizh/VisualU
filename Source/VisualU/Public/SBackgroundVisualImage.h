@@ -15,14 +15,36 @@ class UTexture;
 /// </summary>
 class VISUALU_API SBackgroundVisualImage final : public SVisualImage
 {
+
+	SLATE_DECLARE_WIDGET(SBackgroundVisualImage, SVisualImage)
+
+	SLATE_BEGIN_ARGS(SBackgroundVisualImage) : _IsTransitioning(false), _IsTargetAnimated(false) {}
+
+		SLATE_ARGUMENT(bool, IsTransitioning)
+
+		SLATE_ARGUMENT(bool, IsTargetAnimated)
+
+		SLATE_ATTRIBUTE(UMaterialInstanceDynamic*, Transition)
+
+		SLATE_ATTRIBUTE(UPaperFlipbook*, Target)
+
+	SLATE_END_ARGS()
+
 public:
 	SBackgroundVisualImage();
+	
+	void Construct(const FArguments& Args);
 
 	void SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, bool bShouldAnimateTarget);
 
-	void SetTransitionState(bool IsTransitioning);
+	void StopTransition();
 
 	FORCEINLINE bool IsTransitioning() const { return bIsTransitioning; }
+
+protected:
+	virtual void AddReferencedObjects(FReferenceCollector& Collector) override;
+
+	virtual FString GetReferencerName() const override;
 
 private:
 	virtual UObject* GetFinalResource() const override;
@@ -30,9 +52,9 @@ private:
 	UPaperSprite* GetTargetSprite() const;
 
 private:
-	UMaterialInstanceDynamic* Transition;
+	TSlateAttribute<UMaterialInstanceDynamic*> Transition;
 
-	UPaperFlipbook* Target;
+	TSlateAttribute<UPaperFlipbook*> Target;
 
 	bool bIsTransitioning;
 

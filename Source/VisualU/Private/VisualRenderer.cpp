@@ -25,18 +25,21 @@
 UVisualRenderer::UVisualRenderer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer),
 	Transition(nullptr),
+	FinalScene(nullptr),
 	Background(nullptr),
 	Canvas(nullptr)
 {
-	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
-	ParameterCollection = VisualUSettings->MPC;
 }
 
 void UVisualRenderer::DrawScene(const FScenario* Scene)
 {
 	check(Scene);
 
-	ClearSprites();
+	ForEachSprite([](UVisualSprite* Sprite) 
+	{
+		Sprite->OnSpriteDisappear.Broadcast();
+		Sprite->RemoveFromParent();
+	});
 
 	if (UPaperFlipbook* const BackgroundArt = Scene->Background.BackgroundArt.Get())
 	{
@@ -60,29 +63,35 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 			SpriteSlot->SetAnchors(SpriteData.Anchors);
 			SpriteSlot->SetAutoSize(true);
 			SpriteSlot->SetPosition(SpriteData.Position);
+
+			Sprite->OnSpriteAppear.Broadcast();
 		}
 	}
 }
 
-void UVisualRenderer::PlayTransition(const FScenario* From, const FScenario* To)
+bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* To)
 {
 	check(From);
 	check(To);
-	const TSoftObjectPtr<UMaterialInterface> SoftTransitionMaterial = From->Background.TransitionMaterial;
-	if (!SoftTransitionMaterial.IsNull())
+	const bool bIsTransitionPossible = To->Background.BackgroundArt.IsValid() && From->Background.TransitionMaterial.IsValid();
+	if (bIsTransitionPossible)
 	{
-		const bool bIsTransitionPossible = ensureMsgf(!To->Background.BackgroundArt.IsNull(), TEXT("You are trying to transition to an empty background"));
-		if (bIsTransitionPossible)
-		{
-			UPaperFlipbook* NextFlipbook = To->Background.BackgroundArt.LoadSynchronous();
-			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.LoadSynchronous();
-			UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
-			DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
+		UPaperFlipbook* NextFlipbook = To->Background.BackgroundArt.Get();
+		UMaterialInterface* TransitionMaterial = From->Background.TransitionMaterial.Get();
+		UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
+		DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
 
-			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
-			PlayAnimationForward(Transition, 1.f, true);
-		}
+		ForEachSprite([](UVisualSprite* Sprite) 
+		{
+			Sprite->OnSpriteDisappear.Broadcast();
+		});
+
+		Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
+		PlayAnimationForward(Transition, /*PlaybackSpeed=*/1.f, /*bRestoreState=*/true);
+		FinalScene = To;
 	}
+
+	return bIsTransitionPossible;
 }
 
 TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
@@ -102,58 +111,76 @@ TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
 	return VisualSceneSlate;
 }
 
-void UVisualRenderer::NativeConstruct()
+void UVisualRenderer::NativeOnInitialized()
 {
-	Super::NativeConstruct();
+	Super::NativeOnInitialized();
 
 	//AnimationTabSummoner.cpp
 	//MaterialParameterCollectionTrackEditor.cpp
+	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 	const float StartTime = 0.f;
-	const float EndTime = 1.f;
+	const float EndTime = VisualUSettings->TransitionDuration;
 
 	const FName AnimationName = MakeUniqueObjectName(this, UWidgetAnimation::StaticClass());
 	Transition = NewObject<UWidgetAnimation>(this, AnimationName);
 	Transition->MovieScene = NewObject<UMovieScene>(Transition, AnimationName);
 	Transition->MovieScene->SetDisplayRate(FFrameRate(20, 1));
-	const FFrameTime InFrame = StartTime * Transition->MovieScene->GetTickResolution();
-	const FFrameTime OutFrame = EndTime * Transition->MovieScene->GetTickResolution();
+
+	const FFrameRate TickResolution = Transition->MovieScene->GetTickResolution();
+	
+	const FFrameTime InFrame = StartTime * TickResolution;
+	const FFrameTime OutFrame = EndTime * TickResolution;
 	Transition->MovieScene->SetPlaybackRange(TRange<FFrameNumber>(InFrame.FrameNumber, OutFrame.FrameNumber + 1));
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (!ParameterCollection.IsNull())
+	TSoftObjectPtr<UMaterialParameterCollection> ParameterCollection = VisualUSettings->TransitionMPC;
+	
+	if (ensureMsgf(!ParameterCollection.IsNull(), TEXT("Can't initialize transition animation without Parameter Collection. Please specify one in VisualU project settings.")))
 	{
 		UMaterialParameterCollection* Collection = ParameterCollection.LoadSynchronous();
+		check(Collection);
 
-		Transition->MovieScene->Modify();
+		if (ensureMsgf(Collection->ScalarParameters.IsValidIndex(0), TEXT("No scalar parameters found to initialize transition animation. Only first scalar parameter will be used.")))
+		{
+			UMovieSceneMaterialParameterCollectionTrack* Track = Transition->MovieScene->AddTrack<UMovieSceneMaterialParameterCollectionTrack>();
+			check(Track);
 
-		UMovieSceneMaterialParameterCollectionTrack* Track = Transition->MovieScene->AddTrack<UMovieSceneMaterialParameterCollectionTrack>();
-		check(Track);
-
-		UMovieSceneParameterSection* ParameterSection = Cast<UMovieSceneParameterSection>(Track->CreateNewSection());
-		check(ParameterSection);
-
-		const int32 TicksPerFrame = Transition->MovieScene->GetTickResolution().AsDecimal() / Transition->MovieScene->GetDisplayRate().AsDecimal();
-		Track->AddSection(*ParameterSection);
-		Track->MPC = Collection;
-		Track->AddScalarParameterKey(TEXT("Blending"), FFrameNumber(1), 0.f);
-		Track->AddScalarParameterKey(TEXT("Blending"), FFrameNumber(21 * TicksPerFrame), 1.f);
+			UMovieSceneParameterSection* ParameterSection = Cast<UMovieSceneParameterSection>(Track->CreateNewSection());
+			check(ParameterSection);
+;
+			const FName ParameterName = Collection->ScalarParameters[0].ParameterName;
+			const FFrameTime EndFrame = EndTime * TickResolution;
+			
+			Track->AddSection(*ParameterSection);
+			Track->MPC = Collection;
+			Track->AddScalarParameterKey(ParameterName, FFrameNumber(1), 0.f);
+			Track->AddScalarParameterKey(ParameterName, EndFrame.FrameNumber + 1, 1.f);
+		}
 	}
 }
 
-bool UVisualRenderer::ClearSprites()
+void UVisualRenderer::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
 {
-	bool bRemoved = false;
+	Super::OnAnimationFinished_Implementation(Animation);
+
+	if (Animation == Transition)
+	{
+		Background->StopTransition();
+		DrawScene(FinalScene);
+		FinalScene = nullptr;
+	}
+}
+
+void UVisualRenderer::ForEachSprite(TFunction<void(UVisualSprite* Sprite)> Action)
+{
 	const int32 NumChildren = Canvas->GetChildrenCount();
-	//Widget at index 0 is the Background, we want to keep it
+	//Widget at 0 is the Background
 	for (int32 i = 1; i < NumChildren; i++)
 	{
-		if (Canvas->RemoveChildAt(i))
+		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Canvas->GetChildAt(i)))
 		{
-			bRemoved = true;
-			i--;
+			Action(Sprite);
 		}
 	}
-
-	return bRemoved;
 }
