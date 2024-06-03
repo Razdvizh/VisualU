@@ -8,20 +8,6 @@ public class VisualU : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		PublicIncludePaths.AddRange(
-			new string[] {
-				// ... add public include paths required here ...
-			}
-			);
-				
-		
-		PrivateIncludePaths.AddRange(
-			new string[] {
-				// ... add other private include paths required here ...
-			}
-			);
-			
-		
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
@@ -30,7 +16,6 @@ public class VisualU : ModuleRules
 			}
 			);
 			
-		
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
@@ -46,5 +31,8 @@ public class VisualU : ModuleRules
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
+		
+		//PublicDefinitions.Add("WITH_GAMEPLAY_DEBUGGER=" + (Target.bUseGameplayDebugger ? 1 : 0));
+
 	}
 }
