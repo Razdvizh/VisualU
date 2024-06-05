@@ -11,9 +11,7 @@ public class VisualUDebugger : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-                "Core",
-                "CoreUObject",
-                "Engine"
+				"VisualU"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -21,10 +19,12 @@ public class VisualUDebugger : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Slate",
+                "Core",
+                "CoreUObject",
+                "Engine",
+                "Slate",
 				"SlateCore",
-				"GameplayDebugger",
-				"VisualU"
+				"GameplayDebugger"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

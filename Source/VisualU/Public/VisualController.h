@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Scenario.h"
 #include "Templates/SubclassOf.h"
+#include "Containers/Deque.h"
 #include "VisualController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStart);
@@ -52,7 +53,7 @@ public:
 	bool IsWithChoice() const;
 
 	/// <summary>
-	/// Releases the handle for the assets of the current scene.
+	/// Releases the handle for the assets of the next scene.
 	/// </summary>
 	/// <remarks>
 	/// If no other handles to these assets exist, assets will be unloaded from memory.

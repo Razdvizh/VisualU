@@ -10,8 +10,8 @@ FGameplayDebuggerCategory_VisualU::FGameplayDebuggerCategory_VisualU()
 }
 
 void FGameplayDebuggerCategory_VisualU::CollectData(APlayerController* OwnerPC, AActor* DebugActor)
-{
-	
+{	
+
 }
 
 void FGameplayDebuggerCategory_VisualU::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext)
@@ -24,3 +24,4 @@ VISUALUDEBUGGER_API TSharedRef<FGameplayDebuggerCategory> FGameplayDebuggerCateg
 }
 
 #endif
+

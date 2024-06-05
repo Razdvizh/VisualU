@@ -10,13 +10,6 @@
 #include "VisualRenderer.h"
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-static TAutoConsoleVariable<bool> CVarDebugDeferredSceneLoading
-(
-	TEXT("VisualU.DebugDefferedSceneLoading"),
-	false,
-	TEXT("bool. Displays status of asset loading of future scenarios."),
-	ECVF_Cheat
-);
 static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
 (
 	TEXT("VisualU.EditorStallThreadForLoading"),
@@ -88,7 +81,7 @@ void UVisualController::PrepareScenes(ENodeDirection Direction)
 				{
 					const FScenario* Scene = GetSceneAt(SceneIndex + u);
 					TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(Scene);
-
+					
 					SceneHandles.Enqueue(SceneHandle);
 				}
 			}

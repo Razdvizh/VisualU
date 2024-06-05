@@ -12,7 +12,7 @@ class AActor;
 /**
  * Debugger for VisualU that provides information on asynchronous scene loading.
  */
-class FGameplayDebuggerCategory_VisualU : public FGameplayDebuggerCategory
+class FGameplayDebuggerCategory_VisualU final : public FGameplayDebuggerCategory
 {
 public:
 	FGameplayDebuggerCategory_VisualU();
