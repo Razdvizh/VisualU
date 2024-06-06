@@ -22,7 +22,8 @@ SBackgroundVisualImage::SBackgroundVisualImage()
 	Transition(*this),
 	Target(*this),
 	bIsTransitioning(false),
-	bIsTargetAnimated(false)
+	bIsTargetAnimated(false),
+	TargetFrameIndex(0)
 {
 }
 
@@ -30,6 +31,7 @@ void SBackgroundVisualImage::Construct(const FArguments& Args)
 {
 	bIsTransitioning = Args._IsTransitioning;
 	bIsTargetAnimated = Args._IsTargetAnimated;
+	TargetFrameIndex = Args._TargetFrameIndex;
 	Transition.Assign(*this, Args._Transition);
 	Target.Assign(*this, Args._Target);
 }
@@ -42,10 +44,24 @@ void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMate
 	if (Target.Get() && bShouldAnimateTarget)
 	{
 		GetCurveSequence()->AddCurve(0.f, Target.Get()->GetTotalDuration());
+		GetCurveSequence()->Play(AsShared(), true, 0.f, false);
 	}
 
 	bIsTransitioning = true;
 	bIsTargetAnimated = bShouldAnimateTarget;
+	TargetFrameIndex = 0;
+}
+
+void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, int32 FrameIndex)
+{
+	Target.Set(*this, TargetFlipbook);
+	Transition.Set(*this, TransitionMaterial);
+
+	check(TargetFrameIndex >= 0);
+	TargetFrameIndex = FrameIndex;
+
+	bIsTransitioning = true;
+	bIsTargetAnimated = false;
 }
 
 void SBackgroundVisualImage::StopTransition()
@@ -88,7 +104,7 @@ UPaperSprite* SBackgroundVisualImage::GetTargetSprite() const
 {
 	if (UPaperFlipbook* TargetFlipbook = Target.Get())
 	{
-		UPaperSprite* CurrentSprite = bIsTargetAnimated ? TargetFlipbook->GetSpriteAtTime(const_cast<SBackgroundVisualImage*>(this)->GetCurveSequence()->GetSequenceTime()) : TargetFlipbook->GetSpriteAtFrame(0);
+		UPaperSprite* CurrentSprite = bIsTargetAnimated ? TargetFlipbook->GetSpriteAtTime(const_cast<SBackgroundVisualImage*>(this)->GetCurveSequence()->GetSequenceTime()) : TargetFlipbook->GetSpriteAtFrame(TargetFrameIndex);
 		return CurrentSprite;
 	}
 

@@ -18,11 +18,13 @@ class VISUALU_API SBackgroundVisualImage final : public SVisualImage
 
 	SLATE_DECLARE_WIDGET(SBackgroundVisualImage, SVisualImage)
 
-	SLATE_BEGIN_ARGS(SBackgroundVisualImage) : _IsTransitioning(false), _IsTargetAnimated(false) {}
+	SLATE_BEGIN_ARGS(SBackgroundVisualImage) : _IsTransitioning(false), _IsTargetAnimated(false), _TargetFrameIndex(0) {}
 
 		SLATE_ARGUMENT(bool, IsTransitioning)
 
 		SLATE_ARGUMENT(bool, IsTargetAnimated)
+
+		SLATE_ARGUMENT(int32, TargetFrameIndex)
 
 		SLATE_ATTRIBUTE(UMaterialInstanceDynamic*, Transition)
 
@@ -36,6 +38,8 @@ public:
 	void Construct(const FArguments& Args);
 
 	void SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, bool bShouldAnimateTarget);
+
+	void SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, int32 FrameIndex);
 
 	void StopTransition();
 
@@ -59,4 +63,6 @@ private:
 	bool bIsTransitioning;
 
 	bool bIsTargetAnimated;
+
+	int32 TargetFrameIndex;
 };

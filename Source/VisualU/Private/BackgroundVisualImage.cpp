@@ -42,6 +42,14 @@ void UBackgroundVisualImage::PlayTransition(UPaperFlipbook* Target, UMaterialIns
 	}
 }
 
+void UBackgroundVisualImage::PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, int32 TargetFrameIndex)
+{
+	if (VisualImageSlate.IsValid())
+	{
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->SetTransition(Target, Transition, TargetFrameIndex);
+	}
+}
+
 TSharedRef<SWidget> UBackgroundVisualImage::RebuildWidget()
 {
 	VisualImageSlate = SNew(SBackgroundVisualImage);

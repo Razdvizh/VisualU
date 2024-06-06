@@ -119,10 +119,10 @@ public:
 	virtual ~FBackground() {}
 
 	/// <summary>
-	/// Background Art of the scene.
+	/// Background info for the scene.
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Background Art of this Scenario"))
-	TSoftObjectPtr<UPaperFlipbook> BackgroundArt;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Background info for the Scenario"))
+	FVisualImageInfo BackgroundArtInfo;
 
 	/// <summary>
 	/// Transition to play on background when switching to the next scene.
@@ -238,7 +238,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Sprites that this Scenario has"))
 	TArray<FSprite> SpritesParams;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (Bitmask, BitmaskEnum = EScenarioMetaFlags, ToolTip = "What kinds of Visual sprites this scene has"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "What kinds of Visual sprites this scene has"))
 	uint8 Flags;
 
 	const UDataTable* Owner;
@@ -265,9 +265,9 @@ public:
 	/// </remarks>
 	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
 	{
-		if (!Background.BackgroundArt.IsNull())
+		if (!Background.BackgroundArtInfo.Expression.IsNull())
 		{
-			Out.Emplace(Background.BackgroundArt.ToSoftObjectPath());
+			Out.Emplace(Background.BackgroundArtInfo.Expression.ToSoftObjectPath());
 		}
 		if (!Music.IsNull())
 		{
@@ -291,7 +291,7 @@ public:
 	{
 		if (Author.CompareTo(Other.Author)
 			&& Line.CompareTo(Other.Line)
-			&& Background.BackgroundArt.GetAssetName() == Other.Background.BackgroundArt.GetAssetName()
+			&& Background.BackgroundArtInfo == Other.Background.BackgroundArtInfo
 			&& Background.TransitionMaterial.GetAssetName() == Other.Background.TransitionMaterial.GetAssetName()
 			&& Music.GetAssetName() == Other.Music.GetAssetName())
 		{
@@ -323,7 +323,7 @@ public:
 		UE_LOG(LogVisualU, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("\tBackground Art: %s"), !Background.BackgroundArt.IsNull() ? *Background.BackgroundArt.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Warning, TEXT("\tBackground Art: %s"), !Background.BackgroundArtInfo.Expression.IsNull() ? *Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("\tTransition Material: %s"), !Background.TransitionMaterial.IsNull() ? *Background.TransitionMaterial.GetAssetName() : TEXT("None"));
 
 		if (!SpritesParams.IsEmpty())

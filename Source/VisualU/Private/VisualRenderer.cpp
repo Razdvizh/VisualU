@@ -41,9 +41,9 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 		Canvas->RemoveChild(Sprite);
 	});
 
-	if (UPaperFlipbook* const BackgroundArt = Scene->Background.BackgroundArt.Get())
+	if (Scene->Background.BackgroundArtInfo.Expression.IsValid())
 	{
-		Background->SetFlipbook(BackgroundArt);
+		Background->AssignVisualImageInfo(Scene->Background.BackgroundArtInfo);
 	}
 
 	if (USoundBase* const Music = Scene->Music.Get())
@@ -79,14 +79,16 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 {
 	check(From);
 	check(To);
-	const bool bIsTransitionPossible = To->Background.BackgroundArt.IsValid() &&
-		From->Background.TransitionMaterial.IsValid() &&
-		!Background->IsTransitioning();
+	const FVisualImageInfo& ToBackgroundArtInfo = To->Background.BackgroundArtInfo;
+	const TSoftObjectPtr<UMaterialInterface>& SoftTransitionMaterial = From->Background.TransitionMaterial;
+	const bool bIsTransitionPossible = ToBackgroundArtInfo.Expression.IsValid()
+											 && SoftTransitionMaterial.IsValid()
+											 &&	 !Background->IsTransitioning();
 
 	if (bIsTransitionPossible)
 	{
-		UPaperFlipbook* NextFlipbook = To->Background.BackgroundArt.Get();
-		UMaterialInterface* TransitionMaterial = From->Background.TransitionMaterial.Get();
+		UPaperFlipbook* NextFlipbook = ToBackgroundArtInfo.Expression.Get();
+		UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.Get();
 		UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
 		DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
 
@@ -94,8 +96,15 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 		{
 			Sprite->OnSpriteDisappear.Broadcast();
 		});
-
-		Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
+		
+		if (ToBackgroundArtInfo.bAnimate)
+		{
+			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, true);
+		}
+		else
+		{
+			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, ToBackgroundArtInfo.FrameIndex);
+		}
 		PlayAnimationForward(Transition, /*PlaybackSpeed=*/1.f, /*bRestoreState=*/true);
 		FinalScene = To;
 	}

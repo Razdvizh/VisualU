@@ -44,8 +44,10 @@ public:
 	/// </summary>
 	/// <param name="Target">New flipbook that would be displayed by this image after transition ends</param>
 	/// <param name="Transition">Material that serves as transition effect</param>
-	/// <param name="bShouldAnimateTarget">Whether or not Target flipbook should be animated</param>
+	/// <param name="bShouldAnimateTarget">Whether or not Target flipbook should be animated. If false, will display first frame of the flipbook.</param>
 	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, bool bShouldAnimateTarget);
+
+	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, int32 FrameIndex);
 
 protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;

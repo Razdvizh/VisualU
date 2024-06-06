@@ -100,9 +100,9 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	if (!Scene->Background.BackgroundArt.IsNull())
+	if (!Scene->Background.BackgroundArtInfo.Expression.IsNull())
 	{
-		Background->SetFlipbook(Scene->Background.BackgroundArt.Get());
+		Background->SetFlipbook(Scene->Background.BackgroundArtInfo.Expression.Get());
 	}
 
 	if (USoundBase* Music = Scene->Music.Get())
@@ -320,15 +320,22 @@ void UVisualScene::PlayTransition(UWidgetAnimation* DrivingAnim)
 	if (!SoftTransitionMaterial.IsNull() && CanAdvanceScene())
 	{
 		const FScenario* NextScene = GetSceneAt(SceneIndex + 1);
-		const bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArt.IsNull(), TEXT("You are trying to transition to an empty background"));
+		const bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArtInfo.Expression.IsNull(), TEXT("You are trying to transition to an empty background"));
 		if (bIsTransitionPossible)
 		{
-			UPaperFlipbook* NextFlipbook = NextScene->Background.BackgroundArt.LoadSynchronous();
+			UPaperFlipbook* NextFlipbook = NextScene->Background.BackgroundArtInfo.Expression.LoadSynchronous();
 			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.LoadSynchronous();
 			UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
 			DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
 			
-			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, Background->IsAnimated());
+			if (NextScene->Background.BackgroundArtInfo.bAnimate)
+			{
+				Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, true);
+			}
+			else
+			{
+				Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, NextScene->Background.BackgroundArtInfo.FrameIndex);
+			}
 			PlayAnimationForward(DrivingAnim, 1.f, true);
 		}
 	}
@@ -413,7 +420,7 @@ void UVisualScene::StopTransition() const
 	OnSceneTransitionEnded.Broadcast();
 	OnNativeSceneTransitionEnded.Broadcast();
 
-	Background->SetFlipbook(GetCurrentScene()->Background.BackgroundArt.LoadSynchronous());
+	Background->SetFlipbook(GetCurrentScene()->Background.BackgroundArtInfo.Expression.LoadSynchronous());
 	Background->StopTransition();
 }
 
