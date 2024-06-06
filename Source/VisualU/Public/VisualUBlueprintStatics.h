@@ -7,6 +7,8 @@
 #include "VisualUBlueprintStatics.generated.h"
 
 class UPaperSprite;
+class UVisualController;
+class UDataTable;
 
 ///<summary>
 /// Provides useful functionality that is missing in the Blueprints.
@@ -29,6 +31,9 @@ class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary
 	/// <param name="InScenesData">Data to print to the log</param>
 	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (ToolTip = "Outputs a friendly representation of scene data to the log"))
 	static void PrintScenesData();
+
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Choice", meta = (ToolTip = "Sets Visual Controller to iterate over provided Data Table. NOTE: Data Table can't be empty."))
+	static void Choose(UVisualController* Controller, const UDataTable* DataTable);
 
 private:
 	/// <summary>

@@ -172,6 +172,15 @@ struct FScenarioVisualInfo : public FVisualInfo
 	}
 };
 
+UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = true))
+enum class EScenarioMetaFlags : uint8
+{
+	None = 0,
+	Character = 1 << 0,
+	Choice = 1 << 1
+};
+ENUM_CLASS_FLAGS(EScenarioMetaFlags)
+
 /// <summary>
 /// A single scene or "frame" of the Visual Novel game.
 /// </summary>
@@ -228,6 +237,9 @@ public:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Sprites that this Scenario has"))
 	TArray<FSprite> SpritesParams;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (Bitmask, BitmaskEnum = EScenarioMetaFlags, ToolTip = "What kinds of Visual sprites this scene has"))
+	uint8 Flags;
 
 	const UDataTable* Owner;
 
@@ -332,7 +344,8 @@ public:
 	/// <returns><c>true</c> if scene has <see cref="UVisualChoice">Visual Choice</see></returns>
 	inline bool HasChoice() const
 	{
-		return false;
+		const uint8 AsInt = StaticCast<uint8>(EScenarioMetaFlags::Choice);
+		return (Flags & AsInt) == AsInt;
 	}
 
 	/// <summary>

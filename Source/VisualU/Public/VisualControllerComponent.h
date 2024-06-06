@@ -21,11 +21,9 @@ public:
 	// Sets default values for this component's properties
 	UVisualControllerComponent();
 
-	virtual UVisualController* GetVisualController_Implementation() const override final;
+	virtual void InitializeComponent() override;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	virtual UVisualController* GetVisualController_Implementation() const override final;
 
 private:
 	UPROPERTY(EditAnywhere, Instanced, BlueprintReadOnly, meta = (AllowPrivateAccess = true))

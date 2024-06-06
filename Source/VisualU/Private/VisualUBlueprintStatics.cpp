@@ -5,6 +5,8 @@
 #include "PaperSprite.h"
 #include "Scenario.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "VisualController.h"
+#include "Engine/DataTable.h"
 
 UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 {
@@ -34,6 +36,13 @@ void UVisualUBlueprintStatics::PrintScenesData()
 			UE_LOG(LogVisualU, Warning, TEXT("================================================="));
 		}
 	}
+}
+
+void UVisualUBlueprintStatics::Choose(UVisualController* Controller, const UDataTable* DataTable)
+{
+	check(Controller);
+	check(DataTable);
+	Controller->ToNode(DataTable);
 }
 
 void UVisualUBlueprintStatics::GetScenesData(TArray<FAssetData>& OutData)

@@ -14,14 +14,17 @@ UVisualControllerComponent::UVisualControllerComponent()
 	// ...
 }
 
+void UVisualControllerComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
+	if (!IsValid(VisualController))
+	{
+		VisualController = NewObject<UVisualController>(this, MakeUniqueObjectName(this, UVisualController::StaticClass()));
+	}
+}
+
 UVisualController* UVisualControllerComponent::GetVisualController_Implementation() const
 {
 	return VisualController;
-}
-
-// Called when the game starts
-void UVisualControllerComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
 }
