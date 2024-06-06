@@ -24,7 +24,7 @@ class VISUALU_API IVisualControllerInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Visual Controller Interface")
 	UVisualController* GetVisualController() const;
 
 };

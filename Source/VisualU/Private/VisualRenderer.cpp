@@ -184,7 +184,7 @@ void UVisualRenderer::OnAnimationFinished_Implementation(const UWidgetAnimation*
 void UVisualRenderer::ForEachSprite(TFunction<void(UVisualSprite* Sprite)> Action)
 {
 	TArray<UWidget*> Children = Canvas->GetAllChildren();
-	for (auto& Child : Children)
+	for (UWidget*& Child : Children)
 	{
 		if (UVisualSprite* Sprite = Cast<UVisualSprite>(Child))
 		{

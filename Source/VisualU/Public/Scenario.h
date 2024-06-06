@@ -7,7 +7,6 @@
 #include "VisualSprite.h"
 #include "VisualDefaults.h"
 #include "VisualImage.h"
-#include "VisualChoice.h"
 #include "InfoAssignable.h"
 #include "Scenario.generated.h"
 
@@ -137,35 +136,35 @@ struct FScenarioVisualInfo : public FVisualInfo
 {
 	GENERATED_USTRUCT_BODY()
 
-		/// <summary>
-		/// <see cref="FScenario::Author"/>
-		/// </summary>
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		FText Author;
+	/// <summary>
+	/// <see cref="FScenario::Author"/>
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
+	FText Author;
 
 	/// <summary>
 	/// <see cref="FScenario::Line"/>
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		FText Line;
+	FText Line;
 
 	/// <summary>
 	/// <see cref="FScenario::Music"/>
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		TSoftObjectPtr<USoundBase> Music;
+	TSoftObjectPtr<USoundBase> Music;
 
 	/// <summary>
 	/// <see cref="FScenario::Background"/>
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		FBackground Background;
+	FBackground Background;
 
 	/// <summary>
 	/// <see cref="FScenario::SpritesParams"/>
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-		TArray<FSprite> SpritesParams;
+	TArray<FSprite> SpritesParams;
 
 	virtual void Accept(IInfoAssignable* Visitor) const override
 	{
@@ -333,17 +332,6 @@ public:
 	/// <returns><c>true</c> if scene has <see cref="UVisualChoice">Visual Choice</see></returns>
 	inline bool HasChoice() const
 	{
-		if (!SpritesParams.IsEmpty())
-		{
-			for (const auto& SpriteParam : SpritesParams)
-			{
-				if (!SpriteParam.SpriteClass.IsNull() && SpriteParam.SpriteClass->IsChildOf<UVisualChoice>())
-				{
-					return true;
-				}
-			}
-		}
-		
 		return false;
 	}
 
