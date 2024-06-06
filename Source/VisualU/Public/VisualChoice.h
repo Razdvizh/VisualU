@@ -22,29 +22,13 @@ public:
 	UVisualChoice(const FObjectInitializer& ObjectInitializer);
 
 	/// <summary>
-	/// Setter for <see cref="UVisualScene">Visual Scene</see> if it wasn't provided during construction.
-	/// </summary>
-	/// <param name="Scene">Active Visual Scene</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Scene", meta = (ToolTip = "Setter for the Visual Scene in case it wasn't provided during construction"))
-	void SetVisualScene(UVisualScene* Scene);
-	
-	/// \copydoc UVisualSprite
-	virtual void AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo) override;
-
-	/// <summary>
 	/// Sets the provided node as active for operations inside the <see cref="UVisualScene">Visual Scene</see>.
 	/// </summary>
 	/// <param name="node">node to operate on</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Choice", meta = (DisplayName = "Choose", DeprecatedFunction, DeprecationMessage = "Visual Scene usage is deprecated, and this function relies on it. Use overloaded version that takes Visual Controller instead.", ToolTip = "Sets the provided node as active for operations inside Visual Secne"))
-	void Choose_DEPRECATED(const UDataTable* Node) const;
+	UFUNCTION(BlueprintCallable, Category = "Visual Choice", meta = (ToolTip = "Sets the provided node as active for operations inside Visual Scene."))
+	void LegacyChoose(UVisualScene* Scene, const UDataTable* Node) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Choice")
 	void Choose(UVisualController* Controller, const UDataTable* Node) const;
 
-protected:
-	/// <summary>
-	/// Pointer to the active <see cref="UVisualScene">Visual Scene</see>.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Scene", meta = (ExposeOnSpawn = true, ToolTip = "Pointer to the active Visual Scene"))
-	UVisualScene* VisualScene;
 };

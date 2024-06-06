@@ -3,35 +3,23 @@
 
 #include "VisualChoice.h"
 #include "Engine/DataTable.h"
-#include "Scenario.h"
 #include "VisualScene.h"
+#include "VisualController.h"
 
 UVisualChoice::UVisualChoice(const FObjectInitializer& ObjectInitializer) 
-	: Super(ObjectInitializer),
-	VisualScene(nullptr)
+	: Super(ObjectInitializer)
 {
 	
 }
 
-void UVisualChoice::SetVisualScene(UVisualScene* Scene)
+void UVisualChoice::LegacyChoose(UVisualScene* Scene, const UDataTable* Node) const
 {
-	VisualScene = Scene;
-}
-
-void UVisualChoice::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
-{
-	if (!InInfo.IsEmpty())
-	{
-		Super::AssignSpriteInfo(InInfo);
-	}
-}
-
-void UVisualChoice::Choose_DEPRECATED(const UDataTable* Node) const
-{
-	checkf(VisualScene, TEXT("Visual Scene is invalid. Use SetVisualScene() first"));
-	VisualScene->ToNode(Node);
+	check(Scene);
+	Scene->ToNode(Node);
 }
 
 void UVisualChoice::Choose(UVisualController* Controller, const UDataTable* Node) const
 {
+	check(Controller);
+	Controller->ToNode(Node);
 }
