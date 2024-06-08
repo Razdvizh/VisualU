@@ -26,7 +26,15 @@
 		{
 			"Name": "VisualUDebugger",
 			"Type": "DeveloperTool",
-			"LoadingPhase": "PreDefault",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "VisualUEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
 			"PlatformAllowList": [
 				"Win64"
 			]

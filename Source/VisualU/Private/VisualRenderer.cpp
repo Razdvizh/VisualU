@@ -167,7 +167,7 @@ void UVisualRenderer::NativeOnInitialized()
 			UMovieSceneParameterSection* ParameterSection = Cast<UMovieSceneParameterSection>(Track->CreateNewSection());
 			check(ParameterSection);
 ;
-			const FName ParameterName = Collection->ScalarParameters[0].ParameterName;
+			const FName& ParameterName = Collection->ScalarParameters[0].ParameterName;
 			const FFrameTime EndFrame = EndTime * TickResolution;
 
 			Track->AddSection(*ParameterSection);

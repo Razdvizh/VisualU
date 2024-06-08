@@ -166,7 +166,7 @@ bool UVisualController::ToScene(const FScenario* Scene)
 	else
 	{
 		/*Traverse the stack until the requested Node is found*/
-		for (int i = ExhaustedScenes.Num() - 1; i >= 0; i--)
+		for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 		{
 			if (ExhaustedScenes[i]->Owner == Scene->Owner)
 			{

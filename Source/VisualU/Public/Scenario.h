@@ -265,6 +265,7 @@ public:
 	/// </remarks>
 	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
 	{
+		Out.Reserve(3 + SpritesParams.Num());
 		if (!Background.BackgroundArtInfo.Expression.IsNull())
 		{
 			Out.Emplace(Background.BackgroundArtInfo.Expression.ToSoftObjectPath());
@@ -277,10 +278,10 @@ public:
 		{
 			Out.Emplace(Background.TransitionMaterial.ToSoftObjectPath());
 		}
-		for (const auto& SpriteParam : SpritesParams)
+		for (const FSprite& SpriteParam : SpritesParams)
 		{
 			Out.Emplace(SpriteParam.SpriteClass.ToSoftObjectPath());
-			for (const auto& Info : SpriteParam.SpriteInfo)
+			for (const FVisualImageInfo& Info : SpriteParam.SpriteInfo)
 			{
 				Out.Emplace(Info.Expression.ToSoftObjectPath());
 			}
