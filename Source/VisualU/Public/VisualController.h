@@ -17,23 +17,22 @@ class APlayerController;
 struct FStreamableHandle;
 
 /**
-* Describes direction in which scenes "flow" - current scene is expected to change either to the next(forward) or previous(backward) scene in the node.
-*/
-enum class EVisualControllerNodeDirection : int8
-{
-	Backward = -1,
-	Forward = 1
-};
-
-typedef EVisualControllerNodeDirection ENodeDirection;
-
-/**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew)
 class VISUALU_API UVisualController : public UObject
 {
 	GENERATED_BODY()
+
+private:
+	/**
+	* Describes direction in which scenes move - current scene is expected to change either to the next(forward) or previous(backward) scene in the node.
+	*/
+	enum class ENodeDirection : int8
+	{
+		Backward = -1,
+		Forward = 1
+	};
 
 public:
 	UVisualController();
@@ -142,7 +141,7 @@ public:
 	* Construct underlying widget and add it to the player screen. Will show currently selected scene.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void Visualize(APlayerController* OwningController, int32 ZOrder = 0);
+	void Visualize(APlayerController* OwningController, const TSubclassOf<UVisualRenderer>& RendererClass, int32 ZOrder = 0);
 
 	/**
 	* Destroy underlying widget.
@@ -197,12 +196,6 @@ public:
 	* Called when Visual Controller begins switching to a different scenario.
 	*/
 	FOnNativeSceneEnd OnNativeSceneEnd;
-
-	/**
-	* Class of underlying widget that is controlled by this Visual Controller.
-	*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Widget")
-	TSubclassOf<UVisualRenderer> RendererClass;
 
 protected:
 	/// <summary>

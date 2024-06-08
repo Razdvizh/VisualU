@@ -36,7 +36,7 @@ void SBackgroundVisualImage::Construct(const FArguments& Args)
 	Target.Assign(*this, Args._Target);
 }
 
-void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, bool bShouldAnimateTarget)
+void SBackgroundVisualImage::StartTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, bool bShouldAnimateTarget)
 {
 	Target.Set(*this, TargetFlipbook);
 	Transition.Set(*this, TransitionMaterial);
@@ -52,7 +52,7 @@ void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMate
 	TargetFrameIndex = 0;
 }
 
-void SBackgroundVisualImage::SetTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, int32 FrameIndex)
+void SBackgroundVisualImage::StartTransition(UPaperFlipbook* TargetFlipbook, UMaterialInstanceDynamic* TransitionMaterial, int32 FrameIndex)
 {
 	Target.Set(*this, TargetFlipbook);
 	Transition.Set(*this, TransitionMaterial);

@@ -21,7 +21,6 @@ static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
 
 UVisualController::UVisualController() 
 	: Super(),
-	RendererClass(UVisualRenderer::StaticClass()),
 	Renderer(nullptr),
 	NextSceneHandle(nullptr),
 	Node(),
@@ -205,14 +204,15 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	{
 		return;
 	}
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
 
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
 		Scene->Owner->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
+
+	OnSceneEnd.Broadcast();
+	OnNativeSceneEnd.Broadcast();
 	
 	SceneHandles.Empty();
 	CancelNextScene();
@@ -226,7 +226,7 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualController::AssertNextSceneLoad(EVisualControllerNodeDirection Direction)
+void UVisualController::AssertNextSceneLoad(ENodeDirection Direction)
 {
 	const int32 NextSceneIndex = SceneIndex + (Direction == ENodeDirection::Forward ? 1 : -1);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
@@ -243,7 +243,8 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	{
 		return;
 	}
-	ExhaustedScenes.Push(Node.Last());
+	FScenario* Last = Node.Last();
+	ExhaustedScenes.Push(Last);
 
 	Node.Empty();
 	NewNode->GetAllRows(UE_SOURCE_LOCATION, Node);
@@ -258,7 +259,10 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 
 	SceneIndex = 0;
 	LoadScene(GetCurrentScene());
-	Renderer->DrawScene(GetCurrentScene());
+	if (!TryPlayTransition(Last, GetCurrentScene()))
+	{
+		Renderer->DrawScene(GetCurrentScene());
+	}
 	PrepareScenes();
 
 	OnSceneStart.Broadcast();
@@ -276,7 +280,7 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 	return false;
 }
 
-void UVisualController::Visualize(APlayerController* OwningController, int32 ZOrder)
+void UVisualController::Visualize(APlayerController* OwningController, const TSubclassOf<UVisualRenderer>& RendererClass, int32 ZOrder)
 {
 	if (!IsValid(Renderer))
 	{

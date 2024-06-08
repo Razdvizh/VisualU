@@ -38,7 +38,7 @@ void UBackgroundVisualImage::PlayTransition(UPaperFlipbook* Target, UMaterialIns
 {
 	if (VisualImageSlate.IsValid())
 	{
-		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->SetTransition(Target, Transition, bShouldAnimateTarget);
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->StartTransition(Target, Transition, bShouldAnimateTarget);
 	}
 }
 
@@ -46,7 +46,7 @@ void UBackgroundVisualImage::PlayTransition(UPaperFlipbook* Target, UMaterialIns
 {
 	if (VisualImageSlate.IsValid())
 	{
-		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->SetTransition(Target, Transition, TargetFrameIndex);
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->StartTransition(Target, Transition, TargetFrameIndex);
 	}
 }
 
