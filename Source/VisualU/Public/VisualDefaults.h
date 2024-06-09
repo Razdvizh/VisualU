@@ -16,7 +16,7 @@ struct FMargin;
 USTRUCT(BlueprintType)
 struct FVisualAnchors : public FAnchors
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	FVisualAnchors() : Super() {}
@@ -28,17 +28,17 @@ public:
 	inline static const FAnchors Default = FAnchors();
 	inline static const FAnchors FullScreen = FAnchors(0, 0, 1, 1);
 	inline static const FAnchors BottomLeft = FAnchors(0, 1, 0, 1);
-	inline static const FAnchors TopLeft = FAnchors(0, 0, 0, 0);
 	inline static const FAnchors MiddleLeft = FAnchors(0, 0.5, 0, 0.5);
+	inline static const FAnchors TopLeft = FAnchors(0, 0, 0, 0);
 	inline static const FAnchors BottomRight = FAnchors(1, 1, 1, 1);
-	inline static const FAnchors TopRight = FAnchors(1, 0, 1, 0);
 	inline static const FAnchors MiddleRight = FAnchors(1, 0.5, 1, 0.5);
+	inline static const FAnchors TopRight = FAnchors(1, 0, 1, 0);
 	inline static const FAnchors BottomCenter = FAnchors(0.5, 1, 0.5, 1);
-	inline static const FAnchors TopCenter = FAnchors(0.5, 0, 0.5, 0);
 	inline static const FAnchors Center = FAnchors(0.5, 0.5, 0.5, 0.5);
-	inline static const FAnchors TopHorizontal = FAnchors(0, 0, 1, 0);
-	inline static const FAnchors MiddleHorizontal = FAnchors(0, 0.5, 1, 0.5);
+	inline static const FAnchors TopCenter = FAnchors(0.5, 0, 0.5, 0);
 	inline static const FAnchors BottomHorizontal = FAnchors(0, 1, 1, 1);
+	inline static const FAnchors MiddleHorizontal = FAnchors(0, 0.5, 1, 0.5);
+	inline static const FAnchors TopHorizontal = FAnchors(0, 0, 1, 0);
 	inline static const FAnchors LeftVertical = FAnchors(0, 0, 0, 1);
 	inline static const FAnchors CenterVertical = FAnchors(0.5, 0, 0.5, 1);
 	inline static const FAnchors RightVertical = FAnchors(1, 0, 1, 1);
