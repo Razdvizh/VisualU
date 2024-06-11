@@ -52,14 +52,6 @@ public:
 	bool IsWithChoice() const;
 
 	/// <summary>
-	/// Releases the handle for the assets of the next scene.
-	/// </summary>
-	/// <remarks>
-	/// If no other handles to these assets exist, assets will be unloaded from memory.
-	/// </remarks>
-	void CancelNextScene();
-
-	/// <summary>
 	/// Whether or not the <paramref name="Scene"/> is exhausted.
 	/// </summary>
 	/// <param name="Scene"><see cref="FScenario">Scene</see> to check</param>
@@ -207,7 +199,19 @@ protected:
 
 	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
+	/*
+	* Loads assets of future scenes.
+	* @see ENodeDirection determines where future scenes are.
+	*/
 	void PrepareScenes(ENodeDirection Direction = ENodeDirection::Forward);
+
+	/// <summary>
+	/// Releases the handle for the assets of the next scene.
+	/// </summary>
+	/// <remarks>
+	/// If no other handles to these assets exist, assets will be unloaded from memory.
+	/// </remarks>
+	void CancelNextScene();
 
 	/**
 	* Requests Renderer to display transition animation.
@@ -270,6 +274,11 @@ private:
 	/// is not considered exhausted anymore untill the player advances forward again.
 	/// </remarks>
 	TArray<FScenario*> ExhaustedScenes;
+
+	/*
+	* So far, the deepest scene in Visual Controller.
+	*/
+	const FScenario* Head;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
 	bool bPlayTransitions;

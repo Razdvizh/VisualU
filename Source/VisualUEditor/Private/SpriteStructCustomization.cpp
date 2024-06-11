@@ -39,7 +39,11 @@ void FSpriteStructCustomization::CustomizeChildren(TSharedRef<IPropertyHandle> P
 	ChildBuilder.AddProperty(SpriteInfoHandle.ToSharedRef());
 
 	FMenuBuilder MenuBuilder(true, nullptr, nullptr, true, &FAppStyle::Get());
-	const auto AddAnchorsPreset = [&MenuBuilder](const FText& PresetName, const FText& PresetToolTip, const FVisualAnchors& Value, TSharedRef<IPropertyHandle> Handle)
+	const auto AddAnchorsPreset = [&MenuBuilder](
+		const FText& PresetName, 
+		const FText& PresetToolTip, 
+		const FVisualAnchors& Value, 
+		TSharedRef<IPropertyHandle> Handle)
 	{
 		MenuBuilder.AddMenuEntry(
 			PresetName,

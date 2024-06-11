@@ -241,6 +241,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "What kinds of Visual sprites this scene has"))
 	uint8 Flags;
 
+	//Left undiscoverable by reflection to avoid circular references and intricacies of TWeakObjectPtr.
 	const UDataTable* Owner;
 
 	int32 Index;
@@ -296,8 +297,7 @@ public:
 			&& Background.TransitionMaterial.GetAssetName() == Other.Background.TransitionMaterial.GetAssetName()
 			&& Music.GetAssetName() == Other.Music.GetAssetName())
 		{
-			int i = 0;
-			for (i = 0; i < SpritesParams.Num(); i++)
+			for (int32 i = 0; i < SpritesParams.Num(); i++)
 			{
 				if (!Other.SpritesParams.IsValidIndex(i) || SpritesParams[i] != Other.SpritesParams[i])
 				{
@@ -321,23 +321,31 @@ public:
 	/// </summary>
 	virtual void PrintLog() const
 	{
-		UE_LOG(LogVisualU, Warning, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("\tBackground Art: %s"), !Background.BackgroundArtInfo.Expression.IsNull() ? *Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("\tTransition Material: %s"), !Background.TransitionMaterial.IsNull() ? *Background.TransitionMaterial.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tBackground Art: %s"), !Background.BackgroundArtInfo.Expression.IsNull() ? *Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tTransition Material: %s"), !Background.TransitionMaterial.IsNull() ? *Background.TransitionMaterial.GetAssetName() : TEXT("None"));
 
 		if (!SpritesParams.IsEmpty())
 		{
-			int cnt = 0;
-			for (const auto& SpriteParam : SpritesParams)
+			int32 cnt = 0;
+			for (const FSprite& SpriteParam : SpritesParams)
 			{
 				cnt++;
-				UE_LOG(LogVisualU, Warning, TEXT("\tSprite Parameter %d"), cnt);
+				UE_LOG(LogVisualU, Display, TEXT("\tSprite Parameter %d"), cnt);
 				SpriteParam.PrintLog();
 			}
 		}
 	}
+
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	FORCEINLINE const FString GetDebugString() const
+	{
+		check(Owner);
+		return FString::Printf(TEXT("DataTable: %s, index: %i"), *Owner->GetFName().ToString(), Index);
+	}
+#endif
 
 	/// <summary>
 	/// Checks whether or not this scene has at least one <see cref="UVisualChoice">Visual Choice</see>.

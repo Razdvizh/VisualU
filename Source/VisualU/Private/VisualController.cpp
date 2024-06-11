@@ -28,6 +28,7 @@ UVisualController::UVisualController()
 	ScenesToLoad(5),
 	SceneHandles(),
 	ExhaustedScenes(),
+	Head(nullptr),
 	bPlayTransitions(true)
 {
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
@@ -39,6 +40,7 @@ UVisualController::UVisualController()
 	FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
 
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
+	Head = GetCurrentScene();
 }
 
 TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
@@ -113,10 +115,16 @@ void UVisualController::ToNextScene()
 	AssertNextSceneLoad();
 
 	SceneIndex += 1;
-
-	if (!TryPlayTransition(GetSceneAt(SceneIndex - 1), GetCurrentScene()))
+	
+	const FScenario* CurrentScene = GetCurrentScene();
+	if (SceneIndex > Head->Index && Head->Owner == CurrentScene->Owner)
 	{
-		Renderer->DrawScene(GetCurrentScene());
+		Head = CurrentScene;
+	}
+
+	if (!TryPlayTransition(GetSceneAt(SceneIndex - 1), CurrentScene))
+	{
+		Renderer->DrawScene(CurrentScene);
 	}
 
 	CancelNextScene();
@@ -228,7 +236,7 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 
 void UVisualController::AssertNextSceneLoad(ENodeDirection Direction)
 {
-	const int32 NextSceneIndex = SceneIndex + (Direction == ENodeDirection::Forward ? 1 : -1);
+	const int32 NextSceneIndex = SceneIndex + StaticCast<int32>(Direction);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
 
 	#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITOR
@@ -239,6 +247,13 @@ void UVisualController::AssertNextSceneLoad(ENodeDirection Direction)
 void UVisualController::ToNode(const UDataTable* NewNode)
 {
 	check(NewNode);
+	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to the active node is not allowed."));
+	//Assertions aren't present in shipping builds, so compiler most likely will optimize empty loop.
+	for (const FScenario* ExhaustedScene : ExhaustedScenes)
+	{
+		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use ToScene or ToPreviousScene instead."));
+	}
+
 	if (Renderer->IsTransitionInProgress())
 	{
 		return;
@@ -258,10 +273,12 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	CancelNextScene();
 
 	SceneIndex = 0;
-	LoadScene(GetCurrentScene());
-	if (!TryPlayTransition(Last, GetCurrentScene()))
+
+	Head = GetCurrentScene();
+	LoadScene(Head);
+	if (!TryPlayTransition(Last, Head))
 	{
-		Renderer->DrawScene(GetCurrentScene());
+		Renderer->DrawScene(Head);
 	}
 	PrepareScenes();
 
