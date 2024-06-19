@@ -60,6 +60,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside Visual Sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	/// <summary>
 	/// Prints all fields to the VisualU log.
 	/// </summary>
@@ -71,14 +72,15 @@ public:
 		UE_LOG(LogVisualU, Warning, TEXT("Z order: %d"), ZOrder);
 		if (!SpriteInfo.IsEmpty())
 		{
-			int cnt = 0;
-			for (const auto& Info : SpriteInfo)
+			int32 cnt = 0;
+			for (const FVisualImageInfo& Info : SpriteInfo)
 			{
 				cnt++;
 				UE_LOG(LogVisualU, Warning, TEXT("\tSprite Info %d: %s"), cnt, *Info.ToString());
 			}
 		}
 	}
+#endif
 
 	FORCEINLINE bool operator== (const FSprite& Other)
 	{
@@ -87,7 +89,7 @@ public:
 			&& Position == Other.Position
 			&& ZOrder == Other.ZOrder)
 		{
-			for (int i = 0; i < SpriteInfo.Num(); i++)
+			for (int32 i = 0; i < SpriteInfo.Num(); i++)
 			{
 				if (!Other.SpriteInfo.IsValidIndex(i) || SpriteInfo[i] != Other.SpriteInfo[i])
 				{
@@ -111,7 +113,7 @@ public:
 USTRUCT(BlueprintType)
 struct FBackground
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	FBackground() {}
@@ -134,7 +136,7 @@ public:
 USTRUCT(BlueprintType)
 struct FScenarioVisualInfo : public FVisualInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 	/// <summary>
 	/// <see cref="FScenario::Author"/>
@@ -203,7 +205,7 @@ ENUM_CLASS_FLAGS(EScenarioMetaFlags)
 USTRUCT(BlueprintType)
 struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	FScenario() : Owner(nullptr), Index(0) {}
@@ -316,6 +318,7 @@ public:
 		return !(*this == Other);
 	}
 
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	/// <summary>
 	/// Prints all content of the scene to VisualU log.
 	/// </summary>
@@ -339,7 +342,6 @@ public:
 		}
 	}
 
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	FORCEINLINE const FString GetDebugString() const
 	{
 		check(Owner);
