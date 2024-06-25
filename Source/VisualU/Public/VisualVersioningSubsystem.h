@@ -6,7 +6,7 @@
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "VisualVersioningSubsystem.generated.h"
 
-struct FScenario;
+struct FScenarioVisualInfo;
 class UDataTable;
 class UVisualController;
 
@@ -19,9 +19,12 @@ class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintCallable, Category = "Visual Versioning")
+	void ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FScenarioVisualInfo& Version);
+
 	virtual void Deinitialize() override;
 
 private:
 	TSet<FScenario*> InitialScenes;
-
+	
 };

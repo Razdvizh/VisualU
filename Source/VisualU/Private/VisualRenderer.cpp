@@ -41,17 +41,17 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 		Canvas->RemoveChild(Sprite);
 	});
 
-	if (Scene->Background.BackgroundArtInfo.Expression.IsValid())
+	if (Scene->Info.Background.BackgroundArtInfo.Expression.IsValid())
 	{
-		Background->AssignVisualImageInfo(Scene->Background.BackgroundArtInfo);
+		Background->AssignVisualImageInfo(Scene->Info.Background.BackgroundArtInfo);
 	}
 
-	if (USoundBase* const Music = Scene->Music.Get())
+	if (USoundBase* const Music = Scene->Info.Music.Get())
 	{
 		PlaySound(Music);
 	}
 
-	for (const auto& SpriteData : Scene->SpritesParams)
+	for (const auto& SpriteData : Scene->Info.SpritesParams)
 	{
 		if (UClass* const SpriteClass = SpriteData.SpriteClass.Get())
 		{
@@ -79,8 +79,8 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 {
 	check(From);
 	check(To);
-	const FVisualImageInfo& ToBackgroundArtInfo = To->Background.BackgroundArtInfo;
-	const TSoftObjectPtr<UMaterialInterface>& SoftTransitionMaterial = From->Background.TransitionMaterial;
+	const FVisualImageInfo& ToBackgroundArtInfo = To->Info.Background.BackgroundArtInfo;
+	const TSoftObjectPtr<UMaterialInterface>& SoftTransitionMaterial = From->Info.Background.TransitionMaterial;
 	const bool bIsTransitionPossible = ToBackgroundArtInfo.Expression.IsValid()
 											 && SoftTransitionMaterial.IsValid()
 											 &&	 !Background->IsTransitioning();

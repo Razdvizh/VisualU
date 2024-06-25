@@ -248,6 +248,7 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 {
 	check(NewNode);
 	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to the active node is not allowed."));
+	check(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
 	//Assertions aren't present in shipping builds, so compiler most likely will optimize empty loop.
 	for (const FScenario* ExhaustedScene : ExhaustedScenes)
 	{

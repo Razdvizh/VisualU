@@ -133,47 +133,6 @@ public:
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
 };
 
-USTRUCT(BlueprintType)
-struct FScenarioVisualInfo : public FVisualInfo
-{
-	GENERATED_BODY()
-
-	/// <summary>
-	/// <see cref="FScenario::Author"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-	FText Author;
-
-	/// <summary>
-	/// <see cref="FScenario::Line"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-	FText Line;
-
-	/// <summary>
-	/// <see cref="FScenario::Music"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-	TSoftObjectPtr<USoundBase> Music;
-
-	/// <summary>
-	/// <see cref="FScenario::Background"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-	FBackground Background;
-
-	/// <summary>
-	/// <see cref="FScenario::SpritesParams"/>
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
-	TArray<FSprite> SpritesParams;
-
-	virtual void Accept(IInfoAssignable* Visitor) const override
-	{
-		Visitor->AssignScenarioVisualInfo(*this);
-	}
-};
-
 UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = true))
 enum class EScenarioMetaFlags : uint8
 {
@@ -182,6 +141,53 @@ enum class EScenarioMetaFlags : uint8
 	Choice = 1 << 1
 };
 ENUM_CLASS_FLAGS(EScenarioMetaFlags)
+
+USTRUCT(BlueprintType)
+struct FScenarioVisualInfo : public FVisualInfo
+{
+	GENERATED_BODY()
+
+public:
+	FScenarioVisualInfo() = default;
+
+	/// <summary>
+	/// An author of the <see cref="FScenario::Line">Line</see>.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "An author of the Line"))
+	FText Author;
+
+	/// <summary>
+	/// A dialog line.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "A dialog line"))
+	FText Line;
+
+	/// <summary>
+	/// Audio to play while the scene is displayed.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Audio to play while this Scenario is displayed"))
+	TSoftObjectPtr<USoundBase> Music;
+
+	/// <summary>
+	/// Background to display.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Background to display"))
+	FBackground Background;
+
+	/// <summary>
+	/// Sprites that this scene has.
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Sprites that this Scenario has"))
+	TArray<FSprite> SpritesParams;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "What kinds of Visual sprites this scene has"))
+	uint8 Flags;
+
+	virtual void Accept(IInfoAssignable* Visitor) const override
+	{
+		Visitor->AssignScenarioVisualInfo(*this);
+	}
+};
 
 /// <summary>
 /// A single scene or "frame" of the Visual Novel game.
@@ -208,40 +214,10 @@ struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 	GENERATED_BODY()
 
 public:
-	FScenario() : Owner(nullptr), Index(0) {}
+	FScenario() = default;
 
-	/// <summary>
-	/// An author of the <see cref="FScenario::Line">Line</see>.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "An author of the Line"))
-	FText Author;
-
-	/// <summary>
-	/// A dialog line.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "A dialog line"))
-	FText Line;
-	
-	/// <summary>
-	/// Audio to play while the scene is displayed.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Audio to play while this Scenario is displayed"))
-	TSoftObjectPtr<USoundBase> Music;
-	
-	/// <summary>
-	/// Background to display.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Background to display"))
-	FBackground Background;
-
-	/// <summary>
-	/// Sprites that this scene has.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Sprites that this Scenario has"))
-	TArray<FSprite> SpritesParams;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "What kinds of Visual sprites this scene has"))
-	uint8 Flags;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario")
+	FScenarioVisualInfo Info;
 
 	//Left undiscoverable by reflection to avoid circular references and intricacies of TWeakObjectPtr.
 	const UDataTable* Owner;
@@ -268,40 +244,40 @@ public:
 	/// </remarks>
 	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
 	{
-		Out.Reserve(3 + SpritesParams.Num());
-		if (!Background.BackgroundArtInfo.Expression.IsNull())
+		Out.Reserve(3 + Info.SpritesParams.Num());
+		if (!Info.Background.BackgroundArtInfo.Expression.IsNull())
 		{
-			Out.Emplace(Background.BackgroundArtInfo.Expression.ToSoftObjectPath());
+			Out.Emplace(Info.Background.BackgroundArtInfo.Expression.ToSoftObjectPath());
 		}
-		if (!Music.IsNull())
+		if (!Info.Music.IsNull())
 		{
-			Out.Emplace(Music.ToSoftObjectPath());
+			Out.Emplace(Info.Music.ToSoftObjectPath());
 		}
-		if (!Background.TransitionMaterial.IsNull())
+		if (!Info.Background.TransitionMaterial.IsNull())
 		{
-			Out.Emplace(Background.TransitionMaterial.ToSoftObjectPath());
+			Out.Emplace(Info.Background.TransitionMaterial.ToSoftObjectPath());
 		}
-		for (const FSprite& SpriteParam : SpritesParams)
+		for (const FSprite& SpriteParam : Info.SpritesParams)
 		{
 			Out.Emplace(SpriteParam.SpriteClass.ToSoftObjectPath());
-			for (const FVisualImageInfo& Info : SpriteParam.SpriteInfo)
+			for (const FVisualImageInfo& ImageInfo : SpriteParam.SpriteInfo)
 			{
-				Out.Emplace(Info.Expression.ToSoftObjectPath());
+				Out.Emplace(ImageInfo.Expression.ToSoftObjectPath());
 			}
 		}
 	}
 
 	FORCEINLINE bool operator== (const FScenario& Other)
 	{
-		if (Author.CompareTo(Other.Author)
-			&& Line.CompareTo(Other.Line)
-			&& Background.BackgroundArtInfo == Other.Background.BackgroundArtInfo
-			&& Background.TransitionMaterial.GetAssetName() == Other.Background.TransitionMaterial.GetAssetName()
-			&& Music.GetAssetName() == Other.Music.GetAssetName())
+		if (Info.Author.CompareTo(Other.Info.Author)
+			&& Info.Line.CompareTo(Other.Info.Line)
+			&& Info.Background.BackgroundArtInfo == Other.Info.Background.BackgroundArtInfo
+			&& Info.Background.TransitionMaterial.GetAssetName() == Other.Info.Background.TransitionMaterial.GetAssetName()
+			&& Info.Music.GetAssetName() == Other.Info.Music.GetAssetName())
 		{
-			for (int32 i = 0; i < SpritesParams.Num(); i++)
+			for (int32 i = 0; i < Info.SpritesParams.Num(); i++)
 			{
-				if (!Other.SpritesParams.IsValidIndex(i) || SpritesParams[i] != Other.SpritesParams[i])
+				if (!Other.Info.SpritesParams.IsValidIndex(i) || Info.SpritesParams[i] != Other.Info.SpritesParams[i])
 				{
 					return false;
 				}
@@ -324,16 +300,16 @@ public:
 	/// </summary>
 	virtual void PrintLog() const
 	{
-		UE_LOG(LogVisualU, Display, TEXT("\tAuthor: %s"), !Author.IsEmpty() ? *Author.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tLine: %s"), !Line.IsEmpty() ? *Line.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tMusic: %s"), !Music.IsNull() ? *Music.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tBackground Art: %s"), !Background.BackgroundArtInfo.Expression.IsNull() ? *Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tTransition Material: %s"), !Background.TransitionMaterial.IsNull() ? *Background.TransitionMaterial.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tAuthor: %s"), !Info.Author.IsEmpty() ? *Info.Author.ToString() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tLine: %s"), !Info.Line.IsEmpty() ? *Info.Line.ToString() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tMusic: %s"), !Info.Music.IsNull() ? *Info.Music.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tBackground Art: %s"), !Info.Background.BackgroundArtInfo.Expression.IsNull() ? *Info.Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tTransition Material: %s"), !Info.Background.TransitionMaterial.IsNull() ? *Info.Background.TransitionMaterial.GetAssetName() : TEXT("None"));
 
-		if (!SpritesParams.IsEmpty())
+		if (!Info.SpritesParams.IsEmpty())
 		{
 			int32 cnt = 0;
-			for (const FSprite& SpriteParam : SpritesParams)
+			for (const FSprite& SpriteParam : Info.SpritesParams)
 			{
 				cnt++;
 				UE_LOG(LogVisualU, Display, TEXT("\tSprite Parameter %d"), cnt);
@@ -356,7 +332,7 @@ public:
 	inline bool HasChoice() const
 	{
 		const uint8 AsInt = StaticCast<uint8>(EScenarioMetaFlags::Choice);
-		return (Flags & AsInt) == AsInt;
+		return (Info.Flags & AsInt) == AsInt;
 	}
 
 	/// <summary>
@@ -365,16 +341,16 @@ public:
 	/// <returns><c>true</c> if scene background has valid <see cref="FBackground::TransitionMaterial"/></returns>
 	inline bool HasTransition() const
 	{
-		return !Background.TransitionMaterial.IsNull();
+		return !Info.Background.TransitionMaterial.IsNull();
 	}
 
-	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& Info) override
+	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& InInfo) override
 	{
-		Author = Info.Author;
-		Line = Info.Line;
-		Music = Info.Music;
-		Background = Info.Background;
-		SpritesParams = Info.SpritesParams;
+		Info.Author = InInfo.Author;
+		Info.Line = InInfo.Line;
+		Info.Music = InInfo.Music;
+		Info.Background = InInfo.Background;
+		Info.SpritesParams = InInfo.SpritesParams;
 	}
 
 private:

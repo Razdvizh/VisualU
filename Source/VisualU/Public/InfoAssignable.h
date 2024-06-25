@@ -48,9 +48,10 @@ public:
 USTRUCT(BlueprintInternalUseOnly)
 struct FVisualInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
-	FVisualInfo() {};
+public:
+	FVisualInfo() = default;
 	virtual ~FVisualInfo() {};
 
 	virtual void Accept(IInfoAssignable* Visitor) const PURE_VIRTUAL(FVisualInfo::Accept, );

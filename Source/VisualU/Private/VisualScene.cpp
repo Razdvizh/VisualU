@@ -100,17 +100,17 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 
 	ClearSprites();
 
-	if (!Scene->Background.BackgroundArtInfo.Expression.IsNull())
+	if (!Scene->Info.Background.BackgroundArtInfo.Expression.IsNull())
 	{
-		Background->SetFlipbook(Scene->Background.BackgroundArtInfo.Expression.Get());
+		Background->SetFlipbook(Scene->Info.Background.BackgroundArtInfo.Expression.Get());
 	}
 
-	if (USoundBase* Music = Scene->Music.Get())
+	if (USoundBase* Music = Scene->Info.Music.Get())
 	{
 		PlaySound(Music);
 	}
 
-	for (const auto& SpriteData : Scene->SpritesParams)
+	for (const auto& SpriteData : Scene->Info.SpritesParams)
 	{
 		UVisualSprite* Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteData.SpriteClass.Get(), SpriteData.SpriteClass->GetFName());
 		Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
@@ -316,25 +316,25 @@ void UVisualScene::PlayTransition(UWidgetAnimation* DrivingAnim)
 {
 	checkf(DrivingAnim, TEXT("Attempted to start transition with invalid animation"));
 	const FScenario* CurrentScene = GetCurrentScene();
-	const TSoftObjectPtr<UMaterialInterface> SoftTransitionMaterial = CurrentScene->Background.TransitionMaterial;
+	const TSoftObjectPtr<UMaterialInterface> SoftTransitionMaterial = CurrentScene->Info.Background.TransitionMaterial;
 	if (!SoftTransitionMaterial.IsNull() && CanAdvanceScene())
 	{
 		const FScenario* NextScene = GetSceneAt(SceneIndex + 1);
-		const bool bIsTransitionPossible = ensureMsgf(!NextScene->Background.BackgroundArtInfo.Expression.IsNull(), TEXT("You are trying to transition to an empty background"));
+		const bool bIsTransitionPossible = ensureMsgf(!NextScene->Info.Background.BackgroundArtInfo.Expression.IsNull(), TEXT("You are trying to transition to an empty background"));
 		if (bIsTransitionPossible)
 		{
-			UPaperFlipbook* NextFlipbook = NextScene->Background.BackgroundArtInfo.Expression.LoadSynchronous();
+			UPaperFlipbook* NextFlipbook = NextScene->Info.Background.BackgroundArtInfo.Expression.LoadSynchronous();
 			UMaterialInterface* TransitionMaterial = SoftTransitionMaterial.LoadSynchronous();
 			UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
 			DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
 			
-			if (NextScene->Background.BackgroundArtInfo.bAnimate)
+			if (NextScene->Info.Background.BackgroundArtInfo.bAnimate)
 			{
 				Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, true);
 			}
 			else
 			{
-				Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, NextScene->Background.BackgroundArtInfo.FrameIndex);
+				Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, NextScene->Info.Background.BackgroundArtInfo.FrameIndex);
 			}
 			PlayAnimationForward(DrivingAnim, 1.f, true);
 		}
@@ -420,7 +420,7 @@ void UVisualScene::StopTransition() const
 	OnSceneTransitionEnded.Broadcast();
 	OnNativeSceneTransitionEnded.Broadcast();
 
-	Background->SetFlipbook(GetCurrentScene()->Background.BackgroundArtInfo.Expression.LoadSynchronous());
+	Background->SetFlipbook(GetCurrentScene()->Info.Background.BackgroundArtInfo.Expression.LoadSynchronous());
 	Background->StopTransition();
 }
 
