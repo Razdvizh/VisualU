@@ -53,7 +53,7 @@ private:
 	/// Transition ends when this animation ends.
 	/// </remarks>
 	UPROPERTY(Transient)
-	UWidgetAnimation* Transition;
+	TObjectPtr<UWidgetAnimation> Transition;
 
 	const FScenario* FinalScene;
 
@@ -61,7 +61,7 @@ private:
 	/// Internal widget for scene background.
 	/// </summary>
 	UPROPERTY()
-	UBackgroundVisualImage* Background;
+	TObjectPtr<UBackgroundVisualImage> Background;
 
 	/// <summary>
 	/// Internal widget for scene canvas panel.
@@ -70,6 +70,6 @@ private:
 	/// All <see cref="UVisualSprite">Visual Sprites</see> and <see cref="UVisualScene::Background"/> are children of this panel widget.
 	/// </remarks>
 	UPROPERTY()
-	UCanvasPanel* Canvas;
+	TObjectPtr<UCanvasPanel> Canvas;
 	
 };

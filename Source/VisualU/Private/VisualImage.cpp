@@ -91,23 +91,13 @@ void UVisualImage::SetFrameIndex(int Index)
 	}
 }
 
-void UVisualImage::SetFlipbook(TObjectPtr<UPaperFlipbook> InFlipbook)
-{
-	Flipbook = InFlipbook;
-
-	if (VisualImageSlate.IsValid())
-	{
-		VisualImageSlate->SetFlipbook(Flipbook);
-	}
-}
-
 void UVisualImage::SetFlipbook(UPaperFlipbook* InFlipbook)
 {
 	Flipbook = InFlipbook;
 
 	if (VisualImageSlate.IsValid())
 	{
-		VisualImageSlate->SetFlipbook(Flipbook);
+		VisualImageSlate->SetFlipbook(Flipbook.Get());
 	}
 }
 

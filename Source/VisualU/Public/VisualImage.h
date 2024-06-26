@@ -125,7 +125,7 @@ protected:
 	/// Paper flipbook to visualize.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetFlipbook)
-	mutable UPaperFlipbook* Flipbook;
+	mutable TObjectPtr<UPaperFlipbook> Flipbook;
 
 	/// <summary>
 	/// Implement property binding for <see cref="UVisualImage::Flipbook"/>.
@@ -205,12 +205,6 @@ public:
 	/// <param name="InFlipbook">Flipbook to visualize</param>
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Synchronously set paper flipbook"))
 	void SetFlipbook(UPaperFlipbook* InFlipbook);
-
-	/// <summary>
-	/// Synchronously set paper flipbook.
-	/// </summary>
-	/// <param name="InFlipbook">Flipbook to visualize</param>
-	void SetFlipbook(TObjectPtr<UPaperFlipbook> InFlipbook);
 
 	/// <summary>
 	/// Asynchronously set paper flipbook.

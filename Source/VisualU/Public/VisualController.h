@@ -226,7 +226,7 @@ private:
 
 private:
 	UPROPERTY()
-	UVisualRenderer* Renderer;
+	TObjectPtr<UVisualRenderer> Renderer;
 
 	/// useful for various tasks, transition for example.
 	/// <summary>
