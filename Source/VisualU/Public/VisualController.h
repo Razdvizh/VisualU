@@ -19,7 +19,7 @@ struct FStreamableHandle;
 /**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
  */
-UCLASS(Blueprintable, BlueprintType, EditInlineNew)
+UCLASS(Blueprintable, BlueprintType, EditInlineNew, Within = PlayerController)
 class VISUALU_API UVisualController : public UObject
 {
 	GENERATED_BODY()

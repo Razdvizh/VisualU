@@ -52,7 +52,4 @@ public:
 protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
-#if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override;
-#endif
 };

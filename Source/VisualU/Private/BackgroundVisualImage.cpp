@@ -56,10 +56,3 @@ TSharedRef<SWidget> UBackgroundVisualImage::RebuildWidget()
 
 	return VisualImageSlate.ToSharedRef();
 }
-
-#if WITH_EDITOR
-const FText UBackgroundVisualImage::GetPaletteCategory()
-{
-	return UWidget::GetPaletteCategory();
-}
-#endif
