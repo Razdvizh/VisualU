@@ -8,16 +8,10 @@
 
 void UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FScenarioVisualInfo& Version)
 {
-	check(VisualController);
-	check(DataTable);
 
-	TArray<FScenario*> Rows;
-	DataTable->GetAllRows(UE_SOURCE_LOCATION, Rows);
-	InitialScenes.Add(Rows[Index]);
-	Rows[Index]->AssignScenarioVisualInfo(Version);
 }
 
 void UVisualVersioningSubsystem::Deinitialize()
 {
-	
+
 }

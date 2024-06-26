@@ -240,13 +240,13 @@ protected:
 	/// It can safely animate any parameters of the widgets or materials.
 	/// Transition ends when this animation ends.
 	/// </remarks>
-	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnimOptional))
+	UPROPERTY(BlueprintReadOnly, Transient, Category = "Visual Scene", meta = (BindWidgetAnimOptional))
 	UWidgetAnimation* Transition;
 
 	/// <summary>
 	/// Internal widget for scene background.
 	/// </summary>
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Visual Scene")
 	UBackgroundVisualImage* Background;
 
 	/// <summary>

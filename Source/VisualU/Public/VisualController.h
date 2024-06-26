@@ -130,19 +130,19 @@ public:
 	void ToNode(const UDataTable* NewNode);
 
 	/**
-	* Construct underlying widget and add it to the player screen. Will show currently selected scene.
+	* Construct renderer if necessary and add it to the player screen. Will show currently selected scene.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder = 0);
 
 	/**
-	* Destroy underlying widget.
+	* Destroy underlying renderer.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Discard();
 
 	/**
-	* Change renderer's visibility.
+	* Change renderer visibility.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void SetVisibility(ESlateVisibility Visibility);
@@ -154,7 +154,7 @@ public:
 	FORCEINLINE int32 GetNumScenesToLoad() const { return ScenesToLoad; };
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
-	void SetPlayTransitions(bool bShouldPlay);
+	void ShouldPlayTransitions(bool bShouldPlay);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
 	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
@@ -185,17 +185,22 @@ public:
 
 protected:
 	/// <summary>
-	/// Loads assets of the <paramref name="Scene"/> into the memory.
+	/// Asynchronously load assets of the <paramref name="Scene"/> into the memory.
 	/// </summary>
 	/// <param name="Scene">Scenario whose assets should be loaded</param>
 	/// <param name="AfterLoadDelegate">Delegate that would be executed after assets are loaded</param>
 	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
+	/// <summary>
+	/// Load assets of the <paramref name="Scene"/> into the memory.
+	/// </summary>
+	/// <param name="Scene">Scenario whose assets should be loaded</param>
+	/// <param name="AfterLoadDelegate">Delegate that would be executed after assets are loaded</param>
 	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
 	/*
 	* Loads assets of future scenes.
-	* @see ENodeDirection determines where future scenes are.
+	* @param Direction determines where future scenes are.
 	*/
 	void PrepareScenes(ENodeDirection Direction = ENodeDirection::Forward);
 
@@ -228,7 +233,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<UVisualRenderer> Renderer;
 
-	/// useful for various tasks, transition for example.
 	/// <summary>
 	/// Handle for assets of the scene that are loaded into the memory.
 	/// </summary>
@@ -254,7 +258,7 @@ private:
 
 	/*
 	* Handles for resources of the following scenarios.
-	* @note Number of elements always less or equal to ScenesToLoad.
+	* @note Number of elements is always less or equal to ScenesToLoad.
 	*/
 	TQueue<TSharedPtr<FStreamableHandle>> SceneHandles;
 

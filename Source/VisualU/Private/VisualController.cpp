@@ -167,11 +167,12 @@ void UVisualController::ToPreviousScene()
 
 bool UVisualController::ToScene(const FScenario* Scene)
 {
-	check(Scene);
 	if (Renderer->IsTransitionInProgress())
 	{
 		return false;
 	}
+	check(Scene);
+
 	bool bIsFound = false;
 	if (Node[0]->Owner == Scene->Owner)
 	{
@@ -217,8 +218,8 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	{
 		return;
 	}
-
 	check(Scene);
+
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
@@ -245,9 +246,9 @@ void UVisualController::AssertNextSceneLoad(ENodeDirection Direction)
 	const int32 NextSceneIndex = SceneIndex + StaticCast<int32>(Direction);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
 
-	#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITOR
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITOR
 	FPlatformProcess::Sleep(CVarEditorStallThreadForLoading.GetValueOnAnyThread());
-	#endif
+#endif
 }
 
 void UVisualController::ToNode(const UDataTable* NewNode)
@@ -256,7 +257,6 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	{
 		return;
 	}
-
 	check(NewNode);
 	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to the active node is not allowed."));
 	check(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
@@ -340,7 +340,7 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 	ScenesToLoad = Num;
 }
 
-void UVisualController::SetPlayTransitions(bool bShouldPlay)
+void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
 {
 	bPlayTransitions = bShouldPlay;
 }

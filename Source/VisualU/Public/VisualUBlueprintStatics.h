@@ -29,7 +29,7 @@ class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary
 	/// Outputs a friendly representation of scene data to the log.
 	/// </summary>
 	/// <param name="InScenesData">Data to print to the log</param>
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (ToolTip = "Outputs a friendly representation of scene data to the log"))
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (DevelopmentOnly, ToolTip = "Outputs a friendly representation of scene data to the log"))
 	static void PrintScenesData();
 
 	UFUNCTION(BlueprintCallable, Category = "VisualU|Choice", meta = (ToolTip = "Sets Visual Controller to iterate over provided Data Table. NOTE: Data Table can't be empty."))

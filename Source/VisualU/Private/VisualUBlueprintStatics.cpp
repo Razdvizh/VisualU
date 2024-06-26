@@ -15,6 +15,7 @@ UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 
 void UVisualUBlueprintStatics::PrintScenesData()
 {
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	TArray<FAssetData> ScenesData;
 	GetScenesData(ScenesData);
 
@@ -36,6 +37,7 @@ void UVisualUBlueprintStatics::PrintScenesData()
 			UE_LOG(LogVisualU, Display, TEXT("================================================="));
 		}
 	}
+#endif
 }
 
 void UVisualUBlueprintStatics::Choose(UVisualController* Controller, const UDataTable* DataTable)

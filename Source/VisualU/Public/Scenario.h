@@ -21,12 +21,10 @@ class USoundCue;
 USTRUCT(BlueprintType)
 struct FSprite
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
-	FSprite() : Anchors(FVisualAnchors::BottomLeft), Position(ForceInit), ZOrder(0) {}
-
-	virtual ~FSprite() {}
+	FSprite() = default;
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> class to be constructed and visualized by <see cref="UVisualScene">Visual Scene</see>.
@@ -64,7 +62,7 @@ public:
 	/// <summary>
 	/// Prints all fields to the VisualU log.
 	/// </summary>
-	virtual void PrintLog() const
+	inline void PrintLog() const
 	{
 		UE_LOG(LogVisualU, Warning, TEXT("Sprite Class: %s"), !SpriteClass.IsNull() ? *SpriteClass->GetFName().ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Warning, TEXT("Anchors: %s"), *Anchors.ToString());
@@ -116,9 +114,7 @@ struct FBackground
 	GENERATED_BODY()
 
 public:
-	FBackground() {}
-
-	virtual ~FBackground() {}
+	FBackground() = default;
 
 	/// <summary>
 	/// Background info for the scene.

@@ -51,7 +51,7 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 		PlaySound(Music);
 	}
 
-	for (const auto& SpriteData : Scene->Info.SpritesParams)
+	for (const FSprite& SpriteData : Scene->Info.SpritesParams)
 	{
 		if (UClass* const SpriteClass = SpriteData.SpriteClass.Get())
 		{
