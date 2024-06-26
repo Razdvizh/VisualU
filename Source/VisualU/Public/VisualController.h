@@ -90,7 +90,7 @@ public:
 	/// <summary>
 	/// Visualize the previous <see cref="FScenario">scene</see> in the node.
 	/// </summary>
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the previous Scene in the node"))
 	void ToPreviousScene();
 
 	/// <summary>
@@ -133,7 +133,7 @@ public:
 	* Construct underlying widget and add it to the player screen. Will show currently selected scene.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void Visualize(APlayerController* OwningController, const TSubclassOf<UVisualRenderer>& RendererClass, int32 ZOrder = 0);
+	void Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder = 0);
 
 	/**
 	* Destroy underlying widget.
@@ -142,16 +142,10 @@ public:
 	void Discard();
 
 	/**
-	* Make underlying widget visible.
+	* Change renderer's visibility.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void Show();
-
-	/**
-	* Make underlying widget collapsed.
-	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void Hide();
+	void SetVisibility(ESlateVisibility Visibility);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "SetNumScenariosToLoad"))
 	void SetNumScenesToLoad(int32 Num);

@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
+#include "VisualU.h"
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
@@ -135,6 +136,11 @@ void UVisualController::ToNextScene()
 
 void UVisualController::ToPreviousScene()
 {
+	if (Renderer->IsTransitionInProgress())
+	{
+		return;
+	}
+
 	if (!CanRetractScene())
 	{
 		if (!ExhaustedScenes.IsEmpty())
@@ -207,12 +213,12 @@ bool UVisualController::ToScenario(const FScenario& Scenario)
 
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
-	check(Scene);
 	if (Renderer->IsTransitionInProgress())
 	{
 		return;
 	}
 
+	check(Scene);
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
@@ -246,6 +252,11 @@ void UVisualController::AssertNextSceneLoad(ENodeDirection Direction)
 
 void UVisualController::ToNode(const UDataTable* NewNode)
 {
+	if (Renderer->IsTransitionInProgress())
+	{
+		return;
+	}
+
 	check(NewNode);
 	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to the active node is not allowed."));
 	check(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
@@ -255,10 +266,6 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use ToScene or ToPreviousScene instead."));
 	}
 
-	if (Renderer->IsTransitionInProgress())
-	{
-		return;
-	}
 	FScenario* Last = Node.Last();
 	ExhaustedScenes.Push(Last);
 
@@ -298,12 +305,11 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 	return false;
 }
 
-void UVisualController::Visualize(APlayerController* OwningController, const TSubclassOf<UVisualRenderer>& RendererClass, int32 ZOrder)
+void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
 {
 	if (!IsValid(Renderer))
 	{
-		checkf(OwningController, TEXT("Supplied PlayerController is invalid."));
-		Renderer = CreateWidget<UVisualRenderer>(OwningController, RendererClass);
+		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
 	}
 
 	LoadScene(GetCurrentScene());
@@ -314,19 +320,14 @@ void UVisualController::Visualize(APlayerController* OwningController, const TSu
 
 void UVisualController::Discard()
 {
+	check(Renderer);
 	Renderer->RemoveFromParent();
 }
 
-void UVisualController::Show()
+void UVisualController::SetVisibility(ESlateVisibility Visibility)
 {
 	check(Renderer);
-	Renderer->SetVisibility(ESlateVisibility::Visible);
-}
-
-void UVisualController::Hide()
-{
-	check(Renderer);
-	Renderer->SetVisibility(ESlateVisibility::Collapsed);
+	Renderer->SetVisibility(Visibility);
 }
 
 void UVisualController::SetNumScenesToLoad(int32 Num)

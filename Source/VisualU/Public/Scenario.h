@@ -181,7 +181,7 @@ public:
 	TArray<FSprite> SpritesParams;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "What kinds of Visual sprites this scene has"))
-	uint8 Flags;
+	uint8 Flags = 0;
 
 	virtual void Accept(IInfoAssignable* Visitor) const override
 	{
@@ -318,7 +318,7 @@ public:
 		}
 	}
 
-	FORCEINLINE const FString GetDebugString() const
+	FORCEINLINE FString GetDebugString() const
 	{
 		check(Owner);
 		return FString::Printf(TEXT("DataTable: %s, index: %i"), *Owner->GetFName().ToString(), Index);
