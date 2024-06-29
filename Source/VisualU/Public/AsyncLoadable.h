@@ -17,6 +17,7 @@ class UAsyncLoadable : public UInterface
 
 /// <summary>
 /// Indicates use and support for asynchronous asset loading.
+/// To be revisited.
 /// </summary>
 class IAsyncLoadable
 {

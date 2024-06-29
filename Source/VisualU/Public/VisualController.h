@@ -6,6 +6,7 @@
 #include "Scenario.h"
 #include "Templates/SubclassOf.h"
 #include "Containers/Deque.h"
+#include "Async/AsyncWork.h"
 #include "VisualController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStart);
@@ -17,22 +18,57 @@ class APlayerController;
 struct FStreamableHandle;
 
 /**
+* Describes direction in which scenes move - current scene is expected to change either to the next(forward) or previous(backward) scene in the node.
+*/
+UENUM()
+enum class EVisualControllerDirection : int8
+{
+	Backward = -1,
+	Forward = 1
+};
+
+class FFastMoveAsyncWorker : public FNonAbandonableTask
+{
+public:
+	FFastMoveAsyncWorker(UVisualController* Controller,
+		EVisualControllerDirection Direction)
+		: VisualController(Controller),
+		ControllerDirection(Direction)
+	{
+	};
+
+	void DoWork();
+
+	FORCEINLINE TStatId GetStatId() const
+	{
+		RETURN_QUICK_DECLARE_CYCLE_STAT(FFastMoveAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
+	}
+
+private:
+	TWeakObjectPtr<UVisualController> VisualController;
+
+	EVisualControllerDirection ControllerDirection;
+
+};
+
+class FFastMoveAsyncTask : public FAsyncTask<FFastMoveAsyncWorker>
+{
+
+public:
+	FFastMoveAsyncTask(UVisualController* Controller,
+		EVisualControllerDirection Direction) 
+		: FAsyncTask(Controller, Direction)
+	{
+	};
+};
+
+/**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew, Within = PlayerController)
 class VISUALU_API UVisualController : public UObject
 {
 	GENERATED_BODY()
-
-private:
-	/**
-	* Describes direction in which scenes move - current scene is expected to change either to the next(forward) or previous(backward) scene in the node.
-	*/
-	enum class ENodeDirection : int8
-	{
-		Backward = -1,
-		Forward = 1
-	};
 
 public:
 	UVisualController();
@@ -85,13 +121,13 @@ public:
 	/// Visualize the next <see cref="FScenario">scene</see> in the node.
 	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the next Scene in the node"))
-	void ToNextScene();
+	bool RequestNextScene();
 
 	/// <summary>
 	/// Visualize the previous <see cref="FScenario">scene</see> in the node.
 	/// </summary>
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the previous Scene in the node"))
-	void ToPreviousScene();
+	bool RequestPreviousScene();
 
 	/// <summary>
 	/// Jump to any exhausted scene.
@@ -99,7 +135,7 @@ public:
 	/// <param name="Scene"><see cref="FScenario">scene</see> to visualize</param>
 	/// <returns><c>true</c> if scene was visualized</returns>
 	/// \warning Only use this method on <see cref="FScenario">scenes</see> that was already seen by the player.
-	bool ToScene(const FScenario* Scene);
+	bool RequestScene(const FScenario* Scene);
 
 	/// <summary>
 	/// Get scene in the node.
@@ -128,6 +164,12 @@ public:
 	/// \attention Avoid passing the same node as the currently active one 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Sets provided node as active"))
 	void ToNode(const UDataTable* NewNode);
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	void RequestFastMove();
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	void CancelFastMove(bool bShouldPlayTransitions);
 
 	/**
 	* Construct renderer if necessary and add it to the player screen. Will show currently selected scene.
@@ -158,6 +200,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
 	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow Control")
+	FORCEINLINE bool IsCurrentScenarioHead() const { return GetCurrentScene() == Head; }
 	
 	/**
 	* Called when Visual Controller has switched to a different scenario.
@@ -202,7 +247,7 @@ protected:
 	* Loads assets of future scenes.
 	* @param Direction determines where future scenes are.
 	*/
-	void PrepareScenes(ENodeDirection Direction = ENodeDirection::Forward);
+	void PrepareScenes(EVisualControllerDirection Direction = EVisualControllerDirection::Forward);
 
 	/// <summary>
 	/// Releases the handle for the assets of the next scene.
@@ -227,7 +272,7 @@ private:
 	* Guarantees that the next requested scenario assets will be loaded.
 	* @param Direction determines what is the next scenario e.g. controller going back to the beginning or forward towards the end of the node.
 	*/
-	void AssertNextSceneLoad(ENodeDirection Direction = ENodeDirection::Forward);
+	void AssertNextSceneLoad(EVisualControllerDirection Direction = EVisualControllerDirection::Forward);
 
 private:
 	UPROPERTY()

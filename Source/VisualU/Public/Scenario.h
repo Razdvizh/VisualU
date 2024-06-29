@@ -205,6 +205,11 @@ public:
 		Visitor->AssignScenarioVisualInfo(*this);
 	}
 
+	FORCEINLINE void Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+	}
+
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualScenarioInfo& ScenarioInfo)
 	{
 		Ar << ScenarioInfo.Author
@@ -368,6 +373,11 @@ public:
 		Info.Music = InInfo.Music;
 		Info.Background = InInfo.Background;
 		Info.SpritesParams = InInfo.SpritesParams;
+	}
+
+	FORCEINLINE void Serialize(FArchive& Ar)
+	{
+		Ar << *this;
 	}
 
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FScenario& Scenario)

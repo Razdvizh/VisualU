@@ -14,7 +14,7 @@ class UVisualStoryLog : public UInterface
 };
 
 /**
- * 
+ * Interface for story log that allows to revisit previously seen scenes.
  */
 class VISUALU_API IVisualStoryLog
 {

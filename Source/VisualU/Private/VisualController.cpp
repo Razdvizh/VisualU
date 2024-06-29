@@ -20,6 +20,25 @@ static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
 );
 #endif
 
+void FFastMoveAsyncWorker::DoWork()
+{
+	if (UVisualController* Controller = VisualController.Get())
+	{
+		FGCScopeGuard ScopeGuard;
+		while (!Controller->IsWithChoice() || !Controller->IsCurrentScenarioHead())
+		{
+			const bool bSucceeded = ControllerDirection == EVisualControllerDirection::Forward
+				? Controller->RequestNextScene()
+				: Controller->RequestPreviousScene();
+
+			if (!bSucceeded)
+			{
+				break;
+			}
+		}
+	}
+}
+
 UVisualController::UVisualController() 
 	: Super(),
 	Renderer(nullptr),
@@ -70,7 +89,7 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scen
 	return Handle;
 }
 
-void UVisualController::PrepareScenes(ENodeDirection Direction)
+void UVisualController::PrepareScenes(EVisualControllerDirection Direction)
 {
 	if (ScenesToLoad > 0)
 	{
@@ -78,7 +97,7 @@ void UVisualController::PrepareScenes(ENodeDirection Direction)
 		{
 			for (int32 i = 1; i <= ScenesToLoad; i++)
 			{
-				const int32 u = Direction == ENodeDirection::Forward ? i : -i;
+				const int32 u = Direction == EVisualControllerDirection::Forward ? i : -i;
 				if (Node.IsValidIndex(SceneIndex + u))
 				{
 					const FScenario* Scene = GetSceneAt(SceneIndex + u);
@@ -91,7 +110,7 @@ void UVisualController::PrepareScenes(ENodeDirection Direction)
 			return;
 		}
 
-		const int32 NextIndex = SceneIndex + (Direction == ENodeDirection::Forward ? (ScenesToLoad + 1) : -(ScenesToLoad + 1));
+		const int32 NextIndex = SceneIndex + (Direction == EVisualControllerDirection::Forward ? (ScenesToLoad + 1) : -(ScenesToLoad + 1));
 		if (Node.IsValidIndex(NextIndex))
 		{
 			TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(GetSceneAt(NextIndex));
@@ -102,11 +121,11 @@ void UVisualController::PrepareScenes(ENodeDirection Direction)
 	}
 }
 
-void UVisualController::ToNextScene()
+bool UVisualController::RequestNextScene()
 {
 	if (!CanAdvanceScene() || Renderer->IsTransitionInProgress())
 	{
-		return;
+		return false;
 	}
 	
 	OnSceneEnd.Broadcast();
@@ -132,13 +151,15 @@ void UVisualController::ToNextScene()
 	
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+
+	return true;
 }
 
-void UVisualController::ToPreviousScene()
+bool UVisualController::RequestPreviousScene()
 {
 	if (Renderer->IsTransitionInProgress())
 	{
-		return;
+		return false;
 	}
 
 	if (!CanRetractScene())
@@ -146,15 +167,17 @@ void UVisualController::ToPreviousScene()
 		if (!ExhaustedScenes.IsEmpty())
 		{
 			SetCurrentScene(ExhaustedScenes.Pop());
+			return true;
 		}
-		return;
+
+		return false;
 	}
 
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 
-	PrepareScenes(ENodeDirection::Backward);
-	AssertNextSceneLoad(ENodeDirection::Backward);
+	PrepareScenes(EVisualControllerDirection::Backward);
+	AssertNextSceneLoad(EVisualControllerDirection::Backward);
 
 	SceneIndex -= 1;
 	Renderer->DrawScene(GetCurrentScene());
@@ -163,9 +186,11 @@ void UVisualController::ToPreviousScene()
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+
+	return true;
 }
 
-bool UVisualController::ToScene(const FScenario* Scene)
+bool UVisualController::RequestScene(const FScenario* Scene)
 {
 	if (Renderer->IsTransitionInProgress())
 	{
@@ -209,17 +234,12 @@ const FScenario* UVisualController::GetSceneAt(int32 Index)
 
 bool UVisualController::ToScenario(const FScenario& Scenario)
 {
-	return ToScene(&Scenario);
+	return RequestScene(&Scenario);
 }
 
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
-	if (Renderer->IsTransitionInProgress())
-	{
-		return;
-	}
 	check(Scene);
-
 	if (Scene->Owner != GetSceneAt(0)->Owner)
 	{
 		Node.Empty();
@@ -241,7 +261,7 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualController::AssertNextSceneLoad(ENodeDirection Direction)
+void UVisualController::AssertNextSceneLoad(EVisualControllerDirection Direction)
 {
 	const int32 NextSceneIndex = SceneIndex + StaticCast<int32>(Direction);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
@@ -263,7 +283,7 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	//Assertions aren't present in shipping builds, so compiler most likely will optimize empty loop.
 	for (const FScenario* ExhaustedScene : ExhaustedScenes)
 	{
-		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use ToScene or ToPreviousScene instead."));
+		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
 	}
 
 	FScenario* Last = Node.Last();
@@ -292,6 +312,16 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+}
+
+void UVisualController::RequestFastMove()
+{
+	bPlayTransitions = false;
+}
+
+void UVisualController::CancelFastMove(bool bShouldPlayTransitions)
+{
+	bPlayTransitions = bShouldPlayTransitions;
 }
 
 bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)

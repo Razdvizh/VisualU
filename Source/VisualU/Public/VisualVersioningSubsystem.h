@@ -12,6 +12,7 @@ struct FVisualScenarioInfo;
 
 /**
  * Allows for altering scenarios in chosen Data Tables.
+ * To be revisited.
  */
 UCLASS()
 class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem

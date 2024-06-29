@@ -123,8 +123,6 @@ class VISUALU_API UVisualImage : public UVisualImageBase
 public:
 	UVisualImage(const FObjectInitializer& ObjectInitializer);
 
-	~UVisualImage();
-
 	DECLARE_DYNAMIC_DELEGATE_RetVal(UPaperFlipbook*, FGetPaperFlipbook);
 
 protected:

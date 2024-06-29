@@ -21,12 +21,6 @@ UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer)
 	FrameIndex = 0;
 }
 
-UVisualImage::~UVisualImage()
-{
-	Flipbook = nullptr;
-	CancelAsyncLoad();
-}
-
 void UVisualImage::ReleaseSlateResources(bool bReleaseChildren)
 {
 	UVisualImageBase::ReleaseSlateResources(bReleaseChildren);

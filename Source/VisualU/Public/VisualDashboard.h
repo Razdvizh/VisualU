@@ -14,7 +14,7 @@ class UVisualDashboard : public UInterface
 };
 
 /**
- * 
+ * Interface for dashboard - a control panel common for visual novels.
  */
 class VISUALU_API IVisualDashboard
 {
