@@ -91,22 +91,17 @@ public:
 		return Ar;
 	}
 
-	FORCEINLINE bool operator== (const FVisualImageInfo& Other)
+	FORCEINLINE bool operator== (const FVisualImageInfo& Other) const
 	{
-		if (Expression == Other.Expression
+		return Expression == Other.Expression
 			&& ColorAndOpacity == Other.ColorAndOpacity
 			&& DesiredScale == Other.DesiredScale
 			&& MirrorScale == Other.MirrorScale
 			&& bAnimate == Other.bAnimate
-			&& FrameIndex == Other.FrameIndex)
-		{
-			return true;
-		}
-
-		return false;
+			&& FrameIndex == Other.FrameIndex;
 	}
 
-	FORCEINLINE bool operator!= (const FVisualImageInfo& Other)
+	FORCEINLINE bool operator!= (const FVisualImageInfo& Other) const
 	{
 		return !(*this == Other);
 	}

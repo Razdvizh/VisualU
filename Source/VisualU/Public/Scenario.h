@@ -91,26 +91,16 @@ public:
 	}
 #endif
 
-	FORCEINLINE bool operator== (const FSprite& Other)
+	FORCEINLINE bool operator== (const FSprite& Other) const
 	{
-		if (SpriteClass == Other.SpriteClass
+		return SpriteClass == Other.SpriteClass
 			&& Anchors == Other.Anchors
 			&& Position == Other.Position
-			&& ZOrder == Other.ZOrder)
-		{
-			for (int32 i = 0; i < SpriteInfo.Num(); i++)
-			{
-				if (!Other.SpriteInfo.IsValidIndex(i) || SpriteInfo[i] != Other.SpriteInfo[i])
-				{
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
+			&& ZOrder == Other.ZOrder
+			&& SpriteInfo == Other.SpriteInfo;
 	}
 
-	FORCEINLINE bool operator!= (const FSprite& Other)
+	FORCEINLINE bool operator!= (const FSprite& Other) const
 	{
 		return !(*this == Other);
 	}
@@ -144,12 +134,12 @@ public:
 		return Ar << Background.BackgroundArtInfo << Background.TransitionMaterial;
 	}
 
-	FORCEINLINE bool operator== (const FBackground& Other)
+	FORCEINLINE bool operator== (const FBackground& Other) const
 	{
 		return (BackgroundArtInfo == Other.BackgroundArtInfo && TransitionMaterial == Other.TransitionMaterial);
 	}
 
-	FORCEINLINE bool operator!= (const FBackground& Other)
+	FORCEINLINE bool operator!= (const FBackground& Other) const
 	{
 		return !(*this == Other);
 	}
@@ -218,13 +208,28 @@ public:
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualScenarioInfo& ScenarioInfo)
 	{
 		Ar << ScenarioInfo.Author
-		   << ScenarioInfo.Line
-		   << ScenarioInfo.Music
-		   << ScenarioInfo.Background
-		   << ScenarioInfo.SpritesParams
-		   << ScenarioInfo.Flags;
+			<< ScenarioInfo.Line
+			<< ScenarioInfo.Music
+			<< ScenarioInfo.Background
+			<< ScenarioInfo.SpritesParams
+			<< ScenarioInfo.Flags;
 
 		return Ar;
+	}
+
+	FORCEINLINE bool operator== (const FVisualScenarioInfo& Other) const
+	{
+		return Author.CompareTo(Other.Author)
+			&& Line.CompareTo(Other.Line)
+			&& Music == Other.Music
+			&& Background == Other.Background
+			&& SpritesParams == Other.SpritesParams
+			&& Flags == Other.Flags;
+	}
+
+	FORCEINLINE bool operator!= (const FVisualScenarioInfo& Other) const
+	{
+		return !(*this == Other);
 	}
 };
 
@@ -370,29 +375,12 @@ public:
 		return Ar << Scenario.Info;
 	}
 
-	FORCEINLINE bool operator== (const FScenario& Other)
+	FORCEINLINE bool operator== (const FScenario& Other) const
 	{
-		if (Info.Author.CompareTo(Other.Info.Author)
-			&& Info.Line.CompareTo(Other.Info.Line)
-			&& Info.Background.BackgroundArtInfo == Other.Info.Background.BackgroundArtInfo
-			&& Info.Background.TransitionMaterial.GetAssetName() == Other.Info.Background.TransitionMaterial.GetAssetName()
-			&& Info.Music.GetAssetName() == Other.Info.Music.GetAssetName())
-		{
-			for (int32 i = 0; i < Info.SpritesParams.Num(); i++)
-			{
-				if (!Other.Info.SpritesParams.IsValidIndex(i) || Info.SpritesParams[i] != Other.Info.SpritesParams[i])
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return false;
+		return Info == Other.Info;
 	}
 
-	FORCEINLINE bool operator!= (const FScenario& Other)
+	FORCEINLINE bool operator!= (const FScenario& Other) const
 	{
 		return !(*this == Other);
 	}
