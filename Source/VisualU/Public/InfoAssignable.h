@@ -7,7 +7,7 @@
 #include "InfoAssignable.generated.h"
 
 struct FVisualImageInfo;
-struct FScenarioVisualInfo;
+struct FVisualScenarioInfo;
 
 UINTERFACE(MinimalAPI)
 class UInfoAssignable : public UInterface
@@ -30,7 +30,7 @@ class IInfoAssignable
 public:
 	virtual void AssignVisualImageInfo(const FVisualImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualImageInfo, );
 
-	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignScenarioVisualInfo, );
+	virtual void AssignScenarioVisualInfo(const FVisualScenarioInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignScenarioVisualInfo, );
 
 };
 

@@ -43,6 +43,11 @@ public:
 	inline static const FAnchors CenterVertical = FAnchors(0.5, 0, 0.5, 1);
 	inline static const FAnchors RightVertical = FAnchors(1, 0, 1, 1);
 
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualAnchors& Anchors)
+	{
+		return Ar << Anchors.Minimum << Anchors.Maximum;
+	}
+
 	/// <summary>
 	/// Get a string representation of anchors.
 	/// </summary>
@@ -72,6 +77,16 @@ public:
 
 	inline static const FMargin Zero = FMargin(0, 0);
 	
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualMargin& Margin)
+	{
+		Ar << Margin.Left 
+		   << Margin.Top 
+		   << Margin.Right 
+		   << Margin.Bottom;
+
+		return Ar;
+	}
+
 	/// <summary>
 	/// Get a string representation of margin.
 	/// </summary>

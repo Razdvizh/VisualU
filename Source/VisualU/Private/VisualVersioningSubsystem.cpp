@@ -6,7 +6,7 @@
 #include "VisualController.h"
 #include "Scenario.h"
 
-void UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FScenarioVisualInfo& Version)
+void UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version)
 {
 
 }

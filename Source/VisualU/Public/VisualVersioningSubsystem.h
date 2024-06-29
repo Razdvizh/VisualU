@@ -8,7 +8,7 @@
 
 class UDataTable;
 class UVisualController;
-struct FScenarioVisualInfo;
+struct FVisualScenarioInfo;
 
 /**
  * Allows for altering scenarios in chosen Data Tables.
@@ -20,7 +20,7 @@ class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Versioning", meta = (DeprecatedFunction))
-	void ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FScenarioVisualInfo& Version);
+	void ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version);
 
 	virtual void Deinitialize() override;
 	

@@ -58,6 +58,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside Visual Sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FSprite& Sprite)
+	{
+		Ar << Sprite.SpriteClass 
+		   << Sprite.Anchors 
+		   << Sprite.Position 
+		   << Sprite.ZOrder 
+		   << Sprite.SpriteInfo;
+
+		return Ar;
+	}
+
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	/// <summary>
 	/// Prints all fields to the VisualU log.
@@ -127,6 +138,21 @@ public:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Transition to play on background when switching to the next scene"))
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
+
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FBackground& Background)
+	{
+		return Ar << Background.BackgroundArtInfo << Background.TransitionMaterial;
+	}
+
+	FORCEINLINE bool operator== (const FBackground& Other)
+	{
+		return (BackgroundArtInfo == Other.BackgroundArtInfo && TransitionMaterial == Other.TransitionMaterial);
+	}
+
+	FORCEINLINE bool operator!= (const FBackground& Other)
+	{
+		return !(*this == Other);
+	}
 };
 
 UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = true))
@@ -134,17 +160,22 @@ enum class EScenarioMetaFlags : uint8
 {
 	None = 0,
 	Character = 1 << 0,
-	Choice = 1 << 1
+	Choice = 1 << 1,
+	Custom_1 = 1 << 2,
+	Custom_2 = 1 << 3,
+	Custom_3 = 1 << 4,
+	Custom_4 = 1 << 5,
+	Custom_5 = 1 << 6
 };
 ENUM_CLASS_FLAGS(EScenarioMetaFlags)
 
 USTRUCT(BlueprintType)
-struct FScenarioVisualInfo : public FVisualInfo
+struct FVisualScenarioInfo : public FVisualInfo
 {
 	GENERATED_BODY()
 
 public:
-	FScenarioVisualInfo() = default;
+	FVisualScenarioInfo() = default;
 
 	/// <summary>
 	/// An author of the <see cref="FScenario::Line">Line</see>.
@@ -183,6 +214,18 @@ public:
 	{
 		Visitor->AssignScenarioVisualInfo(*this);
 	}
+
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualScenarioInfo& ScenarioInfo)
+	{
+		Ar << ScenarioInfo.Author
+		   << ScenarioInfo.Line
+		   << ScenarioInfo.Music
+		   << ScenarioInfo.Background
+		   << ScenarioInfo.SpritesParams
+		   << ScenarioInfo.Flags;
+
+		return Ar;
+	}
 };
 
 /// <summary>
@@ -213,7 +256,7 @@ public:
 	FScenario() = default;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario")
-	FScenarioVisualInfo Info;
+	FVisualScenarioInfo Info;
 
 	//Left undiscoverable by reflection to avoid circular references and intricacies of TWeakObjectPtr.
 	const UDataTable* Owner;
@@ -261,33 +304,6 @@ public:
 				Out.Emplace(ImageInfo.Expression.ToSoftObjectPath());
 			}
 		}
-	}
-
-	FORCEINLINE bool operator== (const FScenario& Other)
-	{
-		if (Info.Author.CompareTo(Other.Info.Author)
-			&& Info.Line.CompareTo(Other.Info.Line)
-			&& Info.Background.BackgroundArtInfo == Other.Info.Background.BackgroundArtInfo
-			&& Info.Background.TransitionMaterial.GetAssetName() == Other.Info.Background.TransitionMaterial.GetAssetName()
-			&& Info.Music.GetAssetName() == Other.Info.Music.GetAssetName())
-		{
-			for (int32 i = 0; i < Info.SpritesParams.Num(); i++)
-			{
-				if (!Other.Info.SpritesParams.IsValidIndex(i) || Info.SpritesParams[i] != Other.Info.SpritesParams[i])
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	FORCEINLINE bool operator!= (const FScenario& Other)
-	{
-		return !(*this == Other);
 	}
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
@@ -340,13 +356,45 @@ public:
 		return !Info.Background.TransitionMaterial.IsNull();
 	}
 
-	virtual void AssignScenarioVisualInfo(const FScenarioVisualInfo& InInfo) override
+	virtual void AssignScenarioVisualInfo(const FVisualScenarioInfo& InInfo) override
 	{
 		Info.Author = InInfo.Author;
 		Info.Line = InInfo.Line;
 		Info.Music = InInfo.Music;
 		Info.Background = InInfo.Background;
 		Info.SpritesParams = InInfo.SpritesParams;
+	}
+
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FScenario& Scenario)
+	{
+		return Ar << Scenario.Info;
+	}
+
+	FORCEINLINE bool operator== (const FScenario& Other)
+	{
+		if (Info.Author.CompareTo(Other.Info.Author)
+			&& Info.Line.CompareTo(Other.Info.Line)
+			&& Info.Background.BackgroundArtInfo == Other.Info.Background.BackgroundArtInfo
+			&& Info.Background.TransitionMaterial.GetAssetName() == Other.Info.Background.TransitionMaterial.GetAssetName()
+			&& Info.Music.GetAssetName() == Other.Info.Music.GetAssetName())
+		{
+			for (int32 i = 0; i < Info.SpritesParams.Num(); i++)
+			{
+				if (!Other.Info.SpritesParams.IsValidIndex(i) || Info.SpritesParams[i] != Other.Info.SpritesParams[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	FORCEINLINE bool operator!= (const FScenario& Other)
+	{
+		return !(*this == Other);
 	}
 
 private:

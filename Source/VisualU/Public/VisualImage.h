@@ -22,7 +22,7 @@ class SVisualImage;
 USTRUCT(BlueprintType)
 struct FVisualImageInfo : public FVisualInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	FVisualImageInfo()
@@ -77,6 +77,18 @@ public:
 			*MirrorScale.ToString(),
 			bAnimate ? TEXT("true") : TEXT("false"),
 			FrameIndex);
+	}
+
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualImageInfo& ImageInfo)
+	{
+		Ar << ImageInfo.Expression
+		   << ImageInfo.ColorAndOpacity
+		   << ImageInfo.DesiredScale
+		   << ImageInfo.MirrorScale
+		   << ImageInfo.bAnimate
+		   << ImageInfo.FrameIndex;
+
+		return Ar;
 	}
 
 	FORCEINLINE bool operator== (const FVisualImageInfo& Other)
