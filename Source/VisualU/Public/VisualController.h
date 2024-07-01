@@ -18,49 +18,71 @@ class APlayerController;
 struct FStreamableHandle;
 
 /**
+* !!! DO NOT USE OUTSIDE OF VISUAL CONTROLLER FUNCTIONS !!!
 * Describes direction in which scenes move - current scene is expected to change either to the next(forward) or previous(backward) scene in the node.
+* None is an internal value and must never be used.
+* @note Declared using a namespace in order to support negative enum values. 
+* It will break a lot of things in blueprints if this enum is used as a variable or in conversions, etc.
 */
-UENUM()
-enum class EVisualControllerDirection : int8
+UENUM(BlueprintType)
+namespace EVisualControllerDirection
 {
-	Backward = -1,
-	Forward = 1
-};
-
-class FFastMoveAsyncWorker : public FNonAbandonableTask
-{
-public:
-	FFastMoveAsyncWorker(UVisualController* Controller,
-		EVisualControllerDirection Direction)
-		: VisualController(Controller),
-		ControllerDirection(Direction)
+	enum Type : int8
 	{
+		Backward = -1,
+		None = 0 UMETA(Hidden),
+		Forward = 1
 	};
+}
 
-	void DoWork();
-
-	FORCEINLINE TStatId GetStatId() const
+namespace UE
+{
+	namespace VisualU
 	{
-		RETURN_QUICK_DECLARE_CYCLE_STAT(FFastMoveAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
+		namespace Private
+		{
+			class FFastMoveAsyncWorker : public FNonAbandonableTask
+			{
+			public:
+				FFastMoveAsyncWorker(UVisualController* Controller,
+					EVisualControllerDirection::Type Direction,
+					bool PlayedTransitions)
+					: VisualController(Controller),
+					ControllerDirection(Direction),
+					bPlayedTransitions(PlayedTransitions)
+				{
+				};
+
+				void DoWork();
+
+				FORCEINLINE TStatId GetStatId() const
+				{
+					RETURN_QUICK_DECLARE_CYCLE_STAT(FFastMoveAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
+				}
+
+			private:
+				UVisualController* VisualController;
+
+				EVisualControllerDirection::Type ControllerDirection;
+
+				bool bPlayedTransitions;
+
+			};
+
+			class FFastMoveAsyncTask : public FAsyncTask<FFastMoveAsyncWorker>
+			{
+			public:
+				FFastMoveAsyncTask(UVisualController* Controller,
+					EVisualControllerDirection::Type Direction,
+					bool PlayedTransitions)
+					: FAsyncTask(Controller, Direction, PlayedTransitions)
+				{
+				};
+
+			};
+		}
 	}
-
-private:
-	TWeakObjectPtr<UVisualController> VisualController;
-
-	EVisualControllerDirection ControllerDirection;
-
-};
-
-class FFastMoveAsyncTask : public FAsyncTask<FFastMoveAsyncWorker>
-{
-
-public:
-	FFastMoveAsyncTask(UVisualController* Controller,
-		EVisualControllerDirection Direction) 
-		: FAsyncTask(Controller, Direction)
-	{
-	};
-};
+}
 
 /**
  * Controls the flow of `FScenario`'s and provides interface for others to observe it.
@@ -71,7 +93,11 @@ class VISUALU_API UVisualController : public UObject
 	GENERATED_BODY()
 
 public:
-	UVisualController();
+	UVisualController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void BeginDestroy() override;
+
+	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 
 	/// <returns>Currently visualized <see cref="FScenario">scene</see></returns>
 	const FScenario* GetCurrentScene() const;
@@ -166,10 +192,10 @@ public:
 	void ToNode(const UDataTable* NewNode);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	void RequestFastMove();
+	void RequestFastMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	void CancelFastMove(bool bShouldPlayTransitions);
+	void CancelFastMove();
 
 	/**
 	* Construct renderer if necessary and add it to the player screen. Will show currently selected scene.
@@ -202,7 +228,10 @@ public:
 	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow Control")
-	FORCEINLINE bool IsCurrentScenarioHead() const { return GetCurrentScene() == Head; }
+	bool IsCurrentScenarioHead() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	FORCEINLINE bool IsFastMoving() const { return bIsFastMoving; }
 	
 	/**
 	* Called when Visual Controller has switched to a different scenario.
@@ -247,7 +276,7 @@ protected:
 	* Loads assets of future scenes.
 	* @param Direction determines where future scenes are.
 	*/
-	void PrepareScenes(EVisualControllerDirection Direction = EVisualControllerDirection::Forward);
+	void PrepareScenes(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 	/// <summary>
 	/// Releases the handle for the assets of the next scene.
@@ -272,7 +301,7 @@ private:
 	* Guarantees that the next requested scenario assets will be loaded.
 	* @param Direction determines what is the next scenario e.g. controller going back to the beginning or forward towards the end of the node.
 	*/
-	void AssertNextSceneLoad(EVisualControllerDirection Direction = EVisualControllerDirection::Forward);
+	void AssertNextSceneLoad(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 private:
 	UPROPERTY()
@@ -295,8 +324,8 @@ private:
 	int32 SceneIndex;
 
 	/*
-	* How many following scenarios will be loaded. 
-	* @note for value of 5: 5(or how much is left in the node) scenarios after current scene will be loaded asynchronously.
+	* How many following scenarios will be loaded asynchronously. Zero means no asynchronous loading.
+	* @note Will load remaining scenarios in a node even when their amount is less than this value.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (DisplayName = "Num Scenarios to Load", AllowPrivateAccess = true))
 	int32 ScenesToLoad;
@@ -323,7 +352,12 @@ private:
 	*/
 	const FScenario* Head;
 
+	TUniquePtr<UE::VisualU::Private::FFastMoveAsyncTask> FastMoveTask;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
 	bool bPlayTransitions;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Is Visual Controller in fast move mode."))
+	bool bIsFastMoving;
 
 };

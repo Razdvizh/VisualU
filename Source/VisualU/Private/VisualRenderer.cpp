@@ -50,7 +50,7 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 	{
 		PlaySound(Music);
 	}
-
+	
 	for (const FSprite& SpriteData : Scene->Info.SpritesParams)
 	{
 		if (UClass* const SpriteClass = SpriteData.SpriteClass.Get())
@@ -154,12 +154,12 @@ void UVisualRenderer::NativeOnInitialized()
 
 	TSoftObjectPtr<UMaterialParameterCollection> ParameterCollection = VisualUSettings->TransitionMPC;
 	
-	if (ensureMsgf(!ParameterCollection.IsNull(), TEXT("Can't initialize transition animation without Parameter Collection. Please specify one in VisualU project settings.")))
+	if (ensureMsgf(!ParameterCollection.IsNull(), TEXT("Can't initialize transition animation without parameter collection. Please specify one in VisualU project settings.")))
 	{
 		UMaterialParameterCollection* Collection = ParameterCollection.LoadSynchronous();
 		check(Collection);
 
-		if (ensureMsgf(Collection->ScalarParameters.IsValidIndex(0), TEXT("No scalar parameters found to initialize transition animation. Only first scalar parameter will be used.")))
+		if (ensureMsgf(Collection->ScalarParameters.IsValidIndex(0), TEXT("No scalar parameters found to initialize transition animation. Please specify one scalar parameter in parameter collection.")))
 		{
 			UMovieSceneMaterialParameterCollectionTrack* Track = Transition->MovieScene->AddTrack<UMovieSceneMaterialParameterCollectionTrack>();
 			check(Track);

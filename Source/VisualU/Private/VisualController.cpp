@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
+#include "Tasks/Task.h"
 #include "VisualU.h"
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
@@ -20,27 +21,33 @@ static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
 );
 #endif
 
-void FFastMoveAsyncWorker::DoWork()
+void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 {
-	if (UVisualController* Controller = VisualController.Get())
+	checkf(VisualController, TEXT("Can't start fast move for invalid controller."));
+	check(ControllerDirection != EVisualControllerDirection::None);
+	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float DeltaTime)
 	{
-		FGCScopeGuard ScopeGuard;
-		while (!Controller->IsWithChoice() || !Controller->IsCurrentScenarioHead())
+		if (IsValid(VisualController) && VisualController->IsFastMoving())
 		{
-			const bool bSucceeded = ControllerDirection == EVisualControllerDirection::Forward
-				? Controller->RequestNextScene()
-				: Controller->RequestPreviousScene();
+			const bool bCanContinue = (ControllerDirection == EVisualControllerDirection::Forward
+				? (!VisualController->IsCurrentScenarioHead() && VisualController->RequestNextScene())
+				: VisualController->RequestPreviousScene());
 
-			if (!bSucceeded)
+			if (!bCanContinue)
 			{
-				break;
+				VisualController->CancelFastMove();
+				VisualController->ShouldPlayTransitions(bPlayedTransitions);
 			}
+
+			return bCanContinue;
 		}
-	}
+
+		return false;
+	}));
 }
 
-UVisualController::UVisualController() 
-	: Super(),
+UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer),
 	Renderer(nullptr),
 	NextSceneHandle(nullptr),
 	Node(),
@@ -49,18 +56,34 @@ UVisualController::UVisualController()
 	SceneHandles(),
 	ExhaustedScenes(),
 	Head(nullptr),
-	bPlayTransitions(true)
+	FastMoveTask(nullptr),
+	bPlayTransitions(true),
+	bIsFastMoving(false)
 {
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 
-	check(!VisualUSettings->FirstDataTable.IsNull());
+	checkf(!VisualUSettings->FirstDataTable.IsNull(), TEXT("Unable to find first data table, please specify one in project settings."));
 	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
 
-	check(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
+	checkf(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Data table must be based on FScenario struct."));
 	FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
 
 	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 	Head = GetCurrentScene();
+}
+
+void UVisualController::BeginDestroy()
+{
+	CancelFastMove();
+
+	Super::BeginDestroy();
+}
+
+void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
+{
+	CancelFastMove();
+	
+	Super::PreSave(SaveContext);
 }
 
 TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
@@ -89,8 +112,9 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scen
 	return Handle;
 }
 
-void UVisualController::PrepareScenes(EVisualControllerDirection Direction)
+void UVisualController::PrepareScenes(EVisualControllerDirection::Type Direction)
 {
+	check(Direction != EVisualControllerDirection::None);
 	if (ScenesToLoad > 0)
 	{
 		if (SceneHandles.IsEmpty())
@@ -261,8 +285,9 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualController::AssertNextSceneLoad(EVisualControllerDirection Direction)
+void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Direction)
 {
+	check(Direction != EVisualControllerDirection::None);
 	const int32 NextSceneIndex = SceneIndex + StaticCast<int32>(Direction);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
 
@@ -279,13 +304,13 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	}
 	check(NewNode);
 	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to the active node is not allowed."));
-	check(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()));
+	checkf(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Node must be based on FScenario struct."));
 	//Assertions aren't present in shipping builds, so compiler most likely will optimize empty loop.
 	for (const FScenario* ExhaustedScene : ExhaustedScenes)
 	{
 		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
 	}
-
+	
 	FScenario* Last = Node.Last();
 	ExhaustedScenes.Push(Last);
 
@@ -314,14 +339,27 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 	OnNativeSceneStart.Broadcast();
 }
 
-void UVisualController::RequestFastMove()
+void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
 {
-	bPlayTransitions = false;
+	if (!bIsFastMoving)
+	{
+		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions);
+		bPlayTransitions = false;
+		bIsFastMoving = true;
+		FastMoveTask->StartBackgroundTask();
+	}
 }
 
-void UVisualController::CancelFastMove(bool bShouldPlayTransitions)
+void UVisualController::CancelFastMove()
 {
-	bPlayTransitions = bShouldPlayTransitions;
+	if (FastMoveTask.IsValid())
+	{
+		FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
+		FastMoveTask->Cancel();
+		FastMoveTask.Reset(nullptr);
+	}
+
+	bIsFastMoving = false;
 }
 
 bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
@@ -373,6 +411,11 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
 {
 	bPlayTransitions = bShouldPlay;
+}
+
+bool UVisualController::IsCurrentScenarioHead() const
+{
+	return GetCurrentScene() == Head;
 }
 
 bool UVisualController::IsWithChoice() const

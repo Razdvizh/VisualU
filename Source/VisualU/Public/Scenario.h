@@ -43,13 +43,13 @@ public:
 	/// <see cref="UVisualSprite">Visual Sprite</see> position in Canvas Panel.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite position in Canvas Panel"))
-	FVector2D Position;
+	FVector2D Position = FVector2D(ForceInitToZero);
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> Z coordinate (or layer) in Canvas Panel.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite's Z coordinate (a.k.a layer) in Canvas Panel"))
-	int32 ZOrder;
+	int32 ZOrder = 0;
 
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
