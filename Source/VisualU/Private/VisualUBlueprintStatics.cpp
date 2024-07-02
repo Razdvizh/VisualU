@@ -40,11 +40,11 @@ void UVisualUBlueprintStatics::PrintScenesData()
 #endif
 }
 
-void UVisualUBlueprintStatics::Choose(UVisualController* Controller, const UDataTable* DataTable)
+bool UVisualUBlueprintStatics::Choose(UVisualController* Controller, const UDataTable* DataTable)
 {
 	check(Controller);
 	check(DataTable);
-	Controller->ToNode(DataTable);
+	return Controller->RequestNode(DataTable);
 }
 
 void UVisualUBlueprintStatics::GetScenesData(TArray<FAssetData>& OutData)

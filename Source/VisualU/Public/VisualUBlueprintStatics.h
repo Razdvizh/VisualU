@@ -33,7 +33,7 @@ class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary
 	static void PrintScenesData();
 
 	UFUNCTION(BlueprintCallable, Category = "VisualU|Choice", meta = (ToolTip = "Sets Visual Controller to iterate over provided Data Table. NOTE: Data Table can't be empty."))
-	static void Choose(UVisualController* Controller, const UDataTable* DataTable);
+	static bool Choose(UVisualController* Controller, const UDataTable* DataTable);
 
 private:
 	/// <summary>

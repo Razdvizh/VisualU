@@ -5,10 +5,11 @@
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 #include "Engine/DataTable.h"
+#include "Tasks/Task.h"
 #include "GameFramework/PlayerController.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
-#include "Tasks/Task.h"
+#include "VisualDashboard.h"
 #include "VisualU.h"
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
@@ -30,7 +31,9 @@ void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 		if (IsValid(VisualController) && VisualController->IsFastMoving())
 		{
 			const bool bCanContinue = (ControllerDirection == EVisualControllerDirection::Forward
-				? (!VisualController->IsCurrentScenarioHead() && VisualController->RequestNextScene())
+				? (!VisualController->IsCurrentScenarioHead() 
+					&& !VisualController->IsWithChoice() 
+					&& VisualController->RequestNextScene())
 				: VisualController->RequestPreviousScene());
 
 			if (!bCanContinue)
@@ -58,7 +61,8 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	Head(nullptr),
 	FastMoveTask(nullptr),
 	bPlayTransitions(true),
-	bIsFastMoving(false)
+	AutoMoveDelay(5.f),
+	Mode(EVisualControllerMode::Idle)
 {
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 
@@ -256,7 +260,7 @@ const FScenario* UVisualController::GetSceneAt(int32 Index)
 	return Node[Index];
 }
 
-bool UVisualController::ToScenario(const FScenario& Scenario)
+bool UVisualController::RequestScenario(const FScenario& Scenario)
 {
 	return RequestScene(&Scenario);
 }
@@ -296,14 +300,15 @@ void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Dir
 #endif
 }
 
-void UVisualController::ToNode(const UDataTable* NewNode)
+bool UVisualController::RequestNode(const UDataTable* NewNode)
 {
 	if (Renderer->IsTransitionInProgress())
 	{
-		return;
+		return false;
 	}
 	check(NewNode);
-	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to the active node is not allowed."));
+	checkf(!NewNode->GetRowMap().IsEmpty(), TEXT("Jumping to empty node is not allowed."));
+	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to active node is not allowed."));
 	checkf(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Node must be based on FScenario struct."));
 	//Assertions aren't present in shipping builds, so compiler most likely will optimize empty loop.
 	for (const FScenario* ExhaustedScene : ExhaustedScenes)
@@ -337,16 +342,32 @@ void UVisualController::ToNode(const UDataTable* NewNode)
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
+
+	return true;
 }
 
 void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
 {
-	if (!bIsFastMoving)
+	if (!(Mode == EVisualControllerMode::AutoMoving || Mode == EVisualControllerMode::FastMoving))
 	{
 		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions);
 		bPlayTransitions = false;
-		bIsFastMoving = true;
+		Mode = EVisualControllerMode::FastMoving;
 		FastMoveTask->StartBackgroundTask();
+	}
+}
+
+void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
+{
+	if (!(Mode == EVisualControllerMode::AutoMoving || Mode == EVisualControllerMode::FastMoving))
+	{
+		if (ensureMsgf(VisualDashboard, TEXT("Auto Move relies on Visual Dashboard, please specify one using SetDashboard.")))
+		{
+			UObject* Dashboard = VisualDashboard.GetObject();
+			FOnTextDisplayFinished SignalDelegate = VisualDashboard->Execute_GetTextDisplayFinishedDelegate(Dashboard);
+			SignalDelegate.BindUFunction(this, TEXT("AutoMove"));
+			Mode = EVisualControllerMode::AutoMoving;
+		}
 	}
 }
 
@@ -359,7 +380,19 @@ void UVisualController::CancelFastMove()
 		FastMoveTask.Reset(nullptr);
 	}
 
-	bIsFastMoving = false;
+	Mode = EVisualControllerMode::Idle;
+}
+
+void UVisualController::CancelAutoMove()
+{
+	if (VisualDashboard)
+	{
+		UObject* Dashboard = VisualDashboard.GetObject();
+		FOnTextDisplayFinished SignalDelegate = VisualDashboard->Execute_GetTextDisplayFinishedDelegate(Dashboard);
+		SignalDelegate.Clear();
+	}
+
+	Mode = EVisualControllerMode::Idle;
 }
 
 bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
@@ -371,6 +404,25 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 	}
 
 	return false;
+}
+
+void UVisualController::AutoMove(EVisualControllerDirection::Type Direction)
+{
+	check(IsAutoMoving());
+	check(Direction != EVisualControllerDirection::None);
+	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this, Direction](float DeltaTime)
+	{
+		const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
+			? (!IsWithChoice() && RequestNextScene())
+			: RequestPreviousScene());
+
+		if (!bCanContinue)
+		{
+			CancelAutoMove();
+		}
+
+		return bCanContinue;
+	}), AutoMoveDelay);
 }
 
 void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
@@ -396,6 +448,17 @@ void UVisualController::SetVisibility(ESlateVisibility Visibility)
 {
 	check(Renderer);
 	Renderer->SetVisibility(Visibility);
+}
+
+void UVisualController::SetDashboard(TScriptInterface<IVisualDashboard> Dashboard)
+{
+	VisualDashboard = Dashboard;
+}
+
+void UVisualController::SetDashboardObject(UObject* Dashboard)
+{
+	check(Dashboard->Implements<UVisualDashboard>());
+	VisualDashboard = Dashboard;
 }
 
 void UVisualController::SetNumScenesToLoad(int32 Num)

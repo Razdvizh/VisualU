@@ -15,6 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEnd);
 
 class UVisualRenderer;
 class APlayerController;
+class IVisualDashboard;
 struct FStreamableHandle;
 
 /**
@@ -34,6 +35,19 @@ namespace EVisualControllerDirection
 		Forward = 1
 	};
 }
+
+/**
+* Describes current state of the Visual Controller.
+* @note All "frame-wise" operations (To Node, Next/Previous Scene, etc.) are not considered.
+* Expect 'Idle' state when performing aforementioned calls outside of Fast Move and Auto Move.
+*/
+UENUM(BlueprintType)
+enum class EVisualControllerMode : uint8
+{
+	Idle = 0,
+	FastMoving = 1,
+	AutoMoving = 2
+};
 
 namespace UE
 {
@@ -107,10 +121,10 @@ public:
 	const FScenario& GetCurrentScenario() const;
 
 	/// <summary>
-	/// Whether or not currently visualized scene has a <see cref="UVisualChoice">choice sprite</see>.
+	/// Whether or not currently visualized scene contains a choice.
 	/// </summary>
-	/// <returns><c>true</c> if current scene has a <see cref="UVisualChoice">choice</see></returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario", meta = (ToolTip = "Whether or not currently visualized scene has a choice sprite"))
+	/// <returns><c>true</c> if current scene contains choice</returns>
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Scenario", meta = (ToolTip = "Whether or not currently visualized scene contains a choice"))
 	bool IsWithChoice() const;
 
 	/// <summary>
@@ -177,7 +191,7 @@ public:
 	/// <returns><c>true</c> if scenario was visualized</returns>
 	/// \warning Only use this method on <see cref="FScenario">scenarios</see> that was already seen by the player.
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Jump to any exhausted Scene"))
-	bool ToScenario(const FScenario& Scenario);
+	bool RequestScenario(const FScenario& Scenario);
 
 	/// <summary>
 	/// Sets provided node as active and visualizes the first <see cref="FScenario">Scenario in the node</see>
@@ -189,13 +203,19 @@ public:
 	/// </remarks>
 	/// \attention Avoid passing the same node as the currently active one 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Sets provided node as active"))
-	void ToNode(const UDataTable* NewNode);
+	bool RequestNode(const UDataTable* NewNode);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	void RequestFastMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	void RequestAutoMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	void CancelFastMove();
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	void CancelAutoMove();
 
 	/**
 	* Construct renderer if necessary and add it to the player screen. Will show currently selected scene.
@@ -215,6 +235,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void SetVisibility(ESlateVisibility Visibility);
 
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	void SetDashboard(TScriptInterface<IVisualDashboard> Dashboard);
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Object must implement Visual Dashboard interface"))
+	void SetDashboardObject(UObject* Dashboard);
+
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "SetNumScenariosToLoad"))
 	void SetNumScenesToLoad(int32 Num);
 
@@ -231,8 +257,14 @@ public:
 	bool IsCurrentScenarioHead() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	FORCEINLINE bool IsFastMoving() const { return bIsFastMoving; }
+	FORCEINLINE bool IsFastMoving() const { return Mode == EVisualControllerMode::FastMoving; }
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	FORCEINLINE bool IsAutoMoving() const { return Mode == EVisualControllerMode::AutoMoving; }
 	
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	FORCEINLINE bool IsIdle() const { return Mode == EVisualControllerMode::Idle; }
+
 	/**
 	* Called when Visual Controller has switched to a different scenario.
 	*/
@@ -292,6 +324,9 @@ protected:
 	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
 private:
+	UFUNCTION()
+	void AutoMove(EVisualControllerDirection::Type Direction);
+
 	/**
 	* Switch Visual Controller to the specified scenario, potentially switching node as well.
 	*/
@@ -354,10 +389,15 @@ private:
 
 	TUniquePtr<UE::VisualU::Private::FFastMoveAsyncTask> FastMoveTask;
 
+	TScriptInterface<IVisualDashboard> VisualDashboard;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
 	bool bPlayTransitions;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Is Visual Controller in fast move mode."))
-	bool bIsFastMoving;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, UIMax = 999.f, ClampMax = 999.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode"))
+	float AutoMoveDelay;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Visual Controller current state"))
+	EVisualControllerMode Mode;
 
 };
