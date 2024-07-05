@@ -246,7 +246,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
 	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
 
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow Control")
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	void SetAutoMoveDelay(float Delay);
+	
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	FORCEINLINE float GetAutoMoveDelay() const { return AutoMoveDelay; }
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	bool IsCurrentScenarioHead() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
@@ -352,7 +358,7 @@ private:
 	* How many following scenarios will be loaded asynchronously. Zero means no asynchronous loading.
 	* @note Will load remaining scenarios in a node even when their amount is less than this value.
 	*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (DisplayName = "Num Scenarios to Load", AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f))
 	int32 ScenesToLoad;
 
 	/*
@@ -382,7 +388,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
 	bool bPlayTransitions;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, UIMax = 999.f, ClampMax = 999.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
 	float AutoMoveDelay;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Visual Controller current state"))

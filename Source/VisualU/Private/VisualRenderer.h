@@ -30,6 +30,8 @@ public:
 
 	bool TryDrawTransition(const FScenario* From, const FScenario* To);
 
+	void ForceStopTransition() const;
+
 protected:
 	/// <summary>
 	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.

@@ -11,6 +11,7 @@
 #include "MovieSceneSection.h"
 #include "MovieScene.h"
 #include "Animation/WidgetAnimation.h"
+#include "Animation/UMGSequencePlayer.h"
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
@@ -97,6 +98,7 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 			Sprite->OnSpriteDisappear.Broadcast();
 		});
 		
+		FinalScene = To;
 		if (ToBackgroundArtInfo.bAnimate)
 		{
 			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, true);
@@ -106,10 +108,20 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, ToBackgroundArtInfo.FrameIndex);
 		}
 		PlayAnimationForward(Transition, /*PlaybackSpeed=*/1.f, /*bRestoreState=*/true);
-		FinalScene = To;
 	}
 
 	return bIsTransitionPossible;
+}
+
+void UVisualRenderer::ForceStopTransition() const
+{
+	if (IsTransitionInProgress())
+	{
+		UUMGSequencePlayer* Player = GetSequencePlayer(Transition);
+		check(Player);
+
+		Player->Stop();
+	}
 }
 
 TSharedRef<SWidget> UVisualRenderer::RebuildWidget()

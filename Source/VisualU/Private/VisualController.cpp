@@ -79,6 +79,10 @@ void UVisualController::BeginDestroy()
 {
 	CancelFastMove();
 	CancelAutoMove();
+	if (Renderer)
+	{
+		Renderer->ForceStopTransition();
+	}
 
 	Super::BeginDestroy();
 }
@@ -87,6 +91,10 @@ void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 {
 	CancelFastMove();
 	CancelAutoMove();
+	if (Renderer)
+	{
+		Renderer->ForceStopTransition();
+	}
 	
 	Super::PreSave(SaveContext);
 }
@@ -349,7 +357,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 
 void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
 {
-	if (!(Mode == EVisualControllerMode::AutoMoving || Mode == EVisualControllerMode::FastMoving))
+	if (!(IsAutoMoving() || IsFastMoving()))
 	{
 		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions);
 		bPlayTransitions = false;
@@ -360,7 +368,7 @@ void UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 
 void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
 {
-	if (!(Mode == EVisualControllerMode::AutoMoving || Mode == EVisualControllerMode::FastMoving))
+	if (!(IsAutoMoving() || IsFastMoving()))
 	{
 		Mode = EVisualControllerMode::AutoMoving;
 		const auto AutoMove = [this, Direction](float DeltaTime)
@@ -383,7 +391,8 @@ void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		};
 
 		/*Fire it once first to replicate a do-while style*/
-		AutoMove(0.f);
+		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), 0.f);
+		FTSTicker::RemoveTicker(Handle);
 		FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), AutoMoveDelay);
 	}
 }
@@ -449,17 +458,28 @@ void UVisualController::SetVisibility(ESlateVisibility Visibility)
 
 void UVisualController::SetNumScenesToLoad(int32 Num)
 {
-	if (Num > 100)
+	if (ensureMsgf(Num >= 0, TEXT("Expected positive value, set operation failed.")))
 	{
-		UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
-	}
+		if (Num > 100)
+		{
+			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
+		}
 
-	ScenesToLoad = Num;
+		ScenesToLoad = Num;
+	}
 }
 
 void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
 {
 	bPlayTransitions = bShouldPlay;
+}
+
+void UVisualController::SetAutoMoveDelay(float Delay)
+{
+	if (ensureMsgf(!FMath::IsNegativeOrNegativeZero(Delay), TEXT("Negative time is invalid, set operation failed.")))
+	{
+		AutoMoveDelay = Delay;
+	}
 }
 
 bool UVisualController::IsCurrentScenarioHead() const
