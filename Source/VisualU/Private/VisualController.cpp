@@ -37,8 +37,8 @@ void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 
 			if (!bCanContinue)
 			{
-				VisualController->CancelFastMove();
 				VisualController->ShouldPlayTransitions(bPlayedTransitions);
+				VisualController->CancelFastMove();
 			}
 
 			return bCanContinue;

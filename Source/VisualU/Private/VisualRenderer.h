@@ -30,7 +30,7 @@ public:
 
 	bool TryDrawTransition(const FScenario* From, const FScenario* To);
 
-	void ForceStopTransition() const;
+	void ForceStopTransition();
 
 protected:
 	/// <summary>

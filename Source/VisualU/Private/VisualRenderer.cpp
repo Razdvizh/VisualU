@@ -113,7 +113,7 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 	return bIsTransitionPossible;
 }
 
-void UVisualRenderer::ForceStopTransition() const
+void UVisualRenderer::ForceStopTransition()
 {
 	if (IsTransitionInProgress())
 	{
@@ -121,6 +121,8 @@ void UVisualRenderer::ForceStopTransition() const
 		check(Player);
 
 		Player->Stop();
+
+		UpdateCanTick();
 	}
 }
 
