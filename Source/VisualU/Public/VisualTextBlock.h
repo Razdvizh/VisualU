@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/RichTextBlock.h"
-#include "VisualUSettings.h"
 #include "VisualTextBlock.generated.h"
 
 class UVisualUSettings;
 ///\todo change this to regular dynamic multicast delegate
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnActionEncounteredSignature, UVisualTextBlock, OnActionEncountered, const EVisualTextAction, Action);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnActionEncountered, UVisualTextBlock, OnActionEncountered, const EVisualTextAction, Action);
 
 /// <summary>
 /// Supports Visual Novel style of typewriter effect.
@@ -97,7 +96,7 @@ public:
 	/// Broadcasts the encountered action in the text.
 	/// </summary>
 	UPROPERTY(BlueprintAssignable, Category = "Visual Text Block", meta = (ToolTip = "Broadcasts the encountered action in the text."))
-	FOnActionEncounteredSignature OnActionEncountered;
+	FOnActionEncountered OnActionEncountered;
 
 protected:
 	/// <summary>
@@ -111,7 +110,7 @@ protected:
 	/// </summary>
 	/// \warning Does not guarantee that each line would have exact specified amount of characters.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have exact specified amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
-	int LineWidth;
+	int32 LineWidth;
 
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override;

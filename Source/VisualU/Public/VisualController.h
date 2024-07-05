@@ -15,7 +15,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEnd);
 
 class UVisualRenderer;
 class APlayerController;
-class IVisualDashboard;
 struct FStreamableHandle;
 
 /**
@@ -235,12 +234,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void SetVisibility(ESlateVisibility Visibility);
 
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	void SetDashboard(TScriptInterface<IVisualDashboard> Dashboard);
-
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Object must implement Visual Dashboard interface"))
-	void SetDashboardObject(UObject* Dashboard);
-
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "SetNumScenariosToLoad"))
 	void SetNumScenesToLoad(int32 Num);
 
@@ -324,9 +317,6 @@ protected:
 	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
 private:
-	UFUNCTION()
-	void AutoMove(EVisualControllerDirection::Type Direction);
-
 	/**
 	* Switch Visual Controller to the specified scenario, potentially switching node as well.
 	*/
@@ -388,8 +378,6 @@ private:
 	const FScenario* Head;
 
 	TUniquePtr<UE::VisualU::Private::FFastMoveAsyncTask> FastMoveTask;
-
-	TScriptInterface<IVisualDashboard> VisualDashboard;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
 	bool bPlayTransitions;

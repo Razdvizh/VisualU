@@ -9,7 +9,6 @@
 #include "GameFramework/PlayerController.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
-#include "VisualDashboard.h"
 #include "VisualU.h"
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
@@ -79,6 +78,7 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 void UVisualController::BeginDestroy()
 {
 	CancelFastMove();
+	CancelAutoMove();
 
 	Super::BeginDestroy();
 }
@@ -86,6 +86,7 @@ void UVisualController::BeginDestroy()
 void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 {
 	CancelFastMove();
+	CancelAutoMove();
 	
 	Super::PreSave(SaveContext);
 }
@@ -361,38 +362,53 @@ void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 {
 	if (!(Mode == EVisualControllerMode::AutoMoving || Mode == EVisualControllerMode::FastMoving))
 	{
-		if (ensureMsgf(VisualDashboard, TEXT("Auto Move relies on Visual Dashboard, please specify one using SetDashboard.")))
+		Mode = EVisualControllerMode::AutoMoving;
+		const auto AutoMove = [this, Direction](float DeltaTime)
 		{
-			UObject* Dashboard = VisualDashboard.GetObject();
-			FOnTextDisplayFinished SignalDelegate = VisualDashboard->Execute_GetTextDisplayFinishedDelegate(Dashboard);
-			SignalDelegate.BindUFunction(this, TEXT("AutoMove"));
-			Mode = EVisualControllerMode::AutoMoving;
-		}
+			if (IsAutoMoving())
+			{
+				const bool bCanContinue = (Direction == EVisualControllerDirection::Forward 
+					? (!IsWithChoice() && RequestNextScene())
+					: RequestPreviousScene());
+
+				if (!bCanContinue)
+				{
+					CancelAutoMove();
+				}
+
+				return bCanContinue;
+			}
+
+			return false;
+		};
+
+		/*Fire it once first to replicate a do-while style*/
+		AutoMove(0.f);
+		FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), AutoMoveDelay);
 	}
 }
 
 void UVisualController::CancelFastMove()
 {
-	if (FastMoveTask.IsValid())
+	if (IsFastMoving())
 	{
-		FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
-		FastMoveTask->Cancel();
-		FastMoveTask.Reset(nullptr);
-	}
+		if (FastMoveTask.IsValid())
+		{
+			FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
+			FastMoveTask->Cancel();
+			FastMoveTask.Reset(nullptr);
+		}
 
-	Mode = EVisualControllerMode::Idle;
+		Mode = EVisualControllerMode::Idle;
+	}
 }
 
 void UVisualController::CancelAutoMove()
 {
-	if (VisualDashboard)
+	if (IsAutoMoving())
 	{
-		UObject* Dashboard = VisualDashboard.GetObject();
-		FOnTextDisplayFinished SignalDelegate = VisualDashboard->Execute_GetTextDisplayFinishedDelegate(Dashboard);
-		SignalDelegate.Clear();
+		Mode = EVisualControllerMode::Idle;
 	}
-
-	Mode = EVisualControllerMode::Idle;
 }
 
 bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
@@ -404,25 +420,6 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 	}
 
 	return false;
-}
-
-void UVisualController::AutoMove(EVisualControllerDirection::Type Direction)
-{
-	check(IsAutoMoving());
-	check(Direction != EVisualControllerDirection::None);
-	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this, Direction](float DeltaTime)
-	{
-		const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
-			? (!IsWithChoice() && RequestNextScene())
-			: RequestPreviousScene());
-
-		if (!bCanContinue)
-		{
-			CancelAutoMove();
-		}
-
-		return bCanContinue;
-	}), AutoMoveDelay);
 }
 
 void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
@@ -448,17 +445,6 @@ void UVisualController::SetVisibility(ESlateVisibility Visibility)
 {
 	check(Renderer);
 	Renderer->SetVisibility(Visibility);
-}
-
-void UVisualController::SetDashboard(TScriptInterface<IVisualDashboard> Dashboard)
-{
-	VisualDashboard = Dashboard;
-}
-
-void UVisualController::SetDashboardObject(UObject* Dashboard)
-{
-	check(Dashboard->Implements<UVisualDashboard>());
-	VisualDashboard = Dashboard;
 }
 
 void UVisualController::SetNumScenesToLoad(int32 Num)
