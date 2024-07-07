@@ -8,6 +8,7 @@
 #include "Tasks/Task.h"
 #include "GameFramework/PlayerController.h"
 #include "Sound/SoundBase.h"
+#include "VisualVersioningSubsystem.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
 #include "VisualU.h"
@@ -211,7 +212,12 @@ bool UVisualController::RequestPreviousScene()
 	{
 		if (!ExhaustedScenes.IsEmpty())
 		{
-			SetCurrentScene(ExhaustedScenes.Pop());
+			FScenario* Scene = ExhaustedScenes.Pop();
+			if (UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>())
+			{
+				VisualVersioning->Checkout(Scene);
+			}
+			SetCurrentScene(Scene);
 			return true;
 		}
 
@@ -242,6 +248,10 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 		return false;
 	}
 	check(Scene);
+	if (ensureMsgf(!(Scene->Owner == Head->Owner && Scene->Index > Head->Index), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
+	{
+		return false;
+	}
 
 	bool bIsFound = false;
 	if (Node[0]->Owner == Scene->Owner)
@@ -250,16 +260,25 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 	}
 	else
 	{
+		UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>();
 		/*Traverse the stack until the requested Node is found*/
 		for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 		{
 			if (ExhaustedScenes[i]->Owner == Scene->Owner)
 			{
-				ExhaustedScenes.Pop();
+				FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+				if (VisualVersioning)
+				{
+					VisualVersioning->Checkout(ExhaustedScene);
+				}
 				bIsFound = true;
 				break;
 			}
-			ExhaustedScenes.Pop();
+			FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+			if (VisualVersioning)
+			{
+				VisualVersioning->Checkout(ExhaustedScene);
+			}
 		}
 	}
 
@@ -327,11 +346,12 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	checkf(!NewNode->GetRowMap().IsEmpty(), TEXT("Jumping to empty node is not allowed."));
 	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to active node is not allowed."));
 	checkf(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Node must be based on FScenario struct."));
-	//Assertions aren't present in shipping builds, so compiler most likely will optimize empty loop.
+#if !UE_BUILD_SHIPPING
 	for (const FScenario* ExhaustedScene : ExhaustedScenes)
 	{
 		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
 	}
+#endif
 	
 	FScenario* Last = Node.Last();
 	ExhaustedScenes.Push(Last);

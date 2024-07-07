@@ -18,6 +18,7 @@ class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
+public:
 	/// <summary>
 	/// Get the texture of <paramref name="Sprite"/> that should be rendered.
 	/// </summary>

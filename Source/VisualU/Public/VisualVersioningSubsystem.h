@@ -12,7 +12,6 @@ struct FVisualScenarioInfo;
 
 /**
  * Allows for altering scenarios in chosen Data Tables.
- * To be revisited.
  */
 UCLASS()
 class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem
@@ -20,9 +19,23 @@ class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = "Visual Versioning", meta = (DeprecatedFunction))
-	void ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version);
+	UVisualVersioningSubsystem();
+
+	/*
+	* Chooses a provided version of Data Table in Visual Controller
+	* Returns result of choosing
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Versioning")
+	bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version);
+
+	/*
+	* Switches subsystem to an older version
+	*/
+	void Checkout(FScenario* const Scene) const;
 
 	virtual void Deinitialize() override;
 	
+private:
+	TMultiMap<FScenario*, FVisualScenarioInfo> Versions;
+
 };
