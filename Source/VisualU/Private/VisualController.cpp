@@ -353,7 +353,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	}
 #endif
 	
-	FScenario* Last = Node.Last();
+	FScenario* Last = Node[SceneIndex];
 	ExhaustedScenes.Push(Last);
 
 	Node.Empty();

@@ -31,8 +31,10 @@ bool UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualControll
 void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
 {
 	check(Scene);
-	const FVisualScenarioInfo& Version = Versions.FindChecked(Scene);
-	Scene->Info = Version;
+	if (const FVisualScenarioInfo* Version = Versions.Find(Scene))
+	{
+		Scene->Info = *Version;
+	}
 }
 
 void UVisualVersioningSubsystem::Deinitialize()
