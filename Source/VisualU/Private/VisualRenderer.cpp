@@ -15,7 +15,6 @@
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
-#include "Sound/SoundCue.h"
 #include "PaperFlipbook.h"
 #include "VisualSprite.h"
 #include "VisualImage.h"
@@ -45,11 +44,6 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 	if (Scene->Info.Background.BackgroundArtInfo.Expression.IsValid())
 	{
 		Background->AssignVisualImageInfo(Scene->Info.Background.BackgroundArtInfo);
-	}
-
-	if (USoundBase* const Music = Scene->Info.Music.Get())
-	{
-		PlaySound(Music);
 	}
 	
 	for (const FSprite& SpriteData : Scene->Info.SpritesParams)

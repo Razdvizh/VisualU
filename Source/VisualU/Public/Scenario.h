@@ -183,7 +183,7 @@ public:
 	/// Audio to play while the scene is displayed.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Audio to play while this Scenario is displayed"))
-	TSoftObjectPtr<USoundBase> Music;
+	TSoftObjectPtr<USoundBase> Sound;
 
 	/// <summary>
 	/// Background to display.
@@ -214,7 +214,7 @@ public:
 	{
 		Ar << ScenarioInfo.Author
 			<< ScenarioInfo.Line
-			<< ScenarioInfo.Music
+			<< ScenarioInfo.Sound
 			<< ScenarioInfo.Background
 			<< ScenarioInfo.SpritesParams
 			<< ScenarioInfo.Flags;
@@ -226,7 +226,7 @@ public:
 	{
 		return Author.CompareTo(Other.Author)
 			&& Line.CompareTo(Other.Line)
-			&& Music == Other.Music
+			&& Sound == Other.Sound
 			&& Background == Other.Background
 			&& SpritesParams == Other.SpritesParams
 			&& Flags == Other.Flags;
@@ -298,9 +298,9 @@ public:
 		{
 			Out.Emplace(Info.Background.BackgroundArtInfo.Expression.ToSoftObjectPath());
 		}
-		if (!Info.Music.IsNull())
+		if (!Info.Sound.IsNull())
 		{
-			Out.Emplace(Info.Music.ToSoftObjectPath());
+			Out.Emplace(Info.Sound.ToSoftObjectPath());
 		}
 		if (!Info.Background.TransitionMaterial.IsNull())
 		{
@@ -324,7 +324,7 @@ public:
 	{
 		UE_LOG(LogVisualU, Display, TEXT("\tAuthor: %s"), !Info.Author.IsEmpty() ? *Info.Author.ToString() : TEXT("None"));
 		UE_LOG(LogVisualU, Display, TEXT("\tLine: %s"), !Info.Line.IsEmpty() ? *Info.Line.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tMusic: %s"), !Info.Music.IsNull() ? *Info.Music.GetAssetName() : TEXT("None"));
+		UE_LOG(LogVisualU, Display, TEXT("\tMusic: %s"), !Info.Sound.IsNull() ? *Info.Sound.GetAssetName() : TEXT("None"));
 		UE_LOG(LogVisualU, Display, TEXT("\tBackground Art: %s"), !Info.Background.BackgroundArtInfo.Expression.IsNull() ? *Info.Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
 		UE_LOG(LogVisualU, Display, TEXT("\tTransition Material: %s"), !Info.Background.TransitionMaterial.IsNull() ? *Info.Background.TransitionMaterial.GetAssetName() : TEXT("None"));
 
@@ -370,7 +370,7 @@ public:
 	{
 		Info.Author = InInfo.Author;
 		Info.Line = InInfo.Line;
-		Info.Music = InInfo.Music;
+		Info.Sound = InInfo.Sound;
 		Info.Background = InInfo.Background;
 		Info.SpritesParams = InInfo.SpritesParams;
 	}

@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "Tasks/Task.h"
 #include "GameFramework/PlayerController.h"
+#include "Sound/SoundBase.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
 #include "VisualU.h"
@@ -38,6 +39,7 @@ void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 			if (!bCanContinue)
 			{
 				VisualController->ShouldPlayTransitions(bPlayedTransitions);
+				VisualController->ShouldPlaySound(bPlayedSound);
 				VisualController->CancelFastMove();
 			}
 
@@ -60,6 +62,7 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	Head(nullptr),
 	FastMoveTask(nullptr),
 	bPlayTransitions(true),
+	bPlaySound(true),
 	AutoMoveDelay(5.f),
 	Mode(EVisualControllerMode::Idle)
 {
@@ -184,6 +187,11 @@ bool UVisualController::RequestNextScene()
 		Renderer->DrawScene(CurrentScene);
 	}
 
+	if (bPlaySound)
+	{
+		GetOuterAPlayerController()->ClientPlaySound(CurrentScene->Info.Sound.Get());
+	}
+
 	CancelNextScene();
 	
 	OnSceneStart.Broadcast();
@@ -290,7 +298,7 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	CancelNextScene();
 
 	SceneIndex = Scene->Index;
-	LoadScene(GetCurrentScene());
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(GetCurrentScene());
 	Renderer->DrawScene(GetCurrentScene());
 	PrepareScenes();
 
@@ -342,11 +350,17 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	SceneIndex = 0;
 
 	Head = GetCurrentScene();
-	LoadScene(Head);
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(Head);
 	if (!TryPlayTransition(Last, Head))
 	{
 		Renderer->DrawScene(Head);
 	}
+
+	if (bPlaySound)
+	{
+		GetOuterAPlayerController()->ClientPlaySound(Head->Info.Sound.Get());
+	}
+
 	PrepareScenes();
 
 	OnSceneStart.Broadcast();
@@ -359,8 +373,9 @@ void UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 {
 	if (!(IsAutoMoving() || IsFastMoving()))
 	{
-		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions);
+		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions, bPlaySound);
 		bPlayTransitions = false;
+		bPlaySound = false;
 		Mode = EVisualControllerMode::FastMoving;
 		FastMoveTask->StartBackgroundTask();
 	}
@@ -438,9 +453,14 @@ void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, in
 		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
 	}
 
-	LoadScene(GetCurrentScene());
+	const FScenario* CurrentScene = GetCurrentScene();
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
 	Renderer->AddToPlayerScreen(ZOrder);
-	Renderer->DrawScene(GetCurrentScene());
+	Renderer->DrawScene(CurrentScene);
+	if (bPlaySound)
+	{
+		GetOuterAPlayerController()->ClientPlaySound(CurrentScene->Info.Sound.Get());
+	}
 	PrepareScenes();
 }
 
@@ -472,6 +492,11 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
 {
 	bPlayTransitions = bShouldPlay;
+}
+
+void UVisualController::ShouldPlaySound(bool bShouldPlay)
+{
+	bPlaySound = bShouldPlay;
 }
 
 void UVisualController::SetAutoMoveDelay(float Delay)

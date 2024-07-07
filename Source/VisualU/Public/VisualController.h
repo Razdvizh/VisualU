@@ -59,10 +59,12 @@ namespace UE
 			public:
 				FFastMoveAsyncWorker(UVisualController* Controller,
 					EVisualControllerDirection::Type Direction,
-					bool PlayedTransitions)
+					bool PlayedTransitions,
+					bool PlayedSound)
 					: VisualController(Controller),
 					ControllerDirection(Direction),
-					bPlayedTransitions(PlayedTransitions)
+					bPlayedTransitions(PlayedTransitions),
+					bPlayedSound(PlayedSound)
 				{
 				};
 
@@ -80,6 +82,8 @@ namespace UE
 
 				bool bPlayedTransitions;
 
+				bool bPlayedSound;
+
 			};
 
 			class FFastMoveAsyncTask : public FAsyncTask<FFastMoveAsyncWorker>
@@ -87,8 +91,9 @@ namespace UE
 			public:
 				FFastMoveAsyncTask(UVisualController* Controller,
 					EVisualControllerDirection::Type Direction,
-					bool PlayedTransitions)
-					: FAsyncTask(Controller, Direction, PlayedTransitions)
+					bool PlayedTransitions,
+					bool PlayedSound)
+					: FAsyncTask(Controller, Direction, PlayedTransitions, PlayedSound)
 				{
 				};
 
@@ -246,6 +251,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Transition")
 	FORCEINLINE bool PlaysTransitions() const { return bPlayTransitions; }
 
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Sound")
+	void ShouldPlaySound(bool bShouldPlay);
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Sound")
+	FORCEINLINE bool PlaysSound() const { return bPlaySound; }
+
+	/*
+	* New delay, in seconds, between scenes in Auto Move mode.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	void SetAutoMoveDelay(float Delay);
 	
@@ -385,8 +399,11 @@ private:
 
 	TUniquePtr<UE::VisualU::Private::FFastMoveAsyncTask> FastMoveTask;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios."))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
 	bool bPlayTransitions;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Sound", meta = (AllowPrivateAccess = true, ToolTip = "Will Visual Controller play scene sound"))
+	bool bPlaySound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
 	float AutoMoveDelay;

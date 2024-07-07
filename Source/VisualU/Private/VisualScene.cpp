@@ -106,9 +106,9 @@ void UVisualScene::ConstructScene(const FScenario* Scene)
 		Background->SetFlipbook(Scene->Info.Background.BackgroundArtInfo.Expression.Get());
 	}
 
-	if (USoundBase* Music = Scene->Info.Music.Get())
+	if (USoundBase* Sound = Scene->Info.Sound.Get())
 	{
-		PlaySound(Music);
+		PlaySound(Sound);
 	}
 
 	for (const auto& SpriteData : Scene->Info.SpritesParams)
