@@ -32,6 +32,14 @@
 			]
 		},
 		{
+			"Name": "VisualUBlueprint",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		},
+		{
 			"Name": "VisualUEditor",
 			"Type": "Editor",
 			"LoadingPhase": "PostEngineInit",

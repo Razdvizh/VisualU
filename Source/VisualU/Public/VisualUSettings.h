@@ -14,8 +14,10 @@ class UMaterialParameterCollection;
 UENUM(BlueprintType)
 enum class EVisualTextAction : uint8
 {
-	None, /* < No action */
-	Break, /* < Stops text appearance */
+	/*No action*/
+	None,
+	/*Stops text appearance*/
+	Break,
 };
 
 /// <summary>
@@ -48,10 +50,10 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller", meta = (ToolTip = "Data Table that contains the first scenario"))
 	TSoftObjectPtr<UDataTable> FirstDataTable;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (DisplayName = "Transition Material Parameter Collection", ToolTip = "First scalar parameter from this collection will be used to indicate progress of transition for materials."))
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (DisplayName = "Transition Material Parameter Collection", ToolTip = "First scalar parameter from this collection will be used to indicate progress of transition for materials"))
 	TSoftObjectPtr<UMaterialParameterCollection> TransitionMPC;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration of the transition between scenarios."))
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration of the transition between scenarios"))
 	float TransitionDuration;
 
 	/// <summary>
@@ -72,7 +74,7 @@ public:
 	/// <remarks>
 	/// Transition begins with this sprite.
 	/// </remarks>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transitions")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transition")
 	FName AParameterName;
 
 	/// <summary>
@@ -81,6 +83,6 @@ public:
 	/// <remarks>
 	/// Transition ends with this sprite.
 	/// </remarks>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transitions")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transition")
 	FName BParameterName;
 };

@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class VisualUDebugger : ModuleRules
+public class VisualUBlueprint : ModuleRules
 {
-	public VisualUDebugger(ReadOnlyTargetRules Target) : base(Target)
+	public VisualUBlueprint(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
@@ -17,16 +17,14 @@ public class VisualUDebugger : ModuleRules
                 "Engine",
                 "Slate",
                 "SlateCore"
-			}
+            }
 			);
 		
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"GameplayDebugger"
+
 			}
 			);
-
-		SetupGameplayDebuggerSupport(Target);
 	}
 }

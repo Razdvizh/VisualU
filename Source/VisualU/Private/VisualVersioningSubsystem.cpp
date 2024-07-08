@@ -24,7 +24,7 @@ bool UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualControll
 	FScenario* Scene = Rows[Index];
 	Versions.Add(Scene, Scene->Info);
 	Scene->Info = Version;
-
+	
 	return VisualController->RequestNode(DataTable);
 }
 

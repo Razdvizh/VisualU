@@ -298,20 +298,26 @@ public:
 		{
 			Out.Emplace(Info.Background.BackgroundArtInfo.Expression.ToSoftObjectPath());
 		}
-		if (!Info.Sound.IsNull())
-		{
-			Out.Emplace(Info.Sound.ToSoftObjectPath());
-		}
 		if (!Info.Background.TransitionMaterial.IsNull())
 		{
 			Out.Emplace(Info.Background.TransitionMaterial.ToSoftObjectPath());
 		}
+		if (!Info.Sound.IsNull())
+		{
+			Out.Emplace(Info.Sound.ToSoftObjectPath());
+		}
 		for (const FSprite& SpriteParam : Info.SpritesParams)
 		{
-			Out.Emplace(SpriteParam.SpriteClass.ToSoftObjectPath());
+			if (!SpriteParam.SpriteClass.IsNull())
+			{
+				Out.Emplace(SpriteParam.SpriteClass.ToSoftObjectPath());
+			}
 			for (const FVisualImageInfo& ImageInfo : SpriteParam.SpriteInfo)
 			{
-				Out.Emplace(ImageInfo.Expression.ToSoftObjectPath());
+				if (!ImageInfo.Expression.IsNull())
+				{
+					Out.Emplace(ImageInfo.Expression.ToSoftObjectPath());
+				}
 			}
 		}
 	}

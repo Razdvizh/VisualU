@@ -7,6 +7,7 @@ public class VisualU : ModuleRules
 	public VisualU(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		CppStandard = CppStandardVersion.Cpp20;
 		
 		PublicDependencyModuleNames.AddRange(
 			new string[]

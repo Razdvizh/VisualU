@@ -10,6 +10,25 @@ class UDataTable;
 class UVisualController;
 struct FVisualScenarioInfo;
 
+//
+//template<typename T, typename U>
+//class HasMemberOfTypeImpl {
+//private:
+//
+//	template<typename C>
+//	static std::true_type test(decltype(static_cast<U C::*>(nullptr))*);
+//
+//	template<typename>
+//	static std::false_type test(...);
+//
+//public:
+//	static constexpr bool value = decltype(test<T>(nullptr))::value;
+//};
+//
+//
+//template<typename T, typename U>
+//concept HasMemberOfType = HasMemberOfTypeImpl<T, U>::value;
+
 /**
  * Allows for altering scenarios in chosen Data Tables.
  */
@@ -33,6 +52,12 @@ public:
 	*/
 	void Checkout(FScenario* const Scene) const;
 
+	//template<typename T, typename... V>
+	//inline void Test(T* Obj, V T::*... Pointers, const V&... Values)
+	//{
+	//	((Obj->*Pointers = Values), ...);
+	//}
+	
 	virtual void Deinitialize() override;
 	
 private:
