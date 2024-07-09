@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
+#include "Scenario.h"
 #include "VisualVersioningSubsystem.generated.h"
 
 class UDataTable;
 class UVisualController;
-struct FVisualScenarioInfo;
 
 //
 //template<typename T, typename U>
@@ -44,7 +44,7 @@ public:
 	* Chooses a provided version of Data Table in Visual Controller
 	* Returns result of choosing
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Versioning")
+	UFUNCTION(Category = "Visual Versioning")
 	bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version);
 
 	/*

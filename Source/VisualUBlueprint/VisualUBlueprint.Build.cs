@@ -4,27 +4,27 @@ using UnrealBuildTool;
 
 public class VisualUBlueprint : ModuleRules
 {
-	public VisualUBlueprint(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
-		PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"VisualU",
+    public VisualUBlueprint(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+
+        PublicDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "VisualU",
                 "Core",
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
+                "BlueprintGraph",
+                "ToolMenus"
             }
-			);
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
+            );
 
-			}
-			);
-	}
+        if (Target.bBuildEditor || Target.bCompileAgainstEditor)
+        {
+            PrivateDependencyModuleNames.Add("UnrealEd");
+        }
+    }
 }

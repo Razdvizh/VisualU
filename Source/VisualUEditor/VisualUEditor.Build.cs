@@ -12,7 +12,6 @@ public class VisualUEditor : ModuleRules
 			new string[]
 			{
 				"VisualU"
-				// ... add other public dependencies that you statically link with here ...
 			}
 			);
 		
@@ -25,7 +24,6 @@ public class VisualUEditor : ModuleRules
                 "Slate",
 				"SlateCore",
 				"PropertyEditor"
-				// ... add private dependencies that you statically link with here ...	
 			}
 			);
 		

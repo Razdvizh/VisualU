@@ -4,7 +4,6 @@
 #include "VisualVersioningSubsystem.h"
 #include "Engine/DataTable.h"
 #include "VisualController.h"
-#include "Scenario.h"
 
 UVisualVersioningSubsystem::UVisualVersioningSubsystem()
 	: Super(),
