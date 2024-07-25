@@ -5,29 +5,13 @@
 #include "CoreMinimal.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "Scenario.h"
+#include "Engine/DataTable.h"
+#include "VisualController.h"
+#include "VisualTemplates.h"
 #include "VisualVersioningSubsystem.generated.h"
 
 class UDataTable;
 class UVisualController;
-
-//
-//template<typename T, typename U>
-//class HasMemberOfTypeImpl {
-//private:
-//
-//	template<typename C>
-//	static std::true_type test(decltype(static_cast<U C::*>(nullptr))*);
-//
-//	template<typename>
-//	static std::false_type test(...);
-//
-//public:
-//	static constexpr bool value = decltype(test<T>(nullptr))::value;
-//};
-//
-//
-//template<typename T, typename U>
-//concept HasMemberOfType = HasMemberOfTypeImpl<T, U>::value;
 
 /**
  * Allows for altering scenarios in chosen Data Tables.
@@ -41,25 +25,51 @@ public:
 	UVisualVersioningSubsystem();
 
 	/*
-	* Chooses a provided version of Data Table in Visual Controller
-	* Returns result of choosing
+	* Chooses a provided version of Data Table in Visual Controller.
+	* @param Version new scenario information.
+	* Returns result of choosing data table.
 	*/
-	UFUNCTION(Category = "Visual Versioning")
-	bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version);
+	UFUNCTION(BlueprintCallable, Category = "Visual Versioning")
+	bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, const FName& SceneName, const FVisualScenarioInfo& Version);
+
+	template<typename T = FVisualScenarioInfo, typename... V>
+	inline bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, const FName& SceneName, V T::*... Members, const V&... Values)
+	{
+		check(VisualController);
+
+		FScenario* Scene = GetSceneChecked(DataTable, SceneName);
+		Versions.Add(Scene, Scene->Info);
+		UpdateMembers(Scene->Info, Members, Values);
+
+		return VisualController->RequestNode(DataTable);
+	}
+
+	template<typename T = FVisualScenarioInfo, typename... V>
+	inline bool ChooseVersion(UVisualController* VisualController, FScenario* Scene, V T::*... Members, const V&... Values)
+	{
+		check(VisualController);
+		check(Scene);
+
+		Versions.Add(Scene, Scene->Info);
+		UpdateMembers(Scene->Info, Members, Values);
+
+		return VisualController->RequestNode(Scene->Owner);
+	}
 
 	/*
-	* Switches subsystem to an older version
+	* Switches scene to an older version
 	*/
 	void Checkout(FScenario* const Scene) const;
-
-	//template<typename T, typename... V>
-	//inline void Test(T* Obj, V T::*... Pointers, const V&... Values)
-	//{
-	//	((Obj->*Pointers = Values), ...);
-	//}
 	
 	virtual void Deinitialize() override;
-	
+
+private:
+	/*
+	* Returns scenario from data table at given location.
+	* Will trigger assertion for invalid data table and index.
+	*/
+	FScenario* GetSceneChecked(const UDataTable* DataTable, const FName& SceneName) const;
+
 private:
 	TMultiMap<FScenario*, FVisualScenarioInfo> Versions;
 

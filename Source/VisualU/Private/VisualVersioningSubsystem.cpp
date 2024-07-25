@@ -2,8 +2,6 @@
 
 
 #include "VisualVersioningSubsystem.h"
-#include "Engine/DataTable.h"
-#include "VisualController.h"
 
 UVisualVersioningSubsystem::UVisualVersioningSubsystem()
 	: Super(),
@@ -11,16 +9,11 @@ UVisualVersioningSubsystem::UVisualVersioningSubsystem()
 {
 }
 
-bool UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, int32 Index, const FVisualScenarioInfo& Version)
+bool UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, const FName& SceneName, const FVisualScenarioInfo& Version)
 {
 	check(VisualController);
-	check(DataTable);
 
-	TArray<FScenario*> Rows;
-	DataTable->GetAllRows(UE_SOURCE_LOCATION, Rows);
-	checkf(Rows.IsValidIndex(Index), TEXT("Can't find scene at position: %i in Data Table: %s"), Index, *DataTable->GetFName().ToString());
-
-	FScenario* Scene = Rows[Index];
+	FScenario* Scene = GetSceneChecked(DataTable, SceneName);
 	Versions.Add(Scene, Scene->Info);
 	Scene->Info = Version;
 	
@@ -50,4 +43,14 @@ void UVisualVersioningSubsystem::Deinitialize()
 			Scene->Info = Infos[0];
 		}
 	}
+}
+
+FScenario* UVisualVersioningSubsystem::GetSceneChecked(const UDataTable* DataTable, const FName& SceneName) const
+{
+	check(DataTable);
+	
+	FScenario* Scene = DataTable->FindRow<FScenario>(SceneName, UE_SOURCE_LOCATION, false);
+	checkf(Scene, TEXT("Can't find scene with name: %s in Data Table: %s"), *SceneName.ToString(), *DataTable->GetFName().ToString());
+
+	return Scene;
 }
