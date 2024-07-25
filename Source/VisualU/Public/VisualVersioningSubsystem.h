@@ -57,7 +57,7 @@ public:
 	}
 
 	/*
-	* Switches scene to an older version
+	* Switches scene to an older version.
 	*/
 	void Checkout(FScenario* const Scene) const;
 	

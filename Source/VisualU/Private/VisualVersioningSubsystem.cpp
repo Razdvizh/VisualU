@@ -35,6 +35,7 @@ void UVisualVersioningSubsystem::Deinitialize()
 	Versions.GetKeys(Scenes);
 	for (FScenario*& Scene : Scenes)
 	{
+		check(Scene);
 		TArray<FVisualScenarioInfo> Infos;
 		Versions.MultiFind(Scene, Infos, /*bMaintainOrder=*/true);
 		if (!Infos.IsEmpty())
@@ -49,7 +50,7 @@ FScenario* UVisualVersioningSubsystem::GetSceneChecked(const UDataTable* DataTab
 {
 	check(DataTable);
 	
-	FScenario* Scene = DataTable->FindRow<FScenario>(SceneName, UE_SOURCE_LOCATION, false);
+	FScenario* Scene = DataTable->FindRow<FScenario>(SceneName, UE_SOURCE_LOCATION, /*bWarnIfMissing=*/false);
 	checkf(Scene, TEXT("Can't find scene with name: %s in Data Table: %s"), *SceneName.ToString(), *DataTable->GetFName().ToString());
 
 	return Scene;

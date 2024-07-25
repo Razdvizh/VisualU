@@ -62,6 +62,7 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	ExhaustedScenes(),
 	Head(nullptr),
 	FastMoveTask(nullptr),
+	AutoMoveHandle(nullptr),
 	bPlayTransitions(true),
 	bPlaySound(true),
 	AutoMoveDelay(5.f),
@@ -101,6 +102,16 @@ void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 	}
 	
 	Super::PreSave(SaveContext);
+}
+
+void UVisualController::PostInitProperties()
+{
+	Super::PostInitProperties();
+
+	if (GEngine)
+	{
+		bPlaySound &= GEngine->UseSound();
+	}
 }
 
 TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
@@ -162,6 +173,17 @@ void UVisualController::PrepareScenes(EVisualControllerDirection::Type Direction
 	}
 }
 
+void UVisualController::TryPlaySceneSound(TSoftObjectPtr<USoundBase> SceneSound) const
+{
+	if (bPlaySound)
+	{
+		if (USoundBase* Sound = SceneSound.Get())
+		{
+			GetOuterAPlayerController()->ClientPlaySound(Sound);
+		}
+	}
+}
+
 bool UVisualController::RequestNextScene()
 {
 	if (!CanAdvanceScene() || Renderer->IsTransitionInProgress())
@@ -188,11 +210,7 @@ bool UVisualController::RequestNextScene()
 		Renderer->DrawScene(CurrentScene);
 	}
 
-	if (bPlaySound)
-	{
-		GetOuterAPlayerController()->ClientPlaySound(CurrentScene->Info.Sound.Get());
-	}
-
+	TryPlaySceneSound(CurrentScene->Info.Sound);
 	CancelNextScene();
 	
 	OnSceneStart.Broadcast();
@@ -338,7 +356,7 @@ void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Dir
 
 bool UVisualController::RequestNode(const UDataTable* NewNode)
 {
-	if (Renderer->IsTransitionInProgress())
+	if (Renderer->IsTransitionInProgress() || IsFastMoving() || IsAutoMoving())
 	{
 		return false;
 	}
@@ -354,6 +372,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 #endif
 	
 	FScenario* Last = Node[SceneIndex];
+	const UDataTable* LastNode = Last->GetOwner();
 	ExhaustedScenes.Push(Last);
 
 	Node.Empty();
@@ -369,18 +388,18 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 
 	SceneIndex = 0;
 
-	Head = GetCurrentScene();
-	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(Head);
-	if (!TryPlayTransition(Last, Head))
+	const FScenario* CurrentScene = GetCurrentScene();
+	if (Head->GetOwner() == LastNode)
 	{
-		Renderer->DrawScene(Head);
+		Head = CurrentScene;
+	}
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
+	if (!TryPlayTransition(Last, CurrentScene))
+	{
+		Renderer->DrawScene(CurrentScene);
 	}
 
-	if (bPlaySound)
-	{
-		GetOuterAPlayerController()->ClientPlaySound(Head->Info.Sound.Get());
-	}
-
+	TryPlaySceneSound(CurrentScene->Info.Sound);
 	PrepareScenes();
 
 	OnSceneStart.Broadcast();
@@ -391,7 +410,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 
 void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
 {
-	if (!(IsAutoMoving() || IsFastMoving()))
+	if (IsIdle())
 	{
 		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions, bPlaySound);
 		bPlayTransitions = false;
@@ -403,45 +422,38 @@ void UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 
 void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
 {
-	if (!(IsAutoMoving() || IsFastMoving()))
+	if (IsIdle())
 	{
+		check(Direction != EVisualControllerDirection::None);
 		Mode = EVisualControllerMode::AutoMoving;
-		const auto AutoMove = [this, Direction](float DeltaTime)
+		const auto AutoMove = [this, Direction](float DeltaTime) -> bool
 		{
-			if (IsAutoMoving())
+			const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
+				? (!IsWithChoice() && RequestNextScene())
+				: RequestPreviousScene());
+
+			if (!bCanContinue)
 			{
-				const bool bCanContinue = (Direction == EVisualControllerDirection::Forward 
-					? (!IsWithChoice() && RequestNextScene())
-					: RequestPreviousScene());
-
-				if (!bCanContinue)
-				{
-					CancelAutoMove();
-				}
-
-				return bCanContinue;
+				CancelAutoMove();
 			}
 
-			return false;
+			return bCanContinue;
 		};
 
 		/*Fire it once first to replicate a do-while style*/
 		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), 0.f);
 		FTSTicker::RemoveTicker(Handle);
-		FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), AutoMoveDelay);
+		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), AutoMoveDelay);
 	}
 }
 
 void UVisualController::CancelFastMove()
 {
-	if (IsFastMoving())
+	if (IsFastMoving() && FastMoveTask.IsValid())
 	{
-		if (FastMoveTask.IsValid())
-		{
-			FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
-			FastMoveTask->Cancel();
-			FastMoveTask.Reset(nullptr);
-		}
+		FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
+		FastMoveTask->Cancel();
+		FastMoveTask.Reset(nullptr);
 
 		Mode = EVisualControllerMode::Idle;
 	}
@@ -449,8 +461,9 @@ void UVisualController::CancelFastMove()
 
 void UVisualController::CancelAutoMove()
 {
-	if (IsAutoMoving())
+	if (IsAutoMoving() && AutoMoveHandle.IsValid())
 	{
+		FTSTicker::RemoveTicker(AutoMoveHandle);
 		Mode = EVisualControllerMode::Idle;
 	}
 }
@@ -477,10 +490,7 @@ void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, in
 	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
 	Renderer->AddToPlayerScreen(ZOrder);
 	Renderer->DrawScene(CurrentScene);
-	if (bPlaySound)
-	{
-		GetOuterAPlayerController()->ClientPlaySound(CurrentScene->Info.Sound.Get());
-	}
+	TryPlaySceneSound(CurrentScene->Info.Sound);
 	PrepareScenes();
 }
 

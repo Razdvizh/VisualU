@@ -298,6 +298,8 @@ protected:
 
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
+	TSharedPtr<FStreamableHandle> AsyncLoadFlipbook(TSoftObjectPtr<UPaperFlipbook> FlipbookToLoad, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority);
+
 	/// <summary>
 	/// Convertion for property binding implementation.
 	/// </summary>

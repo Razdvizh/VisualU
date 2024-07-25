@@ -65,7 +65,7 @@ public:
 USTRUCT(BlueprintType)
 struct FVisualMargin : public FMargin
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	FVisualMargin() : Super() {}

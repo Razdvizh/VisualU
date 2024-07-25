@@ -55,6 +55,13 @@ TSharedRef<SWidget> UVisualImage::RebuildWidget()
 	return VisualImageSlate.ToSharedRef();
 }
 
+TSharedPtr<FStreamableHandle> UVisualImage::AsyncLoadFlipbook(TSoftObjectPtr<UPaperFlipbook> FlipbookToLoad, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority)
+{
+	check(!FlipbookToLoad.IsNull());
+
+	return UAssetManager::GetStreamableManager().RequestAsyncLoad(FlipbookToLoad.ToSoftObjectPath(), AfterLoadDelegate, Priority);
+}
+
 void UVisualImage::AssignVisualImageInfo(const FVisualImageInfo& InInfo)
 {
 	SetFlipbookAsync(InInfo.Expression);
@@ -126,18 +133,17 @@ bool UVisualImage::IsFlipbookLoaded() const
 
 void UVisualImage::SetFlipbookAsync(TSoftObjectPtr<UPaperFlipbook> InFlipbook)
 {
-	TWeakObjectPtr<UVisualImage> WeakThis = TWeakObjectPtr<UVisualImage>(this);
-	FStreamableDelegate OnFlipbookLoaded{};
-
-	OnFlipbookLoaded.BindLambda([WeakThis, InFlipbook]()
+	if (ensureMsgf(!InFlipbook.IsNull(), TEXT("Failed to load flipbook, soft pointer is pointing to null.")))
 	{
-		if (UVisualImage* Pinned = WeakThis.Get())
-		{
-			Pinned->SetFlipbook(InFlipbook.Get());
-		}
-	});
+		FStreamableDelegate OnFlipbookLoaded;
 
-	FlipbookHandle = AsyncLoad(InFlipbook.ToSoftObjectPath(), OnFlipbookLoaded, FStreamableManager::AsyncLoadHighPriority);
+		OnFlipbookLoaded.BindWeakLambda(this, [this, InFlipbook]()
+		{
+			SetFlipbook(InFlipbook.Get());
+		});
+
+		FlipbookHandle = AsyncLoadFlipbook(InFlipbook, OnFlipbookLoaded, FStreamableManager::AsyncLoadHighPriority);
+	}
 }
 
 void UVisualImage::SetColorAndOpacity(const FLinearColor& InColorAndOpacity)

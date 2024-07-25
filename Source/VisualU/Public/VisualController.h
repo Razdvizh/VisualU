@@ -117,6 +117,8 @@ public:
 
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 
+	virtual void PostInitProperties() override;
+
 	/// <returns>Currently visualized <see cref="FScenario">scene</see></returns>
 	const FScenario* GetCurrentScene() const;
 
@@ -323,6 +325,8 @@ protected:
 	*/
 	void PrepareScenes(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
+	void TryPlaySceneSound(TSoftObjectPtr<USoundBase> SceneSound) const;
+
 	/// <summary>
 	/// Releases the handle for the assets of the next scene.
 	/// </summary>
@@ -398,6 +402,8 @@ private:
 	const FScenario* Head;
 
 	TUniquePtr<UE::VisualU::Private::FFastMoveAsyncTask> FastMoveTask;
+
+	FTSTicker::FDelegateHandle AutoMoveHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
 	bool bPlayTransitions;
