@@ -178,7 +178,7 @@ bool UVisualController::RequestNextScene()
 	SceneIndex += 1;
 	
 	const FScenario* CurrentScene = GetCurrentScene();
-	if (SceneIndex > Head->Index && Head->Owner == CurrentScene->Owner)
+	if (SceneIndex > Head->GetIndex() && Head->GetOwner() == CurrentScene->GetOwner())
 	{
 		Head = CurrentScene;
 	}
@@ -248,13 +248,13 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 		return false;
 	}
 	check(Scene);
-	if (ensureMsgf(!(Scene->Owner == Head->Owner && Scene->Index > Head->Index), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
+	if (ensureMsgf(!(Scene->GetOwner() == Head->GetOwner() && Scene->GetIndex() > Head->GetIndex()), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
 	{
 		return false;
 	}
 
 	bool bIsFound = false;
-	if (Node[0]->Owner == Scene->Owner)
+	if (Node[0]->GetOwner() == Scene->GetOwner())
 	{
 		bIsFound = true;
 	}
@@ -264,7 +264,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 		/*Traverse the stack until the requested Node is found*/
 		for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 		{
-			if (ExhaustedScenes[i]->Owner == Scene->Owner)
+			if (ExhaustedScenes[i]->GetOwner() == Scene->GetOwner())
 			{
 				FScenario* ExhaustedScene = ExhaustedScenes.Pop();
 				if (VisualVersioning)
@@ -304,10 +304,10 @@ bool UVisualController::RequestScenario(const FScenario& Scenario)
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
 	check(Scene);
-	if (Scene->Owner != GetSceneAt(0)->Owner)
+	if (Scene->GetOwner() != GetSceneAt(0)->GetOwner())
 	{
 		Node.Empty();
-		Scene->Owner->GetAllRows(UE_SOURCE_LOCATION, Node);
+		Scene->GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
 
 	OnSceneEnd.Broadcast();
@@ -316,7 +316,7 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	SceneHandles.Empty();
 	CancelNextScene();
 
-	SceneIndex = Scene->Index;
+	SceneIndex = Scene->GetIndex();
 	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(GetCurrentScene());
 	Renderer->DrawScene(GetCurrentScene());
 	PrepareScenes();
@@ -344,12 +344,12 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	}
 	check(NewNode);
 	checkf(!NewNode->GetRowMap().IsEmpty(), TEXT("Jumping to empty node is not allowed."));
-	checkf(GetCurrentScene()->Owner != NewNode, TEXT("Jumping to active node is not allowed."));
+	checkf(GetCurrentScene()->GetOwner() != NewNode, TEXT("Jumping to active node is not allowed."));
 	checkf(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Node must be based on FScenario struct."));
 #if !UE_BUILD_SHIPPING
 	for (const FScenario* ExhaustedScene : ExhaustedScenes)
 	{
-		checkf(ExhaustedScene->Owner != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
+		checkf(ExhaustedScene->GetOwner() != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
 	}
 #endif
 	

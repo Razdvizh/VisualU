@@ -240,7 +240,7 @@ void UVisualScene::ToPreviousScene()
 bool UVisualScene::ToScene(const FScenario* Scene)
 {
 	bool bIsFound = false;
-	if (Node[0]->Owner == Scene->Owner)
+	if (Node[0]->GetOwner() == Scene->GetOwner())
 	{
 		bIsFound = true;
 	}
@@ -249,7 +249,7 @@ bool UVisualScene::ToScene(const FScenario* Scene)
 		/*Traverse the stack until the requested Node is found*/
 		for (int i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 		{
-			if (ExhaustedScenes[i]->Owner == Scene->Owner)
+			if (ExhaustedScenes[i]->GetOwner() == Scene->GetOwner())
 			{
 				ExhaustedScenes.Pop();
 				bIsFound = true;
@@ -283,13 +283,13 @@ void UVisualScene::SetCurrentScene(const FScenario* Scene)
 	OnSceneEnd.Broadcast();
 	OnNativeSceneEnd.Broadcast();
 	
-	if (Scene->Owner != GetSceneAt(0)->Owner)
+	if (Scene->GetOwner() != GetSceneAt(0)->GetOwner())
 	{
 		Node.Empty();
-		Scene->Owner->GetAllRows(UE_SOURCE_LOCATION, Node);
+		Scene->GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
 
-	SceneIndex = Scene->Index;
+	SceneIndex = Scene->GetIndex();
 	LoadAndConstruct();
 
 	OnSceneStart.Broadcast();

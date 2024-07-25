@@ -268,10 +268,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario")
 	FVisualScenarioInfo Info;
 
+protected:
 	//Left undiscoverable by reflection to avoid circular references and intricacies of TWeakObjectPtr.
 	const UDataTable* Owner;
 
 	int32 Index;
+
+public:
+	FORCEINLINE const UDataTable* GetOwner() const { return Owner; }
+
+	FORCEINLINE int32 GetIndex() const { return Index; }
 
 	virtual void OnPostDataImport(const UDataTable* InDataTable, const FName InRowName, TArray<FString>& OutCollectedImportProblems) override
 	{
