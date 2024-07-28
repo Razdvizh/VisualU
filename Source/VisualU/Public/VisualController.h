@@ -115,7 +115,11 @@ public:
 
 	virtual void BeginDestroy() override;
 
+	virtual void Serialize(FArchive& Ar) override;
+
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+
+	virtual void PostLoad() override;
 
 	virtual void PostInitProperties() override;
 
@@ -353,7 +357,7 @@ private:
 	void AssertNextSceneLoad(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 private:
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TObjectPtr<UVisualRenderer> Renderer;
 
 	/// <summary>
@@ -376,7 +380,7 @@ private:
 	* How many following scenarios will be loaded asynchronously. Zero means no asynchronous loading.
 	* @note Will load remaining scenarios in a node even when their amount is less than this value.
 	*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f))
+	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Async", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f))
 	int32 ScenesToLoad;
 
 	/*
@@ -405,16 +409,16 @@ private:
 
 	FTSTicker::FDelegateHandle AutoMoveHandle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
+	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
 	bool bPlayTransitions;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Sound", meta = (AllowPrivateAccess = true, ToolTip = "Will Visual Controller play scene sound"))
+	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Sound", meta = (AllowPrivateAccess = true, ToolTip = "Will Visual Controller play scene sound"))
 	bool bPlaySound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
+	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
 	float AutoMoveDelay;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Visual Controller current state"))
+	UPROPERTY(VisibleInstanceOnly, Transient, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Visual Controller current state"))
 	EVisualControllerMode Mode;
 
 };

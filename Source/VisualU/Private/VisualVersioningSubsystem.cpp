@@ -2,6 +2,7 @@
 
 
 #include "VisualVersioningSubsystem.h"
+#include "VisualUCustomVersion.h"
 
 UVisualVersioningSubsystem::UVisualVersioningSubsystem()
 	: Super(),
@@ -29,9 +30,51 @@ void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
 	}
 }
 
+void UVisualVersioningSubsystem::Serialize(FArchive& Ar)
+{
+	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
+
+	if (Ar.IsSaving())
+	{
+		TSet<FScenario*> Scenes;
+		Versions.GetKeys(Scenes);
+		int32 NumScenes = Scenes.Num();
+		Ar << NumScenes;
+		for (FScenario*& Scene : Scenes)
+		{
+			Ar << *Scene;
+			TArray<FVisualScenarioInfo> Infos;
+			Versions.MultiFind(Scene, Infos, /*bMaintainOrder=*/true);
+			Ar << Infos;
+		}
+
+		//Check if needed
+		Versions.Empty();
+	}
+	else
+	{
+		int32 NumScenes;
+		Ar << NumScenes;
+		Versions.Reserve(NumScenes);
+		for (int32 i = 0; i < NumScenes; i++)
+		{
+			FScenario Scene;
+			Ar << Scene;
+			TArray<FVisualScenarioInfo> Infos;
+			Ar << Infos;
+			for (FVisualScenarioInfo& Info : Infos)
+			{
+				Versions.Add(FScenario::ResolveScene(Scene), Info);
+			}
+		}
+	}
+
+	Super::Serialize(Ar);
+}
+
 void UVisualVersioningSubsystem::Deinitialize()
 {
-	TArray<FScenario*> Scenes;
+	TSet<FScenario*> Scenes;
 	Versions.GetKeys(Scenes);
 	for (FScenario*& Scene : Scenes)
 	{

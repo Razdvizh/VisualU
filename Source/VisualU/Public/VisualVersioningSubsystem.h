@@ -60,6 +60,8 @@ public:
 	* Switches scene to an older version.
 	*/
 	void Checkout(FScenario* const Scene) const;
+
+	virtual void Serialize(FArchive& Ar) override;
 	
 	virtual void Deinitialize() override;
 

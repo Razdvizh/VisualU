@@ -9,6 +9,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Sound/SoundBase.h"
 #include "VisualVersioningSubsystem.h"
+#include "VisualUCustomVersion.h"
 #include "VisualUSettings.h"
 #include "VisualRenderer.h"
 #include "VisualU.h"
@@ -92,6 +93,59 @@ void UVisualController::BeginDestroy()
 	Super::BeginDestroy();
 }
 
+void UVisualController::Serialize(FArchive& Ar)
+{
+	/*
+	* Serialize:
+	* 1. Exhausted scenes
+	* 2. Current scene
+	* 3. Head
+	* 4. UPROPERTies marked with SaveGame
+	*/
+	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
+	Ar.ArIsSaveGame = true;
+
+	if (Ar.IsSaving())
+	{
+		int32 NumExhaustedScenes = ExhaustedScenes.Num();
+		Ar << NumExhaustedScenes;
+		for (FScenario*& ExhaustedScene : ExhaustedScenes)
+		{
+			Ar << *ExhaustedScene;
+		}
+
+		Ar << const_cast<FScenario&>(GetCurrentScenario());
+		Ar << *(const_cast<FScenario*>(Head));
+
+		//Check if needed
+		Node.Empty();
+		ExhaustedScenes.Empty();
+	}
+	else
+	{
+		int32 NumExhaustedScenes;
+		Ar << NumExhaustedScenes;
+		ExhaustedScenes.Reserve(NumExhaustedScenes);
+		for (int32 i = 0; i < NumExhaustedScenes; i++)
+		{
+			FScenario ExhaustedScene;
+			Ar << ExhaustedScene;
+			ExhaustedScenes.Add(FScenario::ResolveScene(ExhaustedScene));
+		}
+
+		FScenario CurrentScenario;
+		Ar << CurrentScenario;
+		CurrentScenario.GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
+		SceneIndex = CurrentScenario.GetIndex();
+
+		FScenario SavedHead;
+		Ar << SavedHead;
+		Head = FScenario::ResolveScene(SavedHead);
+	}
+
+	Super::Serialize(Ar);
+}
+
 void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 {
 	CancelFastMove();
@@ -102,6 +156,11 @@ void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 	}
 	
 	Super::PreSave(SaveContext);
+}
+
+void UVisualController::PostLoad()
+{
+	Super::PostLoad();
 }
 
 void UVisualController::PostInitProperties()

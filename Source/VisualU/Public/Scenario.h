@@ -275,6 +275,26 @@ protected:
 	int32 Index;
 
 public:
+	/*
+	* Matches provided scene to its data stored in the data table.
+	*/
+	static FScenario* ResolveScene(const FScenario& Scene)
+	{
+		if (ensure(Scene.GetOwner()))
+		{
+			TArray<FScenario*> Scenes;
+			Scene.GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Scenes);
+			const int32 Idx = Scene.GetIndex();
+
+			if (ensure(Scenes.IsValidIndex(Idx)))
+			{
+				return Scenes[Idx];
+			}
+		}
+
+		return nullptr;
+	}
+
 	FORCEINLINE const UDataTable* GetOwner() const { return Owner; }
 
 	FORCEINLINE int32 GetIndex() const { return Index; }
@@ -394,7 +414,15 @@ public:
 
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FScenario& Scenario)
 	{
-		return Ar << Scenario.Info;
+		TSoftObjectPtr<UDataTable> SoftOwner(Scenario.Owner);
+		Ar << SoftOwner;
+
+		if (Ar.IsLoading())
+		{
+			Scenario.Owner = SoftOwner.LoadSynchronous();
+		}
+
+		return Ar << Scenario.Index;
 	}
 
 	FORCEINLINE bool operator== (const FScenario& Other) const
