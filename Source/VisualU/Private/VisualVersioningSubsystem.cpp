@@ -30,7 +30,7 @@ void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
 	}
 }
 
-void UVisualVersioningSubsystem::Serialize(FArchive& Ar)
+void UVisualVersioningSubsystem::Experimental_SerializeSubsystem(FArchive& Ar)
 {
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 
@@ -47,9 +47,6 @@ void UVisualVersioningSubsystem::Serialize(FArchive& Ar)
 			Versions.MultiFind(Scene, Infos, /*bMaintainOrder=*/true);
 			Ar << Infos;
 		}
-
-		//Check if needed
-		Versions.Empty();
 	}
 	else
 	{
@@ -68,8 +65,6 @@ void UVisualVersioningSubsystem::Serialize(FArchive& Ar)
 			}
 		}
 	}
-
-	Super::Serialize(Ar);
 }
 
 void UVisualVersioningSubsystem::Deinitialize()

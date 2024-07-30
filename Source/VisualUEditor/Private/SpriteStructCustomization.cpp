@@ -12,7 +12,7 @@
 #include "Scenario.h"
 #include "VisualDefaults.h"
 
-#define LOCTEXT_NAMESPACE "Visual U Editor"
+#define LOCTEXT_NAMESPACE "VisualUEditor"
 
 VISUALUEDITOR_API TSharedRef<IPropertyTypeCustomization> FSpriteStructCustomization::MakeInstance()
 {

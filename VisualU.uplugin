@@ -10,7 +10,7 @@
 	"DocsURL": "https://razdvizh.github.io/VisualU/",
 	"MarketplaceURL": "",
 	"SupportURL": "https://discordapp.com/users/338467575476256769",
-	"CanContainContent": false,
+	"CanContainContent": true,
 	"IsBetaVersion": true,
 	"IsExperimentalVersion": false,
 	"Installed": false,
@@ -19,14 +19,6 @@
 			"Name": "VisualU",
 			"Type": "Runtime",
 			"LoadingPhase": "PreDefault",
-			"PlatformAllowList": [
-				"Win64"
-			]
-		},
-		{
-			"Name": "VisualUDebugger",
-			"Type": "DeveloperTool",
-			"LoadingPhase": "Default",
 			"PlatformAllowList": [
 				"Win64"
 			]

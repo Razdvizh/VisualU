@@ -5,6 +5,9 @@
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 #include "Engine/DataTable.h"
+#include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
+#include "Misc/App.h"
 #include "Tasks/Task.h"
 #include "GameFramework/PlayerController.h"
 #include "Sound/SoundBase.h"
@@ -69,16 +72,7 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	AutoMoveDelay(5.f),
 	Mode(EVisualControllerMode::Idle)
 {
-	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 
-	checkf(!VisualUSettings->FirstDataTable.IsNull(), TEXT("Unable to find first data table, please specify one in project settings."));
-	const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
-
-	checkf(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Data table must be based on FScenario struct."));
-	FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
-
-	checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
-	Head = GetCurrentScene();
 }
 
 void UVisualController::BeginDestroy()
@@ -93,15 +87,8 @@ void UVisualController::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void UVisualController::Serialize(FArchive& Ar)
+void UVisualController::Experimental_SerializeController(FArchive& Ar)
 {
-	/*
-	* Serialize:
-	* 1. Exhausted scenes
-	* 2. Current scene
-	* 3. Head
-	* 4. UPROPERTies marked with SaveGame
-	*/
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 	Ar.ArIsSaveGame = true;
 
@@ -116,10 +103,6 @@ void UVisualController::Serialize(FArchive& Ar)
 
 		Ar << const_cast<FScenario&>(GetCurrentScenario());
 		Ar << *(const_cast<FScenario*>(Head));
-
-		//Check if needed
-		Node.Empty();
-		ExhaustedScenes.Empty();
 	}
 	else
 	{
@@ -158,11 +141,6 @@ void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 	Super::PreSave(SaveContext);
 }
 
-void UVisualController::PostLoad()
-{
-	Super::PostLoad();
-}
-
 void UVisualController::PostInitProperties()
 {
 	Super::PostInitProperties();
@@ -170,6 +148,20 @@ void UVisualController::PostInitProperties()
 	if (GEngine)
 	{
 		bPlaySound &= GEngine->UseSound();
+	}
+
+	if (IsInGameThread() && FApp::IsGame())
+	{
+		const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
+
+		checkf(!VisualUSettings->FirstDataTable.IsNull(), TEXT("Unable to find first data table, please specify one in project settings."));
+		const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
+
+		checkf(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Data table must be based on FScenario struct."));
+		FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
+
+		checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
+		Head = GetCurrentScene();
 	}
 }
 
@@ -337,7 +329,11 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 	}
 	else
 	{
-		UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>();
+		UVisualVersioningSubsystem* VisualVersioning = nullptr;
+		if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
+		{
+			VisualVersioning = LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
+		}
 		/*Traverse the stack until the requested Node is found*/
 		for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 		{

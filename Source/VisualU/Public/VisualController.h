@@ -115,11 +115,9 @@ public:
 
 	virtual void BeginDestroy() override;
 
-	virtual void Serialize(FArchive& Ar) override;
+	virtual void Experimental_SerializeController(FArchive& Ar);
 
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
-
-	virtual void PostLoad() override;
 
 	virtual void PostInitProperties() override;
 

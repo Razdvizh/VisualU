@@ -19,12 +19,15 @@ struct FPropertyChangedEvent;
 UCLASS()
 class VISUALU_API UME_TransitionParameter2D : public UMaterialExpressionTextureSampleParameter2D
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
+
+public:
+	UME_TransitionParameter2D(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	/// <summary>
 	/// Whether or not this parameter node represents final sprite that should be visualized after transition ends.
 	/// </summary>
-	UPROPERTY(EditAnywhere, Category = "Visual U")
+	UPROPERTY(EditAnywhere, Category = "VisualU")
 	bool bIsSecondTransition;
 
 	/// <summary>

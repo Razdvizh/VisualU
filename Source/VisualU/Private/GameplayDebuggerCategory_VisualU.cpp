@@ -18,7 +18,7 @@ void FGameplayDebuggerCategory_VisualU::DrawData(APlayerController* OwnerPC, FGa
 {
 }
 
-VISUALUDEBUGGER_API TSharedRef<FGameplayDebuggerCategory> FGameplayDebuggerCategory_VisualU::MakeInstance()
+TSharedRef<FGameplayDebuggerCategory> FGameplayDebuggerCategory_VisualU::MakeInstance()
 {
 	return MakeShareable(new FGameplayDebuggerCategory_VisualU());
 }

@@ -29,7 +29,7 @@ enum class EVisualTextAction : uint8
 /// It is not a subclass of <c>UDeveloperSettings</c> due to the internal structure of the Unreal plugins.
 /// Registration for engine's settings system occurs through <c>ISettingsModule</c> inside <see cref="FVisualUModule">Module struct</see>.
 /// </remarks>
-UCLASS(config = "Plugins", defaultconfig, meta = (DisplayName = "Visual U"))
+UCLASS(config = "Plugins", defaultconfig, meta = (DisplayName = "VisualU"))
 class VISUALU_API UVisualUSettings : public UObject
 {
 	GENERATED_BODY()
@@ -53,7 +53,7 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (DisplayName = "Transition Material Parameter Collection", ToolTip = "First scalar parameter from this collection will be used to indicate progress of transition for materials"))
 	TSoftObjectPtr<UMaterialParameterCollection> TransitionMPC;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration of the transition between scenarios"))
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration, in seconds, of the transition between scenarios"))
 	float TransitionDuration;
 
 	/// <summary>

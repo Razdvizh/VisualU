@@ -8,7 +8,7 @@
 #include "PaperFlipbook.h"
 #include "PaperSprite.h"
 
-#define LOCTEXT_NAMESPACE "Visual U"
+#define LOCTEXT_NAMESPACE "VisualU"
 
 UVisualImage::UVisualImage(const FObjectInitializer& ObjectInitializer) 
 	: UVisualImageBase(ObjectInitializer),
@@ -196,7 +196,7 @@ UPaperSprite* UVisualImage::GetCurrentSprite() const
 #if WITH_EDITOR
 const FText UVisualImage::GetPaletteCategory()
 {
-	return LOCTEXT("VisualUCategory", "Visual U");
+	return LOCTEXT("VisualImageCategory", "VisualU");
 }
 #endif
 

@@ -10,7 +10,7 @@ class APlayerController;
 class AActor;
 
 /**
- * Debugger for VisualU that provides information on asynchronous scene loading.
+ * Debugger for VisualU that provides information on Visual controller.
  */
 class FGameplayDebuggerCategory_VisualU final : public FGameplayDebuggerCategory
 {
@@ -20,7 +20,7 @@ public:
 	virtual void CollectData(APlayerController* OwnerPC, AActor* DebugActor) override;
 	virtual void DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) override;
 
-	VISUALUDEBUGGER_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
+	VISUALU_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
 };
 
 #endif

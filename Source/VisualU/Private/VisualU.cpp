@@ -6,34 +6,53 @@
 #include "Developer/Settings/Public/ISettingsModule.h"
 #include "Developer/Settings/Public/ISettingsSection.h"
 #endif
+#if WITH_GAMEPLAY_DEBUGGER_CORE
+#include "GameplayDebugger.h"
+#endif
+#if WITH_GAMEPLAY_DEBUGGER
+#include "GameplayDebuggerCategory_VisualU.h"
+#endif
 
-#define LOCTEXT_NAMESPACE "VisualUModule"
+#define LOCTEXT_NAMESPACE "VisualU"
 DEFINE_LOG_CATEGORY(LogVisualU);
 
 void FVisualUModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-	#if WITH_EDITOR
+#if WITH_EDITOR
 	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings"));
 	SettingsSection = SettingsModule->RegisterSettings(
 		TEXT("Project"),
 		TEXT("Plugins"),
 		TEXT("VisualUSettings"),
-		LOCTEXT("VisualUSettingsName", "Visual U"),
-		LOCTEXT("VisualUSettingsDescription", "Configure options for Visual U elements"),
+		LOCTEXT("VisualUSettingsName", "VisualU"),
+		LOCTEXT("VisualUSettingsDescription", "Configure options for VisualU elements"),
 		GetMutableDefault<UVisualUSettings>());
-	#endif
+#endif
+#if WITH_GAMEPLAY_DEBUGGER
+	IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
+	GameplayDebuggerModule.RegisterCategory(TEXT("VisualU"), IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_VisualU::MakeInstance));
+	GameplayDebuggerModule.NotifyCategoriesChanged();
+#endif
 }
 
 void FVisualUModule::ShutdownModule()
 {
-	#if WITH_EDITOR
+#if WITH_EDITOR
 	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings")))
 	{
 		SettingsModule->UnregisterSettings(TEXT("Project"), TEXT("Plugins"), TEXT("VisualUSettings"));
 		SettingsSection.Reset();
 	}
-	#endif
+#endif
+#if WITH_GAMEPLAY_DEBUGGER
+	if (IGameplayDebugger::IsAvailable())
+	{
+		IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
+		GameplayDebuggerModule.UnregisterCategory(TEXT("VisualU"));
+		GameplayDebuggerModule.NotifyCategoriesChanged();
+	}
+#endif
 }
 
 #if WITH_EDITOR

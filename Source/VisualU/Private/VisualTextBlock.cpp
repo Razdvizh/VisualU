@@ -10,7 +10,7 @@
 #include "Components/PanelSlot.h"
 #include "TimerManager.h"
 
-#define LOCTEXT_NAMESPACE "Visual U"
+#define LOCTEXT_NAMESPACE "VisualU"
 
 UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer),
@@ -112,7 +112,7 @@ void UVisualTextBlock::SetCharacterAppearanceDelay(float Delay)
 #if WITH_EDITOR
 const FText UVisualTextBlock::GetPaletteCategory()
 {
-	return LOCTEXT("Visual U", "Visual U");
+	return LOCTEXT("VisualTextBlockCategory", "VisualU");
 }
 #endif
 

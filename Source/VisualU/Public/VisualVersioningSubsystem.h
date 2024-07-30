@@ -61,7 +61,7 @@ public:
 	*/
 	void Checkout(FScenario* const Scene) const;
 
-	virtual void Serialize(FArchive& Ar) override;
+	virtual void Experimental_SerializeSubsystem(FArchive& Ar);
 	
 	virtual void Deinitialize() override;
 

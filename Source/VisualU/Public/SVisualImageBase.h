@@ -42,10 +42,10 @@ protected:
 	///~OnPaint step methods
 
 private:
-	SVisualImageBase() {};
+	SVisualImageBase() = default;
 	SVisualImageBase(SVisualImageBase const&) {};
 	FORCEINLINE SVisualImageBase& operator=(SVisualImageBase const&) { return *this; }
-	~SVisualImageBase() {};
+	~SVisualImageBase() = default;
 
 	friend DerivedT;
 };

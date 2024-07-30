@@ -37,7 +37,7 @@ void UVisualSocket::SetImageDesiredPosition(FVector2D Position)
 #if WITH_EDITOR
 const FText UVisualSocket::GetPaletteCategory()
 {
-	return LOCTEXT("Visual U", "Visual U");
+	return LOCTEXT("VisualSocketCategory", "VisualU");
 }
 #endif
 

@@ -52,7 +52,7 @@ struct FVisualInfo
 
 public:
 	FVisualInfo() = default;
-	virtual ~FVisualInfo() {};
+	virtual ~FVisualInfo() = default;
 
 	virtual void Accept(IInfoAssignable* Visitor) const PURE_VIRTUAL(FVisualInfo::Accept, );
 

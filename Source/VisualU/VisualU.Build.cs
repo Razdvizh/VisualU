@@ -20,14 +20,14 @@ public class VisualU : ModuleRules
                 "SlateCore",
                 "UMG",
                 "AssetRegistry",
+				"GameplayDebugger",
                 "MovieScene",
                 "MovieSceneTracks"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
-			
-		
-		//PublicDefinitions.Add("WITH_GAMEPLAY_DEBUGGER=" + (Target.bUseGameplayDebugger ? 1 : 0));
+
+		SetupGameplayDebuggerSupport(Target);
 
 	}
 }
