@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "Misc/App.h"
 #include "Tasks/Task.h"
+#include "Containers/Queue.h"
 #include "GameFramework/PlayerController.h"
 #include "Sound/SoundBase.h"
 #include "VisualVersioningSubsystem.h"
@@ -88,7 +89,7 @@ void UVisualController::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void UVisualController::Experimental_SerializeController(FArchive& Ar)
+void UVisualController::SerializeController_Experimental(FArchive& Ar)
 {
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 	Ar.ArIsSaveGame = true;
@@ -146,10 +147,7 @@ void UVisualController::PostInitProperties()
 {
 	Super::PostInitProperties();
 
-	if (GEngine)
-	{
-		bPlaySound &= GEngine->UseSound();
-	}
+	bPlaySound &= (GEngine && GEngine->UseSound());
 
 	if (IsInGameThread() && FApp::IsGame())
 	{

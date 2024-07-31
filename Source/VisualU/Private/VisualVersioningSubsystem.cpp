@@ -30,7 +30,7 @@ void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
 	}
 }
 
-void UVisualVersioningSubsystem::Experimental_SerializeSubsystem(FArchive& Ar)
+void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 {
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 

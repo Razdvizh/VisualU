@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Scenario.h"
 #include "Templates/SubclassOf.h"
-#include "Containers/Deque.h"
 #include "Async/AsyncWork.h"
 #include "VisualController.generated.h"
 
@@ -115,7 +114,7 @@ public:
 
 	virtual void BeginDestroy() override;
 
-	virtual void Experimental_SerializeController(FArchive& Ar);
+	virtual void SerializeController_Experimental(FArchive& Ar);
 
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 
@@ -388,7 +387,7 @@ private:
 	TQueue<TSharedPtr<FStreamableHandle>> SceneHandles;
 
 	/*
-	* Keeps references to all data tables that currently own scenarios that are referenced by Visual controller.
+	* Maintains references to all data tables that currently own scenarios that are referenced by Visual controller.
 	*/
 	UPROPERTY()
 	TSet<const UDataTable*> NodeReferenceKeeper;
@@ -419,10 +418,14 @@ private:
 	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Sound", meta = (AllowPrivateAccess = true, ToolTip = "Will Visual Controller play scene sound"))
 	bool bPlaySound;
 
-	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
+	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait after text is displayed before moving in Auto Move mode. Must be larger than transition duration to not stop on transitions. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
 	float AutoMoveDelay;
 
 	UPROPERTY(VisibleInstanceOnly, Transient, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Visual Controller current state"))
 	EVisualControllerMode Mode;
+
+#if WITH_GAMEPLAY_DEBUGGER_MENU
+	friend class FGameplayDebuggerCategory_VisualU;
+#endif
 
 };

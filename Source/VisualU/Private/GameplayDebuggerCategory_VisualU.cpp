@@ -3,6 +3,13 @@
 
 #include "GameplayDebuggerCategory_VisualU.h"
 #if WITH_GAMEPLAY_DEBUGGER_MENU
+#include "GameplayDebuggerTypes.h"
+#include "VisualController.h"
+#include "VisualRenderer.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/PlayerController.h"
+#include "Containers/Queue.h"
+#include "Engine/StreamableManager.h"
 
 FGameplayDebuggerCategory_VisualU::FGameplayDebuggerCategory_VisualU()
 {
@@ -24,4 +31,3 @@ TSharedRef<FGameplayDebuggerCategory> FGameplayDebuggerCategory_VisualU::MakeIns
 }
 
 #endif
-
