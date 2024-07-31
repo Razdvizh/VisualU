@@ -63,6 +63,7 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	SceneIndex(0),
 	ScenesToLoad(5),
 	SceneHandles(),
+	NodeReferenceKeeper(),
 	ExhaustedScenes(),
 	Head(nullptr),
 	FastMoveTask(nullptr),
@@ -162,6 +163,7 @@ void UVisualController::PostInitProperties()
 
 		checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
 		Head = GetCurrentScene();
+		NodeReferenceKeeper.Add(FirstDataTable);
 	}
 }
 
@@ -348,6 +350,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 				break;
 			}
 			FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+			NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
 			if (VisualVersioning)
 			{
 				VisualVersioning->Checkout(ExhaustedScene);
@@ -377,10 +380,14 @@ bool UVisualController::RequestScenario(const FScenario& Scenario)
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
 	check(Scene);
-	if (Scene->GetOwner() != GetSceneAt(0)->GetOwner())
+	const UDataTable* SceneOwner = Scene->GetOwner();
+	const UDataTable* FirstSceneOwner = GetSceneAt(0)->GetOwner();
+	if (SceneOwner != FirstSceneOwner)
 	{
+		NodeReferenceKeeper.Remove(FirstSceneOwner);
 		Node.Empty();
-		Scene->GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
+		NodeReferenceKeeper.Add(SceneOwner);
+		SceneOwner->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
 
 	OnSceneEnd.Broadcast();
@@ -444,6 +451,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	SceneIndex = 0;
 
 	const FScenario* CurrentScene = GetCurrentScene();
+	NodeReferenceKeeper.Add(CurrentScene->GetOwner());
 	if (Head->GetOwner() == LastNode)
 	{
 		Head = CurrentScene;

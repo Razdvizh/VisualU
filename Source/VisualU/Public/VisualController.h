@@ -387,6 +387,12 @@ private:
 	*/
 	TQueue<TSharedPtr<FStreamableHandle>> SceneHandles;
 
+	/*
+	* Keeps references to all data tables that currently own scenarios that are referenced by Visual controller.
+	*/
+	UPROPERTY()
+	TSet<const UDataTable*> NodeReferenceKeeper;
+
 	/// <summary>
 	/// Scenes that has been already seen in the game.
 	/// Only the scenes **past** the currently active scene are exhausted.
