@@ -6,6 +6,9 @@
 #include "Scenario.h"
 #include "Templates/SubclassOf.h"
 #include "Async/AsyncWork.h"
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+#include "Containers/Deque.h"
+#endif
 #include "VisualController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStart);
@@ -270,7 +273,13 @@ public:
 	FORCEINLINE float GetAutoMoveDelay() const { return AutoMoveDelay; }
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	bool IsTransitioning() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	bool IsCurrentScenarioHead() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
+	FORCEINLINE EVisualControllerMode GetMode() const { return Mode; }
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	FORCEINLINE bool IsFastMoving() const { return Mode == EVisualControllerMode::FastMoving; }
@@ -280,6 +289,18 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	FORCEINLINE bool IsIdle() const { return Mode == EVisualControllerMode::Idle; }
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
+	bool IsVisualized() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Debug", meta = (DevelopmentOnly))
+	const FString GetHeadDebugString() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Debug", meta = (DevelopmentOnly))
+	const FString GetAsyncQueueDebugString() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Debug", meta = (DevelopmentOnly))
+	const FString GetExhaustedScenesDebugString() const;
 
 	/**
 	* Called when Visual Controller has switched to a different scenario.
@@ -386,6 +407,10 @@ private:
 	*/
 	TQueue<TSharedPtr<FStreamableHandle>> SceneHandles;
 
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	TDeque<TWeakPtr<FStreamableHandle>> DebugSceneHandles{};
+#endif
+
 	/*
 	* Maintains references to all data tables that currently own scenarios that are referenced by Visual controller.
 	*/
@@ -423,9 +448,5 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, Transient, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, ToolTip = "Visual Controller current state"))
 	EVisualControllerMode Mode;
-
-#if WITH_GAMEPLAY_DEBUGGER_MENU
-	friend class FGameplayDebuggerCategory_VisualU;
-#endif
 
 };

@@ -173,7 +173,13 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario*
 
 	Scene->GetDataToLoad(DataToLoad);
 
-	return UAssetManager::GetStreamableManager().RequestAsyncLoad(DataToLoad, AfterLoadDelegate, FStreamableManager::DefaultAsyncLoadPriority);
+	return UAssetManager::GetStreamableManager().RequestAsyncLoad(
+		DataToLoad,
+		AfterLoadDelegate,
+		FStreamableManager::DefaultAsyncLoadPriority,
+		/*bManageActiveHandle=*/false,
+		/*bStartStalled=*/false,
+		Scene->GetDebugString());
 }
 
 TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
@@ -184,7 +190,7 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scen
 
 	Scene->GetDataToLoad(DataToLoad);
 
-	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, false);
+	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, /*bManageActiveHandle*/false, Scene->GetDebugString());
 
 	AfterLoadDelegate.ExecuteIfBound();
 
@@ -205,8 +211,11 @@ void UVisualController::PrepareScenes(EVisualControllerDirection::Type Direction
 				{
 					const FScenario* Scene = GetSceneAt(SceneIndex + u);
 					TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(Scene);
-					
-					SceneHandles.Enqueue(SceneHandle);
+				
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+					DebugSceneHandles.PushLast(SceneHandle);
+#endif
+					SceneHandles.Enqueue(MoveTemp(SceneHandle));
 				}
 			}
 
@@ -217,10 +226,19 @@ void UVisualController::PrepareScenes(EVisualControllerDirection::Type Direction
 		if (Node.IsValidIndex(NextIndex))
 		{
 			TSharedPtr<FStreamableHandle> SceneHandle = LoadSceneAsync(GetSceneAt(NextIndex));
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+			DebugSceneHandles.PushLast(SceneHandle);
+#endif
 			SceneHandles.Enqueue(MoveTemp(SceneHandle));
 		}
 
 		SceneHandles.Dequeue(NextSceneHandle);
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+		if (!DebugSceneHandles.IsEmpty())
+		{
+			DebugSceneHandles.PopFirst();
+		}
+#endif
 	}
 }
 
@@ -598,9 +616,58 @@ void UVisualController::SetAutoMoveDelay(float Delay)
 	}
 }
 
+bool UVisualController::IsTransitioning() const
+{
+	return Renderer ? Renderer->IsTransitionInProgress() : false;
+}
+
 bool UVisualController::IsCurrentScenarioHead() const
 {
 	return GetCurrentScene() == Head;
+}
+
+bool UVisualController::IsVisualized() const
+{
+	return IsValid(Renderer);
+}
+
+const FString UVisualController::GetHeadDebugString() const
+{
+	FString DebugString{};
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	DebugString = Head ? Head->GetDebugString() : TEXT("None");
+#endif
+
+	return DebugString;
+}
+
+const FString UVisualController::GetAsyncQueueDebugString() const
+{
+	FString DebugString{};
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	for (TWeakPtr<FStreamableHandle> WeakSceneHandle : DebugSceneHandles)
+	{
+		if (TSharedPtr<FStreamableHandle> SceneHandle = WeakSceneHandle.Pin())
+		{
+			DebugString += FString::Printf(TEXT("%s Progress: %.2f\n"), *SceneHandle->GetDebugName(), SceneHandle->GetProgress());
+		}
+	}
+#endif
+
+	return DebugString;
+}
+
+const FString UVisualController::GetExhaustedScenesDebugString() const
+{
+	FString DebugString{};
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	for (FScenario* const& ExhaustedScene : ExhaustedScenes)
+	{
+		DebugString += ExhaustedScene ? (ExhaustedScene->GetDebugString() + TEXT("\n")) : TEXT("Invalid\n");
+	}
+#endif
+
+	return DebugString;
 }
 
 bool UVisualController::IsWithChoice() const
