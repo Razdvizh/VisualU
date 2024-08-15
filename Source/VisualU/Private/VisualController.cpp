@@ -19,14 +19,16 @@
 #include "VisualU.h"
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-static TAutoConsoleVariable<float> CVarEditorStallThreadForLoading
+static TAutoConsoleVariable<float> CVarEditorStallForLoading
 (
-	TEXT("VisualU.EditorStallThreadForLoading"),
+	TEXT("VisualU.EditorStallForLoading"),
 	0.f,
-	TEXT("Editor only. Has effect when > 0.f. Sleeps process for specified amount of time during next scene loading to give GC time to catch up."),
+	TEXT("Editor only. Has effect when val > 0. Sleep process for specified amount of time during next scene loading to give GC time to catch up."),
 	ECVF_Cheat
 );
 #endif
+
+constexpr int ScenesToLoadLargeNum = 100;
 
 void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 {
@@ -74,7 +76,6 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	AutoMoveDelay(5.f),
 	Mode(EVisualControllerMode::Idle)
 {
-
 }
 
 void UVisualController::BeginDestroy()
@@ -108,7 +109,7 @@ void UVisualController::SerializeController_Experimental(FArchive& Ar)
 	}
 	else
 	{
-		int32 NumExhaustedScenes;
+		int32 NumExhaustedScenes = 0;
 		Ar << NumExhaustedScenes;
 		ExhaustedScenes.Reserve(NumExhaustedScenes);
 		for (int32 i = 0; i < NumExhaustedScenes; i++)
@@ -120,7 +121,10 @@ void UVisualController::SerializeController_Experimental(FArchive& Ar)
 
 		FScenario CurrentScenario;
 		Ar << CurrentScenario;
-		CurrentScenario.GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
+		if (CurrentScenario.GetOwner())
+		{
+			CurrentScenario.GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
+		}
 		SceneIndex = CurrentScenario.GetIndex();
 
 		FScenario SavedHead;
@@ -173,13 +177,17 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario*
 
 	Scene->GetDataToLoad(DataToLoad);
 
+	FString DebugString = TEXT("ArrayDelegate");
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	DebugString = Scene->GetDebugString();
+#endif
 	return UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		DataToLoad,
 		AfterLoadDelegate,
 		FStreamableManager::DefaultAsyncLoadPriority,
 		/*bManageActiveHandle=*/false,
 		/*bStartStalled=*/false,
-		Scene->GetDebugString());
+		DebugString);
 }
 
 TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
@@ -190,7 +198,11 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scen
 
 	Scene->GetDataToLoad(DataToLoad);
 
-	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, /*bManageActiveHandle*/false, Scene->GetDebugString());
+	FString DebugString = TEXT("RequestSyncLoad Array");
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	DebugString = Scene->GetDebugString();
+#endif
+	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, /*bManageActiveHandle*/false, DebugString);
 
 	AfterLoadDelegate.ExecuteIfBound();
 
@@ -232,24 +244,21 @@ void UVisualController::PrepareScenes(EVisualControllerDirection::Type Direction
 			SceneHandles.Enqueue(MoveTemp(SceneHandle));
 		}
 
-		SceneHandles.Dequeue(NextSceneHandle);
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 		if (!DebugSceneHandles.IsEmpty())
 		{
 			DebugSceneHandles.PopFirst();
 		}
 #endif
+		SceneHandles.Dequeue(NextSceneHandle);
 	}
 }
 
 void UVisualController::TryPlaySceneSound(TSoftObjectPtr<USoundBase> SceneSound) const
 {
-	if (bPlaySound)
+	if (USoundBase* Sound = SceneSound.Get(); Sound && bPlaySound)
 	{
-		if (USoundBase* Sound = SceneSound.Get())
-		{
-			GetOuterAPlayerController()->ClientPlaySound(Sound);
-		}
+		GetOuterAPlayerController()->ClientPlaySound(Sound);
 	}
 }
 
@@ -334,49 +343,48 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 	{
 		return false;
 	}
+
 	check(Scene);
+	bool bIsFound = false;
 	if (ensureMsgf(!(Scene->GetOwner() == Head->GetOwner() && Scene->GetIndex() > Head->GetIndex()), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
 	{
-		return false;
-	}
-
-	bool bIsFound = false;
-	if (Node[0]->GetOwner() == Scene->GetOwner())
-	{
-		bIsFound = true;
-	}
-	else
-	{
-		UVisualVersioningSubsystem* VisualVersioning = nullptr;
-		if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
+		if (Node[0]->GetOwner() == Scene->GetOwner())
 		{
-			VisualVersioning = LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
+			bIsFound = true;
 		}
-		/*Traverse the stack until the requested Node is found*/
-		for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
+		else
 		{
-			if (ExhaustedScenes[i]->GetOwner() == Scene->GetOwner())
+			UVisualVersioningSubsystem* VisualVersioning = nullptr;
+			if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
 			{
+				VisualVersioning = LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
+			}
+			/*Traverse the stack until the requested Node is found*/
+			for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
+			{
+				if (ExhaustedScenes[i]->GetOwner() == Scene->GetOwner())
+				{
+					FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+					if (VisualVersioning)
+					{
+						VisualVersioning->Checkout(ExhaustedScene);
+					}
+					bIsFound = true;
+					break;
+				}
 				FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+				NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
 				if (VisualVersioning)
 				{
 					VisualVersioning->Checkout(ExhaustedScene);
 				}
-				bIsFound = true;
-				break;
-			}
-			FScenario* ExhaustedScene = ExhaustedScenes.Pop();
-			NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
-			if (VisualVersioning)
-			{
-				VisualVersioning->Checkout(ExhaustedScene);
 			}
 		}
-	}
 
-	if (bIsFound)
-	{
-		SetCurrentScene(Scene);
+		if (bIsFound)
+		{
+			SetCurrentScene(Scene);
+		}
 	}
 
 	return bIsFound;
@@ -413,9 +421,10 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	CancelNextScene();
 
 	SceneIndex = Scene->GetIndex();
-	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(GetCurrentScene());
-	Renderer->DrawScene(GetCurrentScene());
-	PrepareScenes();
+	const FScenario* CurrentScene = GetCurrentScene();
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
+	Renderer->DrawScene(CurrentScene);
+	PrepareScenes(EVisualControllerDirection::Backward);
 
 	OnSceneStart.Broadcast();
 	OnNativeSceneStart.Broadcast();
@@ -427,8 +436,8 @@ void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Dir
 	const int32 NextSceneIndex = SceneIndex + StaticCast<int32>(Direction);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
 
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITOR
-	FPlatformProcess::Sleep(CVarEditorStallThreadForLoading.GetValueOnAnyThread());
+#if WITH_EDITOR
+	FPlatformProcess::Sleep(CVarEditorStallForLoading.GetValueOnAnyThread());
 #endif
 }
 
@@ -450,7 +459,6 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 #endif
 	
 	FScenario* Last = Node[SceneIndex];
-	const UDataTable* LastNode = Last->GetOwner();
 	ExhaustedScenes.Push(Last);
 
 	Node.Empty();
@@ -466,19 +474,15 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 
 	SceneIndex = 0;
 
-	const FScenario* CurrentScene = GetCurrentScene();
-	NodeReferenceKeeper.Add(CurrentScene->GetOwner());
-	if (Head->GetOwner() == LastNode)
+	Head = GetCurrentScene();
+	NodeReferenceKeeper.Add(Head->GetOwner());
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(Head);
+	if (!TryPlayTransition(Last, Head))
 	{
-		Head = CurrentScene;
-	}
-	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
-	if (!TryPlayTransition(Last, CurrentScene))
-	{
-		Renderer->DrawScene(CurrentScene);
+		Renderer->DrawScene(Head);
 	}
 
-	TryPlaySceneSound(CurrentScene->Info.Sound);
+	TryPlaySceneSound(Head->Info.Sound);
 	PrepareScenes();
 
 	OnSceneStart.Broadcast();
@@ -520,9 +524,10 @@ void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		};
 
 		/*Fire it once first to replicate a do-while style*/
-		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), 0.f);
+		FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
+		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, 0.f);
 		FTSTicker::RemoveTicker(Handle);
-		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(AutoMove), AutoMoveDelay);
+		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
 	}
 }
 
@@ -560,7 +565,7 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 
 void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
 {
-	if (!IsValid(Renderer))
+	if (!IsVisualized())
 	{
 		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
 	}
@@ -589,7 +594,7 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 {
 	if (ensureMsgf(Num >= 0, TEXT("Expected positive value, set operation failed.")))
 	{
-		if (Num > 100)
+		if (Num > ScenesToLoadLargeNum)
 		{
 			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
 		}
@@ -633,7 +638,7 @@ bool UVisualController::IsVisualized() const
 
 const FString UVisualController::GetHeadDebugString() const
 {
-	FString DebugString{};
+	FString DebugString;
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	DebugString = Head ? Head->GetDebugString() : TEXT("None");
 #endif
@@ -643,7 +648,7 @@ const FString UVisualController::GetHeadDebugString() const
 
 const FString UVisualController::GetAsyncQueueDebugString() const
 {
-	FString DebugString{};
+	FString DebugString;
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	for (TWeakPtr<FStreamableHandle> WeakSceneHandle : DebugSceneHandles)
 	{
@@ -659,7 +664,7 @@ const FString UVisualController::GetAsyncQueueDebugString() const
 
 const FString UVisualController::GetExhaustedScenesDebugString() const
 {
-	FString DebugString{};
+	FString DebugString;
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	for (FScenario* const& ExhaustedScene : ExhaustedScenes)
 	{

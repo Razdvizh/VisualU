@@ -51,8 +51,9 @@ struct FVisualInfo
 	GENERATED_BODY()
 
 public:
-	FVisualInfo() = default;
-	virtual ~FVisualInfo() = default;
+	FVisualInfo();
+
+	virtual ~FVisualInfo();
 
 	virtual void Accept(IInfoAssignable* Visitor) const PURE_VIRTUAL(FVisualInfo::Accept, );
 

@@ -5,11 +5,9 @@
 #include "CoreMinimal.h"
 #if WITH_GAMEPLAY_DEBUGGER_MENU
 #include "GameplayDebuggerCategory.h"
-#include "Containers/EnumAsByte.h"
 
 class APlayerController;
 class AActor;
-class UTexture;
 
 /**
  * Debugger for VisualU that provides information on Visual controller.
@@ -20,6 +18,7 @@ public:
 	FGameplayDebuggerCategory_VisualU();
 
 	virtual void CollectData(APlayerController* OwnerPC, AActor* DebugActor) override;
+
 	virtual void DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) override;
 
 	VISUALU_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
@@ -27,14 +26,14 @@ public:
 private:
 	struct FRepData
 	{
-	public:
-		FRepData() = default;
+		FRepData();
 
 		FString ControllerName;
 		bool bIsRendererVisualized;
 		uint8 ControllerMode;
 		FString CurrentSceneName;
 		FString CurrentNodeName;
+		FString CurrentSceneDesc;
 		FString ControllerHeadDesc;
 		bool bIsControllerTransitioning;
 		float ControllerAutoMoveDelay;

@@ -33,7 +33,7 @@ void UVisualUBlueprintStatics::PrintScenesData()
 		{
 			cnt++;
 			UE_LOG(LogVisualU, Display, TEXT("\tRow %d"), cnt);
-			Row->PrintLog();
+			UE_LOG(LogVisualU, Display, TEXT("%s"), *Row->ToString());
 			UE_LOG(LogVisualU, Display, TEXT("================================================="));
 		}
 	}

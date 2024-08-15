@@ -105,7 +105,7 @@ namespace UE
 }
 
 /**
- * Controls the flow of `FScenario`'s and provides interface for others to observe it.
+ * Organizes scenes described by FScenario in a meaningful way.
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew, Within = PlayerController)
 class VISUALU_API UVisualController : public UObject

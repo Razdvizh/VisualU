@@ -2,3 +2,7 @@
 
 
 #include "InfoAssignable.h"
+
+FVisualInfo::FVisualInfo() = default;
+
+FVisualInfo::~FVisualInfo() = default;

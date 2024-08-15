@@ -70,7 +70,7 @@ public:
 	/// <returns>String of all fields</returns>
 	virtual FString ToString() const override
 	{
-		return FString::Printf(TEXT("Expression: %s Color and Opacity: %s Desired Scale: %s Mirror Scale: %s Animate: %s Frame Index: %d"),
+		return FString::Printf(TEXT("Expression: %s\nColor and Opacity: %s\nDesired Scale: %s\nMirror Scale: %s\nAnimate: %s\nFrame Index: %d"),
 			!Expression.IsNull() ? *Expression.GetAssetName() : TEXT("None"),
 			*ColorAndOpacity.ToString(),
 			*DesiredScale.ToString(),

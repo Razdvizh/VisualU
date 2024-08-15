@@ -141,8 +141,6 @@ void UVisualRenderer::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	//AnimationTabSummoner.cpp
-	//MaterialParameterCollectionTrackEditor.cpp
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
 	const float StartTime = 0.f;
 	const float EndTime = VisualUSettings->TransitionDuration;
@@ -157,8 +155,6 @@ void UVisualRenderer::NativeOnInitialized()
 	const FFrameTime InFrame = StartTime * TickResolution;
 	const FFrameTime OutFrame = EndTime * TickResolution;
 	Transition->MovieScene->SetPlaybackRange(TRange<FFrameNumber>(InFrame.FrameNumber, OutFrame.FrameNumber + 1));
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	TSoftObjectPtr<UMaterialParameterCollection> ParameterCollection = VisualUSettings->TransitionMPC;
 	

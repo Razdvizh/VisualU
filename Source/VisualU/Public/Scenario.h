@@ -24,7 +24,7 @@ struct FSprite
 	GENERATED_BODY()
 
 public:
-	FSprite() = default;
+	FSprite();
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> class to be constructed and visualized by <see cref="UVisualScene">Visual Scene</see>.
@@ -43,13 +43,13 @@ public:
 	/// <see cref="UVisualSprite">Visual Sprite</see> position in Canvas Panel.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite position in Canvas Panel"))
-	FVector2D Position = FVector2D(ForceInitToZero);
+	FVector2D Position;
 
 	/// <summary>
 	/// <see cref="UVisualSprite">Visual Sprite</see> Z coordinate (or layer) in Canvas Panel.
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite's Z coordinate (a.k.a layer) in Canvas Panel"))
-	int32 ZOrder = 0;
+	int32 ZOrder;
 
 	/// <summary>
 	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
@@ -69,27 +69,25 @@ public:
 		return Ar;
 	}
 
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	/// <summary>
-	/// Prints all fields to the VisualU log.
-	/// </summary>
-	inline void PrintLog() const
+	inline FString ToString() const
 	{
-		UE_LOG(LogVisualU, Warning, TEXT("Sprite Class: %s"), !SpriteClass.IsNull() ? *SpriteClass->GetFName().ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Warning, TEXT("Anchors: %s"), *Anchors.ToString());
-		UE_LOG(LogVisualU, Warning, TEXT("Position: %s"), *Position.ToString());
-		UE_LOG(LogVisualU, Warning, TEXT("Z order: %d"), ZOrder);
+		FString String;
+		String = FString::Printf(TEXT("Sprite Class: %s\n"), SpriteClass.IsNull() ? TEXT("None") : *SpriteClass.GetAssetName());
+		String += FString::Printf(TEXT("Anchors: %s\n"), *Anchors.ToString());
+		String += FString::Printf(TEXT("Position: %s\n"), *Position.ToString());
+		String += FString::Printf(TEXT("Z order: %d\n"), ZOrder);
 		if (!SpriteInfo.IsEmpty())
 		{
 			int32 cnt = 0;
 			for (const FVisualImageInfo& Info : SpriteInfo)
 			{
 				cnt++;
-				UE_LOG(LogVisualU, Warning, TEXT("\tSprite Info %d: %s"), cnt, *Info.ToString());
+				String += FString::Printf(TEXT("Sprite Info %d: %s\n"), cnt, *Info.ToString());
 			}
 		}
+
+		return String;
 	}
-#endif
 
 	FORCEINLINE bool operator== (const FSprite& Other) const
 	{
@@ -115,7 +113,7 @@ struct FBackground
 	GENERATED_BODY()
 
 public:
-	FBackground() = default;
+	FBackground();
 
 	/// <summary>
 	/// Background info for the scene.
@@ -128,6 +126,15 @@ public:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Transition to play on background when switching to the next scene"))
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
+
+	inline FString ToString() const
+	{
+		const FString String = FString::Printf(TEXT("%s\nTransition Material: %s"),
+			*BackgroundArtInfo.ToString(),
+			TransitionMaterial.IsNull() ? TEXT("None") : *TransitionMaterial.GetAssetName());
+
+		return String;
+	}
 
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FBackground& Background)
 	{
@@ -165,7 +172,7 @@ struct FVisualScenarioInfo : public FVisualInfo
 	GENERATED_BODY()
 
 public:
-	FVisualScenarioInfo() = default;
+	FVisualScenarioInfo();
 
 	/// <summary>
 	/// An author of the <see cref="FScenario::Line">Line</see>.
@@ -203,6 +210,27 @@ public:
 	virtual void Accept(IInfoAssignable* Visitor) const override
 	{
 		Visitor->AssignScenarioVisualInfo(*this);
+	}
+
+	virtual FString ToString() const override
+	{
+		FString String;
+		String = FString::Printf(TEXT("Author: %s\n"), Author.IsEmpty() ? TEXT("") : *Author.ToString());
+		String += FString::Printf(TEXT("Line: %s\n"), Line.IsEmpty() ? TEXT("") : *Line.ToString());
+		String += FString::Printf(TEXT("Music: %s\n"), Sound.IsNull() ? TEXT("None") : *Sound.GetAssetName());
+		String += (Background.ToString() + TEXT("\n"));
+
+		if (!SpritesParams.IsEmpty())
+		{
+			int32 cnt = 0;
+			for (const FSprite& SpriteParam : SpritesParams)
+			{
+				cnt++;
+				String += FString::Printf(TEXT("Sprite Parameter %d\n%s"), cnt, *SpriteParam.ToString());
+			}
+		}
+
+		return String;
 	}
 
 	FORCEINLINE void Serialize(FArchive& Ar)
@@ -263,7 +291,7 @@ struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 	GENERATED_BODY()
 
 public:
-	FScenario() = default;
+	FScenario();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario")
 	FVisualScenarioInfo Info;
@@ -348,30 +376,12 @@ public:
 		}
 	}
 
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	/// <summary>
-	/// Prints all content of the scene to VisualU log.
-	/// </summary>
-	virtual void PrintLog() const
+	virtual FString ToString() const
 	{
-		UE_LOG(LogVisualU, Display, TEXT("\tAuthor: %s"), !Info.Author.IsEmpty() ? *Info.Author.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tLine: %s"), !Info.Line.IsEmpty() ? *Info.Line.ToString() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tMusic: %s"), !Info.Sound.IsNull() ? *Info.Sound.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tBackground Art: %s"), !Info.Background.BackgroundArtInfo.Expression.IsNull() ? *Info.Background.BackgroundArtInfo.Expression.GetAssetName() : TEXT("None"));
-		UE_LOG(LogVisualU, Display, TEXT("\tTransition Material: %s"), !Info.Background.TransitionMaterial.IsNull() ? *Info.Background.TransitionMaterial.GetAssetName() : TEXT("None"));
-
-		if (!Info.SpritesParams.IsEmpty())
-		{
-			int32 cnt = 0;
-			for (const FSprite& SpriteParam : Info.SpritesParams)
-			{
-				cnt++;
-				UE_LOG(LogVisualU, Display, TEXT("\tSprite Parameter %d"), cnt);
-				SpriteParam.PrintLog();
-			}
-		}
+		return Info.ToString();
 	}
 
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	FORCEINLINE FString GetDebugString() const
 	{
 		check(Owner);
@@ -385,8 +395,8 @@ public:
 	/// <returns><c>true</c> if scene has <see cref="UVisualChoice">Visual Choice</see></returns>
 	inline bool HasChoice() const
 	{
-		const uint8 AsInt = StaticCast<uint8>(EScenarioMetaFlags::Choice);
-		return (Info.Flags & AsInt) == AsInt;
+		const uint8 Choice = StaticCast<uint8>(EScenarioMetaFlags::Choice);
+		return (Info.Flags & Choice) == Choice;
 	}
 
 	/// <summary>
@@ -412,18 +422,25 @@ public:
 		Ar << *this;
 	}
 
+	UE_DISABLE_OPTIMIZATION
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FScenario& Scenario)
 	{
-		TSoftObjectPtr<UDataTable> SoftOwner(Scenario.Owner);
+		TSoftObjectPtr<UDataTable> SoftOwner;
+		if (Ar.IsSaving())
+		{
+			SoftOwner = Scenario.Owner;
+		}
+
 		Ar << SoftOwner;
 
-		if (Ar.IsLoading())
+		if (Ar.IsLoading() && !SoftOwner.IsNull())
 		{
 			Scenario.Owner = SoftOwner.LoadSynchronous();
 		}
 
 		return Ar << Scenario.Index;
 	}
+	UE_ENABLE_OPTIMIZATION
 
 	FORCEINLINE bool operator== (const FScenario& Other) const
 	{
