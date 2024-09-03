@@ -29,10 +29,10 @@
 
 #include "Widgets/Text/SRichTextBlock.h"
 
-class VISUALU_API SDialogueTextBlock : public SRichTextBlock
+class VISUALU_API SVisualTextBlock : public SRichTextBlock
 {
 public:
-	SDialogueTextBlock();
+	SVisualTextBlock();
 
 	TAttribute<FText> MakeTextAttribute(const FText& TypedText, const FText& FinalText) const;
 

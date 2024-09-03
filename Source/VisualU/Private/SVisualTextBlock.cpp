@@ -25,21 +25,21 @@
 * Forked repository by Adam Parkinson (@SalamiArmi): https://github.com/SalamiArmi/UnrealRichTextDialogueBox
 */
 
-#include "SDialogueTextBlock.h"
+#include "SVisualTextBlock.h"
 
-SDialogueTextBlock::SDialogueTextBlock() = default;
+SVisualTextBlock::SVisualTextBlock() = default;
 
-TAttribute<FText> SDialogueTextBlock::MakeTextAttribute(const FText& TypedText, const FText& FinalText) const
+TAttribute<FText> SVisualTextBlock::MakeTextAttribute(const FText& TypedText, const FText& FinalText) const
 {
-	return TAttribute<FText>::CreateRaw(this, &SDialogueTextBlock::GetTextInternal, TypedText, FinalText);
+	return TAttribute<FText>::CreateRaw(this, &SVisualTextBlock::GetTextInternal, TypedText, FinalText);
 }
 
-FVector2D SDialogueTextBlock::ComputeDesiredSize(float LayoutScaleMultiplier) const
+FVector2D SVisualTextBlock::ComputeDesiredSize(float LayoutScaleMultiplier) const
 {
 	return CachedDesiredSize;
 }
 
-void SDialogueTextBlock::CacheDesiredSize(float LayoutScaleMultiplier)
+void SVisualTextBlock::CacheDesiredSize(float LayoutScaleMultiplier)
 {
 	// calculate actual maxmimum dialogue size
 	bIsComputingDesiredSize = true;
@@ -52,7 +52,7 @@ void SDialogueTextBlock::CacheDesiredSize(float LayoutScaleMultiplier)
 	SRichTextBlock::CacheDesiredSize(LayoutScaleMultiplier);
 }
 
-FText SDialogueTextBlock::GetTextInternal(FText TypedText, FText FinalText) const
+FText SVisualTextBlock::GetTextInternal(FText TypedText, FText FinalText) const
 {
 	return bIsComputingDesiredSize ? FinalText : TypedText;
 }

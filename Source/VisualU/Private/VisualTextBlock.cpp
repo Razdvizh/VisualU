@@ -1,152 +1,433 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+/*
+* MIT License
+*
+* Copyright(c) 2021 Sam Bloomberg
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files(the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions :
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* Original repository by Sam Bloomberg (@redxdev): https://github.com/redxdev/UnrealRichTextDialogueBox
+* Forked repository by Adam Parkinson (@SalamiArmi): https://github.com/SalamiArmi/UnrealRichTextDialogueBox
+*/
 
 #include "VisualTextBlock.h"
-#include "VisualUSettings.h"
-#include "Modules/ModuleManager.h"
-#include "VisualU.h"
-#include "Framework/Application/SlateApplication.h"
-#include "Widgets/Text/SRichTextBlock.h"
-#include "Components/PanelSlot.h"
+#include "Engine/Font.h"
+#include "Engine/World.h"
+#include "Styling/SlateStyle.h"
+#include "SVisualTextBlock.h"
 #include "TimerManager.h"
+#include "Framework/Text/SlateTextRun.h"
+#include "Framework/Text/RichTextMarkupProcessing.h"
+#include "Framework/Text/ShapedTextCache.h"
 
-#define LOCTEXT_NAMESPACE "VisualU"
-
-UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer) 
-	: Super(ObjectInitializer),
-	LineWidth(2),
-	CurrentString(),
-	TextString(),
-	TextLength(0),
-	CurrCharCnt(0),
-	bIsAppearingText(false),
-	bDisplayInstantly(false)
-
+/**
+ * Text run that represents a segment of text which is in the process of being typed out.
+ * The size of the text block will represent the final size of each word rather than the provided content.
+ */
+class FPartialDialogueRun : public FSlateTextRun
 {
-	VisualUSettings = GetDefault<UVisualUSettings>();
+public:
+	FPartialDialogueRun(const FRunInfo& InRunInfo, 
+		const TSharedRef<const FString>& InText, 
+		const FTextBlockStyle& InStyle, 
+		const FTextRange& InRange, 
+		const FDialogueTextSegment& Segment)
+		: FSlateTextRun(InRunInfo, InText, InStyle, InRange),
+		Segment(Segment)
+	{
+	}
+
+	virtual FVector2D Measure(int32 StartIndex, int32 EndIndex, float Scale, const FRunTextContext& TextContext) const override
+	{
+		if (EndIndex != Range.EndIndex)
+		{
+			// measuring text within existing range, refer to normal implementation
+			return FSlateTextRun::Measure(StartIndex, EndIndex, Scale, TextContext);
+		}
+		else
+		{
+			// attempting to measure to end of typed range, construct future typed content from source segment and measure based on that instead.
+			// this will ensure text is wrapped prior to being fully typed.
+			const FString CombinedContent = ConstructCombinedText();
+			return MeasureInternal(StartIndex, CombinedContent.Len(), Scale, TextContext, CombinedContent);
+		}
+	}
+
+private:
+	FString ConstructCombinedText() const
+	{
+		const int32 ExistingChars = Range.Len();
+
+		FString FutureContent;
+		if (!Segment.RunInfo.ContentRange.IsEmpty())
+		{
+			// with tags
+			const int32 SubstringStart = Segment.RunInfo.ContentRange.BeginIndex - Segment.RunInfo.OriginalRange.BeginIndex + ExistingChars;
+			const int32 NumChars = Segment.RunInfo.ContentRange.Len() - ExistingChars;
+			FutureContent = Segment.Text.Mid(SubstringStart, NumChars);
+		}
+		else
+		{
+			// no tags
+			const int32 NumChars = Segment.RunInfo.OriginalRange.Len() - ExistingChars;
+			FutureContent = Segment.Text.Mid(ExistingChars, Segment.RunInfo.OriginalRange.Len() - ExistingChars);
+		}
+		// trim to next possible wrap opportunity
+		for (int32 i = 0; i < FutureContent.Len(); ++i)
+		{
+			const TCHAR FutureChar = FutureContent[i];
+			if (FText::IsWhitespace(FutureChar))
+			{
+				FutureContent.LeftInline(i);
+				break;
+			}
+		}
+
+		return *Text + FutureContent;
+	}
+
+	FVector2D MeasureInternal(int32 BeginIndex, int32 EndIndex, float Scale, const FRunTextContext& TextContext, const FString& InText) const
+	{
+		const FVector2D ShadowOffsetToApply((EndIndex == Range.EndIndex) ? FMath::Abs(Style.ShadowOffset.X * Scale) : 0.0f, FMath::Abs(Style.ShadowOffset.Y * Scale));
+
+		// Offset the measured shaped text by the outline since the outline was not factored into the size of the text
+		// Need to add the outline offsetting to the beginning and the end because it surrounds both sides.
+		const float ScaledOutlineSize = Style.Font.OutlineSettings.OutlineSize * Scale;
+		const FVector2D OutlineSizeToApply((BeginIndex == Range.BeginIndex ? ScaledOutlineSize : 0) + (EndIndex == Range.EndIndex ? ScaledOutlineSize : 0), ScaledOutlineSize);
+
+		if (EndIndex - BeginIndex == 0)
+		{
+			return FVector2D(0, GetMaxHeight(Scale)) + ShadowOffsetToApply + OutlineSizeToApply;
+		}
+
+		// Use the full text range (rather than the run range) so that text that spans runs will still be shaped correctly
+		return ShapedTextCacheUtil::MeasureShapedText(
+			TextContext.ShapedTextCache, 
+			FCachedShapedTextKey(FTextRange(0, InText.Len()), Scale, TextContext, Style.Font), 
+			FTextRange(BeginIndex, EndIndex), *InText) + 
+			ShadowOffsetToApply +
+			OutlineSizeToApply;
+	}
+
+	const FDialogueTextSegment& Segment;
+};
+
+/**
+ * A decorator that intercepts partially typed segments and allocates an FPartialDialogueRun to represent them.
+ */
+class FPartialDialogueDecorator : public ITextDecorator
+{
+public:
+	FPartialDialogueDecorator(
+		const TArray<FDialogueTextSegment>* Segments, 
+		const int32* CurrentSegmentIndex) 
+		: Segments(Segments),
+		CurrentSegmentIndex(CurrentSegmentIndex)
+	{
+	}
+
+	virtual bool Supports(const FTextRunParseResults& RunInfo, const FString& Text) const override
+	{
+		// no segments have been calculated yet
+		if (*CurrentSegmentIndex >= Segments->Num())
+		{
+			return false;
+		}
+
+		// does this run relate to the segment which is still in-flight?
+		const FDialogueTextSegment& Segment = (*Segments)[*CurrentSegmentIndex];
+		const FTextRange& SegmentRange = !RunInfo.ContentRange.IsEmpty() ? Segment.RunInfo.ContentRange : Segment.RunInfo.OriginalRange;
+		const FTextRange& RunRange = !RunInfo.ContentRange.IsEmpty() ? RunInfo.ContentRange : RunInfo.OriginalRange;
+		const FTextRange IntersectedRange = RunRange.Intersect(SegmentRange);
+		return !IntersectedRange.IsEmpty() && SegmentRange != IntersectedRange;
+	}
+
+	virtual TSharedRef<ISlateRun> Create(const TSharedRef<class FTextLayout>& TextLayout, const FTextRunParseResults& InRunInfo, const FString& ProcessedString, const TSharedRef<FString>& InOutModelText, const ISlateStyle* InStyle) override
+	{
+		// copied from FRichTextLayoutMarshaller::AppendRunsForText
+		FRunInfo RunInfo(InRunInfo.Name);
+		for (const TPair<FString, FTextRange>& Pair : InRunInfo.MetaData)
+		{
+			int32 Length = FMath::Max(0, Pair.Value.EndIndex - Pair.Value.BeginIndex);
+			RunInfo.MetaData.Add(Pair.Key, ProcessedString.Mid(Pair.Value.BeginIndex, Length));
+		}
+
+		// resolve text style
+		const bool CanParseTags = !InRunInfo.Name.IsEmpty() && InStyle->HasWidgetStyle<FTextBlockStyle>(*InRunInfo.Name);
+		const FTextBlockStyle& Style = CanParseTags 
+			? InStyle->GetWidgetStyle<FTextBlockStyle>(*InRunInfo.Name) 
+			: StaticCast<FSlateTextLayout&>(*TextLayout).GetDefaultTextStyle();
+
+		// skip tags if valid style parser found
+		const FTextRange& Range = CanParseTags ? InRunInfo.ContentRange : InRunInfo.OriginalRange;
+		FTextRange ModelRange(InOutModelText->Len(), InOutModelText->Len() + Range.Len());
+
+		const FDialogueTextSegment& Segment = (*Segments)[*CurrentSegmentIndex];
+		*InOutModelText += Segment.Text.Mid(Range.BeginIndex - Segment.RunInfo.OriginalRange.BeginIndex, Range.Len());
+
+		return MakeShared<FPartialDialogueRun>(RunInfo, InOutModelText, Style, ModelRange, Segment);
+	}
+
+private:
+	const TArray<FDialogueTextSegment>* Segments;
+
+	const int32* CurrentSegmentIndex;
+};
+
+UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer),
+	LetterPlayTime(0.025f),
+	EndHoldTime(0.15f),
+	CurrentLine(),
+	Segments(),
+	CachedSegmentText(),
+	CurrentSegmentIndex(0),
+	CurrentLetterIndex(0),
+	MaxLetterIndex(0),
+	bHasFinishedPlaying(true),
+	LetterTimer()
+{
+}
+
+void UVisualTextBlock::PlayLine(const FText& InLine)
+{
+	check(GetWorld());
+
+	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+	TimerManager.ClearTimer(LetterTimer);
+
+	CurrentLine = InLine;
+	CurrentLetterIndex = 0;
+	CurrentSegmentIndex = 0;
+	MaxLetterIndex = 0;
+	Segments.Empty();
+	CachedSegmentText.Empty();
+
+	if (CurrentLine.IsEmpty())
+	{
+		SetTextFullyTyped(FText::GetEmpty());
+
+		bHasFinishedPlaying = true;
+		OnLineFinishedPlaying();
+
+		SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		SetTextPartiallyTyped(FText::GetEmpty(), CurrentLine);
+
+		bHasFinishedPlaying = false;
+
+		FTimerDelegate Delegate;
+		Delegate.BindUObject(this, &ThisClass::PlayNextLetter);
+
+		TimerManager.SetTimer(LetterTimer, Delegate, LetterPlayTime, true);
+
+		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UVisualTextBlock::Pause()
+{
+	UWorld* World = GetWorld();
+	check(World);
+
+	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+
+	if (IsInGameThread() && TimerManager.IsTimerActive(LetterTimer))
+	{
+		TimerManager.PauseTimer(LetterTimer);
+	}
+}
+
+void UVisualTextBlock::Resume()
+{
+	UWorld* World = GetWorld();
+	check(World);
+
+	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+
+	if (IsInGameThread() && TimerManager.IsTimerPaused(LetterTimer))
+	{
+		TimerManager.UnPauseTimer(LetterTimer);
+	}
+}
+
+void UVisualTextBlock::SkipToLineEnd()
+{
+	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+	TimerManager.ClearTimer(LetterTimer);
+
+	CurrentLetterIndex = MaxLetterIndex - 1;
+
+	SetTextFullyTyped(CurrentLine);
+
+	bHasFinishedPlaying = true;
+	OnLineFinishedPlaying();
+}
+
+void UVisualTextBlock::SetTextPartiallyTyped(const FText& InText, const FText& InFinalText)
+{
+	Super::SetText(InText);
+
+	if (SVisualTextBlock* DialogueTextBlock = StaticCast<SVisualTextBlock*>(MyRichTextBlock.Get()))
+	{
+		DialogueTextBlock->SetText(DialogueTextBlock->MakeTextAttribute(InText, InFinalText));
+	}
+}
+
+void UVisualTextBlock::SetTextFullyTyped(const FText& InText)
+{
+	Super::SetText(InText);
 }
 
 void UVisualTextBlock::SetText(const FText& InText)
 {
-	ensureMsgf(LineWidth > 1, TEXT("Line Width is %d, text will be displayed immediately"), LineWidth);
+	Super::SetText(InText);
+}
 
-	/*Check if this FText-to-FString conversion works properly with localization. If not, consider using FTextStringHelper*/
-	TextString = InText.ToString();
-	TextLength = TextString.Len();
-	CurrCharCnt = 0;
+TSharedRef<SWidget> UVisualTextBlock::RebuildWidget()
+{
+	// Copied from URichTextBlock::RebuildWidget
+	UpdateStyleData();
 
-	/**If something is disrupted, display text immediately*/
-	if (bIsAppearingText || bDisplayInstantly || CharacterAppearanceDelay <= 0.0f || LineWidth <= 1)
+	TArray<TSharedRef<class ITextDecorator>> CreatedDecorators;
+	CreateDecorators(CreatedDecorators);
+
+	TextParser = CreateMarkupParser();
+	TSharedRef<FRichTextLayoutMarshaller> Marshaller = FRichTextLayoutMarshaller::Create(TextParser, CreateMarkupWriter(), CreatedDecorators, StyleInstance.Get());
+	// add custom decorator to intercept partially typed segments
+	Marshaller->AppendInlineDecorator(MakeShared<FPartialDialogueDecorator>(&Segments, &CurrentSegmentIndex));
+
+	MyRichTextBlock =
+		SNew(SVisualTextBlock)
+		.TextStyle(bOverrideDefaultStyle ? &GetDefaultTextStyleOverride() : &DefaultTextStyle)
+		.Marshaller(Marshaller);
+
+	return MyRichTextBlock.ToSharedRef();
+}
+
+void UVisualTextBlock::PlayNextLetter()
+{
+	if (Segments.IsEmpty())
 	{
-		FText TextToDisplay;
-		const TCHAR* Buffer = TextString.GetCharArray().GetData();
-		TextToDisplay = FText::FromString(Buffer);
-		GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
-		Super::SetText(TextToDisplay);
-		bIsAppearingText = false;
-		return;
+		CalculateWrappedString();
 	}
 
-	/**Pre-wrap text in advance for proper runtime appearance*/
-	const TCHAR Newline = 10;
-	const TCHAR Whitespace = 32;
-	for (int32 i = 1; i < TextString.GetCharArray().Num(); i++)
+	FString WrappedString = CalculateSegments();
+
+	// TODO: How do we keep indexing of text i18n-friendly?
+	if (CurrentLetterIndex < MaxLetterIndex)
 	{
-		if (i % LineWidth == 0)
+		SetTextPartiallyTyped(FText::FromString(WrappedString), CurrentLine);
+
+		OnPlayLetter();
+		++CurrentLetterIndex;
+	}
+	else
+	{
+		SetTextFullyTyped(CurrentLine);
+
+		FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+		TimerManager.ClearTimer(LetterTimer);
+
+		FTimerDelegate Delegate;
+		Delegate.BindUObject(this, &ThisClass::SkipToLineEnd);
+
+		TimerManager.SetTimer(LetterTimer, Delegate, EndHoldTime, false);
+	}
+}
+
+void UVisualTextBlock::CalculateWrappedString()
+{
+	if (TSharedPtr<IRichTextMarkupParser> Parser = GetTextParser(); Parser.IsValid())
+	{
+		TArray<FTextLineParseResults> Lines;
+		FString ProcessedString;
+		Parser->Process(Lines, CurrentLine.ToString(), ProcessedString);
+		for (int32 LineIdx = 0; LineIdx < Lines.Num(); ++LineIdx)
 		{
-			int32 LocalCharIndex = i;
-			while (TextString.IsValidIndex(LocalCharIndex) && TextString[LocalCharIndex] != Whitespace)
+			const FTextLineParseResults& Line = Lines[LineIdx];
+			for (const FTextRunParseResults& Run : Line.Runs)
 			{
-				LocalCharIndex--;
+				Segments.Emplace(
+					FDialogueTextSegment
+					{
+						ProcessedString.Mid(Run.OriginalRange.BeginIndex, Run.OriginalRange.Len()),
+						Run
+					});
 			}
-			TextString.InsertAt(LocalCharIndex, Newline);
-			TextString.RemoveAt(LocalCharIndex + 1);
+
+			if (LineIdx != Lines.Num() - 1)
+			{
+				Segments.Emplace(
+					FDialogueTextSegment
+					{
+						TEXT("\n"),
+						FTextRunParseResults(FString(), FTextRange(0, 1))
+					});
+				++MaxLetterIndex;
+			}
+
+			MaxLetterIndex = Line.Range.EndIndex;
 		}
 	}
+}
 
-	/**Display one character of the text on the screen*/
-	CharacterDelayDelegate.BindUFunction(this, TEXT("DisplayOneCharacter"));
-
-	if (TextString.IsValidIndex(CurrCharCnt))
+FString UVisualTextBlock::CalculateSegments()
+{
+	while (CurrentSegmentIndex < Segments.Num())
 	{
-		CurrentString = FString();
-		GetWorld()->GetTimerManager().SetTimer(CharacterDelayTimer, CharacterDelayDelegate, CharacterAppearanceDelay, true);
-		bIsAppearingText = true;
+		const FDialogueTextSegment& Segment = Segments[CurrentSegmentIndex];
+
+		int32 SegmentStartIndex = FMath::Max(Segment.RunInfo.OriginalRange.BeginIndex, Segment.RunInfo.ContentRange.BeginIndex);
+		CurrentLetterIndex = FMath::Max(CurrentLetterIndex, SegmentStartIndex);
+
+		if (Segment.RunInfo.ContentRange.IsEmpty() ? !Segment.RunInfo.OriginalRange.Contains(CurrentLetterIndex) : !Segment.RunInfo.ContentRange.Contains(CurrentLetterIndex))
+		{
+			CachedSegmentText += Segment.Text;
+			CurrentSegmentIndex++;
+			continue;
+		}
+
+		// is this segment an inline tag? eg. <blah/>
+		if (!Segment.RunInfo.Name.IsEmpty() && !Segment.RunInfo.OriginalRange.IsEmpty() && Segment.RunInfo.ContentRange.IsEmpty())
+		{
+			// seek to end of tag - treat as single character
+			int32 SegmentEndIndex = FMath::Max(Segment.RunInfo.OriginalRange.EndIndex, Segment.RunInfo.ContentRange.EndIndex);
+			CurrentLetterIndex = FMath::Max(CurrentLetterIndex, SegmentEndIndex);
+			return CachedSegmentText + Segment.Text;
+		}
+		// is this segment partially typed?
+		else if (Segment.RunInfo.OriginalRange.Contains(CurrentLetterIndex))
+		{
+			FString Result = CachedSegmentText + Segment.Text.Mid(0, CurrentLetterIndex - Segment.RunInfo.OriginalRange.BeginIndex);
+
+			// if content tags need closing, append the remaining tag characters
+			if (!Segment.RunInfo.ContentRange.IsEmpty() && Segment.RunInfo.ContentRange.Contains(CurrentLetterIndex))
+			{
+				Result += Segment.Text.Mid(Segment.RunInfo.ContentRange.EndIndex - Segment.RunInfo.OriginalRange.BeginIndex, Segment.RunInfo.OriginalRange.EndIndex - Segment.RunInfo.ContentRange.EndIndex);
+			}
+
+			return Result;
+		}
+		break;
 	}
+
+	return CachedSegmentText;
 }
-
-void UVisualTextBlock::SetLineWidth(int InLineWidth)
-{
-	LineWidth = InLineWidth;
-}
-
-void UVisualTextBlock::SetDisplayMode(bool ShouldDisplayInstantly)
-{
-	bDisplayInstantly = ShouldDisplayInstantly;
-}
-
-bool UVisualTextBlock::PauseTextDisplay()
-{
-	bool bIsTimerActive = false;
-
-	if (GetWorld()->GetTimerManager().IsTimerActive(CharacterDelayTimer))
-	{
-		GetWorld()->GetTimerManager().PauseTimer(CharacterDelayTimer);
-		
-		bIsTimerActive = true;
-	}
-
-	return bIsTimerActive;
-}
-
-void UVisualTextBlock::UnPauseTextDisplay()
-{
-	GetWorld()->GetTimerManager().UnPauseTimer(CharacterDelayTimer);
-}
-
-void UVisualTextBlock::SetCharacterAppearanceDelay(float Delay)
-{
-	CharacterAppearanceDelay = Delay;
-}
-
-#if WITH_EDITOR
-const FText UVisualTextBlock::GetPaletteCategory()
-{
-	return LOCTEXT("VisualTextBlockCategory", "VisualU");
-}
-#endif
-
-void UVisualTextBlock::DisplayOneCharacter()
-{
-	FText TextToDisplay;
-	CheckForActions();
-	const TCHAR ch = TextString[CurrCharCnt];
-	CurrentString.AppendChar(ch);
-	CurrCharCnt++;
-	const TCHAR* Buffer = CurrentString.GetCharArray().GetData();
-	TextToDisplay = FText::FromString(Buffer);
-	Super::SetText(TextToDisplay);
-	if (CurrCharCnt == TextLength)
-	{
-		GetWorld()->GetTimerManager().ClearTimer(CharacterDelayTimer);
-		bIsAppearingText = false;
-	}
-}
-
-void UVisualTextBlock::CheckForActions()
-{
-	const TCHAR PairCharacter = VisualUSettings->PairCharacter[0];
-	if (TextString[CurrCharCnt] == PairCharacter)
-	{
-		ensureMsgf(TextString.IsValidIndex(CurrCharCnt + 2), TEXT("invalid use of metacharacters at char %d"), CurrCharCnt);
-		const TCHAR meta = TextString[CurrCharCnt + 1];
-		const FString MetaKey = FString::Printf(TEXT("%c"), meta);
-		ensureMsgf(VisualUSettings->Actions.Contains(MetaKey), TEXT("Provided metacharacter \"%c\" is unspecified"), meta);
-		const EVisualTextAction* Action = VisualUSettings->Actions.Find(MetaKey);
-		OnActionEncountered.Broadcast(*Action);
-
-		TextString.RemoveAt(CurrCharCnt, 3);
-	}
-}
-
-#undef LOCTEXT_NAMESPACE
