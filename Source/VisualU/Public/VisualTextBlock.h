@@ -84,9 +84,7 @@ public:
 	void SkipToLineEnd();
 
 	// variants to feed slate widget more info
-	void SetTextPartiallyTyped(const FText& InText, const FText& InFinalText);
-
-	void SetTextFullyTyped(const FText& InText);
+	virtual void SetTextPartiallyTyped(const FText& InText, const FText& InFinalText);
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Visual Text Block")
@@ -94,9 +92,6 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Visual Text Block")
 	void OnLineFinishedPlaying();
-
-	// implementation hidden in favour of explicit variants
-	virtual void SetText(const FText& InText) override;
 
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 

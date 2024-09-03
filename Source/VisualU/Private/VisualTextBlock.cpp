@@ -103,12 +103,16 @@ private:
 
 	FVector2D MeasureInternal(int32 BeginIndex, int32 EndIndex, float Scale, const FRunTextContext& TextContext, const FString& InText) const
 	{
-		const FVector2D ShadowOffsetToApply((EndIndex == Range.EndIndex) ? FMath::Abs(Style.ShadowOffset.X * Scale) : 0.0f, FMath::Abs(Style.ShadowOffset.Y * Scale));
+		const FVector2D ShadowOffsetToApply((EndIndex == Range.EndIndex) 
+			? FMath::Abs(Style.ShadowOffset.X * Scale) 
+			: 0.0f, FMath::Abs(Style.ShadowOffset.Y * Scale));
 
 		// Offset the measured shaped text by the outline since the outline was not factored into the size of the text
 		// Need to add the outline offsetting to the beginning and the end because it surrounds both sides.
 		const float ScaledOutlineSize = Style.Font.OutlineSettings.OutlineSize * Scale;
-		const FVector2D OutlineSizeToApply((BeginIndex == Range.BeginIndex ? ScaledOutlineSize : 0) + (EndIndex == Range.EndIndex ? ScaledOutlineSize : 0), ScaledOutlineSize);
+		const FVector2D OutlineSizeToApply(
+			(BeginIndex == Range.BeginIndex ? ScaledOutlineSize : 0) + (EndIndex == Range.EndIndex ? ScaledOutlineSize : 0), 
+			ScaledOutlineSize);
 
 		if (EndIndex - BeginIndex == 0)
 		{
@@ -206,9 +210,10 @@ UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer)
 
 void UVisualTextBlock::PlayLine(const FText& InLine)
 {
-	check(GetWorld());
+	UWorld* World = GetWorld();
+	check(World);
 
-	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+	FTimerManager& TimerManager = World->GetTimerManager();
 	TimerManager.ClearTimer(LetterTimer);
 
 	CurrentLine = InLine;
@@ -220,7 +225,7 @@ void UVisualTextBlock::PlayLine(const FText& InLine)
 
 	if (CurrentLine.IsEmpty())
 	{
-		SetTextFullyTyped(FText::GetEmpty());
+		SetText(FText::GetEmpty());
 
 		bHasFinishedPlaying = true;
 		OnLineFinishedPlaying();
@@ -275,7 +280,7 @@ void UVisualTextBlock::SkipToLineEnd()
 
 	CurrentLetterIndex = MaxLetterIndex - 1;
 
-	SetTextFullyTyped(CurrentLine);
+	SetText(CurrentLine);
 
 	bHasFinishedPlaying = true;
 	OnLineFinishedPlaying();
@@ -289,16 +294,6 @@ void UVisualTextBlock::SetTextPartiallyTyped(const FText& InText, const FText& I
 	{
 		DialogueTextBlock->SetText(DialogueTextBlock->MakeTextAttribute(InText, InFinalText));
 	}
-}
-
-void UVisualTextBlock::SetTextFullyTyped(const FText& InText)
-{
-	Super::SetText(InText);
-}
-
-void UVisualTextBlock::SetText(const FText& InText)
-{
-	Super::SetText(InText);
 }
 
 TSharedRef<SWidget> UVisualTextBlock::RebuildWidget()
@@ -341,7 +336,7 @@ void UVisualTextBlock::PlayNextLetter()
 	}
 	else
 	{
-		SetTextFullyTyped(CurrentLine);
+		SetText(CurrentLine);
 
 		FTimerManager& TimerManager = GetWorld()->GetTimerManager();
 		TimerManager.ClearTimer(LetterTimer);
