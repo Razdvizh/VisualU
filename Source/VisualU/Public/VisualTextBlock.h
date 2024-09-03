@@ -66,7 +66,7 @@ public:
 	float EndHoldTime;
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	void PlayLine(const FText& InLine);
+	void Typewrite();
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void Pause();

@@ -208,7 +208,7 @@ UVisualTextBlock::UVisualTextBlock(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-void UVisualTextBlock::PlayLine(const FText& InLine)
+void UVisualTextBlock::Typewrite()
 {
 	UWorld* World = GetWorld();
 	check(World);
@@ -216,7 +216,7 @@ void UVisualTextBlock::PlayLine(const FText& InLine)
 	FTimerManager& TimerManager = World->GetTimerManager();
 	TimerManager.ClearTimer(LetterTimer);
 
-	CurrentLine = InLine;
+	CurrentLine = GetText();
 	CurrentLetterIndex = 0;
 	CurrentSegmentIndex = 0;
 	MaxLetterIndex = 0;
