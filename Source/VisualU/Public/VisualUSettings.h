@@ -74,7 +74,7 @@ public:
 	/// <remarks>
 	/// Transition begins with this sprite.
 	/// </remarks>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transition")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition")
 	FName AParameterName;
 
 	/// <summary>
@@ -83,6 +83,6 @@ public:
 	/// <remarks>
 	/// Transition ends with this sprite.
 	/// </remarks>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Scene|Transition")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition")
 	FName BParameterName;
 };

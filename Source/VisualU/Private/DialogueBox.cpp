@@ -168,7 +168,9 @@ public:
 
 		// resolve text style
 		const bool CanParseTags = !InRunInfo.Name.IsEmpty() && InStyle->HasWidgetStyle<FTextBlockStyle>(*InRunInfo.Name);
-		const FTextBlockStyle& Style = CanParseTags ? InStyle->GetWidgetStyle<FTextBlockStyle>(*InRunInfo.Name) : StaticCast<FSlateTextLayout&>(*TextLayout).GetDefaultTextStyle();
+		const FTextBlockStyle& Style = CanParseTags 
+			? InStyle->GetWidgetStyle<FTextBlockStyle>(*InRunInfo.Name) 
+			: StaticCast<FSlateTextLayout&>(*TextLayout).GetDefaultTextStyle();
 
 		// skip tags if valid style parser found
 		const FTextRange& Range = CanParseTags ? InRunInfo.ContentRange : InRunInfo.OriginalRange;
