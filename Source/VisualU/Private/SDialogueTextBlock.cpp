@@ -1,21 +1,50 @@
+/*
+* MIT License
+*
+* Copyright(c) 2021 Sam Bloomberg
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files(the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions :
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* Original repository by Sam Bloomberg (@redxdev): https://github.com/redxdev/UnrealRichTextDialogueBox
+* Forked repository by Adam Parkinson (@SalamiArmi): https://github.com/SalamiArmi/UnrealRichTextDialogueBox
+*/
+
 #include "SDialogueTextBlock.h"
 
-TAttribute<FText> SDialogueTextBlock::MakeTextAttribute(const FText& typedText, const FText& finalText) const
+SDialogueTextBlock::SDialogueTextBlock() = default;
+
+TAttribute<FText> SDialogueTextBlock::MakeTextAttribute(const FText& TypedText, const FText& FinalText) const
 {
-	return TAttribute<FText>::CreateRaw(this, &SDialogueTextBlock::GetTextInternal, typedText, finalText);
+	return TAttribute<FText>::CreateRaw(this, &SDialogueTextBlock::GetTextInternal, TypedText, FinalText);
 }
 
 FVector2D SDialogueTextBlock::ComputeDesiredSize(float LayoutScaleMultiplier) const
 {
-	return m_cachedDesiredSize;
+	return CachedDesiredSize;
 }
 
 void SDialogueTextBlock::CacheDesiredSize(float LayoutScaleMultiplier)
 {
 	// calculate actual maxmimum dialogue size
-	isComputingDesiredSize = true;
-	m_cachedDesiredSize = SRichTextBlock::ComputeDesiredSize(LayoutScaleMultiplier);
-	isComputingDesiredSize = false;
+	bIsComputingDesiredSize = true;
+	CachedDesiredSize = SRichTextBlock::ComputeDesiredSize(LayoutScaleMultiplier);
+	bIsComputingDesiredSize = false;
 
 	// poke the method again because this internally caches some junk pertaining to layout/content
 	(void)SRichTextBlock::ComputeDesiredSize(LayoutScaleMultiplier);
@@ -23,14 +52,7 @@ void SDialogueTextBlock::CacheDesiredSize(float LayoutScaleMultiplier)
 	SRichTextBlock::CacheDesiredSize(LayoutScaleMultiplier);
 }
 
-FText SDialogueTextBlock::GetTextInternal(FText typedText, FText finalText) const
+FText SDialogueTextBlock::GetTextInternal(FText TypedText, FText FinalText) const
 {
-	if (isComputingDesiredSize)
-	{
-		return finalText;
-	}
-	else
-	{
-		return typedText;
-	}
+	return bIsComputingDesiredSize ? FinalText : TypedText;
 }
