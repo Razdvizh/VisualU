@@ -422,7 +422,6 @@ public:
 		Ar << *this;
 	}
 
-	UE_DISABLE_OPTIMIZATION
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FScenario& Scenario)
 	{
 		TSoftObjectPtr<UDataTable> SoftOwner;
@@ -440,7 +439,6 @@ public:
 
 		return Ar << Scenario.Index;
 	}
-	UE_ENABLE_OPTIMIZATION
 
 	FORCEINLINE bool operator== (const FScenario& Other) const
 	{

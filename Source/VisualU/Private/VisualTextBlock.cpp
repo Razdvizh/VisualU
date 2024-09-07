@@ -228,7 +228,7 @@ void UVisualTextBlock::Typewrite()
 		SetText(FText::GetEmpty());
 
 		bHasFinishedPlaying = true;
-		OnLineFinishedPlaying();
+		OnTypewriterFinished();
 
 		SetVisibility(ESlateVisibility::Hidden);
 	}
@@ -273,7 +273,7 @@ void UVisualTextBlock::Resume()
 	}
 }
 
-void UVisualTextBlock::SkipToLineEnd()
+void UVisualTextBlock::ForceTypewriteToEnd()
 {
 	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
 	TimerManager.ClearTimer(LetterTimer);
@@ -283,7 +283,7 @@ void UVisualTextBlock::SkipToLineEnd()
 	SetText(CurrentLine);
 
 	bHasFinishedPlaying = true;
-	OnLineFinishedPlaying();
+	OnTypewriterFinished();
 }
 
 void UVisualTextBlock::SetTextPartiallyTyped(const FText& InText, const FText& InFinalText)
@@ -308,6 +308,7 @@ TSharedRef<SWidget> UVisualTextBlock::RebuildWidget()
 	TSharedRef<FRichTextLayoutMarshaller> Marshaller = FRichTextLayoutMarshaller::Create(TextParser, CreateMarkupWriter(), CreatedDecorators, StyleInstance.Get());
 	// add custom decorator to intercept partially typed segments
 	Marshaller->AppendInlineDecorator(MakeShared<FPartialDialogueDecorator>(&Segments, &CurrentSegmentIndex));
+	Marshaller->AppendInlineDecorator(MakeShared<FBreakVisualTextBlockDecorator>(this));
 
 	MyRichTextBlock =
 		SNew(SVisualTextBlock)
@@ -342,7 +343,7 @@ void UVisualTextBlock::PlayNextLetter()
 		TimerManager.ClearTimer(LetterTimer);
 
 		FTimerDelegate Delegate;
-		Delegate.BindUObject(this, &ThisClass::SkipToLineEnd);
+		Delegate.BindUObject(this, &ThisClass::ForceTypewriteToEnd);
 
 		TimerManager.SetTimer(LetterTimer, Delegate, EndHoldTime, false);
 	}

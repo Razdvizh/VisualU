@@ -50,7 +50,7 @@ void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 	}
 	else
 	{
-		int32 NumScenes;
+		int32 NumScenes = 0;
 		Ar << NumScenes;
 		Versions.Reserve(NumScenes);
 		for (int32 i = 0; i < NumScenes; i++)

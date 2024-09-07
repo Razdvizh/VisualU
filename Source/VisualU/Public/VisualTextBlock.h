@@ -30,6 +30,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/RichTextBlock.h"
+#include "Framework/Text/IRichTextMarkupParser.h"
 #include "Framework/Text/RichTextLayoutMarshaller.h"
 #include "Framework/Text/SlateTextLayout.h"
 #include "VisualTextBlock.generated.h"
@@ -65,23 +66,31 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Text Block")
 	float EndHoldTime;
 
+	/*
+	* Applies typewriter effect to the current text of the text block.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void Typewrite();
 
+	/*
+	* Pause active typewriter effect.
+	* @note not threadsafe, has no effect for inactive timer.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void Pause();
 
+	/*
+	* Resume active typewriter effect.
+	* @note not threadsafe, has no effect for active timer.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void Resume();
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	void GetCurrentLine(FText& OutLine) const { OutLine = CurrentLine; }
+	FORCEINLINE bool HasTypewriterFinished() const { return bHasFinishedPlaying; }
 
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	bool HasFinishedPlayingLine() const { return bHasFinishedPlaying; }
-
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
-	void SkipToLineEnd();
+	void ForceTypewriteToEnd();
 
 	// variants to feed slate widget more info
 	virtual void SetTextPartiallyTyped(const FText& InText, const FText& InFinalText);
@@ -91,7 +100,7 @@ protected:
 	void OnPlayLetter();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Visual Text Block")
-	void OnLineFinishedPlaying();
+	void OnTypewriterFinished();
 
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
