@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "SVisualImage.h"
@@ -93,19 +93,24 @@ void SVisualImage::SetFlipbook(TAttribute<const UPaperFlipbook*> InFlipbook)
 	UpdateSequence();
 }
 
-void SVisualImage::SetColorAndOpacity(TAttribute<FSlateColor> InColorAndOpacity)
-{
-	ColorAndOpacity.Assign(*this, MoveTemp(InColorAndOpacity));
-}
-
 void SVisualImage::SetColorAndOpacity(const FLinearColor& InLinearColor)
 {
 	ColorAndOpacity.Set(*this, FSlateColor(InLinearColor));
 }
 
+void SVisualImage::SetColorAndOpacity(TAttribute<FSlateColor> InColorAttribute)
+{
+	ColorAndOpacity.Assign(*this, MoveTemp(InColorAttribute));
+}
+
 void SVisualImage::SetColorAndOpacity(const FSlateColor& InSlateColor)
 {
 	ColorAndOpacity.Set(*this, InSlateColor);
+}
+
+void SVisualImage::SetDesiredScale(const FVector2D& InDesiredSize)
+{
+	CustomDesiredScale.Set(*this, TOptional<FVector2D>(InDesiredSize));
 }
 
 void SVisualImage::SetDesiredScale(TAttribute<TOptional<FVector2D>> InDesiredScale)
@@ -118,19 +123,14 @@ void SVisualImage::SetDesiredScale(TOptional<FVector2D> InDesiredScale)
 	CustomDesiredScale.Set(*this, InDesiredScale);
 }
 
-void SVisualImage::SetDesiredScale(const FVector2D& InDesiredSize)
+void SVisualImage::SetMirrorScale(const FVector2D& InMirrorScale)
 {
-	CustomDesiredScale.Set(*this, TOptional<FVector2D>(InDesiredSize));
+	MirrorScale.Set(*this, InMirrorScale);
 }
 
 void SVisualImage::SetMirrorScale(TAttribute<FVector2D> InMirrorScale)
 {
 	MirrorScale.Assign(*this, MoveTemp(InMirrorScale));
-}
-
-void SVisualImage::SetMirrorScale(const FVector2D& InMirrorScale)
-{
-	MirrorScale.Set(*this, InMirrorScale);
 }
 
 void SVisualImage::SetMirrorScale(const FScale2D& InMirrorScale)
@@ -162,6 +162,17 @@ FVector2D SVisualImage::ComputeDesiredSize(float) const
 bool SVisualImage::ComputeVolatility() const
 {
 	return Super::ComputeVolatility() || CurveSequence.IsPlaying() || bAnimate;
+}
+
+void SVisualImage::AddReferencedObjects(FReferenceCollector& Collector)
+{
+	const UPaperFlipbook* FlipbookPtr = Flipbook.Get();
+	Collector.AddReferencedObject(FlipbookPtr);
+}
+
+FString SVisualImage::GetReferencerName() const
+{
+	return TEXT("SVisualImage");
 }
 
 bool SVisualImage::IsResourceValid() const

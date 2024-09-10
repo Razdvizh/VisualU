@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/Widget.h"
-#include "AsyncLoadable.h"
 #include "InfoAssignable.h"
 #include "VisualImageBase.generated.h"
 
@@ -15,7 +14,7 @@
 /// Supports asynchronous loading, <see cref="FVisualInfo">Visual Info</see> assignment through interfaces.
 /// </remarks>
 UCLASS(abstract)
-class VISUALU_API UVisualImageBase : public UWidget, public IAsyncLoadable, public IInfoAssignable
+class VISUALU_API UVisualImageBase : public UWidget, public IInfoAssignable
 {
 	GENERATED_BODY()
 

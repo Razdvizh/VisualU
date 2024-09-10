@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "VisualSocket.h"
@@ -37,7 +37,7 @@ void UVisualSocket::SetImageDesiredPosition(FVector2D Position)
 #if WITH_EDITOR
 const FText UVisualSocket::GetPaletteCategory()
 {
-	return LOCTEXT("Visual U", "Visual U");
+	return LOCTEXT("VisualSocketCategory", "VisualU");
 }
 #endif
 

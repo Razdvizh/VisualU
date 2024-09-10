@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -13,16 +13,13 @@ class UPaperFlipbook;
 class UPaperSprite;
 class SVisualImage;
 
-/// <summary>
-/// Struct with all fields that affect appearance of <see cref="UVisualImage">Visual Image</see>.
-/// </summary>
-/// <remarks>
-/// <see cref="UVisualImage">Visual Image</see> does not contain this struct and does not reflect it in any way.
-/// </remarks>
+/**
+* Collection of data that governs appearance of UVisualImage.
+*/
 USTRUCT(BlueprintType)
 struct FVisualImageInfo : public FVisualInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	FVisualImageInfo()
@@ -35,42 +32,60 @@ public:
 	{
 	}
 
-	/// <see cref="UVisualImage::Flipbook"/>
+	/**
+	* @see UVisualImage::Flipbook
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	TSoftObjectPtr<UPaperFlipbook> Expression;
 
-	/// <see cref="UVisualImage::ColorAndOpacity"/>
+	/**
+	* @see UVisualImage::ColorAndOpacity
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	FLinearColor ColorAndOpacity;
 
-	/// <see cref="UVisualImage::DesiredScale"/>
+	/**
+	* @see UVisualImage::DesiredScale
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info", meta = (Delta = 0.25f, UIMin = 0, ClampMin = 0, AllowPreserveRatio))
 	FVector2D DesiredScale;
 
-	/// <see cref="UVisualImage::MirrorScale"/>
+	/**
+	* @see UVisualImage::MirrorScale
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info", meta = (Delta = 1.f, UIMin = -1, UIMax = 1, ClampMin = -1, ClampMax = 1))
 	FVector2D MirrorScale;
 
-	/// <see cref="UVisualImage::bAnimate"/>
+	/**
+	* @see UVisualImage::bAnimate
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	bool bAnimate;
 
-	/// <see cref="UVisualImage::FrameIndex"/>
+	/**
+	* @see UVisualImage::FrameIndex
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Info|Visual Image Info")
 	int32 FrameIndex;
 
+	/**
+	* Accepts provided visitor.
+	* 
+	* @param Visitor visitor that wants to assign visual image info
+	*/
 	virtual void Accept(IInfoAssignable* Visitor) const override
 	{
 		Visitor->AssignVisualImageInfo(*this);
 	}
 
-	/// <summary>
-	/// Get a string representation of all fields.
-	/// </summary>
-	/// <returns>String of all fields</returns>
+	/**
+	* String representation of FVisualImageInfo.
+	* 
+	* @return string describing all members
+	*/
 	virtual FString ToString() const override
 	{
-		return FString::Printf(TEXT("Expression: %s Color and Opacity: %s Desired Scale: %s Mirror Scale: %s Animate: %s Frame Index: %d"),
+		return FString::Printf(TEXT("Expression: %s\nColor and Opacity: %s\nDesired Scale: %s\nMirror Scale: %s\nAnimate: %s\nFrame Index: %d"),
 			!Expression.IsNull() ? *Expression.GetAssetName() : TEXT("None"),
 			*ColorAndOpacity.ToString(),
 			*DesiredScale.ToString(),
@@ -79,36 +94,41 @@ public:
 			FrameIndex);
 	}
 
-	FORCEINLINE bool operator== (const FVisualImageInfo& Other)
+	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualImageInfo& ImageInfo)
 	{
-		if (Expression == Other.Expression
+		Ar << ImageInfo.Expression
+		   << ImageInfo.ColorAndOpacity
+		   << ImageInfo.DesiredScale
+		   << ImageInfo.MirrorScale
+		   << ImageInfo.bAnimate
+		   << ImageInfo.FrameIndex;
+
+		return Ar;
+	}
+
+	FORCEINLINE bool operator== (const FVisualImageInfo& Other) const
+	{
+		return Expression == Other.Expression
 			&& ColorAndOpacity == Other.ColorAndOpacity
 			&& DesiredScale == Other.DesiredScale
 			&& MirrorScale == Other.MirrorScale
 			&& bAnimate == Other.bAnimate
-			&& FrameIndex == Other.FrameIndex)
-		{
-			return true;
-		}
-
-		return false;
+			&& FrameIndex == Other.FrameIndex;
 	}
 
-	FORCEINLINE bool operator!= (const FVisualImageInfo& Other)
+	FORCEINLINE bool operator!= (const FVisualImageInfo& Other) const
 	{
 		return !(*this == Other);
 	}
 };
 
-/// <summary>
-/// Widget that can visualize sprite flipbooks either in animated or static state.
-/// </summary>
-/// <remarks>
-/// UPaperFlipbook class is provided by Paper2D built-in plugin in order to reuse existing assets and make VisualU compatible
-/// with normal Unreal pipeline for 2D games. Visual Image sets paper flipbook in a regular synchronous way unless <see cref="UVisualImage::SetFlipbookAsync"/>
-/// is called.
-/// </remarks>
-UCLASS(meta = (ToolTip = "Widget that can visualize sprite flipbooks either in animated or static state."))
+/**
+* Widget that can visualize and animate sprite flipbooks.
+* Visual image operates on UPaperFlipbook class 
+* which is provided by Paper2D built-in plugin.
+* Supports asynchronous loading of soft flipbooks.
+*/
+UCLASS(meta = (ToolTip = "Widget that can visualize and animate sprite flipbooks."))
 class VISUALU_API UVisualImage : public UVisualImageBase
 {
 	GENERATED_BODY()
@@ -116,198 +136,249 @@ class VISUALU_API UVisualImage : public UVisualImageBase
 public:
 	UVisualImage(const FObjectInitializer& ObjectInitializer);
 
-	~UVisualImage();
-
 	DECLARE_DYNAMIC_DELEGATE_RetVal(UPaperFlipbook*, FGetPaperFlipbook);
 
 protected:
-	/// <summary>
-	/// Paper flipbook to visualize.
-	/// </summary>
+	/**
+	* Paper flipbook to visualize.
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetFlipbook)
-	mutable UPaperFlipbook* Flipbook;
+	mutable TObjectPtr<UPaperFlipbook> Flipbook;
 
-	/// <summary>
-	/// Implement property binding for <see cref="UVisualImage::Flipbook"/>.
-	/// </summary>
+	/**
+	* Delegate for property binding of the flipbook.
+	* 
+	* @seealso UVisualImage::ToFlipbook()
+	*/
 	UPROPERTY(meta = (ToolTip = "Implement property binding for Flipbook"))
 	FGetPaperFlipbook FlipbookDelegate;
 
-	/// <summary>
-	/// Color and opacity of the <see cref="UVisualImage::Flipbook"/>.
-	/// </summary>
-	/// <remarks>
-	/// Note: would not be rendered if <see cref="UVisualImage::Flipbook"/> is None.
-	/// </remarks>
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetColorAndOpacity, meta = (ToolTip = "Color and opacity of the Flipbook"))
+	/**
+	* Color and opacity of the flipbook.
+	* 
+	* @note has no effect on widget appearance for invalid flipbook
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetColorAndOpacity, meta = (ToolTip = "Color and opacity of the flipbook"))
 	FLinearColor ColorAndOpacity;
 
-	/// <summary>
-	/// Implement property binding for <see cref="UVisualImage::ColorAndOpacity"/>.
-	/// </summary>
-	UPROPERTY(meta = (ToolTip = "Implement property binding for Color and Opacity"))
+	/**
+	* Delegate for property binding of the color and opacity.
+	*/
+	UPROPERTY(meta = (ToolTip = "Delegate for property binding of the color and opacity"))
 	FGetLinearColor ColorAndOpacityDelegate;
 
-	/// <summary>
-	/// Scale of Paper flipbook. Cannot be less than 0.
-	/// </summary>
+	/**
+	* Scale of the flipbook.
+	* Must be larger than zero on both axes.
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetDesiredScale, meta = (Delta = 0.25f, UIMin = 0, ClampMin = 0, AllowPreserveRatio))
 	FVector2D DesiredScale;
 
-	/// <summary>
-	/// Determines the orientation of the sprite on both axes. Only -1 or 1 values are valid.
-	/// </summary>
-	/// <remarks>
-	/// Mirror scale does not change the desired size.
-	/// </remarks>
+	/**
+	* Determines the orientation of the sprite on both axes.
+	* Only -1 or 1 values are valid.
+	* 
+	* @note mirror scale does not affect the desired size of the widget
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetMirrorScale, meta = (ToolTip = "Determines the orientation of the sprite on both axes", Delta = 1.f, UIMin = -1, UIMax = 1, ClampMin = -1, ClampMax = 1))
 	FVector2D MirrorScale;
 
-	/// <summary>
-	/// Decides whether or not flipbook's animation sequence should be played.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = IsAnimated, meta = (ToolTip = "Decides whether or not flipbook should be played"))
+	/**
+	* Decides whether or not flipbook's animation sequence should be played.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = IsAnimated, meta = (ToolTip = "Decides whether or not flipbook's animation sequence should be played"))
 	bool bAnimate;
 
-	/// <summary>
-	/// Index of the flipbook's frame that must be rendered. Ignored if <see cref="UVisualImage::bAnimate"/> is set to <c>true</c>.
-	/// </summary>
+	/**
+	* Index of the flipbook's frame that must be rendered.
+	* Ignored when UVisualImage::bAnimate is true.
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Appearance", BlueprintGetter = GetFrameIndex, meta = (ToolTip = "Index of the flipbook's frame that must be rendered", EditCondition = "!bAnimate", EditConditionHides))
 	int32 FrameIndex;
 
-	/// <summary>
-	/// Handle of paper flipbook resource.
-	/// </summary>
+	/**
+	* Handle to the streamable flipbook.
+	*/
 	TSharedPtr<FStreamableHandle> FlipbookHandle;
 
 public:
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
+	/**
+	* Applies received information to this image.
+	* 
+	* @param InInfo information for this visual image
+	*/
 	virtual void AssignVisualImageInfo(const FVisualImageInfo& InInfo) override;
 
-	/// <summary>
-	/// Play animation sequence of paper flipbook or use <see cref="UVisualImage::FrameIndex"/> to display one frame.
-	/// </summary>
-	/// <param name="IsAnimated">Paper flipbook state</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Play animation sequence of the Flipbook or use FrameIndex to display one frame"))
+	/**
+	* Setter for UVisualController::bAnimate.
+	* 
+	* @param IsAnimated new flipbook animation state
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Either play animation sequence of the flipbook or use frame index to display certain frame"))
 	void SetAnimate(bool IsAnimated);
 
-	/// <summary>
-	/// Set index of paper flipbook frame that should be visualized.
-	/// </summary>
-	/// <param name="Index">Paper flipbook's frame index</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set index of paper flipbook frame that should be visualized"))
+	/**
+	* Setter for UVisualImage::FrameIndex.
+	* 
+	* @param Index index of frame to display
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Sets index of flipbook frame that should be visualized"))
 	void SetFrameIndex(int Index);
 
-	/// <summary>
-	/// Synchronously set paper flipbook.
-	/// </summary>
-	/// <param name="InFlipbook">Flipbook to visualize</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Synchronously set paper flipbook"))
+	/**
+	* Synchronous setter for flipbook.
+	* 
+	* @param InFlipbook new flipbook to display
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Synchronously sets flipbook"))
 	void SetFlipbook(UPaperFlipbook* InFlipbook);
 
-	/// <summary>
-	/// Synchronously set paper flipbook.
-	/// </summary>
-	/// <param name="InFlipbook">Flipbook to visualize</param>
-	void SetFlipbook(TObjectPtr<UPaperFlipbook> InFlipbook);
-
-	/// <summary>
-	/// Asynchronously set paper flipbook.
-	/// </summary>
-	/// <param name="InFlipbook">Flipbook to visualize</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Asynchronously set paper flipbook"))
+	/**
+	* Asynchronous setter for flipbook.
+	*
+	* @param InFlipbook new soft flipbook to display
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Asynchronously sets flipbook"))
 	void SetFlipbookAsync(TSoftObjectPtr<UPaperFlipbook> InFlipbook);
 
-	/// <summary>
-	/// Release handle to paper flipbook resource.
-	/// It would also cancel loading of the asset if it is in progress.
-	/// </summary>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Release handle to paper flipbook resource"))
+	/**
+	* Releases streamed flipbook.
+	* 
+	* @note does not affect already loaded flipbook
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Releases streamed flipbook"))
 	void CancelAsyncLoad();
 
-	/// <returns><c>true</c> if paper flipbook resource is not loaded yet.</returns>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Is Flipbook resource loading"))
+	/**
+	* @return {@code true} when streaming is still in progress.
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Is flipbook loading"))
 	bool IsFlipbookLoading() const;
 
-	/// <returns><c>true</c> if paper flipbook resource is loaded.</returns>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Is Flipbook resource loaded"))
+	/**
+	* @return {@code true} when streaming has finished.
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Is flipbook loaded"))
 	bool IsFlipbookLoaded() const;
 
-	/// <summary>
-	/// Set color and opacity of paper flipbook.
-	/// </summary>
-	/// <param name="InColorAndOpacity">Desired color and opacity</param>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set Color and Opacity of the Flipbook"))
+	/**
+	* Setter for UVisualImage::ColorAndOpacity.
+	* 
+	* @param InColorAndOpacity new color and opacity of the flipbook
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Sets color and opacity of the flipbook"))
 	void SetColorAndOpacity(const FLinearColor& InColorAndOpacity);
 
-	/// <summary>
-	/// Set scale of paper flipbook.
-	/// </summary>
-	/// <param name="InDesiredScale">New scale of paper flipbook</param>
-	/// <seealso cref="UVisualImage::DesiredScale"/>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set scale of Flipbook"))
+	/**
+	* Setter for UVisualImage::DesiredScale.
+	* 
+	* @param InDesiredScale new desired scale of the flipbook
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Sets scale of flipbook"))
 	void SetDesiredScale(const FVector2D& InDesiredScale);
 
-	/// <summary>
-	/// Set orientation of paper flipbook on X and Y axes.
-	/// </summary>
-	/// <param name="InMirrorScale">New orientation of paper flipbook</param>
-	/// <seealso cref="UVisualImage::MirrorScale"/>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Set orientation of Flipbook on X and Y axes"))
+	/**
+	* Setter for UVisualImage::MirrorScale.
+	* 
+	* @param InMirrorScale new mirror scale of the flipbook
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Sets orientation of the flipbook on X and Y axes"))
 	void SetMirrorScale(const FVector2D& InMirrorScale);
 
-	/// <returns>Displayed paper flipbook</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Displayed paper flipbook"))
+	/**
+	* @return current flipbook
+	*/
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Displayed flipbook"))
 	FORCEINLINE UPaperFlipbook* GetFlipbook() const { return Flipbook; }
 
-	/// <returns><c>true</c> if animation sequence of paper flipbook is playing</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Is animation sequence of Flipbook playing"))
+	
+	/**
+	* @return animation state of the flipbook
+	*/
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Is animation sequence of the flipbook playing"))
 	FORCEINLINE bool IsAnimated() const { return bAnimate; }
 
-	/// <summary>
-	/// Get index of paper flipbook frame that is currently displayed. Meaningless if <see cref="UVisualImage::bAnimate"/> is <c>true</c>.
-	/// <returns>Paper flipbook's frame index</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Get index of paper flipbook frame that is currently displayed. Meaningless if bAnimate is set to true"))
-	FORCEINLINE int GetFrameIndex() const { return FrameIndex; }
+	/**
+	* @return Index of the flipbook frame that should be displayed.
+	*		  Meaningless when flipbook is animated.
+	*/
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Index of the flipbook frame that should be displayed. Meaningless when flipbook is animated"))
+	FORCEINLINE int32 GetFrameIndex() const { return FrameIndex; }
 
-	/// <returns>Color and opacity of paper flipbook</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Color and opacity of paper flipbook"))
+	/**
+	* @return color and opacity of the flipbook
+	*/
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Color and opacity of the flipbook"))
 	FORCEINLINE FLinearColor GetColorAndOpacity() const { return ColorAndOpacity; }
 
-	/// <returns>Scale of paper flipbook</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Scale of paper flipbook"))
+	/**
+	* @return desired scale of the flipbook
+	*/
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Desired scale of the flipbook"))
 	FORCEINLINE FVector2D GetDesiredScale() const { return DesiredScale; }
 
-	/// <returns>Orientation of paper flipbook</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Orientation of paper flipbook"))
+	/**
+	* @return mirror scale of the flipbook
+	*/
+	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Mirror scale of the flipbook"))
 	FORCEINLINE FVector2D GetMirrorScale() const { return MirrorScale; }
 
-	/// <summary>
-	/// Get the visualized frame of paper flipbook.
-	/// </summary>
-	/// <returns>Currently displayed sprite</returns>
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Get the visualized frame of paper flipbook."))
+	/**
+	* @return sprite of the flipbook that is currently visualized by this widget
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "Visual Image", meta = (ToolTip = "Sprite of the flipbook that is currently visualized"))
 	UPaperSprite* GetCurrentSprite() const;
 
 protected:
 #if WITH_EDITOR
+	/**
+	* Editor only.
+	* 
+	* @return category name in which this widget should be shown in the palette
+	*/
 	virtual const FText GetPaletteCategory() override;
 #endif
-
+	
+	/**
+	* Keeps C++ and derived blueprint classes synced in the widget designer.
+	*/
 	virtual void SynchronizeProperties() override;
 
+	/**
+	* @return underlying slate widget
+	*/
 	virtual TSharedRef<SWidget> RebuildWidget() override;
+	
+	/**
+	* Asynchronously stream soft flipbook in the memory.
+	* Will trigger assertion for invalid soft flipbook.
+	* 
+	* @param FlipbookToLoad soft flipbook to stream in memory
+	* @param AfterLoadDelegate delegate to execute after loading is complete
+	* @param Priority how urgent is loading of the soft flipbook
+	* @return handle to the loaded flipbook
+	*/
+	TSharedPtr<FStreamableHandle> AsyncLoadFlipbook(TSoftObjectPtr<UPaperFlipbook> FlipbookToLoad, FStreamableDelegate AfterLoadDelegate, TAsyncLoadPriority Priority);
 
-	/// <summary>
-	/// Convertion for property binding implementation.
-	/// </summary>
-	/// <param name="InFlipbook">non-const paper flipbook slate attribute</param>
-	/// <returns><c>const</c> paper flipbook</returns>
+	/**
+	* Converts flipbook attribute to the flipbook pointer.
+	* Used to implement property binding of the flipbook.
+	* 
+	* @param InFlipbook flipbook attribute to convert
+	* @return retrieved flipbook
+	*/
 	const UPaperFlipbook* ToFlipbook(TAttribute<UPaperFlipbook*> InFlipbook) const;
 
 	PROPERTY_BINDING_IMPLEMENTATION(FSlateColor, ColorAndOpacity);
 
 protected:
+	/**
+	* Underlying slate widget.
+	* 
+	* @seealso UVisualImage::RebuildWidget()
+	*/
 	TSharedPtr<SVisualImage> VisualImageSlate;
+
 };

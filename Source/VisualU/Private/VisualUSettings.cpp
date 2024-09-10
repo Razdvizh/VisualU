@@ -1,10 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "VisualUSettings.h"
 
 UVisualUSettings::UVisualUSettings(const FObjectInitializer& ObjectInitializer) 
-	: Super(ObjectInitializer), 
+	: Super(ObjectInitializer),
+	FirstDataTable(),
+	TransitionMPC(),
+	TransitionDuration(0.f),
 	PairCharacter(),
 	AParameterName(TEXT("Transition 1")),
 	BParameterName(TEXT("Transition 2"))

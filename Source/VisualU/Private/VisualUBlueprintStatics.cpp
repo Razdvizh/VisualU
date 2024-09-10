@@ -1,10 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "VisualUBlueprintStatics.h"
 #include "PaperSprite.h"
 #include "Scenario.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "VisualController.h"
+#include "Engine/DataTable.h"
 
 UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 {
@@ -13,32 +15,41 @@ UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 
 void UVisualUBlueprintStatics::PrintScenesData()
 {
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	TArray<FAssetData> ScenesData;
 	GetScenesData(ScenesData);
 
-	for (const auto& Asset : ScenesData)
+	for (const FAssetData& Asset : ScenesData)
 	{
 		const UDataTable* DataTable = Cast<UDataTable>(Asset.GetAsset());
 		TArray<FScenario*> Rows;
 		
 		DataTable->GetAllRows(UE_SOURCE_LOCATION, Rows);
 
-		UE_LOG(LogVisualU, Warning, TEXT("%s"), *Asset.AssetName.ToString());
+		UE_LOG(LogVisualU, Display, TEXT("%s"), *Asset.AssetName.ToString());
 
-		int cnt = 0;
-		for (const auto Row : Rows)
+		int32 cnt = 0;
+		for (const FScenario* Row : Rows)
 		{
 			cnt++;
-			UE_LOG(LogVisualU, Warning, TEXT("\tRow %d"), cnt);
-			Row->PrintLog();
-			UE_LOG(LogVisualU, Warning, TEXT("================================================="));
+			UE_LOG(LogVisualU, Display, TEXT("\tRow %d"), cnt);
+			UE_LOG(LogVisualU, Display, TEXT("%s"), *Row->ToString());
+			UE_LOG(LogVisualU, Display, TEXT("================================================="));
 		}
 	}
+#endif
+}
+
+bool UVisualUBlueprintStatics::Choose(UVisualController* Controller, const UDataTable* DataTable)
+{
+	check(Controller);
+	check(DataTable);
+	return Controller->RequestNode(DataTable);
 }
 
 void UVisualUBlueprintStatics::GetScenesData(TArray<FAssetData>& OutData)
 {
-	FAssetRegistryModule* AssetRegistryModule = &FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
 
 	FARFilter Filter;
 
@@ -53,6 +64,6 @@ void UVisualUBlueprintStatics::GetScenesData(TArray<FAssetData>& OutData)
 
 	if (IsInGameThread())
 	{
-		AssetRegistryModule->Get().GetAssets(Filter, OutData);
+		AssetRegistryModule.Get().GetAssets(Filter, OutData);
 	}
 }

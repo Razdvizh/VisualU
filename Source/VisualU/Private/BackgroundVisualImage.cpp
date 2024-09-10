@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "BackgroundVisualImage.h"
@@ -16,11 +16,11 @@ UBackgroundVisualImage::UBackgroundVisualImage(const FObjectInitializer& ObjectI
 {
 }
 
-void UBackgroundVisualImage::SetTransitionState(bool IsTransitioning)
+void UBackgroundVisualImage::StopTransition()
 {
 	if (VisualImageSlate.IsValid())
 	{
-		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->SetTransitionState(IsTransitioning);
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->StopTransition();
 	}
 }
 
@@ -38,7 +38,15 @@ void UBackgroundVisualImage::PlayTransition(UPaperFlipbook* Target, UMaterialIns
 {
 	if (VisualImageSlate.IsValid())
 	{
-		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->SetTransition(Target, Transition, bShouldAnimateTarget);
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->StartTransition(Target, Transition, bShouldAnimateTarget);
+	}
+}
+
+void UBackgroundVisualImage::PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, int32 TargetFrameIndex)
+{
+	if (VisualImageSlate.IsValid())
+	{
+		StaticCast<SBackgroundVisualImage*>(VisualImageSlate.Get())->StartTransition(Target, Transition, TargetFrameIndex);
 	}
 }
 
@@ -48,10 +56,3 @@ TSharedRef<SWidget> UBackgroundVisualImage::RebuildWidget()
 
 	return VisualImageSlate.ToSharedRef();
 }
-
-#if WITH_EDITOR
-const FText UBackgroundVisualImage::GetPaletteCategory()
-{
-	return UWidget::GetPaletteCategory();
-}
-#endif

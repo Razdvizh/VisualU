@@ -1,152 +1,111 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) Sam Bloomberg
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/RichTextBlock.h"
-#include "VisualUSettings.h"
+#include "Framework/Text/IRichTextMarkupParser.h"
+#include "Framework/Text/RichTextLayoutMarshaller.h"
+#include "Framework/Text/SlateTextLayout.h"
 #include "VisualTextBlock.generated.h"
 
-class UVisualUSettings;
-///\todo change this to regular dynamic multicast delegate
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnActionEncounteredSignature, UVisualTextBlock, OnActionEncountered, const EVisualTextAction, Action);
+struct VISUALU_API FDialogueTextSegment
+{
+	FString Text;
+	FTextRunParseResults RunInfo;
+};
 
-/// <summary>
-/// Supports Visual Novel style of typewriter effect.
-/// </summary>
-/// <remarks>
-/// <c>Visual Text Block</c> can be used as [Rich Text Block](https://docs.unrealengine.com/4.27/en-US/API/Runtime/UMG/Components/URichTextBlock/)
-/// for static rich text and embedded images, fields that <c>Visual Text Block</c> provides control only typewriter effect.
-/// Typewriter mode is achived by calling <see cref="UVisualTextBlock::SetText"/> method.
-/// Use of embedded images in this mode may lead to unexpected behavior, other features that <c>Rich Text Block</c> has are supported.
-/// </remarks>
-UCLASS(meta = (ToolTip = "Supports Visual Novel style of typewriter effect"))
+/**
+ * A text block that exposes more information about text layout.
+ */
+UCLASS()
 class VISUALU_API UVisualTextBlock : public URichTextBlock
 {
 	GENERATED_BODY()
-	
+
 public:
-	UVisualTextBlock(const FObjectInitializer& ObjectInitializer);
+	UVisualTextBlock(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	/// <summary>
-	/// Sets text for the <c>Text Block</c> as if it is typed on typewriter or keyboard.
-	/// Calling it again while the text visualization is still in progress or with incorrect values of controlling fields
-	/// will cause the whole text to show up immediately.
-	/// </summary>
-	/// <param name="InText">Text to display</param>
-	virtual void SetText(const FText& InText) override;
+	FORCEINLINE TSharedPtr<IRichTextMarkupParser> GetTextParser() const
+	{
+		return TextParser;
+	}
 
-	/// <summary>
-	/// Sets the desired amount of characters in one line.
-	/// </summary>
-	/// <param name="InLineWidth">Amount of characters in one line</param>
-	/// \warning <see cref="UVisualTextBlock::LineWidth"/> does not guarantee specified amount of characters to be in one line
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Sets the desired amount of characters in one line."))
-	void SetLineWidth(int InLineWidth);
+	// The amount of time between printing individual letters (for the "typewriter" effect).
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Text Block")
+	float LetterPlayTime;
 
-	/// <summary>
-	/// Sets the delay for next character to appear.
-	/// </summary>
-	/// <param name="Delay">Delay in seconds</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Sets the delay for next character to appear."))
-	void SetCharacterAppearanceDelay(float Delay);
+	// The amount of time to wait after finishing the line before actually marking it completed.
+	// This helps prevent accidentally progressing dialogue on short lines.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual Text Block")
+	float EndHoldTime;
 
-	/// <returns>Delay, in seconds, for the next character to appear</returns>
-	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Delay, in seconds, for the next character to appear"))
-	FORCEINLINE float GetCharacterAppearanceDelay() const { return CharacterAppearanceDelay; };
+	/*
+	* Applies typewriter effect to the current text of the text block.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	void Typewrite();
 
-	/// <summary>
-	/// Whether or not the typewriter effect is active.
-	/// </summary>
-	/// <returns><c>true</c> if the text is displayed as self-typed</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Whether or not the typewriter effect is active."))
-	FORCEINLINE bool IsAppearingText() const { return bIsAppearingText; };
+	/*
+	* Pause active typewriter effect.
+	* @note not threadsafe, has no effect for inactive timer.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	void Pause();
 
-	/// <summary>
-	/// Determines whether the text block displays the whole text instantly or in self-typed way.
-	/// </summary>
-	/// <param name="ShouldDisplayInstantly">How text should be displayed</param>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Determines whether the text block displays the whole text instantly or in self-typed way"))
-	void SetDisplayMode(bool ShouldDisplayInstantly);
+	/*
+	* Resume active typewriter effect.
+	* @note not threadsafe, has no effect for active timer.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	void Resume();
 
-	/// <summary>
-	/// How text will be visualized during <see cref="UVisualTextBlock::SetText"/> call.
-	/// </summary>
-	/// <returns><c>true</c> if the text would be displayed instantly</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "How text will be visualized during SetText call."))
-	FORCEINLINE bool GetDisplayMode() const { return bDisplayInstantly; };
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	FORCEINLINE bool HasTypewriterFinished() const { return bHasFinishedPlaying; }
 
-	/// <returns>desired amount of characters in one line</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "desired amount of characters in one line"))
-	FORCEINLINE int GetLineWidth() const { return LineWidth; };
+	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
+	void ForceTypewriteToEnd();
 
-	/// <summary>
-	/// Pauses on going display of the text. 
-	/// </summary>
-	/// <returns><c>true</c> if the text was paused</returns>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Pauses on going display of the text."))
-	bool PauseTextDisplay();
-
-	/// <summary>
-	/// Resumes text display.
-	/// </summary>
-	UFUNCTION(BlueprintCallable, Category = "Visual Text Block", meta = (ToolTip = "Resumes text display."))
-	void UnPauseTextDisplay();
-
-	/// <summary>
-	/// Broadcasts the encountered action in the text.
-	/// </summary>
-	UPROPERTY(BlueprintAssignable, Category = "Visual Text Block", meta = (ToolTip = "Broadcasts the encountered action in the text."))
-	FOnActionEncounteredSignature OnActionEncountered;
+	// variants to feed slate widget more info
+	virtual void SetTextPartiallyTyped(const FText& InText, const FText& InFinalText);
 
 protected:
-	/// <summary>
-	/// Delay, in seconds, for next character to appear. Must be more than zero to take effect.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, BlueprintGetter = GetCharacterAppearanceDelay, Category = "Visual Text Block", meta = (ToolTip = "Delay, in seconds, for the next character to appear", Units = "s", UIMin = 0.01f, ClampMin = 0.01f))
-	float CharacterAppearanceDelay = 0.04f;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Visual Text Block")
+	void OnPlayLetter();
 
-	/// <summary>
-	/// Desired number of characters for one line. Must be more or equal 2 to take effect.
-	/// </summary>
-	/// \warning Does not guarantee that each line would have exact specified amount of characters.
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "Desired number of characters for one line. Must be more or equal 2 to take effect. Does not guarantee that each line would have exact specified amount of characters.", Delta = 1.f, UIMin = 2, ClampMin = 2))
-	int LineWidth;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Visual Text Block")
+	void OnTypewriterFinished();
 
-#if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override;
-#endif
+	virtual TSharedRef<SWidget> RebuildWidget() override;
 
 private:
-	FTimerHandle CharacterDelayTimer;
+	void PlayNextLetter();
 
-	FTimerDynamicDelegate CharacterDelayDelegate;
+	void CalculateWrappedString();
 
-	const UVisualUSettings* VisualUSettings;
+	FString CalculateSegments();
 
-	/// \internal
-	/// <summary>
-	/// Displays one character from provided text. It is specified as a method in order to build a plugin, and it shouldn't be used anywhere else.
-	/// </summary>
-	UFUNCTION()
-	void DisplayOneCharacter();
+	TSharedPtr<IRichTextMarkupParser> TextParser;
 
-	/// \internal
-	/// <summary>
-	/// Parse text for metacharacters and remove them for final display.
-	/// </summary>
-	UFUNCTION()
-	void CheckForActions();
+	UPROPERTY()
+	FText CurrentLine;
 
-	FString CurrentString;
+	TArray<FDialogueTextSegment> Segments;
 
-	FString TextString;
+	// The section of the text that's already been printed out and won't ever change.
+	// This lets us cache some of the work we've already done. We can't cache absolutely
+	// everything as the last few characters of a string may change if they're related to
+	// a named run that hasn't been completed yet.
+	FString CachedSegmentText;
 
-	uint32 TextLength;
+	int32 CurrentSegmentIndex;
 
-	uint32 CurrCharCnt;
+	int32 CurrentLetterIndex;
 
-	bool bIsAppearingText;
+	int32 MaxLetterIndex;
 
-	bool bDisplayInstantly;
+	uint32 bHasFinishedPlaying : 1;
+
+	FTimerHandle LetterTimer;
 };

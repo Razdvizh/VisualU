@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -7,6 +7,8 @@
 #include "VisualUBlueprintStatics.generated.h"
 
 class UPaperSprite;
+class UVisualController;
+class UDataTable;
 
 ///<summary>
 /// Provides useful functionality that is missing in the Blueprints.
@@ -16,19 +18,23 @@ class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
+public:
 	/// <summary>
 	/// Get the texture of <paramref name="Sprite"/> that should be rendered.
 	/// </summary>
 	/// <param name="Sprite">Sprite to get texture from</param>
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Paper Sprite", meta = (ToolTip = "Get the texture of Sprite that should be rendered"))
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Paper Sprite", meta = (ToolTip = "Get the texture of sprite that should be rendered"))
 	static UTexture2D* GetSpriteTexture(UPaperSprite* Sprite);
 
 	/// <summary>
 	/// Outputs a friendly representation of scene data to the log.
 	/// </summary>
 	/// <param name="InScenesData">Data to print to the log</param>
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (ToolTip = "Outputs a friendly representation of scene data to the log"))
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (DevelopmentOnly, ToolTip = "Outputs a friendly representation of scene data to the log"))
 	static void PrintScenesData();
+
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Choice", meta = (ToolTip = "Sets Visual Controller to iterate over provided Data Table. NOTE: Data Table can't be empty."))
+	static bool Choose(UVisualController* Controller, const UDataTable* DataTable);
 
 private:
 	/// <summary>
