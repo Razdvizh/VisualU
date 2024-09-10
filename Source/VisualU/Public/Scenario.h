@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -14,10 +14,9 @@ class UPaperFlipbook;
 class UMaterialInterface;
 class USoundCue;
 
-/// <summary>
-/// Polymorphlic struct that describes which <see cref="UVisualSprite">Visual Sprite</see> to visualize, its appearance and position 
-/// in the <see cref="UVisualScene">Visual Scene</see>.
-/// </summary>
+/**
+* Describes UVisualSprite for UVisualRenderer. 
+*/
 USTRUCT(BlueprintType)
 struct FSprite
 {
@@ -26,36 +25,38 @@ struct FSprite
 public:
 	FSprite();
 
-	/// <summary>
-	/// <see cref="UVisualSprite">Visual Sprite</see> class to be constructed and visualized by <see cref="UVisualScene">Visual Scene</see>.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite class to be constructed and visualized by Visual Scene"))
+	/**
+	* UVisualSprite class to be visualized by UVisualRenderer.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Sprite class to be visualized by Visual Renderer"))
 	TSoftClassPtr<UVisualSprite> SpriteClass;
 
-	/// <summary>
-	/// <see cref="UVisualSprite">Visual Sprite</see> anchors in Canvas Panel.
-	/// </summary>
-	/// <seealso cref="FVisualAnchors"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite anchors in Canvas Panel"))
+	/**
+	* UVisualSprite anchors in Canvas Panel.
+	* 
+	* @seealso FVisualAnchors
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Sprite anchors in Canvas Panel"))
 	FVisualAnchors Anchors;
 
-	/// <summary>
-	/// <see cref="UVisualSprite">Visual Sprite</see> position in Canvas Panel.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite position in Canvas Panel"))
+	/**
+	* UVisualSprite position in Canvas Panel.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Sprite position in Canvas Panel"))
 	FVector2D Position;
 
-	/// <summary>
-	/// <see cref="UVisualSprite">Visual Sprite</see> Z coordinate (or layer) in Canvas Panel.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Visual Sprite's Z coordinate (a.k.a layer) in Canvas Panel"))
+	/**
+	* UVisualSprite Z coordinate (or layer) in Canvas Panel.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Sprite Z coordinate (or layer) in Canvas Panel"))
 	int32 ZOrder;
 
-	/// <summary>
-	/// Information for <see cref="UVisualImage">Visual Images</see> inside <see cref="UVisualSprite">Visual Sprite</see>.
-	/// </summary>
-	/// <seealso cref="UVisualSprite::AssignSpriteInfo"/>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside Visual Sprite"))
+	/**
+	* Information for UVisualImages inside UVisualSprite.
+	* 
+	* @seealso UVisualSprite::AssignSpriteInfo()
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
 	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FSprite& Sprite)
@@ -69,6 +70,9 @@ public:
 		return Ar;
 	}
 
+	/**
+	* String representation of FSprite.
+	*/
 	inline FString ToString() const
 	{
 		FString String;
@@ -104,9 +108,9 @@ public:
 	}
 };
 
-/// <summary>
-/// Polymorphic struct that describes what background to display and what effect to use for transition.
-/// </summary>
+/**
+* Describes what background to display and what effect to use for transition.
+*/
 USTRUCT(BlueprintType)
 struct FBackground
 {
@@ -115,18 +119,21 @@ struct FBackground
 public:
 	FBackground();
 
-	/// <summary>
-	/// Background info for the scene.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Background info for the Scenario"))
+	/**
+	* Background info for the scene.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Background")
 	FVisualImageInfo BackgroundArtInfo;
 
-	/// <summary>
-	/// Transition to play on background when switching to the next scene.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene", meta = (ToolTip = "Transition to play on background when switching to the next scene"))
+	/**
+	* Transition to play on background when switching to the next scene.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Background")
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
 
+	/**
+	* String representation of FBackground.
+	*/
 	inline FString ToString() const
 	{
 		const FString String = FString::Printf(TEXT("%s\nTransition Material: %s"),
@@ -152,6 +159,11 @@ public:
 	}
 };
 
+/**
+* Metadata to describe FScenario.
+* 
+* @note Not enforced
+*/
 UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = true))
 enum class EScenarioMetaFlags : uint8
 {
@@ -166,6 +178,9 @@ enum class EScenarioMetaFlags : uint8
 };
 ENUM_CLASS_FLAGS(EScenarioMetaFlags)
 
+/**
+* Data that describes FScenario.
+*/
 USTRUCT(BlueprintType)
 struct FVisualScenarioInfo : public FVisualInfo
 {
@@ -173,45 +188,60 @@ struct FVisualScenarioInfo : public FVisualInfo
 
 public:
 	FVisualScenarioInfo();
-
-	/// <summary>
-	/// An author of the <see cref="FScenario::Line">Line</see>.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "An author of the Line"))
+	
+	/**
+	* An author of the FVisualScenarioInfo::Line.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "An author of the line"))
 	FText Author;
 
-	/// <summary>
-	/// A dialog line.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "A dialog line"))
+	/**
+	* A dialog line.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
 	FText Line;
 
-	/// <summary>
-	/// Audio to play while the scene is displayed.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Audio to play while this Scenario is displayed"))
+	/**
+	* Audio to play while the scene is displayed.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
 	TSoftObjectPtr<USoundBase> Sound;
 
-	/// <summary>
-	/// Background to display.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Background to display"))
+	/**
+	* Background to display.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info")
 	FBackground Background;
 
-	/// <summary>
-	/// Sprites that this scene has.
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Sprites that this Scenario has"))
+	/**
+	* FSprites that the scene has.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (ToolTip = "Sprites that the scene has"))
 	TArray<FSprite> SpritesParams;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "What kinds of Visual sprites this scene has"))
+	/**
+	* Describes the role of UVisualSprites of the scene.
+	* 
+	* @note Not enforced
+	* 
+	* @seealso EScenarioMetaFlags
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "Describes the role of sprites of the scene"))
 	uint8 Flags = 0;
 
+	/**
+	* Implements Visitor pattern for this info.
+	* 
+	* @seealso FVisualInfo::Accept()
+	*/
 	virtual void Accept(IInfoAssignable* Visitor) const override
 	{
 		Visitor->AssignScenarioVisualInfo(*this);
 	}
 
+	/**
+	* String representation of the scene.
+	*/
 	virtual FString ToString() const override
 	{
 		FString String;
@@ -266,26 +296,29 @@ public:
 	}
 };
 
-/// <summary>
-/// A single scene or "frame" of the Visual Novel game.
-/// </summary>
-/// <remarks>
-/// Struct with data that describe one scene handled by <see cref="UVisualScene">Visual Scene</see>.
-/// Can be imported from CSV or JSON file or added directly as a row to the <c>Data Table</c> that has <c>FScenario</c> row struct.
-/// Terms "Scene", "Row" and "Scenario" all refer to <c>FScenario</c>. <see cref="UVisualScene">Visual Scene</see> and "Scene" are distinguished
-/// by word "Visual" in front of the class one.
-/// Grouped together under <c>Data Table</c>, they represent a node of the tree structure that allows to create multiple ways to complete the game. 
-/// The first scene in the game is specified by <see cref="UVisualUSettings::FirstDataTable"/> field.
-/// The last scene in the node **can** have <see cref="UVisualChoice">Visual Choice sprite</see> that links nodees together.
-/// Connections between scenes are managed by <see cref="UVisualScene">Visual Scene</see>.
-/// That being said, <c>FScenario</c> is an intrusive data structure, 
-/// meaning that <c>FScenario</c> is well aware in what node and where in the node it resides.
-/// That implies that <c>FScenario</c> must be a part of a node and cannot be owned by some other entity.
-/// <c>FScenario</c> is a polymorphic struct and can be extended if needed.
-/// </remarks>
-/// <seealso cref="FSprite"/>
-/// <seealso cref="UVisualScene"/>
-USTRUCT(BlueprintType)
+/**
+* Describes a single scene/entry/"frame" of UVisualController.
+* Struct with data that describes one scene handled by UVisualController.
+* Can be imported from CSV or JSON file or added directly 
+* as a row to the {@code Data Table} that has {@code FScenario} row struct.
+* Terms "Scene" and "Scenario" in this plugin all refer to {@code FScenario}.
+* Grouped together under {@code Data Table}, scenarios represent a node in 
+* the tree structure, granting ability to choose different narrative paths.
+* The first scene, or root, together with its node in the tree is specified
+* by UVisualUSettings::FirstDataTable.
+* Connections between nodes can be placed in any scene in the current node,
+* but make most sense in the last scene of the current node.
+* Connections can be created by calling UVisualController::RequestNode().
+* Created connections are managed by UVisualController. That said,
+* FScenario is a somewhat-intrusive data structure, that is well aware in
+* what node it resides. That implies that FScenario must be a part of a node.
+* 
+* @note FScenario is a polymorphic struct and can be extended if needed.
+* 
+* @seealso FSprite
+* @seealso UVisualController
+*/
+USTRUCT(BlueprintType, meta = (ToolTip = " Describes a single scene/entry/\"frame\" of Visual Controller"))
 struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 {
 	GENERATED_BODY()
@@ -293,18 +326,31 @@ struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 public:
 	FScenario();
 
+	/**
+	* Actual data of this scenario.
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario")
 	FVisualScenarioInfo Info;
 
 protected:
-	//Left undiscoverable by reflection to avoid circular references and intricacies of TWeakObjectPtr.
+	/**
+	* Node that owns this scenario. Can be nullptr.
+	* 
+	* @note Left undiscoverable by reflection to avoid circular references
+	*		and intricacies of TWeakObjectPtr.
+	*/
 	const UDataTable* Owner;
 
+	/**
+	* Position of this scenario in the node.
+	*/
 	int32 Index;
 
 public:
 	/*
 	* Matches provided scene to its data stored in the data table.
+	* 
+	* @note Used during serialization
 	*/
 	static FScenario* ResolveScene(const FScenario& Scene)
 	{
@@ -323,28 +369,46 @@ public:
 		return nullptr;
 	}
 
+	/*
+	* @return Node of this scenario, can be nullptr
+	*/
 	FORCEINLINE const UDataTable* GetOwner() const { return Owner; }
 
+	/*
+	* @return Position of this scenario
+	*/
 	FORCEINLINE int32 GetIndex() const { return Index; }
 
+	/*
+	* @see FScenario::Intrude()
+	* 
+	* @param InDataTable Data table that imported this row
+	* @param InRowName Name of this this row
+	* @param OutCollectedImportProblems issues found during import
+	*/
 	virtual void OnPostDataImport(const UDataTable* InDataTable, const FName InRowName, TArray<FString>& OutCollectedImportProblems) override
 	{
-		Intrusive(InDataTable);
+		Intrude(InDataTable);
 	}
 
+	/*
+	* @see FScenario::Intrude()
+	* 
+	* @param InDataTable Data table that imported this row
+	* @param InRowName Name of this row
+	*/
 	virtual void OnDataTableChanged(const UDataTable* InDataTable, const FName InRowName) override
 	{
-		Intrusive(InDataTable);
+		Intrude(InDataTable);
 	}
 
-	/// <summary>
-	/// Supplies assets that should be loaded into the memory.
-	/// Note: these assets might be already loaded.
-	/// </summary>
-	/// <param name="Out">Array to be filled with data that should be loaded</param>
-	/// <remarks>
-	/// Method will empty <paramref name="Out"/> array.
-	/// </remarks>
+	/**
+	* Provides assets that should be loaded into the memory.
+	* 
+	* @note said assets might be already loaded. Will empty Out.
+	* 
+	* @param Array to be filled with data that should be loaded
+	*/
 	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
 	{
 		Out.Reserve(3 + Info.SpritesParams.Num());
@@ -376,12 +440,18 @@ public:
 		}
 	}
 
+	/**
+	* String representation of scenario data.
+	*/
 	virtual FString ToString() const
 	{
 		return Info.ToString();
 	}
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	/**
+	* String representation of this scenario for debugging purposes.
+	*/
 	FORCEINLINE FString GetDebugString() const
 	{
 		check(Owner);
@@ -389,25 +459,28 @@ public:
 	}
 #endif
 
-	/// <summary>
-	/// Checks whether or not this scene has at least one <see cref="UVisualChoice">Visual Choice</see>.
-	/// </summary>
-	/// <returns><c>true</c> if scene has <see cref="UVisualChoice">Visual Choice</see></returns>
+	/**
+	* @return {@code true} when this scenario has EScenarioMetaFlags::Choice flag.
+	*/
 	inline bool HasChoice() const
 	{
 		const uint8 Choice = StaticCast<uint8>(EScenarioMetaFlags::Choice);
 		return (Info.Flags & Choice) == Choice;
 	}
 
-	/// <summary>
-	/// Checks whether or not this scene background has valid <see cref="FBackground::TransitionMaterial"/> assigned.
-	/// </summary>
-	/// <returns><c>true</c> if scene background has valid <see cref="FBackground::TransitionMaterial"/></returns>
+	/**
+	* @return {@code true} when this scenario has valid transition material.
+	*/
 	inline bool HasTransition() const
 	{
 		return !Info.Background.TransitionMaterial.IsNull();
 	}
 
+	/**
+	* Setter for FScenario::Info.
+	* 
+	* @param InInfo New information for this scenario
+	*/
 	virtual void AssignScenarioVisualInfo(const FVisualScenarioInfo& InInfo) override
 	{
 		Info.Author = InInfo.Author;
@@ -451,12 +524,12 @@ public:
 	}
 
 private:
-	/// \internal
-	/// <summary>
-	/// Embeds the owning <c>Data Table</c> and index at which this scene resides.
-	/// </summary>
-	/// <param name="InDataTable">Owner of this scene</param>
-	inline void Intrusive(const UDataTable* InDataTable)
+	/**
+	* Makes this scenario aware of its owner and its position.
+	* 
+	* @param InDataTable the owner of this scenario
+	*/
+	inline void Intrude(const UDataTable* InDataTable)
 	{
 		Owner = InDataTable;
 		TArray<FScenario*> Rows;

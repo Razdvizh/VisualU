@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "SBackgroundVisualImage.h"
@@ -6,8 +6,8 @@
 #include "PaperFlipbook.h"
 #include "VisualUSettings.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "ME_TransitionParameter2D.h"
 #include "Engine/Texture.h"
-#include "TransitionMaterialProxy.h"
 #include "Animation/CurveSequence.h"
 
 SLATE_IMPLEMENT_WIDGET(SBackgroundVisualImage)
@@ -94,7 +94,7 @@ UObject* SBackgroundVisualImage::GetFinalResource() const
 		TMap<FName, UTexture*> Params;
 		Params.Add(VisualUSettings->AParameterName, GetCurrentSprite()->GetBakedTexture());
 		Params.Add(VisualUSettings->BParameterName, GetTargetSprite()->GetBakedTexture());
-		return FTransitionMaterialProxy::GetTransitionMaterial(Transition.Get(), Params);
+		return UME_TransitionParameter2D::GetTransitionMaterial(Transition.Get(), Params);
 	}
 
 	return GetCurrentSprite();

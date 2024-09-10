@@ -1,8 +1,9 @@
 
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "ME_TransitionParameter2D.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "VisualUSettings.h"
 
 UME_TransitionParameter2D::UME_TransitionParameter2D(const FObjectInitializer& ObjectInitializer)
@@ -14,6 +15,16 @@ UME_TransitionParameter2D::UME_TransitionParameter2D(const FObjectInitializer& O
 	AParameterName = VisualSettings->AParameterName;
 	BParameterName = VisualSettings->BParameterName;
 	SamplerSource = ESamplerSourceMode::SSM_Wrap_WorldGroupSettings;
+}
+
+UMaterialInstanceDynamic* UME_TransitionParameter2D::GetTransitionMaterial(UMaterialInstanceDynamic* MaterialToChange, const TMap<FName, UTexture*>& Params)
+{
+	for (auto It = Params.CreateConstIterator(); It; ++It)
+	{
+		MaterialToChange->SetTextureParameterValue(It.Key(), It.Value());
+	}
+
+	return MaterialToChange;
 }
 
 #if WITH_EDITOR

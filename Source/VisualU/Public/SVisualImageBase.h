@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -10,41 +10,93 @@ class UPaperFlipbook;
 class UPaperSprite;
 class SVisualImage;
 
-/// <summary>
-/// Slate base class for custom widgets that serve as FSlateBrush containers.
-/// </summary>
-/// <typeparam name="DerivedT">Subclass which derives directly from SVisualImageBase</typeparam>
+/**
+* Base slate class for widgets that can display some render resource.
+* Utilizes CRTP with double dispatch for derived classes,
+* template function is SVisualImageBase::ConvertToBrush.
+* 
+* @param <DerivedT> derived class of SVisualImageBase
+* 
+* @seealso UVisualImageBase
+*/
 template<class DerivedT>
 class VISUALU_API SVisualImageBase : public SLeafWidget
 {
 
 protected:
+	/**
+	* Handles conversion of the render resource to the slate brush.
+	* 
+	* @note this function is finalized
+	* 
+	* @return slate brush made from SVisualImageBase::GetFinalResource()
+	*/
 	virtual FSlateBrush ConvertToBrush() const final;
 
+	/**
+	* Paints render resource as a brush after applying all modifiers.
+	* 
+	* @param Args contains information about paint of this widget
+	* @param AllotedGeometry base geometry for this widget
+	* @param MyCullingRect culling bounds of this widget
+	* @param OutDrawElements elements to draw in the slate window
+	* @param LayerId layer on which elements should be drawn
+	* @param InWidgetStyle base widget appearance info
+	* @param bParentEnabled is parent widget enabled
+	*/
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override final;
 
-	///ConvertToBrush step methods
+	/**
+	* Used during resource-to-brush conversion
+	* to stop it early when resource is invalid.
+	* 
+	* @return validity of the supplied resource
+	*/
 	bool IsResourceValid() const;
 
+	/**
+	* Resource to be displayed by the widget.
+	* 
+	* @return render resource
+	*/
 	UObject* GetFinalResource() const;
 
+	/**
+	* @return slate size of the resource
+	*/
 	const FVector2D GetImageSize() const;
-	///~ConvertToBrush step methods
 
-	///OnPaint step methods
+	/**
+	* @param InWidgetStyle base widget style
+	* @return color and opacity to be applied to the resource
+	*/
 	const FLinearColor GetFinalColorAndOpacity(const FWidgetStyle& InWidgetStyle) const;
 
+	/**
+	* Optional extension to the SVisualImageBase::OnPaint template.
+	* Called before render resource is drawn.
+	*/
 	void PreSlateDrawElementExtension() const;
 
+	/**
+	* @param AllotedGeometry base geometry for this widget
+	* @return geometry of this widget
+	*/
 	FGeometry MakeCustomGeometry(const FGeometry& AllotedGeometry) const;
 
+	/**
+	* Optional extension to the SVisualImageBase::OnPaint template.
+	* Called after render resource is drawn.
+	*/
 	void PostSlateDrawElementExtension() const;
-	///~OnPaint step methods
 
 private:
+	/**
+	* It is an abstract class, can't be constructed.
+	*/
 	SVisualImageBase() = default;
-	SVisualImageBase(SVisualImageBase const&) {};
-	FORCEINLINE SVisualImageBase& operator=(SVisualImageBase const&) { return *this; }
+	SVisualImageBase(SVisualImageBase const&) = delete;
+	SVisualImageBase& operator=(SVisualImageBase const&) = delete;
 	~SVisualImageBase() = default;
 
 	friend DerivedT;
@@ -53,22 +105,22 @@ private:
 template<class DerivedT>
 inline FSlateBrush SVisualImageBase<DerivedT>::ConvertToBrush() const
 {
-	FSlateBrush Brush = FSlateBrush(); // < body
+	FSlateBrush Brush = FSlateBrush();
 
-	if (IsResourceValid()) //step 1 - Is Resource Valid
+	if (IsResourceValid())
 	{
-		UObject* FinalResource = GetFinalResource(); //step 2 - Get Final Resource
+		UObject* FinalResource = GetFinalResource();
 
-		checkSlow(FinalResource); // < body
+		checkSlow(FinalResource);
 
-		const FVector2D ImageSize = GetImageSize(); // step 3 - Get Size
+		const FVector2D ImageSize = GetImageSize();
 
-		Brush.SetResourceObject(FinalResource); // < body
-		Brush.ImageSize = ImageSize; // < body
-		Brush.ImageType = ESlateBrushImageType::FullColor; // < body
-		Brush.DrawAs = ESlateBrushDrawType::Image; // < body
-		Brush.Tiling = ESlateBrushTileType::NoTile; // < body
-		Brush.TintColor = FSlateColor(FLinearColor::White); // < body
+		Brush.SetResourceObject(FinalResource);
+		Brush.ImageSize = ImageSize;
+		Brush.ImageType = ESlateBrushImageType::FullColor;
+		Brush.DrawAs = ESlateBrushDrawType::Image;
+		Brush.Tiling = ESlateBrushTileType::NoTile;
+		Brush.TintColor = FSlateColor(FLinearColor::White);
 	}
 
 	return Brush;
@@ -77,21 +129,19 @@ inline FSlateBrush SVisualImageBase<DerivedT>::ConvertToBrush() const
 template<class DerivedT>
 inline int32 SVisualImageBase<DerivedT>::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
-	const FSlateBrush Brush = ConvertToBrush(); //step 1 - Get FSlateBrush
+	const FSlateBrush Brush = ConvertToBrush();
 
-	const FLinearColor FinalColorAndOpacity = GetFinalColorAndOpacity(InWidgetStyle); //step 2(opt.) - Get Color And Opacity
+	const FLinearColor FinalColorAndOpacity = GetFinalColorAndOpacity(InWidgetStyle);
 
-	if (IsResourceValid()) // < Body
+	if (IsResourceValid())
 	{
 		PreSlateDrawElementExtension();
 
-		const FGeometry CustomGeometry = MakeCustomGeometry(AllottedGeometry); //step 3(opt.) Make Custom Gemoetry
+		const FGeometry CustomGeometry = MakeCustomGeometry(AllottedGeometry);
 		FSlateDrawElement::MakeBox(OutDrawElements, LayerId, CustomGeometry.ToPaintGeometry(), &Brush, ESlateDrawEffect::None, FinalColorAndOpacity);
 
 		PostSlateDrawElementExtension();
 	}
-
-	//hook 2 > PostSlateBoxCreated
 
 	return LayerId;
 }

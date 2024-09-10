@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -8,7 +8,6 @@
 
 class UVisualController;
 
-// This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UVisualControllerInterface : public UInterface
 {
@@ -16,14 +15,18 @@ class UVisualControllerInterface : public UInterface
 };
 
 /**
- * Indicates that the class has access to Visual Controller.
+ * Indicates that the class has access to UVisualController.
+ * 
+ * @see UVisualController
  */
 class VISUALU_API IVisualControllerInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	/**
+	* @return UVisualController from the class that implements the interface.
+	*/
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Visual Controller Interface")
 	UVisualController* GetVisualController() const;
 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -15,18 +15,18 @@ class UInfoAssignable : public UInterface
 	GENERATED_BODY()
 };
 
-/// <summary>
-/// Interface that allows classes to take data from <see cref="FVisualInfo">Visual Info</see> structures.
-/// Classes can assign data from multiple structures.
-/// </summary>
-/// <remarks>
-/// Use <see cref="IInfoAssignable::AssignVisualImageInfo"/> as an example when adding function for custom <see cref="FVisualInfo">Visual Info</see> struct.
-/// </remarks> 
+/**
+* Interface that allows classes to take data from FVisualInfo structures.
+* Classes can assign data from multiple structures.
+* 
+* Use FVisualImageInfo::AssignVisualImageInfo() as an example
+* when adding function
+* for custom FVisualInfo struct.
+*/
 class IInfoAssignable
 {
 	GENERATED_BODY()
 
-		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void AssignVisualImageInfo(const FVisualImageInfo& Info) PURE_VIRTUAL(IInfoAssignable::AssignVisualImageInfo, );
 
@@ -34,17 +34,19 @@ public:
 
 };
 
-/// <summary>
-/// Base struct for Visual Info system. 
-/// </summary>
-/// <remarks>
-/// Represents certain data which other classes can retrieve through <see cref="IInfoAssignable"/> interface.
-/// To create custom Visual Info struct:
-/// -# Create a struct that inherits from <c>FVisualInfo</c>
-/// -# Add desired fields
-/// -# Override <c>Accept</c> function to implement Visitor pattern (see <see cref="FVisualImageInfo::Acept"/> for example) 
-/// -# Override <c>ToString</c> function if needed
-/// Check <see cref="FVisualImageInfo"/>
+/**
+* Base struct for assignable info.
+* 
+* Represents certain data which other classes can retrieve
+* through IInfoAssignable interface.
+* To create custom Visual Info struct:
+* -# Create a struct that inherits from {@code FVisualInfo}
+* -# Add desired fields
+* -# Override {@code Accept} function to implement Visitor pattern
+* -# Override {@codeToString} function if needed
+* 
+* @seealso FVisualImageInfo
+*/
 USTRUCT(BlueprintInternalUseOnly)
 struct FVisualInfo
 {
@@ -55,7 +57,17 @@ public:
 
 	virtual ~FVisualInfo();
 
+	/**
+	* Entry for visitor.
+	*  
+	* @see FVisualImageInfo::Accept()
+	* 
+	* @param Visitor interface object to assign this info to
+	*/
 	virtual void Accept(IInfoAssignable* Visitor) const PURE_VIRTUAL(FVisualInfo::Accept, );
 
+	/**
+	* @return String representation of this info
+	*/
 	virtual FString ToString() const PURE_VIRTUAL(FVisualInfo::ToString, return FString(););
 };

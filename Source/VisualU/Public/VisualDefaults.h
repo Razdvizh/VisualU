@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -9,10 +9,10 @@
 struct FAnchors;
 struct FMargin;
 
-/// <summary>
-/// Extends [FAnchors](https://docs.unrealengine.com/4.26/en-US/API/Runtime/Slate/Widgets/Layout/FAnchors/) 
-/// with human-friendly constants for all possible anchors' positions.
-/// </summary>
+/**
+* Extends [FAnchors](https://docs.unrealengine.com/5.4/en-US/API/Runtime/Slate/Widgets/Layout/FAnchors/)
+* with human-friendly constants for all possible anchors' positions.
+*/
 USTRUCT(BlueprintType)
 struct FVisualAnchors : public FAnchors
 {
@@ -48,20 +48,21 @@ public:
 		return Ar << Anchors.Minimum << Anchors.Maximum;
 	}
 
-	/// <summary>
-	/// Get a string representation of anchors.
-	/// </summary>
-	/// <returns>String of a minimum and maximum components</returns>
+	/**
+	* String representation of this anchor.
+	* 
+	* @return string of minimum and maximum components
+	*/
 	FString ToString() const
 	{
 		return FString::Printf(TEXT("Minimum: %s, Maximum: %s"), *Minimum.ToString(), *Maximum.ToString());
 	}
 };
 
-/// <summary>
-/// Extends [FMargin](https://docs.unrealengine.com/4.26/en-US/API/Runtime/SlateCore/Layout/FMargin/) with <see cref="Zero"/> margin constant 
-/// and a <see cref="ToString"/> method.
-/// </summary>
+/**
+* Extends [FMargin](https://docs.unrealengine.com/5.4/en-US/API/Runtime/SlateCore/Layout/FMargin/)
+* with additional constants, functions and serialization.
+*/
 USTRUCT(BlueprintType)
 struct FVisualMargin : public FMargin
 {
@@ -87,10 +88,11 @@ public:
 		return Ar;
 	}
 
-	/// <summary>
-	/// Get a string representation of margin.
-	/// </summary>
-	/// <returns>String of all margins</returns>
+	/**
+	* String representation of this margin.
+	* 
+	* @return string of all margins
+	*/
 	FString ToString() const
 	{
 		return FString::Printf(TEXT("Left: %d, Top: %d, Right: %d, Bottom: %d"), Left, Top, Right, Bottom);

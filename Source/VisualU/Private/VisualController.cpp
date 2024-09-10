@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "VisualController.h"
@@ -64,13 +64,13 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	NextSceneHandle(nullptr),
 	Node(),
 	SceneIndex(0),
-	ScenesToLoad(5),
 	SceneHandles(),
 	NodeReferenceKeeper(),
 	ExhaustedScenes(),
 	Head(nullptr),
 	FastMoveTask(nullptr),
 	AutoMoveHandle(nullptr),
+	ScenesToLoad(5),
 	bPlayTransitions(true),
 	bPlaySound(true),
 	AutoMoveDelay(5.f),
@@ -169,6 +169,403 @@ void UVisualController::PostInitProperties()
 	}
 }
 
+bool UVisualController::RequestNextScene()
+{
+	if (!CanAdvanceScene() || Renderer->IsTransitionInProgress())
+	{
+		return false;
+	}
+
+	OnSceneEnd.Broadcast();
+	OnNativeSceneEnd.Broadcast();
+
+	PrepareScenes();
+	AssertNextSceneLoad();
+
+	SceneIndex += 1;
+
+	const FScenario* CurrentScene = GetCurrentScene();
+	if (SceneIndex > Head->GetIndex() && Head->GetOwner() == CurrentScene->GetOwner())
+	{
+		Head = CurrentScene;
+	}
+
+	if (!TryPlayTransition(GetSceneAt(SceneIndex - 1), CurrentScene))
+	{
+		Renderer->DrawScene(CurrentScene);
+	}
+
+	TryPlaySceneSound(CurrentScene->Info.Sound);
+	CancelNextScene();
+
+	OnSceneStart.Broadcast();
+	OnNativeSceneStart.Broadcast();
+
+	return true;
+}
+
+bool UVisualController::RequestPreviousScene()
+{
+	if (Renderer->IsTransitionInProgress())
+	{
+		return false;
+	}
+
+	if (!CanRetractScene())
+	{
+		if (!ExhaustedScenes.IsEmpty())
+		{
+			FScenario* Scene = ExhaustedScenes.Pop();
+			if (UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>())
+			{
+				VisualVersioning->Checkout(Scene);
+			}
+			SetCurrentScene(Scene);
+			return true;
+		}
+
+		return false;
+	}
+
+	OnSceneEnd.Broadcast();
+	OnNativeSceneEnd.Broadcast();
+
+	PrepareScenes(EVisualControllerDirection::Backward);
+	AssertNextSceneLoad(EVisualControllerDirection::Backward);
+
+	SceneIndex -= 1;
+	Renderer->DrawScene(GetCurrentScene());
+
+	CancelNextScene();
+
+	OnSceneStart.Broadcast();
+	OnNativeSceneStart.Broadcast();
+
+	return true;
+}
+
+bool UVisualController::RequestScene(const FScenario* Scene)
+{
+	if (Renderer->IsTransitionInProgress())
+	{
+		return false;
+	}
+
+	check(Scene);
+	bool bIsFound = false;
+	if (ensureMsgf(!(Scene->GetOwner() == Head->GetOwner() && Scene->GetIndex() > Head->GetIndex()), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
+	{
+		if (Node[0]->GetOwner() == Scene->GetOwner())
+		{
+			bIsFound = true;
+		}
+		else
+		{
+			UVisualVersioningSubsystem* VisualVersioning = nullptr;
+			if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
+			{
+				VisualVersioning = LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
+			}
+			/*Traverse the stack until the requested Node is found*/
+			for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
+			{
+				if (ExhaustedScenes[i]->GetOwner() == Scene->GetOwner())
+				{
+					FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+					if (VisualVersioning)
+					{
+						VisualVersioning->Checkout(ExhaustedScene);
+					}
+					bIsFound = true;
+					break;
+				}
+				FScenario* ExhaustedScene = ExhaustedScenes.Pop();
+				NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
+				if (VisualVersioning)
+				{
+					VisualVersioning->Checkout(ExhaustedScene);
+				}
+			}
+		}
+
+		if (bIsFound)
+		{
+			SetCurrentScene(Scene);
+		}
+	}
+
+	return bIsFound;
+}
+
+bool UVisualController::RequestScenario(const FScenario& Scenario)
+{
+	return RequestScene(&Scenario);
+}
+
+const FScenario* UVisualController::GetSceneAt(int32 Index)
+{
+	check(Node.IsValidIndex(Index));
+	return Node[Index];
+}
+
+bool UVisualController::RequestNode(const UDataTable* NewNode)
+{
+	if (Renderer->IsTransitionInProgress() || IsFastMoving() || IsAutoMoving())
+	{
+		return false;
+	}
+	check(NewNode);
+	checkf(!NewNode->GetRowMap().IsEmpty(), TEXT("Requesting empty node is not allowed."));
+	checkf(GetCurrentScene()->GetOwner() != NewNode, TEXT("Requesting active node is not allowed."));
+	checkf(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Node must be based on FScenario struct."));
+#if !UE_BUILD_SHIPPING
+	for (const FScenario* ExhaustedScene : ExhaustedScenes)
+	{
+		checkf(ExhaustedScene->GetOwner() != NewNode, TEXT("Requesting already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
+	}
+#endif
+
+	FScenario* Last = Node[SceneIndex];
+	ExhaustedScenes.Push(Last);
+
+	Node.Empty();
+	NewNode->GetAllRows(UE_SOURCE_LOCATION, Node);
+
+	checkf(!Node.IsEmpty(), TEXT("Trying to jump to empty Data Table! - %s"), *NewNode->GetFName().ToString());
+
+	OnSceneEnd.Broadcast();
+	OnNativeSceneEnd.Broadcast();
+
+	SceneHandles.Empty();
+	CancelNextScene();
+
+	SceneIndex = 0;
+
+	Head = GetCurrentScene();
+	NodeReferenceKeeper.Add(Head->GetOwner());
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(Head);
+	if (!TryPlayTransition(Last, Head))
+	{
+		Renderer->DrawScene(Head);
+	}
+
+	TryPlaySceneSound(Head->Info.Sound);
+	PrepareScenes();
+
+	OnSceneStart.Broadcast();
+	OnNativeSceneStart.Broadcast();
+
+	return true;
+}
+
+void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
+{
+	if (IsIdle())
+	{
+		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions, bPlaySound);
+		bPlayTransitions = false;
+		bPlaySound = false;
+		Mode = EVisualControllerMode::FastMoving;
+		FastMoveTask->StartBackgroundTask();
+	}
+}
+
+void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
+{
+	if (IsIdle())
+	{
+		check(Direction != EVisualControllerDirection::None);
+		Mode = EVisualControllerMode::AutoMoving;
+		const auto AutoMove = [this, Direction](float DeltaTime) -> bool
+			{
+				const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
+					? (!IsWithChoice() && RequestNextScene())
+					: RequestPreviousScene());
+
+				if (!bCanContinue)
+				{
+					CancelAutoMove();
+				}
+
+				return bCanContinue;
+			};
+
+		/*Fire it once first to replicate a do-while style*/
+		FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
+		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, 0.f);
+		FTSTicker::RemoveTicker(Handle);
+		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
+	}
+}
+
+void UVisualController::CancelFastMove()
+{
+	if (IsFastMoving() && FastMoveTask.IsValid())
+	{
+		FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
+		FastMoveTask->Cancel();
+		FastMoveTask.Reset(nullptr);
+
+		Mode = EVisualControllerMode::Idle;
+	}
+}
+
+void UVisualController::CancelAutoMove()
+{
+	if (IsAutoMoving() && AutoMoveHandle.IsValid())
+	{
+		FTSTicker::RemoveTicker(AutoMoveHandle);
+		Mode = EVisualControllerMode::Idle;
+	}
+}
+
+void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
+{
+	if (!IsVisualized())
+	{
+		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
+	}
+
+	const FScenario* CurrentScene = GetCurrentScene();
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
+	Renderer->AddToPlayerScreen(ZOrder);
+	Renderer->DrawScene(CurrentScene);
+	TryPlaySceneSound(CurrentScene->Info.Sound);
+	PrepareScenes();
+}
+
+void UVisualController::Discard()
+{
+	check(Renderer);
+	Renderer->RemoveFromParent();
+}
+
+void UVisualController::SetVisibility(ESlateVisibility Visibility)
+{
+	check(Renderer);
+	Renderer->SetVisibility(Visibility);
+}
+
+void UVisualController::SetNumScenesToLoad(int32 Num)
+{
+	if (ensureMsgf(Num >= 0, TEXT("Expected positive value, set operation failed.")))
+	{
+		if (Num > ScenesToLoadLargeNum)
+		{
+			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
+		}
+
+		ScenesToLoad = Num;
+	}
+}
+
+void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
+{
+	bPlayTransitions = bShouldPlay;
+}
+
+void UVisualController::ShouldPlaySound(bool bShouldPlay)
+{
+	bPlaySound = bShouldPlay;
+}
+
+void UVisualController::SetAutoMoveDelay(float Delay)
+{
+	if (ensureMsgf(!FMath::IsNegativeOrNegativeZero(Delay), TEXT("Negative time is invalid, set operation failed.")))
+	{
+		AutoMoveDelay = Delay;
+	}
+}
+
+const FScenario* UVisualController::GetCurrentScene() const
+{
+	return Node[SceneIndex];
+}
+
+const FScenario& UVisualController::GetCurrentScenario() const
+{
+	return *GetCurrentScene();
+}
+
+bool UVisualController::CanAdvanceScene() const
+{
+	return Node.IsValidIndex(SceneIndex + 1);
+}
+
+bool UVisualController::CanRetractScene() const
+{
+	return Node.IsValidIndex(SceneIndex - 1);
+}
+
+bool UVisualController::IsWithChoice() const
+{
+	return GetCurrentScene()->HasChoice();
+}
+
+bool UVisualController::IsSceneExhausted(const FScenario* Scene) const
+{
+	return ExhaustedScenes.Contains(Scene);
+}
+
+bool UVisualController::IsScenarioExhausted(const FScenario& Scenario) const
+{
+	return IsSceneExhausted(&Scenario);
+}
+
+bool UVisualController::IsTransitioning() const
+{
+	return Renderer ? Renderer->IsTransitionInProgress() : false;
+}
+
+bool UVisualController::IsCurrentScenarioHead() const
+{
+	return GetCurrentScene() == Head;
+}
+
+bool UVisualController::IsVisualized() const
+{
+	return IsValid(Renderer);
+}
+
+const FString UVisualController::GetHeadDebugString() const
+{
+	FString DebugString;
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	DebugString = Head ? Head->GetDebugString() : TEXT("None");
+#endif
+
+	return DebugString;
+}
+
+const FString UVisualController::GetAsyncQueueDebugString() const
+{
+	FString DebugString;
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	for (TWeakPtr<FStreamableHandle> WeakSceneHandle : DebugSceneHandles)
+	{
+		if (TSharedPtr<FStreamableHandle> SceneHandle = WeakSceneHandle.Pin())
+		{
+			DebugString += FString::Printf(TEXT("%s Progress: %.2f\n"), *SceneHandle->GetDebugName(), SceneHandle->GetProgress());
+		}
+	}
+#endif
+
+	return DebugString;
+}
+
+const FString UVisualController::GetExhaustedScenesDebugString() const
+{
+	FString DebugString;
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	for (FScenario* const& ExhaustedScene : ExhaustedScenes)
+	{
+		DebugString += ExhaustedScene ? (ExhaustedScene->GetDebugString() + TEXT("\n")) : TEXT("Invalid\n");
+	}
+#endif
+
+	return DebugString;
+}
+
 TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
 {
 	check(Scene);
@@ -262,143 +659,24 @@ void UVisualController::TryPlaySceneSound(TSoftObjectPtr<USoundBase> SceneSound)
 	}
 }
 
-bool UVisualController::RequestNextScene()
+void UVisualController::CancelNextScene()
 {
-	if (!CanAdvanceScene() || Renderer->IsTransitionInProgress())
+	if (NextSceneHandle.IsValid())
 	{
-		return false;
+		NextSceneHandle->CancelHandle();
+		NextSceneHandle.Reset();
 	}
-	
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
-
-	PrepareScenes();
-	AssertNextSceneLoad();
-
-	SceneIndex += 1;
-	
-	const FScenario* CurrentScene = GetCurrentScene();
-	if (SceneIndex > Head->GetIndex() && Head->GetOwner() == CurrentScene->GetOwner())
-	{
-		Head = CurrentScene;
-	}
-
-	if (!TryPlayTransition(GetSceneAt(SceneIndex - 1), CurrentScene))
-	{
-		Renderer->DrawScene(CurrentScene);
-	}
-
-	TryPlaySceneSound(CurrentScene->Info.Sound);
-	CancelNextScene();
-	
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
-
-	return true;
 }
 
-bool UVisualController::RequestPreviousScene()
+bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
 {
-	if (Renderer->IsTransitionInProgress())
+	if (bPlayTransitions && !Renderer->IsTransitionInProgress())
 	{
-		return false;
+		check(Renderer);
+		return Renderer->TryDrawTransition(From, To);
 	}
 
-	if (!CanRetractScene())
-	{
-		if (!ExhaustedScenes.IsEmpty())
-		{
-			FScenario* Scene = ExhaustedScenes.Pop();
-			if (UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>())
-			{
-				VisualVersioning->Checkout(Scene);
-			}
-			SetCurrentScene(Scene);
-			return true;
-		}
-
-		return false;
-	}
-
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
-
-	PrepareScenes(EVisualControllerDirection::Backward);
-	AssertNextSceneLoad(EVisualControllerDirection::Backward);
-
-	SceneIndex -= 1;
-	Renderer->DrawScene(GetCurrentScene());
-	
-	CancelNextScene();
-
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
-
-	return true;
-}
-
-bool UVisualController::RequestScene(const FScenario* Scene)
-{
-	if (Renderer->IsTransitionInProgress())
-	{
-		return false;
-	}
-
-	check(Scene);
-	bool bIsFound = false;
-	if (ensureMsgf(!(Scene->GetOwner() == Head->GetOwner() && Scene->GetIndex() > Head->GetIndex()), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
-	{
-		if (Node[0]->GetOwner() == Scene->GetOwner())
-		{
-			bIsFound = true;
-		}
-		else
-		{
-			UVisualVersioningSubsystem* VisualVersioning = nullptr;
-			if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
-			{
-				VisualVersioning = LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
-			}
-			/*Traverse the stack until the requested Node is found*/
-			for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
-			{
-				if (ExhaustedScenes[i]->GetOwner() == Scene->GetOwner())
-				{
-					FScenario* ExhaustedScene = ExhaustedScenes.Pop();
-					if (VisualVersioning)
-					{
-						VisualVersioning->Checkout(ExhaustedScene);
-					}
-					bIsFound = true;
-					break;
-				}
-				FScenario* ExhaustedScene = ExhaustedScenes.Pop();
-				NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
-				if (VisualVersioning)
-				{
-					VisualVersioning->Checkout(ExhaustedScene);
-				}
-			}
-		}
-
-		if (bIsFound)
-		{
-			SetCurrentScene(Scene);
-		}
-	}
-
-	return bIsFound;
-}
-
-const FScenario* UVisualController::GetSceneAt(int32 Index)
-{
-	check(Node.IsValidIndex(Index));
-	return Node[Index];
-}
-
-bool UVisualController::RequestScenario(const FScenario& Scenario)
-{
-	return RequestScene(&Scenario);
+	return false;
 }
 
 void UVisualController::SetCurrentScene(const FScenario* Scene)
@@ -439,282 +717,4 @@ void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Dir
 #if WITH_EDITOR
 	FPlatformProcess::Sleep(CVarEditorStallForLoading.GetValueOnAnyThread());
 #endif
-}
-
-bool UVisualController::RequestNode(const UDataTable* NewNode)
-{
-	if (Renderer->IsTransitionInProgress() || IsFastMoving() || IsAutoMoving())
-	{
-		return false;
-	}
-	check(NewNode);
-	checkf(!NewNode->GetRowMap().IsEmpty(), TEXT("Jumping to empty node is not allowed."));
-	checkf(GetCurrentScene()->GetOwner() != NewNode, TEXT("Jumping to active node is not allowed."));
-	checkf(NewNode->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Node must be based on FScenario struct."));
-#if !UE_BUILD_SHIPPING
-	for (const FScenario* ExhaustedScene : ExhaustedScenes)
-	{
-		checkf(ExhaustedScene->GetOwner() != NewNode, TEXT("Jumping to already \"seen\" nodes is invalid. Use RequestScene or RequestPreviousScene instead."));
-	}
-#endif
-	
-	FScenario* Last = Node[SceneIndex];
-	ExhaustedScenes.Push(Last);
-
-	Node.Empty();
-	NewNode->GetAllRows(UE_SOURCE_LOCATION, Node);
-
-	checkf(!Node.IsEmpty(), TEXT("Trying to jump to empty Data Table! - %s"), *NewNode->GetFName().ToString());
-
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
-
-	SceneHandles.Empty();
-	CancelNextScene();
-
-	SceneIndex = 0;
-
-	Head = GetCurrentScene();
-	NodeReferenceKeeper.Add(Head->GetOwner());
-	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(Head);
-	if (!TryPlayTransition(Last, Head))
-	{
-		Renderer->DrawScene(Head);
-	}
-
-	TryPlaySceneSound(Head->Info.Sound);
-	PrepareScenes();
-
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
-
-	return true;
-}
-
-void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
-{
-	if (IsIdle())
-	{
-		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions, bPlaySound);
-		bPlayTransitions = false;
-		bPlaySound = false;
-		Mode = EVisualControllerMode::FastMoving;
-		FastMoveTask->StartBackgroundTask();
-	}
-}
-
-void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
-{
-	if (IsIdle())
-	{
-		check(Direction != EVisualControllerDirection::None);
-		Mode = EVisualControllerMode::AutoMoving;
-		const auto AutoMove = [this, Direction](float DeltaTime) -> bool
-		{
-			const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
-				? (!IsWithChoice() && RequestNextScene())
-				: RequestPreviousScene());
-
-			if (!bCanContinue)
-			{
-				CancelAutoMove();
-			}
-
-			return bCanContinue;
-		};
-
-		/*Fire it once first to replicate a do-while style*/
-		FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
-		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, 0.f);
-		FTSTicker::RemoveTicker(Handle);
-		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
-	}
-}
-
-void UVisualController::CancelFastMove()
-{
-	if (IsFastMoving() && FastMoveTask.IsValid())
-	{
-		FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
-		FastMoveTask->Cancel();
-		FastMoveTask.Reset(nullptr);
-
-		Mode = EVisualControllerMode::Idle;
-	}
-}
-
-void UVisualController::CancelAutoMove()
-{
-	if (IsAutoMoving() && AutoMoveHandle.IsValid())
-	{
-		FTSTicker::RemoveTicker(AutoMoveHandle);
-		Mode = EVisualControllerMode::Idle;
-	}
-}
-
-bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
-{
-	if (bPlayTransitions && !Renderer->IsTransitionInProgress())
-	{
-		check(Renderer);
-		return Renderer->TryDrawTransition(From, To);
-	}
-
-	return false;
-}
-
-void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
-{
-	if (!IsVisualized())
-	{
-		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
-	}
-
-	const FScenario* CurrentScene = GetCurrentScene();
-	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
-	Renderer->AddToPlayerScreen(ZOrder);
-	Renderer->DrawScene(CurrentScene);
-	TryPlaySceneSound(CurrentScene->Info.Sound);
-	PrepareScenes();
-}
-
-void UVisualController::Discard()
-{
-	check(Renderer);
-	Renderer->RemoveFromParent();
-}
-
-void UVisualController::SetVisibility(ESlateVisibility Visibility)
-{
-	check(Renderer);
-	Renderer->SetVisibility(Visibility);
-}
-
-void UVisualController::SetNumScenesToLoad(int32 Num)
-{
-	if (ensureMsgf(Num >= 0, TEXT("Expected positive value, set operation failed.")))
-	{
-		if (Num > ScenesToLoadLargeNum)
-		{
-			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
-		}
-
-		ScenesToLoad = Num;
-	}
-}
-
-void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
-{
-	bPlayTransitions = bShouldPlay;
-}
-
-void UVisualController::ShouldPlaySound(bool bShouldPlay)
-{
-	bPlaySound = bShouldPlay;
-}
-
-void UVisualController::SetAutoMoveDelay(float Delay)
-{
-	if (ensureMsgf(!FMath::IsNegativeOrNegativeZero(Delay), TEXT("Negative time is invalid, set operation failed.")))
-	{
-		AutoMoveDelay = Delay;
-	}
-}
-
-bool UVisualController::IsTransitioning() const
-{
-	return Renderer ? Renderer->IsTransitionInProgress() : false;
-}
-
-bool UVisualController::IsCurrentScenarioHead() const
-{
-	return GetCurrentScene() == Head;
-}
-
-bool UVisualController::IsVisualized() const
-{
-	return IsValid(Renderer);
-}
-
-const FString UVisualController::GetHeadDebugString() const
-{
-	FString DebugString;
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	DebugString = Head ? Head->GetDebugString() : TEXT("None");
-#endif
-
-	return DebugString;
-}
-
-const FString UVisualController::GetAsyncQueueDebugString() const
-{
-	FString DebugString;
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	for (TWeakPtr<FStreamableHandle> WeakSceneHandle : DebugSceneHandles)
-	{
-		if (TSharedPtr<FStreamableHandle> SceneHandle = WeakSceneHandle.Pin())
-		{
-			DebugString += FString::Printf(TEXT("%s Progress: %.2f\n"), *SceneHandle->GetDebugName(), SceneHandle->GetProgress());
-		}
-	}
-#endif
-
-	return DebugString;
-}
-
-const FString UVisualController::GetExhaustedScenesDebugString() const
-{
-	FString DebugString;
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	for (FScenario* const& ExhaustedScene : ExhaustedScenes)
-	{
-		DebugString += ExhaustedScene ? (ExhaustedScene->GetDebugString() + TEXT("\n")) : TEXT("Invalid\n");
-	}
-#endif
-
-	return DebugString;
-}
-
-bool UVisualController::IsWithChoice() const
-{
-	return GetCurrentScene()->HasChoice();
-}
-
-void UVisualController::CancelNextScene()
-{
-	if (NextSceneHandle.IsValid())
-	{
-		NextSceneHandle->CancelHandle();
-		NextSceneHandle.Reset();
-	}
-}
-
-bool UVisualController::CanAdvanceScene() const
-{
-	return Node.IsValidIndex(SceneIndex + 1);
-}
-
-bool UVisualController::CanRetractScene() const
-{
-	return Node.IsValidIndex(SceneIndex - 1);
-}
-
-bool UVisualController::IsSceneExhausted(const FScenario* Scene) const
-{
-	return ExhaustedScenes.Contains(Scene);
-}
-
-bool UVisualController::IsScenarioExhausted(const FScenario& Scenario) const
-{
-	return IsSceneExhausted(&Scenario);
-}
-
-const FScenario* UVisualController::GetCurrentScene() const
-{
-	return Node[SceneIndex];
-}
-
-const FScenario& UVisualController::GetCurrentScenario() const
-{
-	return *GetCurrentScene();
 }

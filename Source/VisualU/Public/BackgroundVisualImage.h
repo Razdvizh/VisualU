@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 #pragma once
 
@@ -13,10 +13,9 @@ class UMaterialInstanceDynamic;
 class UPaperFlipbook;
 class UTexture;
 
-/// <summary>
-/// Visual image that supports transition effects through material.
-/// </summary>
-/// \attention Not blueprintable
+/**
+* Visual image that supports transition effects through material.
+*/
 UCLASS()
 class UBackgroundVisualImage final : public UVisualImage
 {
@@ -27,26 +26,36 @@ public:
 
 	UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer);
 
-	/// <summary>
-	/// Change state of the Background Visual Image.
-	/// </summary>
-	/// <remarks>
-	/// Called with <c>false</c> when driving animation ends.
-	/// </remarks>
-	/// <param name="IsTransitioning">New state of the Background Visual Image</param>
+	/**
+	* Stops ongoing transition.
+	* Has no effect when called during stopped transition.
+	*/
 	void StopTransition();
 	
-	/// <returns>Whether or not background is in transiton process</returns>
+	/**
+	* @return {@code false} when no transition is active.
+	*/
 	bool IsTransitioning() const;
 
-	/// <summary>
-	/// Play transition from current Flipbook to Target.
-	/// </summary>
-	/// <param name="Target">New flipbook that would be displayed by this image after transition ends</param>
-	/// <param name="Transition">Material that serves as transition effect</param>
-	/// <param name="bShouldAnimateTarget">Whether or not Target flipbook should be animated. If false, will display first frame of the flipbook.</param>
+	/**
+	* Plays transition from UVisualImage::Flipbook to UBackgroundVisualImage::Target.
+	* 
+	* @param Target New flipbook that would be displayed by this image after transition ends
+	* @param Transition Material that serves as transition effect
+	* @param bShouldAnimateTarget Whether or not UBackgroundVisualImage::Target
+	*		 flipbook should be animated. 
+	*		 For not animated flipbooks, will display first frame
+	*		 of the flipbook.
+	*/
 	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, bool bShouldAnimateTarget);
 
+	/**
+	* Version for non-animated flipbooks.
+	* 
+	* @see PlayTransition()
+	* 
+	* @param FrameIndex which frame to show after transition ends.
+	*/
 	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, int32 FrameIndex);
 
 protected:

@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2024 Evgeny Shustov
 
 
 #include "VisualRenderer.h"
 #include "Blueprint/WidgetTree.h"
 #include "Materials/MaterialInterface.h"
-#include "TransitionMaterialProxy.h"
 #include "Materials/MaterialParameterCollection.h"
 #include "Tracks/MovieSceneMaterialParameterCollectionTrack.h"
 #include "Sections/MovieSceneParameterSection.h"
