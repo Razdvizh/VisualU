@@ -14,7 +14,12 @@ class UWidgetAnimation;
 class UMaterialParameterCollection;
 
 /**
- * Responsible for visualizing data from `FScenario`.
+ * Responsible for visualizing data from described by FScenario.
+ * Renderer supports custom transitions between scene backgrounds that are
+ * defined by FBackground::TransitionMaterial. Transition is driven by widget
+ * animation and can be configured in UVisualUSettings class.
+ * 
+ * @note not blueprintable
  */
 UCLASS(NotBlueprintable)
 class VISUALU_API UVisualRenderer : public UUserWidget
@@ -24,53 +29,96 @@ class VISUALU_API UVisualRenderer : public UUserWidget
 public:
 	UVisualRenderer(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/**
+	* Assembles widgets for the scene.
+	* 
+	* @param Scene scene to render
+	*/
 	virtual void DrawScene(const FScenario* Scene);
 
+	/**
+	* @return {@code true} for ongoing visual transition between secenes
+	* 
+	* @see UVisualRenderer::TryDrawTransition()
+	*/
 	bool IsTransitionInProgress() const;
 
+	/**
+	* Tries to start and visualize transition material
+	* with backgrounds from specified scenes.
+	* Logical transition between scenes is handled by UVisualController.
+	* 
+	* @param From scene which is drawn currently
+	* @param To scene that will be drawn after transition ends
+	* @return {@code true} for started transition
+	* 
+	* @see UVisualRenderer::Transition
+	*/
 	bool TryDrawTransition(const FScenario* From, const FScenario* To);
 
+	/**
+	* Unconditionally stops ongoing transition.
+	*/
 	void ForceStopTransition();
 
 protected:
-	/// <summary>
-	/// Constructs <see cref="UVisualScene::Background"/> and <see cref="UVisualScene::Canvas"/>.
-	/// </summary>
-	/// <returns>Underlying slate widget</returns>
-	/// \warning Do not add any widgets to the Widget tree.
+	/**
+	* Constructs underlying slate widget and widgets needed for drawing scenes.
+	* Renderer always has a canvas panel to which visual sprites are added, and
+	* one persistent visual image for scene background.
+	* 
+	* @return underlying slate widget
+	* 
+	* @see UVisualRenderer::Background
+	*	   UVisualRenderer::Canvas
+	*/
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
+	/**
+	* Initializes renderer properties and transition animation.
+	*/
 	virtual void NativeOnInitialized() override;
 
+	/**
+	* Finishes transition.
+	* 
+	* @param Animation finished transition animation
+	*/
 	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 
+	/**
+	* Iterates over each UVisualSprite in the canvas panel.
+	* 
+	* @param Action callable that will be executed for each sprite
+	*/
 	void ForEachSprite(TFunction<void(UVisualSprite* Sprite)> Action);
 
 private:
-	/// <summary>
-	/// Animation used to drive transitions between <see cref="FScenario">scenes</see>.
-	/// </summary>
-	/// <remarks>
-	/// It can safely animate any parameters of the widgets or materials.
-	/// Transition ends when this animation ends.
-	/// </remarks>
+	/**
+	* Widget animation used to drive transition between scenes.
+	* It can be configured in UVisualUSettings.
+	* 
+	* @note Transient. It will not be serialized.
+	*/
 	UPROPERTY(Transient)
 	TObjectPtr<UWidgetAnimation> Transition;
 
+	/**
+	* Scene that will be displayed after transition ends.
+	* It temporarily used during transition process.
+	* It is invalid when transition does not occur.
+	*/
 	const FScenario* FinalScene;
 
-	/// <summary>
-	/// Internal widget for scene background.
-	/// </summary>
+	/**
+	* Persistent widget that displays scene background.
+	*/
 	UPROPERTY()
 	TObjectPtr<UBackgroundVisualImage> Background;
 
-	/// <summary>
-	/// Internal widget for scene canvas panel.
-	/// </summary>
-	/// <remarks>
-	/// All <see cref="UVisualSprite">Visual Sprites</see> and <see cref="UVisualScene::Background"/> are children of this panel widget.
-	/// </remarks>
+	/**
+	* Persistent widget that holds background and all sprites of the scene.
+	*/
 	UPROPERTY()
 	TObjectPtr<UCanvasPanel> Canvas;
 	

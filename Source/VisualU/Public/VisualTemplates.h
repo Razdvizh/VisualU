@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-/*
+/**
 * Checks if T has a member variable of type U
 */
 template<typename T, typename U>
@@ -21,14 +21,14 @@ public:
 	static constexpr bool value = decltype(test<T>(nullptr))::value;
 };
 
-/*
-* Checks if T has a member variable of type U
+/**
+* @see HasMemberOfTypeImpl
 */
 template<typename T, typename U>
 concept HasMemberOfType = HasMemberOfTypeImpl<T, U>::value;
 
-/*
-* Assignes values to the member variables of the object.
+/**
+* Assigns values, in order, to the member variables of the object.
 */
 template<typename T, typename... V>
 VISUALU_API inline void UpdateMembers(T* Obj, V T::*... Pointers, const V&... Values)

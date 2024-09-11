@@ -10,36 +10,48 @@ class UPaperSprite;
 class UVisualController;
 class UDataTable;
 
-///<summary>
-/// Provides useful functionality that is missing in the Blueprints.
-///</summary>
+/**
+* Blueprint library with utility functions that could be helpful while
+* developing blueprints with VisualU plugin.
+*/
 UCLASS()
 class VISUALU_API UVisualUBlueprintStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
 public:
-	/// <summary>
-	/// Get the texture of <paramref name="Sprite"/> that should be rendered.
-	/// </summary>
-	/// <param name="Sprite">Sprite to get texture from</param>
+	/**
+	* @param Sprite sprite to get texture from
+	* @return rendered texture of the sprite
+	*/
 	UFUNCTION(BlueprintCallable, Category = "VisualU|Paper Sprite", meta = (ToolTip = "Get the texture of sprite that should be rendered"))
 	static UTexture2D* GetSpriteTexture(UPaperSprite* Sprite);
 
-	/// <summary>
-	/// Outputs a friendly representation of scene data to the log.
-	/// </summary>
-	/// <param name="InScenesData">Data to print to the log</param>
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (DevelopmentOnly, ToolTip = "Outputs a friendly representation of scene data to the log"))
+	/**
+	* Development only.
+	* 
+	* Outputs a friendly representation of scene asset data to the log.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (DevelopmentOnly, ToolTip = "Outputs a friendly representation of scene asset data to the log"))
 	static void PrintScenesData();
 
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Choice", meta = (ToolTip = "Sets Visual Controller to iterate over provided Data Table. NOTE: Data Table can't be empty."))
+	/**
+	* Requests provided data table in the controller.
+	* 
+	* @param Controller controller that will request provided data table
+	* @param DataTable new controller node
+	* @return result of data table request
+	* 
+	* @see UVisualController::RequestNode()
+	*/
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Choice", meta = (ToolTip = "Requests provided data table in the controller."))
 	static bool Choose(UVisualController* Controller, const UDataTable* DataTable);
 
 private:
-	/// <summary>
-	/// Gathers asset data of all Scenario Data Tables using Asset Registry.
-	/// </summary>
-	/// <param name="OutData">Array to be filled with data</param>
+	/**
+	* Gathers asset data of all data tables based on FScenario.
+	* 
+	* @param OutData data of scene data tables
+	*/
 	static void GetScenesData(TArray<FAssetData>& OutData);
 };

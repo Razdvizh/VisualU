@@ -13,16 +13,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpriteDisappear);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpriteAppear);
 
-/// <summary>
-/// Base class for widgets that represent sprites that will be visualized by <see cref="UVisualScene">Visual Scene</see>.
-/// </summary>
-/// <remarks>
-/// Visual form of the classic Visual Novel sprite. Can represent NPC, an interactive object, etc.
-/// Visual Sprite contains any amount of <see cref="UVisualImage">Visual Images</see> needed to display a sprite,
-/// which can be altered by <see cref="UVisualScene">Visual Scene</see> using information provided in the different <see cref="FScenario">Scenarios</see>.
-/// It can contain any functionality of the normal widget and can be extended as some specific kind of the sprite.
-/// The arrangement of <see cref="UVisualImage">Visual Images</see> is meant to be done inside blueprint class.
-UCLASS(meta = (ToolTip = "Base class for widgets that represent sprites that will be visualized by Visual Scene"))
+/**
+* Class that represents a sprite that will be visualized by UVisualRenderer.
+* Sprite in VisualU is a widget which appearance is governed by UVisualImage
+* and lifetime is bound to the lifetime of the FScenario that is currently 
+* active in UVisualController. It is represented by FSprite struct
+* in scene visual info. Visual sprite can contain scripts of a normal widget
+* and can be extended as some specific kind of sprite.
+*/
+UCLASS(meta = (ToolTip = "Class that represents a sprite that will be visualized by visual renderer."))
 class VISUALU_API UVisualSprite : public UUserWidget
 {
 	GENERATED_BODY()
@@ -30,26 +29,36 @@ class VISUALU_API UVisualSprite : public UUserWidget
 public:
 	UVisualSprite(const FObjectInitializer& ObjectInitializer);
 
+	/**
+	* Releases memory allocated for slate widgets.
+	*
+	* @param bReleaseChildren should memory of child widgets be released
+	*/
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
-	///\todo add the same member function but for UViusalSocket
-	/// <summary>
-	/// Set the desired fields for the <see cref="UVisualImage">Visual images</see> that this Visual Sprite has.
-	/// </summary>
-	/// <param name="InInfo">Fields to assign</param>
-	/// <remarks>
-	/// Default implementation will assign first <c>FVisualImageInfo</c> to the first <see cref="UVisualImage">Visual Image</see>, which is the one closest
-	/// to the root of the <c>WidgetTree</c>. (In Blueprint editor, the top most <see cref="UVisualImage">Visual Image</see> will be the first, 
-	/// the down most will be the last). It will continue assigning fields in this manner until there is no <see cref="UVisualImage">Visual images</see> 
-	/// in the tree. Any extra <c>FVisualImageInfo</c>s will be ignored.
-	/// </remarks>
-	/// \image html AssignSpriteInfo_default.png
-	UFUNCTION(BlueprintCallable, Category = "Visual Sprite", meta = (ToolTip = "Set the desired fields for the Visual images that this Visual Sprite has."))
+	/**
+	* Assigns provided information to visual images of this sprite.
+	* Default implementation will assign first image info
+	* to the first visual image, which is the one closest
+	* to the root of the {@code Widget tree}.
+	* (In Widget designer, the top most visual image will be the first,
+	* the down most will be the last). It will continue assigning fields
+	* in this manner until there is no visual images left in the tree.
+	* Any extra image info will be ignored.
+	* \image html AssignVisualInfo_default.png
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Sprite", meta = (ToolTip = "Assigns provided information to visual images of this sprite."))
 	virtual void AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo);
 
+	/**
+	* Called when sprite is removed from canvas in the renderer.
+	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Sprite|Events")
 	FOnSpriteDisappear OnSpriteDisappear;
 
+	/**
+	* Called when sprite is being drawn by the renderer.
+	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Sprite|Events")
 	FOnSpriteAppear OnSpriteAppear;
 };

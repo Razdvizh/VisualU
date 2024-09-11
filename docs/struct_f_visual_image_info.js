@@ -1,5 +1,6 @@
 var struct_f_visual_image_info =
 [
+    [ "Accept", "struct_f_visual_image_info.html#a76b8fefabbb8297d65470f2373caa35e", null ],
     [ "ToString", "struct_f_visual_image_info.html#a22384b4ec4c8d8685757624663116212", null ],
     [ "bAnimate", "struct_f_visual_image_info.html#a36f490704c6b20fb5ea881e8f7019053", null ],
     [ "ColorAndOpacity", "struct_f_visual_image_info.html#ade9016ed50378903d2ce419b368a706e", null ],

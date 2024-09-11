@@ -19,7 +19,7 @@ class UInfoAssignable : public UInterface
 * Interface that allows classes to take data from FVisualInfo structures.
 * Classes can assign data from multiple structures.
 * 
-* Use FVisualImageInfo::AssignVisualImageInfo() as an example
+* Use UVisualImage::AssignVisualImageInfo() as an example
 * when adding function
 * for custom FVisualInfo struct.
 */
@@ -45,7 +45,7 @@ public:
 * -# Override {@code Accept} function to implement Visitor pattern
 * -# Override {@codeToString} function if needed
 * 
-* @seealso FVisualImageInfo
+* @see FVisualImageInfo
 */
 USTRUCT(BlueprintInternalUseOnly)
 struct FVisualInfo

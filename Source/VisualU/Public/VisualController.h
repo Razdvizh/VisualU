@@ -111,9 +111,10 @@ namespace UE
  * Organizes scenes described by FScenario in a meaningful way.
  * Must be created within APlayerController.
  * Requires UVisualUSettings::FirstDataTable to be set at compile/editor time.
+ * \image html Tree_structure.png
  * 
- * @seealso UVisualUSettings
- * @seealso FScenario
+ * @see UVisualUSettings
+ *			FScenario
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew, Within = PlayerController)
 class VISUALU_API UVisualController : public UObject
@@ -362,7 +363,7 @@ public:
 	* @param scene to check for exhaustion
 	* @return is scene considered exhausted
 	*
-	* @seealso UVisualController::ExhaustedScenes
+	* @see UVisualController::ExhaustedScenes
 	*/
 	bool IsSceneExhausted(const FScenario* Scene) const;
 
@@ -390,9 +391,9 @@ public:
 	/**
 	* @return current mode of the controller
 	* 
-	* @seealso UVisualController::IsFastMoving()
-	* @seealso UVisualController::IsAutoMoving()
-	* @seealso UVisualController::IsIdle()
+	* @see UVisualController::IsFastMoving()
+	*		   UVisualController::IsAutoMoving()
+	*		   UVisualController::IsIdle()
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	FORCEINLINE EVisualControllerMode GetMode() const { return Mode; }
@@ -400,9 +401,9 @@ public:
 	/**
 	* @return {@code true} when controller is in fast move mode
 	* 
-	* @seealso UVisualController::GetMode()
-	* @seealso UVisualController::IsAutoMoving()
-	* @seealso UVisualController::IsIdle()
+	* @see UVisualController::GetMode()
+	*		   UVisualController::IsAutoMoving()
+	*		   UVisualController::IsIdle()
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	FORCEINLINE bool IsFastMoving() const { return Mode == EVisualControllerMode::FastMoving; }
@@ -410,9 +411,9 @@ public:
 	/**
 	* @return {@code true} when controller is in auto move mode
 	* 
-	* @seealso UVisualController::GetMode()
-	* @seealso UVisualController::IsFastMoving()
-	* @seealso UVisualController::IsIdle()
+	* @see UVisualController::GetMode()
+	*		   UVisualController::IsFastMoving()
+	*          UVisualController::IsIdle()
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	FORCEINLINE bool IsAutoMoving() const { return Mode == EVisualControllerMode::AutoMoving; }
@@ -420,9 +421,9 @@ public:
 	/**
 	* @return {@code true} when controller is idle
 	* 
-	* @seealso UVisualController::GetMode()
-	* @seealso UVisualController::IsFastMoving()
-	* @seealso UVisualController::IsAutoMoving()
+	* @see UVisualController::GetMode()
+	*		   UVisualController::IsFastMoving()
+	*		   UVisualController::IsAutoMoving()
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	FORCEINLINE bool IsIdle() const { return Mode == EVisualControllerMode::Idle; }
@@ -446,7 +447,7 @@ public:
 	* 
 	* @return debug information about asynchronous scene preparation
 	* 
-	* @seealso UVisualController::DebugSceneHandles
+	* @see UVisualController::DebugSceneHandles
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Debug", meta = (DevelopmentOnly))
 	const FString GetAsyncQueueDebugString() const;
@@ -491,7 +492,7 @@ protected:
 	* @param AfterLoadDelegate delegate to execute after assets are loaded
 	* @return handle to manage lifetime of streamed assets
 	* 
-	* @seealso UVisualController::LoadScene()
+	* @see UVisualController::LoadScene()
 	*/
 	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
@@ -502,7 +503,7 @@ protected:
 	* @param AfterLoadDelegate delegate to execute after assets are loaded
 	* @return handle to manage lifetime of streamed assets
 	* 
-	* @seealso UVisualController::LoadSceneAsync()
+	* @see UVisualController::LoadSceneAsync()
 	*/
 	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
@@ -519,14 +520,14 @@ protected:
 	* 
 	* @param SceneSound audio to play
 	* 
-	* @seealso UVisualController::bPlaySound
+	* @see UVisualController::bPlaySound
 	*/
 	void TryPlaySceneSound(TSoftObjectPtr<USoundBase> SceneSound) const;
 
 	/**
 	* Releases the handle for the assets of the next scene.
 	* 
-	* @seealso UVisualController::NextSceneHandle
+	* @see UVisualController::NextSceneHandle
 	*/
 	void CancelNextScene();
 
@@ -569,7 +570,7 @@ private:
 	/**
 	* Currently active data table with scenes.
 	* 
-	* @seealso FScenario
+	* @see FScenario
 	*/
 	TArray<FScenario*> Node;
 
@@ -593,8 +594,8 @@ private:
 	* 
 	* @note isn't present in shipping or test builds
 	* 
-	* @seealso UVisualController::SceneHandles
-	* @seealso UVisualController::PrepareScenes()
+	* @see UVisualController::SceneHandles
+	*		   UVisualController::PrepareScenes()
 	*/
 	TDeque<TWeakPtr<FStreamableHandle>> DebugSceneHandles{};
 #endif
@@ -626,14 +627,14 @@ private:
 	/**
 	* Task to be dispatched asynchronously to perform fast move.
 	* 
-	* @seealso UVisualController::RequestFastMove()
+	* @see UVisualController::RequestFastMove()
 	*/
 	TUniquePtr<UE::VisualU::Private::FFastMoveAsyncTask> FastMoveTask;
 
 	/**
 	* Handle to the ticker that performs auto move.
 	* 
-	* @seealso UVisualController::RequestAutoMove()
+	* @see UVisualController::RequestAutoMove()
 	*/
 	FTSTicker::FDelegateHandle AutoMoveHandle;
 
@@ -668,8 +669,8 @@ private:
 	* 
 	* @note don't put a zero to simulate fast forwarding, use fast move instead
 	* 
-	* @seealso UVisualController::RequestAutoMove()
-	* @seealso UVisualController::RequestFastMove()
+	* @see UVisualController::RequestAutoMove()
+	*		   UVisualController::RequestFastMove()
 	*/
 	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait before moving to the next scene in Auto Move mode. Must be larger than transition duration to not stop on transitions. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
 	float AutoMoveDelay;

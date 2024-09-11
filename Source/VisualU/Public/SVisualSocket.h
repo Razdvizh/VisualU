@@ -12,7 +12,7 @@ class UVisualImage;
 * Slate widget that acts as a socket for the child widget
 * with additional features for UVisualImage.
 * 
-* @seealso UVisualSocket
+* @see UVisualSocket
 */
 class VISUALU_API SVisualSocket : public SScaleBox
 {

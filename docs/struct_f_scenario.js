@@ -1,12 +1,13 @@
 var struct_f_scenario =
 [
+    [ "AssignScenarioVisualInfo", "struct_f_scenario.html#a646e5ad998c4fcf116ab6ba46fb3ef03", null ],
     [ "GetDataToLoad", "struct_f_scenario.html#acd65e06f861c7cc41313a8e52da622e0", null ],
+    [ "GetDebugString", "struct_f_scenario.html#a79bf8b67f974c3ab9202c2354777f9e4", null ],
     [ "HasChoice", "struct_f_scenario.html#a92e73e2d4004acd57beb35393dbc5369", null ],
     [ "HasTransition", "struct_f_scenario.html#a4c08bdf223c01bfc66dfbaa1f30d4b4c", null ],
-    [ "PrintLog", "struct_f_scenario.html#a16d988174296f6c14fdb935f4c52a3e4", null ],
-    [ "Author", "struct_f_scenario.html#aa19a22eb73a6621702d111cd47bb6295", null ],
-    [ "Background", "struct_f_scenario.html#aeeefb9b24401ce5f8dfbd17840d248d7", null ],
-    [ "Line", "struct_f_scenario.html#acff637bca9811d06a4e7074401881754", null ],
-    [ "Music", "struct_f_scenario.html#a388101d815b318c3ed5843f9add67917", null ],
-    [ "SpritesParams", "struct_f_scenario.html#a904a0a0f58e40723e3834ab874b86749", null ]
+    [ "Intrude", "struct_f_scenario.html#a91958f538e550f1603d959b4a60c028d", null ],
+    [ "ToString", "struct_f_scenario.html#a0d215a7d1a1e90ad53ccc902ae52d286", null ],
+    [ "Index", "struct_f_scenario.html#ae32b136b41b749c0b575672066e1812b", null ],
+    [ "Info", "struct_f_scenario.html#add30ca76b5404432c2e0ca01e03338ed", null ],
+    [ "Owner", "struct_f_scenario.html#a8425bae5ad7a39eb027cc5b1b109dd0a", null ]
 ];

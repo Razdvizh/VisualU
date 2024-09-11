@@ -13,7 +13,7 @@ class UPaperSprite;
 /**
 * Slate widget that displays sprite flipbooks.
 * 
-* @seealso UVisualImage
+* @see UVisualImage
 */
 class VISUALU_API SVisualImage : public SVisualImageBase<SVisualImage>, public FGCObject
 {

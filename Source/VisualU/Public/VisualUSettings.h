@@ -8,27 +8,13 @@
 class UDataTable;
 class UMaterialParameterCollection;
 
-/// <summary>
-/// Actions supported by <see cref="UVisualTextBlock">Visual Text Block</see>.
-/// </summary>
-UENUM(BlueprintType)
-enum class EVisualTextAction : uint8
-{
-	/*No action*/
-	None,
-	/*Stops text appearance*/
-	Break,
-};
-
-/// <summary>
-/// Global plugin settings.
-/// You can find them under "Plugins" settings category.
-/// </summary>
-/// <remarks>
-/// The class is derived directly from <c>UObject</c> and simply contains necessary data.
-/// It is not a subclass of <c>UDeveloperSettings</c> due to the internal structure of the Unreal plugins.
-/// Registration for engine's settings system occurs through <c>ISettingsModule</c> inside <see cref="FVisualUModule">Module struct</see>.
-/// </remarks>
+/**
+* Global plugin settings.
+* Can be found under 'Plugins' category in project settings.
+* VisualU settings are written to the 'DefaultPlugins.ini' config file.
+* 
+* @see FVisualUModule for registration details
+*/
 UCLASS(config = "Plugins", defaultconfig, meta = (DisplayName = "VisualU"))
 class VISUALU_API UVisualUSettings : public UObject
 {
@@ -37,52 +23,40 @@ class VISUALU_API UVisualUSettings : public UObject
 public:
 	UVisualUSettings(const FObjectInitializer& ObjectInitializer);
 
-	/// <summary>
-	/// Data Table that represents the first branch of scenarios when game starts.
-	/// </summary>
-	/// <remarks>
-	/// Contains the first scenario that will be loaded and displayed by <see cref="UVisualScene">Visual Scene</see>;
-	/// the entry point in the VisualU system.
-	/// <see cref="UVisualScene">Visual Scene</see> handles the processing and constructing of the first scenario, 
-	/// if the Data Table is empty, the assertion will be triggered.
-	/// </remarks>
-	/// <seealso cref="FScenario"/>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller", meta = (ToolTip = "Data Table that contains the first scenario"))
+	/**
+	* Fist node of UVisualController.
+	* Must be valid for proper initialization of the controller.
+	*/
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller", meta = (ToolTip = "Data Table that contains the first scene"))
 	TSoftObjectPtr<UDataTable> FirstDataTable;
 
+	/**
+	* Material parameter collection used for transition material.
+	* First scalar parameter from this collection will be used
+	* to indicate progress of transition for materials.
+	* 
+	* @see UME_TransitionParameter2D
+	*/
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (DisplayName = "Transition Material Parameter Collection", ToolTip = "First scalar parameter from this collection will be used to indicate progress of transition for materials"))
 	TSoftObjectPtr<UMaterialParameterCollection> TransitionMPC;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration, in seconds, of the transition between scenarios"))
+	/**
+	* Duration, in seconds, of the transition between scenes
+	* 
+	* @see UVisualRenderer::Animation
+	*/
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration, in seconds, of the transition between scenes"))
 	float TransitionDuration;
 
-	/// <summary>
-	/// A mapping of the metacharacter and the corresponding action that <see cref="UVisualTextBlock">Visual Text Block</see> should take.
-	/// </summary>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "A mapping of the metacharacter and the corresponding action that Visual Text Block should take"))
-	TMap<FString, EVisualTextAction> Actions;
-
-	/// <summary>
-	/// A character which, in a pair, would enclose a metacharacter mapped in <see cref="UVisualUSettings::Actions">Actions</see>.
-	/// </summary>
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Text Block", meta = (ToolTip = "A character which, in a pair, would enclose a metacharacter"))
-	FString PairCharacter;
-
-	/// <summary>
-	/// First parameter name for <see cref="UME_TransitionParameter2D"/> nodes.
-	/// </summary>
-	/// <remarks>
-	/// Transition begins with this sprite.
-	/// </remarks>
+	/**
+	* First parameter name for UME_TransitionParameter2D node.
+	*/
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition")
 	FName AParameterName;
 
-	/// <summary>
-	/// Second parameter name for <see cref="UME_TransitionParameter2D"/> nodes.
-	/// </summary>
-	/// <remarks>
-	/// Transition ends with this sprite.
-	/// </remarks>
+	/**
+	* Second parameter name for UME_TransitionParameter2D node.
+	*/
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition")
 	FName BParameterName;
 };

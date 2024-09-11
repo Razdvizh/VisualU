@@ -7,17 +7,20 @@
 #include "InfoAssignable.h"
 #include "VisualImageBase.generated.h"
 
-/// <summary>
-/// Base class for custom UMG widgets that serve as FSlateBrush containers.
-/// </summary>
-/// <remarks>
-/// Supports asynchronous loading, <see cref="FVisualInfo">Visual Info</see> assignment through interfaces.
-/// </remarks>
+/**
+* Base class for UMG widgets that display slate brushes.
+* 
+* @see IInfoAssignable
+*/
 UCLASS(abstract)
 class VISUALU_API UVisualImageBase : public UWidget, public IInfoAssignable
 {
 	GENERATED_BODY()
 
 protected:
+	/**
+	* Abstract, cannot be instantiated.
+	*/
 	UVisualImageBase(const FObjectInitializer& ObjectInitializer);
+
 };

@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['mirrorscale_0',['MirrorScale',['../struct_f_visual_image_info.html#ae9dd9621ac11a3cd2e2dff62ebf84643',1,'FVisualImageInfo::MirrorScale'],['../class_u_visual_image.html#acff966245652515ef1ec12e2220186d6',1,'UVisualImage::MirrorScale']]],
-  ['music_1',['Music',['../struct_f_scenario_visual_info.html#ade135caef7a32a41f09cff80b5ff3f38',1,'FScenarioVisualInfo::Music'],['../struct_f_scenario.html#a388101d815b318c3ed5843f9add67917',1,'FScenario::Music']]]
+  ['makecustomgeometry_0',['MakeCustomGeometry',['../class_s_visual_image.html#a5a6de8778f47541e84d76640b96e1baa',1,'SVisualImage::MakeCustomGeometry()'],['../class_s_visual_image_base.html#adbab3e3688c45b041e89da19ceb8709b',1,'SVisualImageBase::MakeCustomGeometry()']]],
+  ['maketextattribute_1',['MakeTextAttribute',['../class_s_visual_text_block.html#a5ddcf50c5cebfd40e9f4a70e2eec00eb',1,'SVisualTextBlock']]],
+  ['maxletterindex_2',['MaxLetterIndex',['../class_u_visual_text_block.html#a927d710c7d638af2f4302fcbc5cb7cf4',1,'UVisualTextBlock']]],
+  ['mirrorscale_3',['MirrorScale',['../class_s_visual_image.html#aade76555cd8d1b8869048871e23b57f8',1,'SVisualImage::MirrorScale'],['../struct_f_visual_image_info.html#ae9dd9621ac11a3cd2e2dff62ebf84643',1,'FVisualImageInfo::MirrorScale'],['../class_u_visual_image.html#acff966245652515ef1ec12e2220186d6',1,'UVisualImage::MirrorScale']]],
+  ['mode_4',['Mode',['../class_u_visual_controller.html#ac066da2cd71319b29a957843f24826fd',1,'UVisualController']]]
 ];

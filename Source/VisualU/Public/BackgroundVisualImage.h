@@ -22,6 +22,11 @@ class UBackgroundVisualImage final : public UVisualImage
 	GENERATED_BODY()
 
 public:
+	/**
+	* Releases memory allocated for slate widgets.
+	* 
+	* @param bReleaseChildren should memory of child widgets be released
+	*/
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 	UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer);
@@ -59,6 +64,9 @@ public:
 	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, int32 FrameIndex);
 
 protected:
+	/**
+	* @return underlying slate widget
+	*/
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
 };

@@ -7,7 +7,7 @@
 /**
 * Auxiliary underlying slate widget for UVisualTextBlock
 * 
-* @seealso UVisualTextBlock
+* @see UVisualTextBlock
 */
 class VISUALU_API SVisualTextBlock : public SRichTextBlock
 {
