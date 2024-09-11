@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['line_0',['Line',['../struct_f_scenario_visual_info.html#a5681e46627e3a3000d6bbdc6da01f4ec',1,'FScenarioVisualInfo::Line'],['../struct_f_scenario.html#acff637bca9811d06a4e7074401881754',1,'FScenario::Line']]],
-  ['linewidth_1',['LineWidth',['../class_u_visual_text_block.html#ad811c2d6ec29959d6ed0ce40e1200fcd',1,'UVisualTextBlock']]]
+  ['imagedesiredposition_0',['ImageDesiredPosition',['../class_s_visual_socket.html#a7896c1a1c1dbeffa8066fec4226cd006',1,'SVisualSocket::ImageDesiredPosition'],['../class_u_visual_socket.html#a963208d8dfe3c4c594e088e81667d694',1,'UVisualSocket::ImageDesiredPosition']]],
+  ['index_1',['Index',['../struct_f_scenario.html#ae32b136b41b749c0b575672066e1812b',1,'FScenario']]],
+  ['info_2',['Info',['../struct_f_scenario.html#add30ca76b5404432c2e0ca01e03338ed',1,'FScenario']]]
 ];

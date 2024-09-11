@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "Styling/SlateStyle.h"
 #include "SVisualTextBlock.h"
+#include "BreakVisualTextBlockDecorator.h"
 #include "TimerManager.h"
 #include "Framework/Text/SlateTextRun.h"
 #include "Framework/Text/RichTextMarkupProcessing.h"

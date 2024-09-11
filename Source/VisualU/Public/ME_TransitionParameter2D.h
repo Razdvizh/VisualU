@@ -11,8 +11,9 @@ struct FPropertyChangedEvent;
 
 /**
 * Material node for transition materials.
-* Represents either first (currently rendered), or second (final target) sprite
-* in the material asset which serves as transition effect.
+* Represents either first (currently rendered), or second (final target)
+* scene background in the material asset which serves as
+* transition effect.
 * Parameters are immutable in the node and can only be
 * switched by UME_TransitionParameter2D::bIsSecondTransition.
 * Parameter names, however can be changed in UVisualSettings

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['exhaustedscenes_0',['ExhaustedScenes',['../class_u_visual_scene.html#a43cb9d6aa2a57fb029b41d79c43bc28c',1,'UVisualScene']]],
-  ['expression_1',['Expression',['../struct_f_visual_image_info.html#a892c3729d99eb50ed752220475020a4a',1,'FVisualImageInfo']]]
+  ['endholdtime_0',['EndHoldTime',['../class_u_visual_text_block.html#a848f39c0004a6199772727fe61fb8518',1,'UVisualTextBlock']]],
+  ['exhaustedscenes_1',['ExhaustedScenes',['../class_u_visual_controller.html#ac43fdbcd42d094c7afc963bfc822c734',1,'UVisualController']]],
+  ['expression_2',['Expression',['../struct_f_visual_image_info.html#a892c3729d99eb50ed752220475020a4a',1,'FVisualImageInfo']]]
 ];

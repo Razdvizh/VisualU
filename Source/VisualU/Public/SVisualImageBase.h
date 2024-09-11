@@ -15,9 +15,9 @@ class SVisualImage;
 * Utilizes CRTP with double dispatch for derived classes,
 * template function is SVisualImageBase::ConvertToBrush.
 * 
-* @param <DerivedT> derived class of SVisualImageBase
+* @param DerivedT derived class of SVisualImageBase
 * 
-* @seealso UVisualImageBase
+* @see UVisualImageBase
 */
 template<class DerivedT>
 class VISUALU_API SVisualImageBase : public SLeafWidget

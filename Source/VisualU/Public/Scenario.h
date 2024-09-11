@@ -34,7 +34,7 @@ public:
 	/**
 	* UVisualSprite anchors in Canvas Panel.
 	* 
-	* @seealso FVisualAnchors
+	* @see FVisualAnchors
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Sprite anchors in Canvas Panel"))
 	FVisualAnchors Anchors;
@@ -54,7 +54,7 @@ public:
 	/**
 	* Information for UVisualImages inside UVisualSprite.
 	* 
-	* @seealso UVisualSprite::AssignSpriteInfo()
+	* @see UVisualSprite::AssignSpriteInfo()
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
@@ -224,7 +224,7 @@ public:
 	* 
 	* @note Not enforced
 	* 
-	* @seealso EScenarioMetaFlags
+	* @see EScenarioMetaFlags
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scenario Visual Info", meta = (Bitmask, BitmaskEnum = "/Script/VisualU.EScenarioMetaFlags", ToolTip = "Describes the role of sprites of the scene"))
 	uint8 Flags = 0;
@@ -232,7 +232,7 @@ public:
 	/**
 	* Implements Visitor pattern for this info.
 	* 
-	* @seealso FVisualInfo::Accept()
+	* @see FVisualInfo::Accept()
 	*/
 	virtual void Accept(IInfoAssignable* Visitor) const override
 	{
@@ -315,8 +315,8 @@ public:
 * 
 * @note FScenario is a polymorphic struct and can be extended if needed.
 * 
-* @seealso FSprite
-* @seealso UVisualController
+* @see FSprite
+*		   UVisualController
 */
 USTRUCT(BlueprintType, meta = (ToolTip = " Describes a single scene/entry/\"frame\" of Visual Controller"))
 struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable

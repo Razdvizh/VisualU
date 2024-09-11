@@ -13,9 +13,13 @@
 
 #define LOCTEXT_NAMESPACE "VisualU"
 
-UVisualSocket::UVisualSocket(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UVisualSocket::UVisualSocket(const FObjectInitializer& ObjectInitializer) 
+	: Super(ObjectInitializer),
+	SocketOffset(ForceInitToZero),
+	bAutoPositioning(false),
+	ImageDesiredPosition(ForceInitToZero),
+	SlateVisualSocket(nullptr)
 {
-	bAutoPositioning = false;
 	SetStretch(EStretch::Fill);
 }
 
@@ -41,26 +45,6 @@ const FText UVisualSocket::GetPaletteCategory()
 }
 #endif
 
-void UVisualSocket::ReleaseSlateResources(bool bReleaseChildren)
-{
-	Super::ReleaseSlateResources(bReleaseChildren);
-
-	SlateVisualSocket.Reset();
-}
-
-TSharedRef<SWidget> UVisualSocket::RebuildWidget()
-{
-	SlateVisualSocket = SNew(SVisualSocket);
-	MyScaleBox = SlateVisualSocket;
-    
-	if (GetChildrenCount() > 0)
-	{
-		Cast<UScaleBoxSlot>(GetContentSlot())->BuildSlot(MyScaleBox.ToSharedRef());
-	}
-
-	return MyScaleBox.ToSharedRef();
-}
-
 void UVisualSocket::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
@@ -84,6 +68,26 @@ void UVisualSocket::SynchronizeProperties()
 	{
 		SlateVisualSocket->SetSocketOffset(SocketOffset);
 	}
+}
+
+void UVisualSocket::ReleaseSlateResources(bool bReleaseChildren)
+{
+	Super::ReleaseSlateResources(bReleaseChildren);
+
+	SlateVisualSocket.Reset();
+}
+
+TSharedRef<SWidget> UVisualSocket::RebuildWidget()
+{
+	SlateVisualSocket = SNew(SVisualSocket);
+	MyScaleBox = SlateVisualSocket;
+    
+	if (GetChildrenCount() > 0)
+	{
+		Cast<UScaleBoxSlot>(GetContentSlot())->BuildSlot(MyScaleBox.ToSharedRef());
+	}
+
+	return MyScaleBox.ToSharedRef();
 }
 
 #undef LOCTEXT_NAMESPACE

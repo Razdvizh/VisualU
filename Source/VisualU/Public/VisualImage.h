@@ -148,7 +148,7 @@ protected:
 	/**
 	* Delegate for property binding of the flipbook.
 	* 
-	* @seealso UVisualImage::ToFlipbook()
+	* @see UVisualImage::ToFlipbook()
 	*/
 	UPROPERTY(meta = (ToolTip = "Implement property binding for Flipbook"))
 	FGetPaperFlipbook FlipbookDelegate;
@@ -202,6 +202,11 @@ protected:
 	TSharedPtr<FStreamableHandle> FlipbookHandle;
 
 public:
+	/**
+	* Releases memory allocated for slate widgets.
+	*
+	* @param bReleaseChildren should memory of child widgets be released
+	*/
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 	/**
@@ -293,7 +298,6 @@ public:
 	UFUNCTION(BlueprintGetter, meta = (ToolTip = "Displayed flipbook"))
 	FORCEINLINE UPaperFlipbook* GetFlipbook() const { return Flipbook; }
 
-	
 	/**
 	* @return animation state of the flipbook
 	*/
@@ -375,9 +379,9 @@ protected:
 
 protected:
 	/**
-	* Underlying slate widget.
+	* Underlying slate visual image.
 	* 
-	* @seealso UVisualImage::RebuildWidget()
+	* @see UVisualImage::RebuildWidget()
 	*/
 	TSharedPtr<SVisualImage> VisualImageSlate;
 

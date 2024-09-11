@@ -10,7 +10,7 @@ class APlayerController;
 class AActor;
 
 /**
- * Debugger for VisualU that provides information on Visual controller.
+ * Debugger for VisualU that provides information on UVisualController.
  */
 class FGameplayDebuggerCategory_VisualU final : public FGameplayDebuggerCategory
 {

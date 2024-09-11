@@ -10,7 +10,7 @@ class IDetailChildrenBuilder;
 class IPropertyHandle;
 
 /**
- * Custom slate widget for the @see FVisualAnchors. 
+ * Custom slate widget for FVisualAnchors. 
  */
 class FSpriteStructCustomization : public IPropertyTypeCustomization
 {
