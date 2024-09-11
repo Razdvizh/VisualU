@@ -2,6 +2,7 @@
 
 
 #include "VisualController.h"
+#include "Engine/Engine.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 #include "Engine/DataTable.h"
@@ -69,7 +70,7 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	ExhaustedScenes(),
 	Head(nullptr),
 	FastMoveTask(nullptr),
-	AutoMoveHandle(nullptr),
+	AutoMoveHandle(),
 	ScenesToLoad(5),
 	bPlayTransitions(true),
 	bPlaySound(true),

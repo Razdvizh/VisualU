@@ -5,6 +5,7 @@
 #include "PaperSprite.h"
 #include "Scenario.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "AssetRegistry/AssetData.h"
 #include "VisualController.h"
 #include "Engine/DataTable.h"
 

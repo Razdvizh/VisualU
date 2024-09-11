@@ -6,6 +6,7 @@
 #include "Scenario.h"
 #include "Templates/SubclassOf.h"
 #include "Async/AsyncWork.h"
+#include "Containers/Ticker.h"
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 #include "Containers/Deque.h"
 #endif
