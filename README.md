@@ -1,5 +1,5 @@
 # VisualU
-Plugin for Unreal Engine 5.3 that brings core functionality for a widget-based visual novel game.
+Plugin for Unreal Engine 5.3 that brings core functionality for a widget-based visual novel narrative.
 ![VisualU](https://github.com/Razdvizh/VisualU/assets/114196034/63ff59e4-e603-492f-babb-bf7079920c1e)
 
 # Setup
