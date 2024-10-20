@@ -118,6 +118,7 @@ TSharedRef<SWidget> UVisualTextBlock::RebuildWidget()
 	CreateDecorators(CreatedDecorators);
 
 	TextMarshaller = FRichTextLayoutMarshaller::Create(CreateMarkupParser(), CreateMarkupWriter(), CreatedDecorators, StyleInstance.Get());
+	TextMarshaller->AppendInlineDecorator(MakeShared<FBreakVisualTextBlockDecorator>(this));
 
 	MyRichTextBlock =
 		SNew(SRichTextBlock)
