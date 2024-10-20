@@ -131,8 +131,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f764d650b09539038395d1d1b54e3d5" id="r_a6f764d650b09539038395d1d1b54e3d5"><td class="memItemLeft" align="right" valign="top"><a id="a6f764d650b09539038395d1d1b54e3d5" name="a6f764d650b09539038395d1d1b54e3d5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>UVisualTextBlock</b> (const FObjectInitializer &amp;ObjectInitializer=FObjectInitializer::Get())</td></tr>
 <tr class="separator:a6f764d650b09539038395d1d1b54e3d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ed3ea0e0a061f0471d1a8498f9d3077" id="r_a6ed3ea0e0a061f0471d1a8498f9d3077"><td class="memItemLeft" align="right" valign="top">FORCEINLINE TSharedPtr&lt; IRichTextMarkupParser &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ed3ea0e0a061f0471d1a8498f9d3077">GetTextParser</a> () const</td></tr>
-<tr class="separator:a6ed3ea0e0a061f0471d1a8498f9d3077"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d7824bd8ee504fa1930d2261e55c965" id="r_a1d7824bd8ee504fa1930d2261e55c965"><td class="memItemLeft" align="right" valign="top"><a id="a1d7824bd8ee504fa1930d2261e55c965" name="a1d7824bd8ee504fa1930d2261e55c965"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Typewrite</b> ()</td></tr>
 <tr class="memdesc:a1d7824bd8ee504fa1930d2261e55c965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies typewriter effect to the current text of the text block. <br /></td></tr>
@@ -149,8 +147,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Typewrite</b> ()</td>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ForceTypewriteToEnd</b> ()</td></tr>
 <tr class="memdesc:a7ccaca4376973c2709143c36db431be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unconditionally stops typewriter effect. <br /></td></tr>
 <tr class="separator:a7ccaca4376973c2709143c36db431be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1665ec5ac7e30f41e2e95cde0d9395b7" id="r_a1665ec5ac7e30f41e2e95cde0d9395b7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1665ec5ac7e30f41e2e95cde0d9395b7">SetTextPartiallyTyped</a> (const FText &amp;InText, const FText &amp;InFinalText)</td></tr>
-<tr class="separator:a1665ec5ac7e30f41e2e95cde0d9395b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -188,10 +184,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CalculateWrappedStrin
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a63d784f5ccf554018c947e77f6890702" id="r_a63d784f5ccf554018c947e77f6890702"><td class="memItemLeft" align="right" valign="top"><a id="a63d784f5ccf554018c947e77f6890702" name="a63d784f5ccf554018c947e77f6890702"></a>
-TSharedPtr&lt; IRichTextMarkupParser &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TextParser</b></td></tr>
-<tr class="memdesc:a63d784f5ccf554018c947e77f6890702"><td class="mdescLeft">&#160;</td><td class="mdescRight">Text markup parser used for proper typewriter effect. <br /></td></tr>
-<tr class="separator:a63d784f5ccf554018c947e77f6890702"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24d6f3d88c8e0749933eb5a63c3d97e0" id="r_a24d6f3d88c8e0749933eb5a63c3d97e0"><td class="memItemLeft" align="right" valign="top"><a id="a24d6f3d88c8e0749933eb5a63c3d97e0" name="a24d6f3d88c8e0749933eb5a63c3d97e0"></a>
+TSharedPtr&lt; FSlateTextLayout &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TextLayout</b></td></tr>
+<tr class="separator:a24d6f3d88c8e0749933eb5a63c3d97e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad41bc127b7e3a093499aef3b1b99678d" id="r_ad41bc127b7e3a093499aef3b1b99678d"><td class="memItemLeft" align="right" valign="top"><a id="ad41bc127b7e3a093499aef3b1b99678d" name="ad41bc127b7e3a093499aef3b1b99678d"></a>
+TSharedPtr&lt; FRichTextLayoutMarshaller &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TextMarshaller</b></td></tr>
+<tr class="separator:ad41bc127b7e3a093499aef3b1b99678d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a663d085a33213723e22a6d8b20bdd0" id="r_a0a663d085a33213723e22a6d8b20bdd0"><td class="memItemLeft" align="right" valign="top"><a id="a0a663d085a33213723e22a6d8b20bdd0" name="a0a663d085a33213723e22a6d8b20bdd0"></a>
 FText&#160;</td><td class="memItemRight" valign="bottom"><b>CurrentLine</b></td></tr>
 <tr class="memdesc:a0a663d085a33213723e22a6d8b20bdd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Currently typed text. <br /></td></tr>
@@ -203,6 +201,9 @@ TArray&lt; <a class="el" href="struct_f_dialogue_text_segment.html">FDialogueTex
 <tr class="memitem:a4eddd39b8650be3f464d248d704ee977" id="r_a4eddd39b8650be3f464d248d704ee977"><td class="memItemLeft" align="right" valign="top">FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4eddd39b8650be3f464d248d704ee977">CachedSegmentText</a></td></tr>
 <tr class="memdesc:a4eddd39b8650be3f464d248d704ee977"><td class="mdescLeft">&#160;</td><td class="mdescRight">The section of the text that's already been printed out and won't ever change.  <br /></td></tr>
 <tr class="separator:a4eddd39b8650be3f464d248d704ee977"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb6132c856b790da36bb828ffc4a0895" id="r_adb6132c856b790da36bb828ffc4a0895"><td class="memItemLeft" align="right" valign="top"><a id="adb6132c856b790da36bb828ffc4a0895" name="adb6132c856b790da36bb828ffc4a0895"></a>
+int32&#160;</td><td class="memItemRight" valign="bottom"><b>CachedLetterIndex</b></td></tr>
+<tr class="separator:adb6132c856b790da36bb828ffc4a0895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a322f605be17a193a6e5d98d89dee62bf" id="r_a322f605be17a193a6e5d98d89dee62bf"><td class="memItemLeft" align="right" valign="top"><a id="a322f605be17a193a6e5d98d89dee62bf" name="a322f605be17a193a6e5d98d89dee62bf"></a>
 int32&#160;</td><td class="memItemRight" valign="bottom"><b>CurrentSegmentIndex</b></td></tr>
 <tr class="memdesc:a322f605be17a193a6e5d98d89dee62bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current position of a segment. <br /></td></tr>
@@ -252,33 +253,6 @@ FTimerHandle&#160;</td><td class="memItemRight" valign="bottom"><b>LetterTimer</
 </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>parsed dialogue segments as string </dd></dl>
-
-</div>
-</div>
-<a id="a6ed3ea0e0a061f0471d1a8498f9d3077" name="a6ed3ea0e0a061f0471d1a8498f9d3077"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ed3ea0e0a061f0471d1a8498f9d3077">&#9670;&#160;</a></span>GetTextParser()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">FORCEINLINE TSharedPtr&lt; IRichTextMarkupParser &gt; UVisualTextBlock::GetTextParser </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>custom markup text parser</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a63d784f5ccf554018c947e77f6890702" title="Text markup parser used for proper typewriter effect.">UVisualTextBlock::TextParser</a> </dd></dl>
 
 </div>
 </div>
@@ -400,43 +374,6 @@ FTimerHandle&#160;</td><td class="memItemRight" valign="bottom"><b>LetterTimer</
 
 <p>Resumes active typewriter effect. </p>
 <dl class="section note"><dt>Note</dt><dd>not threadsafe, has no effect for active timer. </dd></dl>
-
-</div>
-</div>
-<a id="a1665ec5ac7e30f41e2e95cde0d9395b7" name="a1665ec5ac7e30f41e2e95cde0d9395b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1665ec5ac7e30f41e2e95cde0d9395b7">&#9670;&#160;</a></span>SetTextPartiallyTyped()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UVisualTextBlock::SetTextPartiallyTyped </td>
-          <td>(</td>
-          <td class="paramtype">const FText &amp;</td>          <td class="paramname"><span class="paramname"><em>InText</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const FText &amp;</td>          <td class="paramname"><span class="paramname"><em>InFinalText</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section see"><dt>See also</dt><dd>SVisualtextBlock::MakeTextAttribute()</dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">InText</td><td>text that appears to be typed by typewriter </td></tr>
-    <tr><td class="paramname">InFinalText</td><td>full text after typewriter finishes </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
