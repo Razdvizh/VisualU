@@ -27,7 +27,6 @@ var annotated_dup =
     [ "SVisualImage", "class_s_visual_image.html", "class_s_visual_image" ],
     [ "SVisualImageBase", "class_s_visual_image_base.html", "class_s_visual_image_base" ],
     [ "SVisualSocket", "class_s_visual_socket.html", "class_s_visual_socket" ],
-    [ "SVisualTextBlock", "class_s_visual_text_block.html", "class_s_visual_text_block" ],
     [ "UBackgroundVisualImage", "class_u_background_visual_image.html", "class_u_background_visual_image" ],
     [ "UInfoAssignable", "class_u_info_assignable.html", null ],
     [ "UME_TransitionParameter2D", "class_u_m_e___transition_parameter2_d.html", "class_u_m_e___transition_parameter2_d" ],

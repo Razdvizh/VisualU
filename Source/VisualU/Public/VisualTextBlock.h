@@ -1,4 +1,4 @@
-// Copyright (c) Sam Bloomberg
+﻿// Copyright (c) Sam Bloomberg
 
 #pragma once
 
@@ -6,9 +6,10 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/RichTextBlock.h"
 #include "Framework/Text/IRichTextMarkupParser.h"
-#include "Framework/Text/RichTextLayoutMarshaller.h"
-#include "Framework/Text/SlateTextLayout.h"
 #include "VisualTextBlock.generated.h"
+
+class FSlateTextLayout;
+class FRichTextLayoutMarshaller;
 
 /**
 * Data that represents text segment.
@@ -16,7 +17,7 @@
 struct VISUALU_API FDialogueTextSegment
 {
 	FString Text;
-	FTextRunParseResults RunInfo;
+	FRunInfo RunInfo;
 };
 
 /**
@@ -32,16 +33,6 @@ class VISUALU_API UVisualTextBlock : public URichTextBlock
 
 public:
 	UVisualTextBlock(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	/**
-	* @return custom markup text parser
-	* 
-	* @see UVisualTextBlock::TextParser
-	*/
-	FORCEINLINE TSharedPtr<IRichTextMarkupParser> GetTextParser() const
-	{
-		return TextParser;
-	}
 
 	/**
 	* The amount of time, in seconds, between printing individual letters.
@@ -95,14 +86,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Visual Text Block")
 	void ForceTypewriteToEnd();
 
-	/**
-	* @see SVisualtextBlock::MakeTextAttribute()
-	* 
-	* @param InText text that appears to be typed by typewriter
-	* @param InFinalText full text after typewriter finishes
-	*/
-	virtual void SetTextPartiallyTyped(const FText& InText, const FText& InFinalText);
-
 protected:
 	/**
 	* Called when individual letter is typed by typewriter.
@@ -139,10 +122,10 @@ private:
 	*/
 	FString CalculateSegments();
 
-	/**
-	* Text markup parser used for proper typewriter effect.
-	*/
-	TSharedPtr<IRichTextMarkupParser> TextParser;
+private:
+	TSharedPtr<FSlateTextLayout> TextLayout;
+
+	TSharedPtr<FRichTextLayoutMarshaller> TextMarshaller;
 
 	/**
 	* Currently typed text.
@@ -163,6 +146,11 @@ private:
 	* a named run that hasn't been completed yet.
 	*/
 	FString CachedSegmentText;
+
+	/*
+	* Index of last letter that already been printed out and won't ever change.
+	*/
+	int32 CachedLetterIndex;
 
 	/**
 	* Current position of a segment.

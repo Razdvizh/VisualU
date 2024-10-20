@@ -25,7 +25,6 @@ SOFTWARE.
 ATTRIBUTIONS:
 
 Some code in the following files is licensed under the MIT License by Sam Bloomberg (@redxdev): https://github.com/redxdev/UnrealRichTextDialogueBox
-And based on forked repository by Adam Parkinson (@SalamiArmi): https://github.com/SalamiArmi/UnrealRichTextDialogueBox
 
 Source/VisualU/Public/VisualTextBlock.h
 Source/VisualU/Public/SVisualTextBlock.h

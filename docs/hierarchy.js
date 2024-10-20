@@ -53,9 +53,6 @@ var hierarchy =
       ] ],
       [ "SVisualImageBase< DerivedT >", "class_s_visual_image_base.html", null ]
     ] ],
-    [ "SRichTextBlock", null, [
-      [ "SVisualTextBlock", "class_s_visual_text_block.html", null ]
-    ] ],
     [ "SScaleBox", null, [
       [ "SVisualSocket", "class_s_visual_socket.html", null ]
     ] ],
