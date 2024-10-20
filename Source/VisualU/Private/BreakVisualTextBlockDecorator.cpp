@@ -15,14 +15,6 @@ FBreakVisualTextBlockDecorator::FBreakVisualTextBlockDecorator(UVisualTextBlock*
 {
 }
 
-FBreakVisualTextBlockDecorator::~FBreakVisualTextBlockDecorator()
-{
-	if (Owner && Owner->GetWorld())
-	{
-		Owner->GetWorld()->GetTimerManager().ClearTimer(BreakTimer);
-	}
-}
-
 bool FBreakVisualTextBlockDecorator::Supports(const FTextRunParseResults& RunParseResult, const FString& Text) const
 {
 	if (RunParseResult.Name == TEXT("b"))
