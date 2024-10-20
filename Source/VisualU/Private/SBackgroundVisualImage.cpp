@@ -66,6 +66,7 @@ void SBackgroundVisualImage::StartTransition(UPaperFlipbook* TargetFlipbook, UMa
 
 void SBackgroundVisualImage::StopTransition()
 {
+	SetFlipbook(Target.Get());
 	bIsTransitioning = false;
 	UpdateSequence();
 }
