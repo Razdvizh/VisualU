@@ -30,8 +30,6 @@ var searchData=
   ['getspriteindex_27',['GetSpriteIndex',['../class_s_visual_image.html#a9a01ce6620849850b4e5e42971751903',1,'SVisualImage']]],
   ['getspritetexture_28',['GetSpriteTexture',['../class_u_visual_u_blueprint_statics.html#a594ecf5ed4fad6d54a21d1fa902f54c8',1,'UVisualUBlueprintStatics']]],
   ['gettargetsprite_29',['GetTargetSprite',['../class_s_background_visual_image.html#adfeef107fae8149a7dfe641de0dd9808',1,'SBackgroundVisualImage']]],
-  ['gettextinternal_30',['GetTextInternal',['../class_s_visual_text_block.html#a19f11c754b530f1917c15c28d6c088e2',1,'SVisualTextBlock']]],
-  ['gettextparser_31',['GetTextParser',['../class_u_visual_text_block.html#a6ed3ea0e0a061f0471d1a8498f9d3077',1,'UVisualTextBlock']]],
-  ['gettransitionmaterial_32',['GetTransitionMaterial',['../class_u_m_e___transition_parameter2_d.html#a36dc7c3624fda29bd22423d84cab480d',1,'UME_TransitionParameter2D']]],
-  ['getvisualcontroller_33',['GetVisualController',['../class_i_visual_controller_interface.html#acd441a269fcf471e06d19c172de12c83',1,'IVisualControllerInterface']]]
+  ['gettransitionmaterial_30',['GetTransitionMaterial',['../class_u_m_e___transition_parameter2_d.html#a36dc7c3624fda29bd22423d84cab480d',1,'UME_TransitionParameter2D']]],
+  ['getvisualcontroller_31',['GetVisualController',['../class_i_visual_controller_interface.html#acd441a269fcf471e06d19c172de12c83',1,'IVisualControllerInterface']]]
 ];
