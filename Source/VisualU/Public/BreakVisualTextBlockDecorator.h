@@ -24,8 +24,6 @@ typedef FRichTextDecorator Super;
 public:
 	FBreakVisualTextBlockDecorator(UVisualTextBlock* InOwner);
 
-	virtual ~FBreakVisualTextBlockDecorator() override;
-
 	/**
 	* Determines the tag that is supported by this decorator.
 	* 
