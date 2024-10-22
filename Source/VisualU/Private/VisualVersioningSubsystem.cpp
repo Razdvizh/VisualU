@@ -10,23 +10,33 @@ UVisualVersioningSubsystem::UVisualVersioningSubsystem()
 {
 }
 
-bool UVisualVersioningSubsystem::ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, const FName& SceneName, const FVisualScenarioInfo& Version)
+void UVisualVersioningSubsystem::AlterDataTable(const UDataTable* DataTable, const FName& SceneName, const FVisualScenarioInfo& Version)
 {
-	check(VisualController);
-
 	FScenario* Scene = GetSceneChecked(DataTable, SceneName);
-	Versions.Add(Scene, Scene->Info);
+	FScenarioId Id{Scene->GetOwner(), Scene->GetIndex()};
+	Versions.Add(MoveTemp(Id), Scene->Info);
 	Scene->Info = Version;
-	
-	return VisualController->RequestNode(DataTable);
 }
 
 void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
 {
 	check(Scene);
-	if (const FVisualScenarioInfo* Version = Versions.Find(Scene))
+	FScenarioId Id{ Scene->GetOwner(), Scene->GetIndex() };
+	if (const FVisualScenarioInfo* Version = Versions.Find(Id))
 	{
 		Scene->Info = *Version;
+	}
+}
+
+void UVisualVersioningSubsystem::CheckoutAll(UDataTable* const DataTable) const
+{
+	check(DataTable);
+	TArray<FScenario*> Rows;
+	DataTable->GetAllRows(UE_SOURCE_LOCATION, Rows);
+
+	for (FScenario*& Row : Rows)
+	{
+		Checkout(Row);
 	}
 }
 
@@ -36,15 +46,16 @@ void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 
 	if (Ar.IsSaving())
 	{
-		TSet<FScenario*> Scenes;
-		Versions.GetKeys(Scenes);
-		int32 NumScenes = Scenes.Num();
+		TSet<FScenarioId> SceneIDs;
+		Versions.GetKeys(SceneIDs);
+		int32 NumScenes = SceneIDs.Num();
 		Ar << NumScenes;
-		for (FScenario*& Scene : Scenes)
+		for (FScenarioId& SceneId : SceneIDs)
 		{
+			FScenario* Scene = GetSceneChecked(SceneId);
 			Ar << *Scene;
 			TArray<FVisualScenarioInfo> Infos;
-			Versions.MultiFind(Scene, Infos, /*bMaintainOrder=*/true);
+			Versions.MultiFind(SceneId, Infos, /*bMaintainOrder=*/true);
 			Ar << Infos;
 		}
 	}
@@ -61,7 +72,8 @@ void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 			Ar << Infos;
 			for (FVisualScenarioInfo& Info : Infos)
 			{
-				Versions.Add(FScenario::ResolveScene(Scene), Info);
+				FScenarioId Id {Scene.GetOwner(), Scene.GetIndex()};
+				Versions.Add(Id, Info);
 			}
 		}
 	}
@@ -69,13 +81,13 @@ void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 
 void UVisualVersioningSubsystem::Deinitialize()
 {
-	TSet<FScenario*> Scenes;
-	Versions.GetKeys(Scenes);
-	for (FScenario*& Scene : Scenes)
+	TSet<FScenarioId> SceneIDs;
+	Versions.GetKeys(SceneIDs);
+	for (FScenarioId& SceneId : SceneIDs)
 	{
-		check(Scene);
+		FScenario* Scene = GetSceneChecked(SceneId);
 		TArray<FVisualScenarioInfo> Infos;
-		Versions.MultiFind(Scene, Infos, /*bMaintainOrder=*/true);
+		Versions.MultiFind(SceneId, Infos, /*bMaintainOrder=*/true);
 		if (!Infos.IsEmpty())
 		{
 			//Reset scene to initial, asset state
@@ -92,4 +104,16 @@ FScenario* UVisualVersioningSubsystem::GetSceneChecked(const UDataTable* DataTab
 	checkf(Scene, TEXT("Can't find scene with name: %s in Data Table: %s"), *SceneName.ToString(), *DataTable->GetFName().ToString());
 
 	return Scene;
+}
+
+FScenario* UVisualVersioningSubsystem::GetSceneChecked(const FScenarioId& Id) const
+{
+	checkf(Id.Owner, TEXT("Can't identify a scene with invalid owner."));
+
+	TArray<FScenario*> Rows;
+	Id.Owner->GetAllRows(UE_SOURCE_LOCATION, Rows);
+
+	check(Rows.IsValidIndex(Id.Index));
+
+	return Rows[Id.Index];
 }

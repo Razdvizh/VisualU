@@ -14,21 +14,43 @@ class UDataTable;
 class UVisualController;
 
 /**
- * Allows for altering scenes in chosen nodes.
+ * Allows for altering scenes in nodes.
  * All versions are applied and discared at runtime.
  */
 UCLASS()
 class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem
 {
 	GENERATED_BODY()
+
+private:
+	struct FScenarioId
+	{
+		const UDataTable* Owner;
+		int32 Index;
+
+		friend uint32 GetTypeHash(const FScenarioId& Id)
+		{
+			return HashCombine(GetTypeHash(Id.Owner), Id.Index);
+		}
+
+		friend bool operator==(const FScenarioId& Id, const FScenarioId& Other)
+		{
+			return Id.Owner == Other.Owner &&
+				Id.Index == Other.Index;
+		}
+
+		friend bool operator!=(const FScenarioId& Id, const FScenarioId& Other)
+		{
+			return !(Id == Other);
+		}
+	};
 	
 public:
 	UVisualVersioningSubsystem();
 
 	/**
-	* Chooses data table with scene altered by provided version.
+	* Alters scene in the data table by provided version.
 	* 
-	* @param VisualController controller that will request node
 	* @param DataTable data table that contains desired scene
 	* @param SceneName row name of the desired scene
 	* @param Version altered scene
@@ -37,40 +59,34 @@ public:
 	* @see UVisualUBlueprintStatics::Choose()
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Versioning")
-	bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, const FName& SceneName, const FVisualScenarioInfo& Version);
+	void AlterDataTable(const UDataTable* DataTable, const FName& SceneName, const FVisualScenarioInfo& Version);
 
 	/**
 	* Template version.
 	* 
-	* @see UVisualVersioningSubsystem::ChooseVersion(UVisualController*, const UDataTable*, const FName&, const FVisualScenarioInfo&)
+	* @see UVisualVersioningSubsystem::AlterDataTable(const UDataTable*, const FName&, const FVisualScenarioInfo&)
 	*/
 	template<typename T = FVisualScenarioInfo, typename... V>
-	inline bool ChooseVersion(UVisualController* VisualController, const UDataTable* DataTable, const FName& SceneName, V T::*... Members, const V&... Values)
+	inline void AlterDataTable(const UDataTable* DataTable, const FName& SceneName, V T::*... Members, const V&... Values)
 	{
-		check(VisualController);
-
 		FScenario* Scene = GetSceneChecked(DataTable, SceneName);
-		Versions.Add(Scene, Scene->Info);
+		FScenarioId Id{ Scene->GetOwner(), Scene->GetIndex() };
+		Versions.Add(Id, Scene->Info);
 		UpdateMembers(Scene->Info, Members, Values);
-
-		return VisualController->RequestNode(DataTable);
 	}
 
 	/**
 	* Template version.
 	* 
-	* @see UVisualVersioningSubsystem::ChooseVersion(UVisualController*, const UDataTable*, const FName&, const FVisualScenarioInfo&)
+	* @see UVisualVersioningSubsystem::AlterDataTable(const UDataTable*, const FName&, const FVisualScenarioInfo&)
 	*/
 	template<typename T = FVisualScenarioInfo, typename... V>
-	inline bool ChooseVersion(UVisualController* VisualController, FScenario* Scene, V T::*... Members, const V&... Values)
+	inline void AlterDataTable(FScenario* Scene, V T::*... Members, const V&... Values)
 	{
-		check(VisualController);
 		check(Scene);
-
-		Versions.Add(Scene, Scene->Info);
+		FScenarioId Id{ Scene->GetOwner(), Scene->GetIndex() };
+		Versions.Add(Id, Scene->Info);
 		UpdateMembers(Scene->Info, Members, Values);
-
-		return VisualController->RequestNode(Scene->Owner);
 	}
 
 	/**
@@ -80,6 +96,14 @@ public:
 	* @param Scene scene to revert back to the previous version
 	*/
 	void Checkout(FScenario* const Scene) const;
+
+	/**
+	* Switches all scenes in the data table to an older version.
+	* Has no effect for scenes not altered by this subsystem.
+	*
+	* @param Scene scene to revert back to the previous version
+	*/
+	void CheckoutAll(UDataTable* const DataTable) const;
 
 	/**
 	* Not ready for production code.
@@ -104,10 +128,18 @@ private:
 	*/
 	FScenario* GetSceneChecked(const UDataTable* DataTable, const FName& SceneName) const;
 
+	/**
+	* Will trigger assertion for invalid scenario id.
+	*
+	* @param Id identity of requested scene
+	* @return identified scene
+	*/
+	FScenario* GetSceneChecked(const FScenarioId& Id) const;
+
 private:
 	/**
-	* Map of scenes and their information before being altered.
+	* Map of scenes to all versions of their information.
 	*/
-	TMultiMap<FScenario*, FVisualScenarioInfo> Versions;
+	TMultiMap<FScenarioId, FVisualScenarioInfo> Versions;
 
 };
