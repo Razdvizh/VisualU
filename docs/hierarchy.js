@@ -22,6 +22,7 @@ var hierarchy =
     [ "FRichTextDecorator", null, [
       [ "FBreakVisualTextBlockDecorator", "class_f_break_visual_text_block_decorator.html", null ]
     ] ],
+    [ "UVisualVersioningSubsystem::FScenarioId", "struct_u_visual_versioning_subsystem_1_1_f_scenario_id.html", null ],
     [ "FSprite", "struct_f_sprite.html", null ],
     [ "FTableRowBase", null, [
       [ "FScenario", "struct_f_scenario.html", null ]

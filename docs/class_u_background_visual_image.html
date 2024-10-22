@@ -32,8 +32,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logocombined.png"/></td>
   <td id="projectalign">
-   <div id="projectname">VisualU<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">VisualU<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game</div>
   </td>
@@ -115,7 +116,7 @@ $(function(){initNavTree('class_u_background_visual_image.html',''); initResizab
 <p>Visual image that supports transition effects through material.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualU/Public/BackgroundVisualImage.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.3/VisualUEx/Plugins/VisualU/Source/VisualU/Public/BackgroundVisualImage.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UBackgroundVisualImage:</div>
 <div class="dyncontent">
@@ -344,9 +345,11 @@ TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign=
 </div><div class="memdoc">
 
 <p>Version for non-animated flipbooks. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aecfe08d9e89bc1f8069445d20d17fb39" title="Plays transition from UVisualImage::Flipbook to UBackgroundVisualImage::Target.">PlayTransition()</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aecfe08d9e89bc1f8069445d20d17fb39" title="Plays transition from UVisualImage::Flipbook to UBackgroundVisualImage::Target.">UBackgroundVisualImage::PlayTransition(UPaperFlipbook*, UMaterialInstanceDynamic*, bool)</a></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">Target</td><td>New flipbook that would be displayed by this image after transition ends </td></tr>
+    <tr><td class="paramname">Transition</td><td>Material that serves as transition effect </td></tr>
     <tr><td class="paramname">FrameIndex</td><td>which frame to show after transition ends. </td></tr>
   </table>
   </dd>

@@ -59,7 +59,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprite", meta = (ToolTip = "Information for Visual Images inside sprite"))
 	TArray<FVisualImageInfo> SpriteInfo;
 
-	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FSprite& Sprite)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FSprite& Sprite)
 	{
 		Ar << Sprite.SpriteClass 
 		   << Sprite.Anchors 
@@ -93,7 +93,7 @@ public:
 		return String;
 	}
 
-	FORCEINLINE bool operator== (const FSprite& Other) const
+	FORCEINLINE bool operator==(const FSprite& Other) const
 	{
 		return SpriteClass == Other.SpriteClass
 			&& Anchors == Other.Anchors
@@ -102,7 +102,7 @@ public:
 			&& SpriteInfo == Other.SpriteInfo;
 	}
 
-	FORCEINLINE bool operator!= (const FSprite& Other) const
+	FORCEINLINE bool operator!=(const FSprite& Other) const
 	{
 		return !(*this == Other);
 	}
@@ -143,17 +143,17 @@ public:
 		return String;
 	}
 
-	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FBackground& Background)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FBackground& Background)
 	{
 		return Ar << Background.BackgroundArtInfo << Background.TransitionMaterial;
 	}
 
-	FORCEINLINE bool operator== (const FBackground& Other) const
+	FORCEINLINE bool operator==(const FBackground& Other) const
 	{
 		return (BackgroundArtInfo == Other.BackgroundArtInfo && TransitionMaterial == Other.TransitionMaterial);
 	}
 
-	FORCEINLINE bool operator!= (const FBackground& Other) const
+	FORCEINLINE bool operator!=(const FBackground& Other) const
 	{
 		return !(*this == Other);
 	}
@@ -268,7 +268,7 @@ public:
 		Ar << *this;
 	}
 
-	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FVisualScenarioInfo& ScenarioInfo)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FVisualScenarioInfo& ScenarioInfo)
 	{
 		Ar << ScenarioInfo.Author
 			<< ScenarioInfo.Line
@@ -280,7 +280,7 @@ public:
 		return Ar;
 	}
 
-	FORCEINLINE bool operator== (const FVisualScenarioInfo& Other) const
+	FORCEINLINE bool operator==(const FVisualScenarioInfo& Other) const
 	{
 		return Author.CompareTo(Other.Author)
 			&& Line.CompareTo(Other.Line)
@@ -290,7 +290,7 @@ public:
 			&& Flags == Other.Flags;
 	}
 
-	FORCEINLINE bool operator!= (const FVisualScenarioInfo& Other) const
+	FORCEINLINE bool operator!=(const FVisualScenarioInfo& Other) const
 	{
 		return !(*this == Other);
 	}
@@ -347,7 +347,7 @@ protected:
 	int32 Index;
 
 public:
-	/*
+	/**
 	* Matches provided scene to its data stored in the data table.
 	* 
 	* @note Used during serialization
@@ -407,7 +407,7 @@ public:
 	* 
 	* @note said assets might be already loaded. Will empty Out.
 	* 
-	* @param Array to be filled with data that should be loaded
+	* @param Out array to be filled with data that should be loaded
 	*/
 	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
 	{
@@ -495,7 +495,7 @@ public:
 		Ar << *this;
 	}
 
-	FORCEINLINE friend FArchive& operator<< (FArchive& Ar, FScenario& Scenario)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FScenario& Scenario)
 	{
 		TSoftObjectPtr<UDataTable> SoftOwner;
 		if (Ar.IsSaving())
@@ -513,12 +513,12 @@ public:
 		return Ar << Scenario.Index;
 	}
 
-	FORCEINLINE bool operator== (const FScenario& Other) const
+	FORCEINLINE bool operator==(const FScenario& Other) const
 	{
 		return Info == Other.Info;
 	}
 
-	FORCEINLINE bool operator!= (const FScenario& Other) const
+	FORCEINLINE bool operator!=(const FScenario& Other) const
 	{
 		return !(*this == Other);
 	}

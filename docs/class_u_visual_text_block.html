@@ -32,8 +32,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logocombined.png"/></td>
   <td id="projectalign">
-   <div id="projectname">VisualU<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">VisualU<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game</div>
   </td>
@@ -118,7 +119,7 @@ $(function(){initNavTree('class_u_visual_text_block.html',''); initResizable(tru
 <p>A text block that exposes more information about text layout.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualU/Public/VisualTextBlock.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.3/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualTextBlock.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualTextBlock:</div>
 <div class="dyncontent">
@@ -186,9 +187,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CalculateWrappedStrin
 Private Attributes</h2></td></tr>
 <tr class="memitem:a24d6f3d88c8e0749933eb5a63c3d97e0" id="r_a24d6f3d88c8e0749933eb5a63c3d97e0"><td class="memItemLeft" align="right" valign="top"><a id="a24d6f3d88c8e0749933eb5a63c3d97e0" name="a24d6f3d88c8e0749933eb5a63c3d97e0"></a>
 TSharedPtr&lt; FSlateTextLayout &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TextLayout</b></td></tr>
+<tr class="memdesc:a24d6f3d88c8e0749933eb5a63c3d97e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Text layout of this text block. <br /></td></tr>
 <tr class="separator:a24d6f3d88c8e0749933eb5a63c3d97e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad41bc127b7e3a093499aef3b1b99678d" id="r_ad41bc127b7e3a093499aef3b1b99678d"><td class="memItemLeft" align="right" valign="top"><a id="ad41bc127b7e3a093499aef3b1b99678d" name="ad41bc127b7e3a093499aef3b1b99678d"></a>
 TSharedPtr&lt; FRichTextLayoutMarshaller &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TextMarshaller</b></td></tr>
+<tr class="memdesc:ad41bc127b7e3a093499aef3b1b99678d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Text marshaller for the text layout. <br /></td></tr>
 <tr class="separator:ad41bc127b7e3a093499aef3b1b99678d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a663d085a33213723e22a6d8b20bdd0" id="r_a0a663d085a33213723e22a6d8b20bdd0"><td class="memItemLeft" align="right" valign="top"><a id="a0a663d085a33213723e22a6d8b20bdd0" name="a0a663d085a33213723e22a6d8b20bdd0"></a>
 FText&#160;</td><td class="memItemRight" valign="bottom"><b>CurrentLine</b></td></tr>
@@ -203,6 +206,7 @@ TArray&lt; <a class="el" href="struct_f_dialogue_text_segment.html">FDialogueTex
 <tr class="separator:a4eddd39b8650be3f464d248d704ee977"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb6132c856b790da36bb828ffc4a0895" id="r_adb6132c856b790da36bb828ffc4a0895"><td class="memItemLeft" align="right" valign="top"><a id="adb6132c856b790da36bb828ffc4a0895" name="adb6132c856b790da36bb828ffc4a0895"></a>
 int32&#160;</td><td class="memItemRight" valign="bottom"><b>CachedLetterIndex</b></td></tr>
+<tr class="memdesc:adb6132c856b790da36bb828ffc4a0895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of last letter that already been printed out and won't ever change. <br /></td></tr>
 <tr class="separator:adb6132c856b790da36bb828ffc4a0895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a322f605be17a193a6e5d98d89dee62bf" id="r_a322f605be17a193a6e5d98d89dee62bf"><td class="memItemLeft" align="right" valign="top"><a id="a322f605be17a193a6e5d98d89dee62bf" name="a322f605be17a193a6e5d98d89dee62bf"></a>
 int32&#160;</td><td class="memItemRight" valign="bottom"><b>CurrentSegmentIndex</b></td></tr>

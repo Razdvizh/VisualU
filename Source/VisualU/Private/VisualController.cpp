@@ -212,15 +212,16 @@ bool UVisualController::RequestPreviousScene()
 		return false;
 	}
 
+	if (UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>())
+	{
+		VisualVersioning->Checkout(const_cast<FScenario*>(GetCurrentScene()));
+	}
+
 	if (!CanRetractScene())
 	{
 		if (!ExhaustedScenes.IsEmpty())
 		{
 			FScenario* Scene = ExhaustedScenes.Pop();
-			if (UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>())
-			{
-				VisualVersioning->Checkout(Scene);
-			}
 			SetCurrentScene(Scene);
 			return true;
 		}
@@ -275,7 +276,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 					FScenario* ExhaustedScene = ExhaustedScenes.Pop();
 					if (VisualVersioning)
 					{
-						VisualVersioning->Checkout(ExhaustedScene);
+						VisualVersioning->CheckoutAll(const_cast<UDataTable*>(ExhaustedScene->GetOwner()));
 					}
 					bIsFound = true;
 					break;
@@ -284,7 +285,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 				NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
 				if (VisualVersioning)
 				{
-					VisualVersioning->Checkout(ExhaustedScene);
+					VisualVersioning->CheckoutAll(const_cast<UDataTable*>(ExhaustedScene->GetOwner()));
 				}
 			}
 		}
@@ -601,7 +602,7 @@ TSharedPtr<FStreamableHandle> UVisualController::LoadScene(const FScenario* Scen
 	DebugString = Scene->GetDebugString();
 #endif
 	TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(DataToLoad, /*bManageActiveHandle*/false, DebugString);
-
+	
 	AfterLoadDelegate.ExecuteIfBound();
 
 	return Handle;

@@ -32,8 +32,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logocombined.png"/></td>
   <td id="projectalign">
-   <div id="projectname">VisualU<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">VisualU<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game</div>
   </td>
@@ -118,7 +119,7 @@ $(function(){initNavTree('class_u_visual_controller.html',''); initResizable(tru
 <p>Organizes scenes described by <a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a> in a meaningful way.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualU/Public/VisualController.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.3/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualController.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualController:</div>
 <div class="dyncontent">
@@ -696,7 +697,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 <dl class="section note"><dt>Note</dt><dd>will trigger assertion for invalid index.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">position</td><td>of the scene </td></tr>
+    <tr><td class="paramname">Index</td><td>position of the scene </td></tr>
   </table>
   </dd>
 </dl>
@@ -840,7 +841,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 <dl class="section note"><dt>Note</dt><dd>scene is considered exhausted when it was already seen by player</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">scene</td><td>to check for exhaustion </td></tr>
+    <tr><td class="paramname">Scene</td><td>scene to check for exhaustion </td></tr>
   </table>
   </dd>
 </dl>
