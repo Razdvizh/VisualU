@@ -57,8 +57,10 @@ public:
 	/**
 	* Version for non-animated flipbooks.
 	* 
-	* @see PlayTransition()
+	* @see UBackgroundVisualImage::PlayTransition(UPaperFlipbook*, UMaterialInstanceDynamic*, bool)
 	* 
+	* @param Target New flipbook that would be displayed by this image after transition ends
+	* @param Transition Material that serves as transition effect
 	* @param FrameIndex which frame to show after transition ends.
 	*/
 	void PlayTransition(UPaperFlipbook* Target, UMaterialInstanceDynamic* Transition, int32 FrameIndex);

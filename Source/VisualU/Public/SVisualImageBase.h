@@ -37,7 +37,7 @@ protected:
 	* Paints render resource as a brush after applying all modifiers.
 	* 
 	* @param Args contains information about paint of this widget
-	* @param AllotedGeometry base geometry for this widget
+	* @param AllottedGeometry base geometry for this widget
 	* @param MyCullingRect culling bounds of this widget
 	* @param OutDrawElements elements to draw in the slate window
 	* @param LayerId layer on which elements should be drawn

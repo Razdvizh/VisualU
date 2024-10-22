@@ -101,7 +101,7 @@ public:
 	* Switches all scenes in the data table to an older version.
 	* Has no effect for scenes not altered by this subsystem.
 	*
-	* @param Scene scene to revert back to the previous version
+	* @param DataTable node which scenes will be reverted to previous version
 	*/
 	void CheckoutAll(UDataTable* const DataTable) const;
 

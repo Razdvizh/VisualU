@@ -32,8 +32,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logocombined.png"/></td>
   <td id="projectalign">
-   <div id="projectname">VisualU<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">VisualU<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game</div>
   </td>
@@ -114,7 +115,7 @@ $(function(){initNavTree('struct_f_visual_info.html',''); initResizable(true); }
 <p>Base struct for assignable info.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualU/Public/InfoAssignable.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.3/VisualUEx/Plugins/VisualU/Source/VisualU/Public/InfoAssignable.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for FVisualInfo:</div>
 <div class="dyncontent">
@@ -138,7 +139,7 @@ Public Attributes</h2></td></tr>
 <li>Create a struct that inherits from <code class="JavaDocCode">FVisualInfo</code></li>
 <li>Add desired fields</li>
 <li>Override <code class="JavaDocCode">Accept</code> function to implement Visitor pattern</li>
-<li>Override {@codeToString} function if needed</li>
+<li>Override <code class="JavaDocCode">ToString</code> function if needed</li>
 </ol>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_f_visual_image_info.html" title="Collection of data that governs appearance of UVisualImage.">FVisualImageInfo</a> </dd></dl>
 </div><h2 class="groupheader">Member Data Documentation</h2>

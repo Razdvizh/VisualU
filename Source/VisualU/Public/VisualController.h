@@ -184,7 +184,7 @@ public:
 	* 
 	* @note will trigger assertion for invalid index.
 	* 
-	* @param position of the scene
+	* @param Index position of the scene
 	* @return valid scene
 	*/
 	const FScenario* GetSceneAt(int32 Index);
@@ -361,7 +361,7 @@ public:
 	*
 	* @note scene is considered exhausted when it was already seen by player
 	*
-	* @param scene to check for exhaustion
+	* @param Scene scene to check for exhaustion
 	* @return is scene considered exhausted
 	*
 	* @see UVisualController::ExhaustedScenes

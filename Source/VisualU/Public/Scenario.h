@@ -347,7 +347,7 @@ protected:
 	int32 Index;
 
 public:
-	/*
+	/**
 	* Matches provided scene to its data stored in the data table.
 	* 
 	* @note Used during serialization
@@ -407,7 +407,7 @@ public:
 	* 
 	* @note said assets might be already loaded. Will empty Out.
 	* 
-	* @param Array to be filled with data that should be loaded
+	* @param Out array to be filled with data that should be loaded
 	*/
 	virtual void GetDataToLoad(TArray<FSoftObjectPath>& Out) const
 	{

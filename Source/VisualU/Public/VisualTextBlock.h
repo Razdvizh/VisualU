@@ -123,8 +123,14 @@ private:
 	FString CalculateSegments();
 
 private:
+	/**
+	* Text layout of this text block.
+	*/
 	TSharedPtr<FSlateTextLayout> TextLayout;
 
+	/**
+	* Text marshaller for the text layout.
+	*/
 	TSharedPtr<FRichTextLayoutMarshaller> TextMarshaller;
 
 	/**
@@ -147,7 +153,7 @@ private:
 	*/
 	FString CachedSegmentText;
 
-	/*
+	/**
 	* Index of last letter that already been printed out and won't ever change.
 	*/
 	int32 CachedLetterIndex;
