@@ -43,7 +43,7 @@ public:
 * -# Create a struct that inherits from {@code FVisualInfo}
 * -# Add desired fields
 * -# Override {@code Accept} function to implement Visitor pattern
-* -# Override {@codeToString} function if needed
+* -# Override {@code ToString} function if needed
 * 
 * @see FVisualImageInfo
 */

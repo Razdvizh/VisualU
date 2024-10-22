@@ -32,8 +32,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logocombined.png"/></td>
   <td id="projectalign">
-   <div id="projectname">VisualU<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">VisualU<span id="projectnumber">&#160;1.1</span>
    </div>
    <div id="projectbrief">Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game</div>
   </td>
@@ -118,7 +119,7 @@ $(function(){initNavTree('class_f_break_visual_text_block_decorator.html',''); i
 <p>Pauses typewriter when it hits break tag - <code class="JavaDocCode">&lt;b/&gt;</code>.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualU/Public/BreakVisualTextBlockDecorator.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.3/VisualUEx/Plugins/VisualU/Source/VisualU/Public/BreakVisualTextBlockDecorator.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for FBreakVisualTextBlockDecorator:</div>
 <div class="dyncontent">
@@ -171,9 +172,9 @@ uint32&#160;</td><td class="memItemRight" valign="bottom"><b>bTagDiscovered</b>:
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Pauses typewriter when it hits break tag - <code class="JavaDocCode">&lt;b/&gt;</code>. </p>
-<p>Understands <em>text</em><b><em>text</em>&lt;/&gt; and <em>text</em><em>text</em>. Only one tag per text is supported at this time.</b></p>
-<p><b></p><dl class="section note"><dt>Note</dt><dd>Only the last found break tag in the text will have an effect. </dd></dl>
-<p></b></p>
+<p>Understands </p><div class="fragment"><div class="line">*text*&lt;b&gt;*text*&lt;/&gt; and *text*&lt;b/&gt;*text*. </div>
+</div><!-- fragment --><p> Only one tag per text is supported at this time.</p>
+<dl class="section note"><dt>Note</dt><dd>Only the last found break tag in the text will have an effect. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab8c4035592a0b88d181f7f763726cd33" name="ab8c4035592a0b88d181f7f763726cd33"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab8c4035592a0b88d181f7f763726cd33">&#9670;&#160;</a></span>CreateDecoratorText()</h2>

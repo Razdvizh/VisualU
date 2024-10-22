@@ -11,7 +11,7 @@ class URichTextBlock;
 
 /**
 * Pauses typewriter when it hits break tag - {@code <b/>}.
-* Understands *text*<b>*text*</> and *text*<b/>*text*.
+* Understands @code{.unparsed} *text*<b>*text*</> and *text*<b/>*text*. @endcode
 * Only one tag per text is supported at this time.
 * 
 * @note Only the last found break tag in the text will have an effect.

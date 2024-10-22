@@ -12,6 +12,7 @@ var class_u_visual_text_block =
     [ "Resume", "class_u_visual_text_block.html#a4e12727305db12180acb729dfbcb0eab", null ],
     [ "Typewrite", "class_u_visual_text_block.html#a1d7824bd8ee504fa1930d2261e55c965", null ],
     [ "bHasFinishedPlaying", "class_u_visual_text_block.html#aa3e36d0115b873b9feaf9deb4eec728e", null ],
+    [ "CachedLetterIndex", "class_u_visual_text_block.html#adb6132c856b790da36bb828ffc4a0895", null ],
     [ "CachedSegmentText", "class_u_visual_text_block.html#a4eddd39b8650be3f464d248d704ee977", null ],
     [ "CurrentLetterIndex", "class_u_visual_text_block.html#a8a691770383bee1f747a86d45050b665", null ],
     [ "CurrentLine", "class_u_visual_text_block.html#a0a663d085a33213723e22a6d8b20bdd0", null ],
@@ -20,5 +21,7 @@ var class_u_visual_text_block =
     [ "LetterPlayTime", "class_u_visual_text_block.html#ac11fbfd7f6f94270d3059cb30b915ec3", null ],
     [ "LetterTimer", "class_u_visual_text_block.html#a443c1539f33a7a79be6872860064752c", null ],
     [ "MaxLetterIndex", "class_u_visual_text_block.html#a927d710c7d638af2f4302fcbc5cb7cf4", null ],
-    [ "Segments", "class_u_visual_text_block.html#a302380cfa0482d38fd42c40b9222dd89", null ]
+    [ "Segments", "class_u_visual_text_block.html#a302380cfa0482d38fd42c40b9222dd89", null ],
+    [ "TextLayout", "class_u_visual_text_block.html#a24d6f3d88c8e0749933eb5a63c3d97e0", null ],
+    [ "TextMarshaller", "class_u_visual_text_block.html#ad41bc127b7e3a093499aef3b1b99678d", null ]
 ];
