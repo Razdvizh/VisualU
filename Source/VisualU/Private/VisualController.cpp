@@ -29,7 +29,7 @@ static TAutoConsoleVariable<float> CVarEditorStallForLoading
 );
 #endif
 
-constexpr int ScenesToLoadLargeNum = 100;
+constexpr int32 ScenesToLoadLargeNum = 100;
 
 void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 {
