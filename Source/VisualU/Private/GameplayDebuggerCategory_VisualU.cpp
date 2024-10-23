@@ -17,6 +17,9 @@
 #include "GameFramework/Controller.h"
 #include "Containers/Queue.h"
 
+constexpr float TextSizeXThreshold = 500.f;
+constexpr float TextSizeXDefault = 412.f;
+
 FGameplayDebuggerCategory_VisualU::FGameplayDebuggerCategory_VisualU()
 {
 	bShowOnlyWithDebugActor = false;
@@ -108,7 +111,7 @@ void FGameplayDebuggerCategory_VisualU::DrawData(APlayerController* OwnerPC, FGa
 		CanvasContext.Printf(TEXT("{cyan}Controller head: {magenta}%s"), *RepData.ControllerHeadDesc);
 		CanvasContext.Printf(TEXT("{cyan}Is Controller transitioning: {magenta}%s"), RepData.bIsControllerTransitioning ? TEXT("true") : TEXT("false"));
 		CanvasContext.Printf(TEXT("{cyan}Controller auto move delay: {magenta}%.2f"), RepData.ControllerAutoMoveDelay);
-		CanvasContext.Printf(TEXT("{cyan}Controller plays sound: {magenta}%s"), RepData.bControllerPlaysSound? TEXT("true") : TEXT("false"));
+		CanvasContext.Printf(TEXT("{cyan}Controller plays sound: {magenta}%s"), RepData.bControllerPlaysSound ? TEXT("true") : TEXT("false"));
 		CanvasContext.Printf(TEXT("{cyan}Controller plays transitions: {magenta}%s"), RepData.bControllerPlaysTransitions ? TEXT("true") : TEXT("false"));
 		CanvasContext.Printf(TEXT("{cyan}Controller number of scenarios to load: {magenta}%i"), RepData.NumScenesToLoad);
 		CanvasContext.Printf(TEXT("{cyan}[Exhausted scenarios]\n{magenta}%s"), *RepData.ExhaustedScenesDesc);
@@ -117,6 +120,7 @@ void FGameplayDebuggerCategory_VisualU::DrawData(APlayerController* OwnerPC, FGa
 		float CurrentSceneDescX = 0.f, CurrentSceneDescY = 0.f;
 		const float Padding = 5.f;
 		CanvasContext.MeasureString(RepData.CurrentSceneDesc, CurrentSceneDescX, CurrentSceneDescY);
+		CurrentSceneDescX = CurrentSceneDescX > TextSizeXThreshold ? TextSizeXDefault : CurrentSceneDescX;
 		CanvasContext.PrintfAt(CanvasX - Padding - CurrentSceneDescX, InitialCategoryHeaderPosY, TEXT("{cyan}[Current scenario info]"));
 		CanvasContext.PrintfAt(CanvasX - Padding - CurrentSceneDescX, InitialCategoryHeaderPosY + LineHeight, TEXT("{magenta}%s"), *RepData.CurrentSceneDesc);
 	}
