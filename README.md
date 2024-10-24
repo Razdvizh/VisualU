@@ -20,3 +20,4 @@ Build the plugin for the Unreal Engine 5.4.x project
 # Usage
 Check [API documentation!](https://razdvizh.github.io/VisualU/index.html)
 Check [VisualU Wiki!](https://github.com/Razdvizh/VisualU/wiki)
+Check [Discord Server!](https://discord.gg/9FcxEdgXP7)
