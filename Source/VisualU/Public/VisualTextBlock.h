@@ -1,5 +1,5 @@
 ﻿// Copyright (c) 2024 Evgeny Shustov
-// Copyright (c) 2024 Sam Bloomberg
+// Copyright (c) Sam Bloomberg
 
 #pragma once
 
