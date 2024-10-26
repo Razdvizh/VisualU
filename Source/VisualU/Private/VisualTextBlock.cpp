@@ -1,4 +1,5 @@
-// Copyright (c) Sam Bloomberg
+// Copyright (c) 2024 Evgeny Shustov
+// Copyright (c) 2024 Sam Bloomberg
 
 #include "VisualTextBlock.h"
 #include "Engine/Font.h"

@@ -166,7 +166,7 @@ bool SVisualImage::ComputeVolatility() const
 
 void SVisualImage::AddReferencedObjects(FReferenceCollector& Collector)
 {
-	const UPaperFlipbook* FlipbookPtr = Flipbook.Get();
+	TObjectPtr<const UPaperFlipbook> FlipbookPtr = TObjectPtr<const UPaperFlipbook>(Flipbook.Get());
 	Collector.AddReferencedObject(FlipbookPtr);
 }
 

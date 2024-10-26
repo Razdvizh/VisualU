@@ -75,10 +75,10 @@ void SBackgroundVisualImage::AddReferencedObjects(FReferenceCollector& Collector
 {
 	Super::AddReferencedObjects(Collector);
 	
-	UMaterialInstanceDynamic* TransitionPtr = Transition.Get();
+	TObjectPtr<UMaterialInstanceDynamic> TransitionPtr = TObjectPtr<UMaterialInstanceDynamic>(Transition.Get());
 	Collector.AddReferencedObject(TransitionPtr);
 
-	UPaperFlipbook* TargetPtr = Target.Get();
+	TObjectPtr<UPaperFlipbook> TargetPtr = TObjectPtr<UPaperFlipbook>(Target.Get());
 	Collector.AddReferencedObject(TargetPtr);
 }
 

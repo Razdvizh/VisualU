@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Evgeny Shustov
+
+
 #include "VisualUEditor.h"
 #include "SpriteStructCustomization.h"
 #include "PropertyEditorModule.h"

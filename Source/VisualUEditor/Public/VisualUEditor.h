@@ -1,3 +1,5 @@
+// Copyright (c) 2024 Evgeny Shustov
+
 #pragma once
 
 #include "CoreMinimal.h"
