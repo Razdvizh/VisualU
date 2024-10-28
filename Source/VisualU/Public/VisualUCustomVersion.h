@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "Misc/Guid.h"
 
-struct FVisualUCustomVersion
+struct VISUALU_API FVisualUCustomVersion
 {
 public:
+	FVisualUCustomVersion() = delete;
+
 	enum Type
 	{
 		//--<add new versions above this line>------------------------------------------------------------

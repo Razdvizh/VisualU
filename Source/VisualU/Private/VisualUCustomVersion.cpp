@@ -2,7 +2,7 @@
 
 
 #include "VisualUCustomVersion.h"
-#include "Serialization/CustomVersion.h"
+#include "UObject/DevObjectVersion.h"
 
 const FGuid FVisualUCustomVersion::GUID(0xDA06AED2, 0xFF31AE8C, 0x38A2C1BE, 0x6DAA21EC);
 

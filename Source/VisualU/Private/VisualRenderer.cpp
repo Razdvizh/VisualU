@@ -4,6 +4,7 @@
 #include "VisualRenderer.h"
 #include "Blueprint/WidgetTree.h"
 #include "Materials/MaterialInterface.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialParameterCollection.h"
 #include "Tracks/MovieSceneMaterialParameterCollectionTrack.h"
 #include "Sections/MovieSceneParameterSection.h"
