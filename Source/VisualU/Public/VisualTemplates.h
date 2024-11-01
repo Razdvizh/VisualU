@@ -31,7 +31,7 @@ concept HasMemberOfType = HasMemberOfTypeImpl<T, U>::value;
 * Assigns values, in order, to the member variables of the object.
 */
 template<typename T, typename... V>
-VISUALU_API inline void UpdateMembers(T* Obj, V T::*... Pointers, const V&... Values)
+inline void UpdateMembers(T* Obj, V T::*... Pointers, const V&... Values)
 {
 	((Obj->*Pointers = Values), ...);
 }

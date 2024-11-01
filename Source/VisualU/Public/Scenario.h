@@ -18,7 +18,7 @@ class USoundCue;
 * Describes UVisualSprite for UVisualRenderer. 
 */
 USTRUCT(BlueprintType)
-struct FSprite
+struct VISUALU_API FSprite
 {
 	GENERATED_BODY()
 
@@ -112,7 +112,7 @@ public:
 * Describes what background to display and what effect to use for transition.
 */
 USTRUCT(BlueprintType)
-struct FBackground
+struct VISUALU_API FBackground
 {
 	GENERATED_BODY()
 
@@ -182,7 +182,7 @@ ENUM_CLASS_FLAGS(EScenarioMetaFlags)
 * Data that describes FScenario.
 */
 USTRUCT(BlueprintType)
-struct FVisualScenarioInfo : public FVisualInfo
+struct VISUALU_API FVisualScenarioInfo : public FVisualInfo
 {
 	GENERATED_BODY()
 

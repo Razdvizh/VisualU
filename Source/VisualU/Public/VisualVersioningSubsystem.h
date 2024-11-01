@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "Scenario.h"
+#include "InfoAssignable.h"
 #include "Engine/DataTable.h"
 #include "VisualController.h"
 #include "VisualTemplates.h"
@@ -72,7 +73,7 @@ public:
 		FScenario* Scene = GetSceneChecked(DataTable, SceneName);
 		FScenarioId Id{ Scene->GetOwner(), Scene->GetIndex() };
 		Versions.Add(Id, Scene->Info);
-		UpdateMembers(Scene->Info, Members, Values);
+		UpdateMembers<T, V...>(&Scene->Info, Members..., Values...);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public:
 		check(Scene);
 		FScenarioId Id{ Scene->GetOwner(), Scene->GetIndex() };
 		Versions.Add(Id, Scene->Info);
-		UpdateMembers(Scene->Info, Members, Values);
+		UpdateMembers<T, V...>(&Scene->Info, Members..., Values...);
 	}
 
 	/**
