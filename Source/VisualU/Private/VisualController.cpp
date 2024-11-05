@@ -397,9 +397,11 @@ bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 			};
 
 		/*Fire it once first to replicate a do-while style*/
+		UWorld* World = GetWorld();
+		check(World);
+		AutoMove(World->GetDeltaSeconds());
+
 		FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
-		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, 0.f);
-		FTSTicker::RemoveTicker(Handle);
 		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
 
 		return true;
