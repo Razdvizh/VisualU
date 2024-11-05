@@ -360,7 +360,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	return true;
 }
 
-void UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
+bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
 {
 	if (IsIdle())
 	{
@@ -369,10 +369,14 @@ void UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 		bPlaySound = false;
 		Mode = EVisualControllerMode::FastMoving;
 		FastMoveTask->StartBackgroundTask();
+
+		return true;
 	}
+
+	return false;
 }
 
-void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
+bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
 {
 	if (IsIdle())
 	{
@@ -397,7 +401,11 @@ void UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		FTSTicker::FDelegateHandle Handle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, 0.f);
 		FTSTicker::RemoveTicker(Handle);
 		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
+
+		return true;
 	}
+
+	return false;
 }
 
 void UVisualController::CancelFastMove()

@@ -220,7 +220,7 @@ public:
 	* @param Direction decides whether to request next or previous scenes
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	void RequestFastMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
+	bool RequestFastMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 	/**
 	* Tries to activate auto move.
@@ -235,7 +235,7 @@ public:
 	* @param Direction decides whether to request next or previous scenes
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	void RequestAutoMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
+	bool RequestAutoMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 	/**
 	* Ends fast move mode when it is active.
