@@ -12,10 +12,6 @@
 #endif
 #include "VisualController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneStart);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSceneEnd);
-
 class UVisualRenderer;
 class APlayerController;
 struct FStreamableHandle;
@@ -107,6 +103,15 @@ namespace UE
 		}
 	}
 }
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSceneStart, const FScenario&, Scenario);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSceneEnd, const FScenario&, Scenario);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFastMoveStart, EVisualControllerDirection::Type, Direction);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFastMoveEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoMoveStart, EVisualControllerDirection::Type, Direction);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAutoMoveEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRendererVisualized);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRendererVanished);
 
 /**
  * Organizes scenes described by FScenario in a meaningful way.
@@ -463,27 +468,59 @@ public:
 
 	/**
 	* Called when controller has switched to a different scenario.
+	* 
+	* @param Scenario scenario to which controller has swiched to
 	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneStart OnSceneStart;
 
-	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneStart);
 	/**
-	* Called when controller has switched to a different scenario.
-	*/
-	FOnNativeSceneStart OnNativeSceneStart;
-
-	/**
-	* Called when controller begins switching to a different scenario.
+	* Called when controller is about to switch to a different scenario.
+	* 
+	* @param Scenario active scenario before controller switches
 	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnSceneEnd OnSceneEnd;
 
-	DECLARE_MULTICAST_DELEGATE(FOnNativeSceneEnd);
 	/**
-	* Called when controller begins switching to a different scenario.
+	* Called when controller enters Fast Move mode.
+	* 
+	* @param Direction direction in which controller moves
 	*/
-	FOnNativeSceneEnd OnNativeSceneEnd;
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
+	FOnFastMoveStart OnFastMoveStart;
+
+	/**
+	* Called when controller exits Fast Move mode.
+	*/
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
+	FOnFastMoveEnd OnFastMoveEnd;
+
+	/**
+	* Called when controller enters Auto Move mode.
+	* 
+	* @param Direction direction in which controller moves
+	*/
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
+	FOnAutoMoveStart OnAutoMoveStart;
+
+	/**
+	* Called when controller exits Auto Move mode.
+	*/
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
+	FOnAutoMoveEnd OnAutoMoveEnd;
+
+	/**
+	* Called when renderer is visualized.
+	*/
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
+	FOnRendererVisualized OnRendererVisualized;
+
+	/**
+	* Called when renderer is discarded.
+	*/
+	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
+	FOnRendererVanished OnRendererVanished;
 
 protected:
 	/**

@@ -177,8 +177,7 @@ bool UVisualController::RequestNextScene()
 		return false;
 	}
 
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
+	OnSceneEnd.Broadcast(GetCurrentScenario());
 
 	PrepareScenes();
 	AssertNextSceneLoad();
@@ -199,8 +198,7 @@ bool UVisualController::RequestNextScene()
 	TryPlaySceneSound(CurrentScene->Info.Sound);
 	CancelNextScene();
 
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
+	OnSceneStart.Broadcast(*CurrentScene);
 
 	return true;
 }
@@ -229,19 +227,19 @@ bool UVisualController::RequestPreviousScene()
 		return false;
 	}
 
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
+	OnSceneEnd.Broadcast(GetCurrentScenario());
 
 	PrepareScenes(EVisualControllerDirection::Backward);
 	AssertNextSceneLoad(EVisualControllerDirection::Backward);
 
 	SceneIndex -= 1;
-	Renderer->DrawScene(GetCurrentScene());
+
+	const FScenario* CurrentScene = GetCurrentScene();
+	Renderer->DrawScene(CurrentScene);
 
 	CancelNextScene();
 
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
+	OnSceneStart.Broadcast(*CurrentScene);
 
 	return true;
 }
@@ -335,8 +333,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 
 	checkf(!Node.IsEmpty(), TEXT("Trying to jump to empty Data Table! - %s"), *NewNode->GetFName().ToString());
 
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
+	OnSceneEnd.Broadcast(*Last);
 
 	SceneHandles.Empty();
 	CancelNextScene();
@@ -354,8 +351,7 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	TryPlaySceneSound(Head->Info.Sound);
 	PrepareScenes();
 
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
+	OnSceneStart.Broadcast(*Head);
 
 	return true;
 }
@@ -370,6 +366,8 @@ bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 		Mode = EVisualControllerMode::FastMoving;
 		FastMoveTask->StartBackgroundTask();
 
+		OnFastMoveStart.Broadcast(Direction);
+
 		return true;
 	}
 
@@ -382,6 +380,9 @@ bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 	{
 		check(Direction != EVisualControllerDirection::None);
 		Mode = EVisualControllerMode::AutoMoving;
+
+		OnAutoMoveStart.Broadcast(Direction);
+
 		const auto AutoMove = [this, Direction](float DeltaTime) -> bool
 			{
 				const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
@@ -419,6 +420,8 @@ void UVisualController::CancelFastMove()
 		FastMoveTask.Reset(nullptr);
 
 		Mode = EVisualControllerMode::Idle;
+
+		OnFastMoveEnd.Broadcast();
 	}
 }
 
@@ -428,6 +431,8 @@ void UVisualController::CancelAutoMove()
 	{
 		FTSTicker::RemoveTicker(AutoMoveHandle);
 		Mode = EVisualControllerMode::Idle;
+
+		OnAutoMoveEnd.Broadcast();
 	}
 }
 
@@ -442,6 +447,9 @@ void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, in
 	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
 	Renderer->AddToPlayerScreen(ZOrder);
 	Renderer->DrawScene(CurrentScene);
+
+	OnRendererVisualized.Broadcast();
+
 	TryPlaySceneSound(CurrentScene->Info.Sound);
 	PrepareScenes();
 }
@@ -450,6 +458,8 @@ void UVisualController::Discard()
 {
 	check(Renderer);
 	Renderer->RemoveFromParent();
+
+	OnRendererVanished.Broadcast();
 }
 
 void UVisualController::SetVisibility(ESlateVisibility Visibility)
@@ -695,29 +705,29 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
 	check(Scene);
 	const UDataTable* SceneOwner = Scene->GetOwner();
-	const UDataTable* FirstSceneOwner = GetSceneAt(0)->GetOwner();
-	if (SceneOwner != FirstSceneOwner)
+	const FScenario* CurrentScenario = GetCurrentScene();
+	const UDataTable* CurrentSceneOwner = CurrentScenario->GetOwner();
+	if (SceneOwner != CurrentSceneOwner)
 	{
-		NodeReferenceKeeper.Remove(FirstSceneOwner);
+		NodeReferenceKeeper.Remove(CurrentSceneOwner);
 		Node.Empty();
 		NodeReferenceKeeper.Add(SceneOwner);
 		SceneOwner->GetAllRows(UE_SOURCE_LOCATION, Node);
 	}
 
-	OnSceneEnd.Broadcast();
-	OnNativeSceneEnd.Broadcast();
+	OnSceneEnd.Broadcast(*CurrentScenario);
 	
 	SceneHandles.Empty();
 	CancelNextScene();
 
 	SceneIndex = Scene->GetIndex();
+
 	const FScenario* CurrentScene = GetCurrentScene();
 	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
 	Renderer->DrawScene(CurrentScene);
 	PrepareScenes(EVisualControllerDirection::Backward);
 
-	OnSceneStart.Broadcast();
-	OnNativeSceneStart.Broadcast();
+	OnSceneStart.Broadcast(*CurrentScene);
 }
 
 void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Direction)
