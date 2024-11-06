@@ -156,6 +156,8 @@ public:
 
 	/**
 	* Visualizes the next scene in the node.
+	* 
+	* @return result of the request
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the next scene in the node"))
 	bool RequestNextScene();
@@ -163,6 +165,8 @@ public:
 	/**
 	* Visualizes the previous scene in the node.
 	* Can also display last exhausted scene from previous node.
+	* 
+	* @return result of the request
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the previous scene in the node"))
 	bool RequestPreviousScene();
@@ -174,7 +178,7 @@ public:
 	* @note only use this for past scenes (e.g. already seen by the player)
 	* 
 	* @param Scene exhausted scenario to visualize
-	* @return result of visualization of provided scene
+	* @return result of the request
 	*/
 	bool RequestScene(const FScenario* Scene);
 
@@ -208,7 +212,7 @@ public:
 	*		requesting previous nodes
 	* 
 	* @param NewNode data table with at least one scene
-	* @return request result
+	* @return result of the request
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Sets provided node as active. Data table can't be empty. Will visualize the first scene of the node."))
 	bool RequestNode(const UDataTable* NewNode);
@@ -223,6 +227,7 @@ public:
 	* @note scene transitions are disabled in this mode
 	* 
 	* @param Direction decides whether to request next or previous scenes
+	* @return result of the request
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	bool RequestFastMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
@@ -238,6 +243,7 @@ public:
 	*		UVisualUSettings::TransitionDuration
 	* 
 	* @param Direction decides whether to request next or previous scenes
+	* @return result of the request
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
 	bool RequestAutoMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
@@ -264,13 +270,13 @@ public:
 	void Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder = 0);
 
 	/**
-	* Destroy underlying renderer.
+	* Destroys underlying renderer.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void Discard();
 
 	/**
-	* Change renderer visibility.
+	* Changes renderer visibility.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
 	void SetVisibility(ESlateVisibility Visibility);
@@ -571,6 +577,7 @@ protected:
 
 	/**
 	* Requests renderer to display transition animation.
+	* @return result of the request
 	*/
 	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
