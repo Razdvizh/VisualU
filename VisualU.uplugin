@@ -25,6 +25,7 @@
 				"Linux",
 				"LinuxArm64",
 				"Mac",
+				"IOS",
 				"Android"
 			]
 		},
@@ -37,6 +38,7 @@
 				"Linux",
 				"LinuxArm64",
 				"Mac",
+				"IOS",
 				"Android"
 			]
 		}
