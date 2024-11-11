@@ -34,7 +34,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logocombined.png"/></td>
   <td id="projectalign">
-   <div id="projectname">VisualU<span id="projectnumber">&#160;1.1</span>
+   <div id="projectname">VisualU<span id="projectnumber">&#160;1.2</span>
    </div>
    <div id="projectbrief">Plugin for Unreal Engine 5 that brings core functionality for a widget-based visual novel game</div>
   </td>
@@ -119,7 +119,7 @@ $(function(){initNavTree('class_u_visual_controller.html',''); initResizable(tru
 <p>Organizes scenes described by <a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a> in a meaningful way.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualController.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.4/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualController.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualController:</div>
 <div class="dyncontent">
@@ -136,9 +136,6 @@ Public Member Functions</h2></td></tr>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>BeginDestroy</b> () override</td></tr>
 <tr class="memdesc:a4c5d53d4cdb84d15bd6a0257fc52bb20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Brings controller to idle state before destruction. <br /></td></tr>
 <tr class="separator:a4c5d53d4cdb84d15bd6a0257fc52bb20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6c4c56f4ad668383ce173f3379ce739" id="r_ae6c4c56f4ad668383ce173f3379ce739"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6c4c56f4ad668383ce173f3379ce739">SerializeController_Experimental</a> (FArchive &amp;Ar)</td></tr>
-<tr class="memdesc:ae6c4c56f4ad668383ce173f3379ce739"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not ready for production code.  <br /></td></tr>
-<tr class="separator:ae6c4c56f4ad668383ce173f3379ce739"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a489779e1396d8bc99494516482012456" id="r_a489779e1396d8bc99494516482012456"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a489779e1396d8bc99494516482012456">PreSave</a> (FObjectPreSaveContext SaveContext) override</td></tr>
 <tr class="memdesc:a489779e1396d8bc99494516482012456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Brings controller to idle state before serialization.  <br /></td></tr>
 <tr class="separator:a489779e1396d8bc99494516482012456"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,9 +143,11 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>BeginDestroy<
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PostInitProperties</b> () override</td></tr>
 <tr class="memdesc:a032a80f2b56eaa74b3deff19528d6b5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setups initial values to make controller operational. <br /></td></tr>
 <tr class="separator:a032a80f2b56eaa74b3deff19528d6b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4aaaeac531eac3f43758068a1466f6fa" id="r_a4aaaeac531eac3f43758068a1466f6fa"><td class="memItemLeft" align="right" valign="top"><a id="a4aaaeac531eac3f43758068a1466f6fa" name="a4aaaeac531eac3f43758068a1466f6fa"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>RequestNextScene</b> ()</td></tr>
-<tr class="memdesc:a4aaaeac531eac3f43758068a1466f6fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the next scene in the node. <br /></td></tr>
+<tr class="memitem:ae6c4c56f4ad668383ce173f3379ce739" id="r_ae6c4c56f4ad668383ce173f3379ce739"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6c4c56f4ad668383ce173f3379ce739">SerializeController_Experimental</a> (FArchive &amp;Ar)</td></tr>
+<tr class="memdesc:ae6c4c56f4ad668383ce173f3379ce739"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not ready for production code.  <br /></td></tr>
+<tr class="separator:ae6c4c56f4ad668383ce173f3379ce739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4aaaeac531eac3f43758068a1466f6fa" id="r_a4aaaeac531eac3f43758068a1466f6fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aaaeac531eac3f43758068a1466f6fa">RequestNextScene</a> ()</td></tr>
+<tr class="memdesc:a4aaaeac531eac3f43758068a1466f6fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the next scene in the node.  <br /></td></tr>
 <tr class="separator:a4aaaeac531eac3f43758068a1466f6fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ff83c6c5a2be08d8e60e9bb44b4f5f0" id="r_a2ff83c6c5a2be08d8e60e9bb44b4f5f0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ff83c6c5a2be08d8e60e9bb44b4f5f0">RequestPreviousScene</a> ()</td></tr>
 <tr class="memdesc:a2ff83c6c5a2be08d8e60e9bb44b4f5f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the previous scene in the node.  <br /></td></tr>
@@ -164,29 +163,32 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>RequestNextScene</b> 
 <tr class="memitem:a3e1471d14ceb3108c7832a4c1ae7a1c0" id="r_a3e1471d14ceb3108c7832a4c1ae7a1c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e1471d14ceb3108c7832a4c1ae7a1c0">RequestNode</a> (const UDataTable *NewNode)</td></tr>
 <tr class="memdesc:a3e1471d14ceb3108c7832a4c1ae7a1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets provided node as active and visualizes the first scene in it.  <br /></td></tr>
 <tr class="separator:a3e1471d14ceb3108c7832a4c1ae7a1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73f18a387ab3a353edf5d9f21efc20e1" id="r_a73f18a387ab3a353edf5d9f21efc20e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73f18a387ab3a353edf5d9f21efc20e1">RequestFastMove</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
-<tr class="memdesc:a73f18a387ab3a353edf5d9f21efc20e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to activate fast move mode.  <br /></td></tr>
-<tr class="separator:a73f18a387ab3a353edf5d9f21efc20e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad16598d1d1773f06888deed777bd8cb3" id="r_ad16598d1d1773f06888deed777bd8cb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad16598d1d1773f06888deed777bd8cb3">RequestAutoMove</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
-<tr class="memdesc:ad16598d1d1773f06888deed777bd8cb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to activate auto move.  <br /></td></tr>
-<tr class="separator:ad16598d1d1773f06888deed777bd8cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adda59ec2daea21657f1f8a242f97a44a" id="r_adda59ec2daea21657f1f8a242f97a44a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adda59ec2daea21657f1f8a242f97a44a">RequestFastMove</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
+<tr class="memdesc:adda59ec2daea21657f1f8a242f97a44a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to activate fast move mode.  <br /></td></tr>
+<tr class="separator:adda59ec2daea21657f1f8a242f97a44a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedb6df536c5cf265e0f7cf3187f753ef" id="r_aedb6df536c5cf265e0f7cf3187f753ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aedb6df536c5cf265e0f7cf3187f753ef">RequestAutoMove</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
+<tr class="memdesc:aedb6df536c5cf265e0f7cf3187f753ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to activate auto move.  <br /></td></tr>
+<tr class="separator:aedb6df536c5cf265e0f7cf3187f753ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2d433ee9f71f94b84692ed1df48a04e" id="r_ab2d433ee9f71f94b84692ed1df48a04e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2d433ee9f71f94b84692ed1df48a04e">CancelFastMove</a> ()</td></tr>
 <tr class="memdesc:ab2d433ee9f71f94b84692ed1df48a04e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ends fast move mode when it is active.  <br /></td></tr>
 <tr class="separator:ab2d433ee9f71f94b84692ed1df48a04e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8d92022ab7b43e4abaaa668787ebc73" id="r_ac8d92022ab7b43e4abaaa668787ebc73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac8d92022ab7b43e4abaaa668787ebc73">CancelAutoMove</a> ()</td></tr>
 <tr class="memdesc:ac8d92022ab7b43e4abaaa668787ebc73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ends auto move mode when it is active.  <br /></td></tr>
 <tr class="separator:ac8d92022ab7b43e4abaaa668787ebc73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06472225b2f37f0075cb7eaa5fe4e3b8" id="r_a06472225b2f37f0075cb7eaa5fe4e3b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06472225b2f37f0075cb7eaa5fe4e3b8">Visualize</a> (TSubclassOf&lt; <a class="el" href="class_u_visual_renderer.html">UVisualRenderer</a> &gt; RendererClass, int32 ZOrder=0)</td></tr>
-<tr class="memdesc:a06472225b2f37f0075cb7eaa5fe4e3b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct renderer if necessary and add it to the player screen.  <br /></td></tr>
-<tr class="separator:a06472225b2f37f0075cb7eaa5fe4e3b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8aae9181e8045ee4b612963b90ccf8f" id="r_ac8aae9181e8045ee4b612963b90ccf8f"><td class="memItemLeft" align="right" valign="top"><a id="ac8aae9181e8045ee4b612963b90ccf8f" name="ac8aae9181e8045ee4b612963b90ccf8f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Discard</b> ()</td></tr>
-<tr class="memdesc:ac8aae9181e8045ee4b612963b90ccf8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy underlying renderer. <br /></td></tr>
-<tr class="separator:ac8aae9181e8045ee4b612963b90ccf8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ac7ddce3d00757f99d348a3c842ab24" id="r_a0ac7ddce3d00757f99d348a3c842ab24"><td class="memItemLeft" align="right" valign="top"><a id="a0ac7ddce3d00757f99d348a3c842ab24" name="a0ac7ddce3d00757f99d348a3c842ab24"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetVisibility</b> (ESlateVisibility Visibility)</td></tr>
-<tr class="memdesc:a0ac7ddce3d00757f99d348a3c842ab24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change renderer visibility. <br /></td></tr>
-<tr class="separator:a0ac7ddce3d00757f99d348a3c842ab24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af51339139fe620c44248bb699e0aca12" id="r_af51339139fe620c44248bb699e0aca12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af51339139fe620c44248bb699e0aca12">VisualizeToScreen</a> (TSubclassOf&lt; <a class="el" href="class_u_visual_renderer.html">UVisualRenderer</a> &gt; RendererClass, int32 ZOrder=0)</td></tr>
+<tr class="memdesc:af51339139fe620c44248bb699e0aca12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstruct renderer to a new class if necessary and add it to the player screen.  <br /></td></tr>
+<tr class="separator:af51339139fe620c44248bb699e0aca12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a527c78c99a1031647e0253b42bd3088e" id="r_a527c78c99a1031647e0253b42bd3088e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a527c78c99a1031647e0253b42bd3088e">VisualizeToComponent</a> (TSubclassOf&lt; <a class="el" href="class_u_visual_renderer.html">UVisualRenderer</a> &gt; RendererClass, UWidgetComponent *Component)</td></tr>
+<tr class="memdesc:a527c78c99a1031647e0253b42bd3088e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructs renderer to a new class if necessary and add it to the widget component.  <br /></td></tr>
+<tr class="separator:a527c78c99a1031647e0253b42bd3088e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63fbf2e1faf4e5bb27291d289ed9e7c0" id="r_a63fbf2e1faf4e5bb27291d289ed9e7c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63fbf2e1faf4e5bb27291d289ed9e7c0">RemoveFromScreen</a> () const</td></tr>
+<tr class="memdesc:a63fbf2e1faf4e5bb27291d289ed9e7c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes renderer visualized to screen.  <br /></td></tr>
+<tr class="separator:a63fbf2e1faf4e5bb27291d289ed9e7c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56a3111fd2f51703783c67f39606455" id="r_ab56a3111fd2f51703783c67f39606455"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab56a3111fd2f51703783c67f39606455">SetRendererVisibility</a> (ESlateVisibility Visibility)</td></tr>
+<tr class="memdesc:ab56a3111fd2f51703783c67f39606455"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets renderer visibility.  <br /></td></tr>
+<tr class="separator:ab56a3111fd2f51703783c67f39606455"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17b6f1b15d3a5c906b4fa205256b016a" id="r_a17b6f1b15d3a5c906b4fa205256b016a"><td class="memItemLeft" align="right" valign="top">ESlateVisibility&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17b6f1b15d3a5c906b4fa205256b016a">GetRendererVisibility</a> () const</td></tr>
+<tr class="separator:a17b6f1b15d3a5c906b4fa205256b016a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8b2b4b7735a40e6df2b5ddc788d80d3" id="r_af8b2b4b7735a40e6df2b5ddc788d80d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8b2b4b7735a40e6df2b5ddc788d80d3">SetNumScenesToLoad</a> (int32 Num)</td></tr>
 <tr class="memdesc:af8b2b4b7735a40e6df2b5ddc788d80d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for UVisualController::NumScenesToLoad.  <br /></td></tr>
 <tr class="separator:af8b2b4b7735a40e6df2b5ddc788d80d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,8 +237,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetVisibility</b> (ES
 <tr class="separator:aa44a2ea403f090ab1fb8bbb263eeb264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91a075f26af8bc923166b6b098c2a0cf" id="r_a91a075f26af8bc923166b6b098c2a0cf"><td class="memItemLeft" align="right" valign="top">FORCEINLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91a075f26af8bc923166b6b098c2a0cf">IsIdle</a> () const</td></tr>
 <tr class="separator:a91a075f26af8bc923166b6b098c2a0cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93feecca5ef00e92980849aa3050031a" id="r_a93feecca5ef00e92980849aa3050031a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93feecca5ef00e92980849aa3050031a">IsVisualized</a> () const</td></tr>
-<tr class="separator:a93feecca5ef00e92980849aa3050031a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab79c50f61739b7b4221c40d35a1f2e92" id="r_ab79c50f61739b7b4221c40d35a1f2e92"><td class="memItemLeft" align="right" valign="top">const FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab79c50f61739b7b4221c40d35a1f2e92">GetHeadDebugString</a> () const</td></tr>
 <tr class="memdesc:ab79c50f61739b7b4221c40d35a1f2e92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Development only.  <br /></td></tr>
 <tr class="separator:ab79c50f61739b7b4221c40d35a1f2e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,31 +246,29 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>SetVisibility</b> (ES
 <tr class="memitem:a04428fe4fd17a1e5b40c834087b7be26" id="r_a04428fe4fd17a1e5b40c834087b7be26"><td class="memItemLeft" align="right" valign="top">const FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04428fe4fd17a1e5b40c834087b7be26">GetExhaustedScenesDebugString</a> () const</td></tr>
 <tr class="memdesc:a04428fe4fd17a1e5b40c834087b7be26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Development only.  <br /></td></tr>
 <tr class="separator:a04428fe4fd17a1e5b40c834087b7be26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2308e8a2ea6544563a092c27d59e7359" id="r_a2308e8a2ea6544563a092c27d59e7359"><td class="memItemLeft" align="right" valign="top"><a id="a2308e8a2ea6544563a092c27d59e7359" name="a2308e8a2ea6544563a092c27d59e7359"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DECLARE_MULTICAST_DELEGATE</b> (FOnNativeSceneStart)</td></tr>
-<tr class="separator:a2308e8a2ea6544563a092c27d59e7359"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a378683458e2623ae567846a37e2c2ea2" id="r_a378683458e2623ae567846a37e2c2ea2"><td class="memItemLeft" align="right" valign="top"><a id="a378683458e2623ae567846a37e2c2ea2" name="a378683458e2623ae567846a37e2c2ea2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DECLARE_MULTICAST_DELEGATE</b> (FOnNativeSceneEnd)</td></tr>
-<tr class="separator:a378683458e2623ae567846a37e2c2ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a44182b58d5d888f2b2e0b585a52664d6" id="r_a44182b58d5d888f2b2e0b585a52664d6"><td class="memItemLeft" align="right" valign="top"><a id="a44182b58d5d888f2b2e0b585a52664d6" name="a44182b58d5d888f2b2e0b585a52664d6"></a>
-FOnSceneStart&#160;</td><td class="memItemRight" valign="bottom"><b>OnSceneStart</b></td></tr>
-<tr class="memdesc:a44182b58d5d888f2b2e0b585a52664d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller has switched to a different scenario. <br /></td></tr>
+<tr class="memitem:a44182b58d5d888f2b2e0b585a52664d6" id="r_a44182b58d5d888f2b2e0b585a52664d6"><td class="memItemLeft" align="right" valign="top">FOnSceneStart&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44182b58d5d888f2b2e0b585a52664d6">OnSceneStart</a></td></tr>
+<tr class="memdesc:a44182b58d5d888f2b2e0b585a52664d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller has switched to a different scenario.  <br /></td></tr>
 <tr class="separator:a44182b58d5d888f2b2e0b585a52664d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2256eae30dd25b0981e56f2e14a3d62d" id="r_a2256eae30dd25b0981e56f2e14a3d62d"><td class="memItemLeft" align="right" valign="top"><a id="a2256eae30dd25b0981e56f2e14a3d62d" name="a2256eae30dd25b0981e56f2e14a3d62d"></a>
-FOnNativeSceneStart&#160;</td><td class="memItemRight" valign="bottom"><b>OnNativeSceneStart</b></td></tr>
-<tr class="memdesc:a2256eae30dd25b0981e56f2e14a3d62d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller has switched to a different scenario. <br /></td></tr>
-<tr class="separator:a2256eae30dd25b0981e56f2e14a3d62d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cb81d4b67240e1bc5572658946f3a13" id="r_a8cb81d4b67240e1bc5572658946f3a13"><td class="memItemLeft" align="right" valign="top"><a id="a8cb81d4b67240e1bc5572658946f3a13" name="a8cb81d4b67240e1bc5572658946f3a13"></a>
-FOnSceneEnd&#160;</td><td class="memItemRight" valign="bottom"><b>OnSceneEnd</b></td></tr>
-<tr class="memdesc:a8cb81d4b67240e1bc5572658946f3a13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller begins switching to a different scenario. <br /></td></tr>
+<tr class="memitem:a8cb81d4b67240e1bc5572658946f3a13" id="r_a8cb81d4b67240e1bc5572658946f3a13"><td class="memItemLeft" align="right" valign="top">FOnSceneEnd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cb81d4b67240e1bc5572658946f3a13">OnSceneEnd</a></td></tr>
+<tr class="memdesc:a8cb81d4b67240e1bc5572658946f3a13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller is about to switch to a different scenario.  <br /></td></tr>
 <tr class="separator:a8cb81d4b67240e1bc5572658946f3a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12456f63a3d5aa46d57922da25ed811a" id="r_a12456f63a3d5aa46d57922da25ed811a"><td class="memItemLeft" align="right" valign="top"><a id="a12456f63a3d5aa46d57922da25ed811a" name="a12456f63a3d5aa46d57922da25ed811a"></a>
-FOnNativeSceneEnd&#160;</td><td class="memItemRight" valign="bottom"><b>OnNativeSceneEnd</b></td></tr>
-<tr class="memdesc:a12456f63a3d5aa46d57922da25ed811a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller begins switching to a different scenario. <br /></td></tr>
-<tr class="separator:a12456f63a3d5aa46d57922da25ed811a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5aa9e547c0ae26ebcb1f56afee3e7be" id="r_ac5aa9e547c0ae26ebcb1f56afee3e7be"><td class="memItemLeft" align="right" valign="top">FOnFastMoveStart&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5aa9e547c0ae26ebcb1f56afee3e7be">OnFastMoveStart</a></td></tr>
+<tr class="memdesc:ac5aa9e547c0ae26ebcb1f56afee3e7be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller enters Fast Move mode.  <br /></td></tr>
+<tr class="separator:ac5aa9e547c0ae26ebcb1f56afee3e7be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c2743363887474854ff4ce759ae19e2" id="r_a6c2743363887474854ff4ce759ae19e2"><td class="memItemLeft" align="right" valign="top"><a id="a6c2743363887474854ff4ce759ae19e2" name="a6c2743363887474854ff4ce759ae19e2"></a>
+FOnFastMoveEnd&#160;</td><td class="memItemRight" valign="bottom"><b>OnFastMoveEnd</b></td></tr>
+<tr class="memdesc:a6c2743363887474854ff4ce759ae19e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller exits Fast Move mode. <br /></td></tr>
+<tr class="separator:a6c2743363887474854ff4ce759ae19e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20c0018b08360ee068d0411f0cdb2518" id="r_a20c0018b08360ee068d0411f0cdb2518"><td class="memItemLeft" align="right" valign="top">FOnAutoMoveStart&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20c0018b08360ee068d0411f0cdb2518">OnAutoMoveStart</a></td></tr>
+<tr class="memdesc:a20c0018b08360ee068d0411f0cdb2518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller enters Auto Move mode.  <br /></td></tr>
+<tr class="separator:a20c0018b08360ee068d0411f0cdb2518"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a022f7b250f77cb0f41ae53498c602ffd" id="r_a022f7b250f77cb0f41ae53498c602ffd"><td class="memItemLeft" align="right" valign="top"><a id="a022f7b250f77cb0f41ae53498c602ffd" name="a022f7b250f77cb0f41ae53498c602ffd"></a>
+FOnAutoMoveEnd&#160;</td><td class="memItemRight" valign="bottom"><b>OnAutoMoveEnd</b></td></tr>
+<tr class="memdesc:a022f7b250f77cb0f41ae53498c602ffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when controller exits Auto Move mode. <br /></td></tr>
+<tr class="separator:a022f7b250f77cb0f41ae53498c602ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -289,9 +287,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6248f4e4e67bbecdd768ac4d0cbda3ad" id="r_a6248f4e4e67bbecdd768ac4d0cbda3ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6248f4e4e67bbecdd768ac4d0cbda3ad">CancelNextScene</a> ()</td></tr>
 <tr class="memdesc:a6248f4e4e67bbecdd768ac4d0cbda3ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases the handle for the assets of the next scene.  <br /></td></tr>
 <tr class="separator:a6248f4e4e67bbecdd768ac4d0cbda3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1889a5682e0f09726dfdc7a3e2e86295" id="r_a1889a5682e0f09726dfdc7a3e2e86295"><td class="memItemLeft" align="right" valign="top"><a id="a1889a5682e0f09726dfdc7a3e2e86295" name="a1889a5682e0f09726dfdc7a3e2e86295"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>TryPlayTransition</b> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *From, const <a class="el" href="struct_f_scenario.html">FScenario</a> *To)</td></tr>
-<tr class="memdesc:a1889a5682e0f09726dfdc7a3e2e86295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests renderer to display transition animation. <br /></td></tr>
+<tr class="memitem:a1889a5682e0f09726dfdc7a3e2e86295" id="r_a1889a5682e0f09726dfdc7a3e2e86295"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1889a5682e0f09726dfdc7a3e2e86295">TryPlayTransition</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *From, const <a class="el" href="struct_f_scenario.html">FScenario</a> *To)</td></tr>
+<tr class="memdesc:a1889a5682e0f09726dfdc7a3e2e86295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests renderer to display transition animation.  <br /></td></tr>
 <tr class="separator:a1889a5682e0f09726dfdc7a3e2e86295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
@@ -674,7 +671,25 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>number of scenes to load. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>number of scenes to load </dd></dl>
+
+</div>
+</div>
+<a id="a17b6f1b15d3a5c906b4fa205256b016a" name="a17b6f1b15d3a5c906b4fa205256b016a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17b6f1b15d3a5c906b4fa205256b016a">&#9670;&#160;</a></span>GetRendererVisibility()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ESlateVisibility UVisualController::GetRendererVisibility </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>current renderer visibility </dd></dl>
 
 </div>
 </div>
@@ -868,24 +883,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 <p>Is renderer has transition ongoing. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_u_visual_renderer.html#aae2e52ce399d0f3056a2b0f5315cf2bb">UVisualRenderer::IsTransitionInProgress()</a> </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd><code class="JavaDocCode">true</code> for active scene transition </dd></dl>
-
-</div>
-</div>
-<a id="a93feecca5ef00e92980849aa3050031a" name="a93feecca5ef00e92980849aa3050031a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93feecca5ef00e92980849aa3050031a">&#9670;&#160;</a></span>IsVisualized()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool UVisualController::IsVisualized </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd><code class="JavaDocCode">true</code> when <a class="el" href="#a094c02bc723bce8a93e8cf785f195314" title="Responsible for visualizing scenes as widgets.">UVisualController::Renderer</a> is constructed </dd></dl>
 
 </div>
 </div>
@@ -1105,14 +1102,35 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 </div>
 </div>
-<a id="ad16598d1d1773f06888deed777bd8cb3" name="ad16598d1d1773f06888deed777bd8cb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad16598d1d1773f06888deed777bd8cb3">&#9670;&#160;</a></span>RequestAutoMove()</h2>
+<a id="a63fbf2e1faf4e5bb27291d289ed9e7c0" name="a63fbf2e1faf4e5bb27291d289ed9e7c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63fbf2e1faf4e5bb27291d289ed9e7c0">&#9670;&#160;</a></span>RemoveFromScreen()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void UVisualController::RequestAutoMove </td>
+          <td class="memname">void UVisualController::RemoveFromScreen </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes renderer visualized to screen. </p>
+<p>Has no effect on widget component or not visualized renderer.</p>
+<dl class="section note"><dt>Note</dt><dd>renderer will remain valid after removal </dd></dl>
+
+</div>
+</div>
+<a id="aedb6df536c5cf265e0f7cf3187f753ef" name="aedb6df536c5cf265e0f7cf3187f753ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedb6df536c5cf265e0f7cf3187f753ef">&#9670;&#160;</a></span>RequestAutoMove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualController::RequestAutoMove </td>
           <td>(</td>
           <td class="paramtype">EVisualControllerDirection::Type</td>          <td class="paramname"><span class="paramname"><em>Direction</em></span><span class="paramdefsep"> = </span><span class="paramdefval">EVisualControllerDirection::Forward</span></td><td>)</td>
           <td></td>
@@ -1129,17 +1147,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
 </div>
-<a id="a73f18a387ab3a353edf5d9f21efc20e1" name="a73f18a387ab3a353edf5d9f21efc20e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73f18a387ab3a353edf5d9f21efc20e1">&#9670;&#160;</a></span>RequestFastMove()</h2>
+<a id="adda59ec2daea21657f1f8a242f97a44a" name="adda59ec2daea21657f1f8a242f97a44a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adda59ec2daea21657f1f8a242f97a44a">&#9670;&#160;</a></span>RequestFastMove()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void UVisualController::RequestFastMove </td>
+          <td class="memname">bool UVisualController::RequestFastMove </td>
           <td>(</td>
           <td class="paramtype">EVisualControllerDirection::Type</td>          <td class="paramname"><span class="paramname"><em>Direction</em></span><span class="paramdefsep"> = </span><span class="paramdefval">EVisualControllerDirection::Forward</span></td><td>)</td>
           <td></td>
@@ -1156,6 +1175,27 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
+
+</div>
+</div>
+<a id="a4aaaeac531eac3f43758068a1466f6fa" name="a4aaaeac531eac3f43758068a1466f6fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4aaaeac531eac3f43758068a1466f6fa">&#9670;&#160;</a></span>RequestNextScene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualController::RequestNextScene </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Visualizes the next scene in the node. </p>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
 </div>
@@ -1188,7 +1228,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>request result </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
 </div>
@@ -1208,7 +1248,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Visualizes the previous scene in the node. </p>
-<p>Can also display last exhausted scene from previous node. </p>
+<p>Can also display last exhausted scene from previous node.</p>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
 </div>
@@ -1254,7 +1295,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>result of visualization of provided scene </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
 </div>
@@ -1374,6 +1415,31 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 </div>
 </div>
+<a id="ab56a3111fd2f51703783c67f39606455" name="ab56a3111fd2f51703783c67f39606455"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56a3111fd2f51703783c67f39606455">&#9670;&#160;</a></span>SetRendererVisibility()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualController::SetRendererVisibility </td>
+          <td>(</td>
+          <td class="paramtype">ESlateVisibility</td>          <td class="paramname"><span class="paramname"><em>Visibility</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets renderer visibility. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Visibility</td><td>new renderer visibility </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a12848a85980ca795a7761e706e8076dc" name="a12848a85980ca795a7761e706e8076dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a12848a85980ca795a7761e706e8076dc">&#9670;&#160;</a></span>ShouldPlaySound()</h2>
 
@@ -1459,14 +1525,77 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 </div>
 </div>
-<a id="a06472225b2f37f0075cb7eaa5fe4e3b8" name="a06472225b2f37f0075cb7eaa5fe4e3b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06472225b2f37f0075cb7eaa5fe4e3b8">&#9670;&#160;</a></span>Visualize()</h2>
+<a id="a1889a5682e0f09726dfdc7a3e2e86295" name="a1889a5682e0f09726dfdc7a3e2e86295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1889a5682e0f09726dfdc7a3e2e86295">&#9670;&#160;</a></span>TryPlayTransition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualController::TryPlayTransition </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_f_scenario.html">FScenario</a> *</td>          <td class="paramname"><span class="paramname"><em>From</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_f_scenario.html">FScenario</a> *</td>          <td class="paramname"><span class="paramname"><em>To</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Requests renderer to display transition animation. </p>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
+
+</div>
+</div>
+<a id="a527c78c99a1031647e0253b42bd3088e" name="a527c78c99a1031647e0253b42bd3088e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a527c78c99a1031647e0253b42bd3088e">&#9670;&#160;</a></span>VisualizeToComponent()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void UVisualController::Visualize </td>
+          <td class="memname">void UVisualController::VisualizeToComponent </td>
+          <td>(</td>
+          <td class="paramtype">TSubclassOf&lt; <a class="el" href="class_u_visual_renderer.html">UVisualRenderer</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>RendererClass</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UWidgetComponent *</td>          <td class="paramname"><span class="paramname"><em>Component</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconstructs renderer to a new class if necessary and add it to the widget component. </p>
+<dl class="section note"><dt>Note</dt><dd>renderer will show currently selected scene</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">RendererClass</td><td>Renderer class, has no effect when current and provided classes are the same. </td></tr>
+    <tr><td class="paramname">Component</td><td>widget component that should display the renderer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af51339139fe620c44248bb699e0aca12" name="af51339139fe620c44248bb699e0aca12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af51339139fe620c44248bb699e0aca12">&#9670;&#160;</a></span>VisualizeToScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualController::VisualizeToScreen </td>
           <td>(</td>
           <td class="paramtype">TSubclassOf&lt; <a class="el" href="class_u_visual_renderer.html">UVisualRenderer</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>RendererClass</em></span>, </td>
         </tr>
@@ -1478,8 +1607,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
       </table>
 </div><div class="memdoc">
 
-<p>Construct renderer if necessary and add it to the player screen. </p>
-<p>Will show currently selected scene. </p>
+<p>Reconstruct renderer to a new class if necessary and add it to the player screen. </p>
+<dl class="section note"><dt>Note</dt><dd>renderer will show currently selected scene</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">RendererClass</td><td>Renderer class, has no effect when current and provided classes are the same. </td></tr>
+    <tr><td class="paramname">ZOrder</td><td>renderer layer on the screen </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1507,7 +1643,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 <p>How long, in seconds, controller should wait before moving to the next scene in auto move mode. </p>
 <p>Must be larger than transition duration to not stop on transitions.</p>
 <dl class="section note"><dt>Note</dt><dd>don't put a zero to simulate fast forwarding, use fast move instead</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ad16598d1d1773f06888deed777bd8cb3" title="Tries to activate auto move.">UVisualController::RequestAutoMove()</a> <a class="el" href="#a73f18a387ab3a353edf5d9f21efc20e1" title="Tries to activate fast move mode.">UVisualController::RequestFastMove()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aedb6df536c5cf265e0f7cf3187f753ef" title="Tries to activate auto move.">UVisualController::RequestAutoMove()</a> <a class="el" href="#adda59ec2daea21657f1f8a242f97a44a" title="Tries to activate fast move mode.">UVisualController::RequestFastMove()</a> </dd></dl>
 
 </div>
 </div>
@@ -1532,7 +1668,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Handle to the ticker that performs auto move. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ad16598d1d1773f06888deed777bd8cb3" title="Tries to activate auto move.">UVisualController::RequestAutoMove()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aedb6df536c5cf265e0f7cf3187f753ef" title="Tries to activate auto move.">UVisualController::RequestAutoMove()</a> </dd></dl>
 
 </div>
 </div>
@@ -1633,7 +1769,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Task to be dispatched asynchronously to perform fast move. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a73f18a387ab3a353edf5d9f21efc20e1" title="Tries to activate fast move mode.">UVisualController::RequestFastMove()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#adda59ec2daea21657f1f8a242f97a44a" title="Tries to activate fast move mode.">UVisualController::RequestFastMove()</a> </dd></dl>
 
 </div>
 </div>
@@ -1709,6 +1845,94 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 <p>Currently active data table with scenes. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a> </dd></dl>
+
+</div>
+</div>
+<a id="a20c0018b08360ee068d0411f0cdb2518" name="a20c0018b08360ee068d0411f0cdb2518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20c0018b08360ee068d0411f0cdb2518">&#9670;&#160;</a></span>OnAutoMoveStart</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FOnAutoMoveStart UVisualController::OnAutoMoveStart</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called when controller enters Auto Move mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Direction</td><td>direction in which controller moves </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac5aa9e547c0ae26ebcb1f56afee3e7be" name="ac5aa9e547c0ae26ebcb1f56afee3e7be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5aa9e547c0ae26ebcb1f56afee3e7be">&#9670;&#160;</a></span>OnFastMoveStart</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FOnFastMoveStart UVisualController::OnFastMoveStart</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called when controller enters Fast Move mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Direction</td><td>direction in which controller moves </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8cb81d4b67240e1bc5572658946f3a13" name="a8cb81d4b67240e1bc5572658946f3a13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cb81d4b67240e1bc5572658946f3a13">&#9670;&#160;</a></span>OnSceneEnd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FOnSceneEnd UVisualController::OnSceneEnd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called when controller is about to switch to a different scenario. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Scenario</td><td>active scenario before controller switches </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a44182b58d5d888f2b2e0b585a52664d6" name="a44182b58d5d888f2b2e0b585a52664d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44182b58d5d888f2b2e0b585a52664d6">&#9670;&#160;</a></span>OnSceneStart</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FOnSceneStart UVisualController::OnSceneStart</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Called when controller has switched to a different scenario. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Scenario</td><td>scenario to which controller has swiched to </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

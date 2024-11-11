@@ -1,5 +1,8 @@
 var NAVTREEINDEX1 =
 {
+"class_u_visual_sprite.html#af9798f6d6e1fa042623ee2e6fb27be11":[2,0,29,2],
+"class_u_visual_text_block.html":[2,0,30],
+"class_u_visual_text_block.html#a0a663d085a33213723e22a6d8b20bdd0":[2,0,30,15],
 "class_u_visual_text_block.html#a1d7824bd8ee504fa1930d2261e55c965":[2,0,30,10],
 "class_u_visual_text_block.html#a24d6f3d88c8e0749933eb5a63c3d97e0":[2,0,30,22],
 "class_u_visual_text_block.html#a2ad98392fa7123df66934ed128621ed5":[2,0,30,0],
