@@ -1,8 +1,8 @@
 # VisualU
-Plugin for Unreal Engine 5.4 that brings core functionality for a widget-based visual novel narrative.
+Plugin for Unreal Engine 5.3 that brings core functionality for a widget-based visual novel narrative.
 
 # Setup
-Build the plugin for the Unreal Engine 5.4.x project
+Build the plugin for the Unreal Engine 5.3.x project
 
 ## Build Plugin using Unreal Automation Tool (Windows)
 1. Go to ```<engine_directory>\Engine\Build\BatchFiles```.
