@@ -29,7 +29,7 @@ private:
 		FRepData();
 
 		FString ControllerName;
-		bool bIsRendererVisualized;
+		uint8 RendererVisibility;
 		uint8 ControllerMode;
 		FString CurrentSceneName;
 		FString CurrentNodeName;

@@ -15,6 +15,7 @@
 #include "VisualControllerInterface.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Controller.h"
+#include "Components/SlateWrapperTypes.h"
 #include "Containers/Queue.h"
 
 constexpr float TextSizeXThreshold = 500.f;
@@ -31,7 +32,7 @@ FGameplayDebuggerCategory_VisualU::FRepData::FRepData() = default;
 void FGameplayDebuggerCategory_VisualU::FRepData::Serialize(FArchive& Ar)
 {
 	Ar << ControllerName;
-	Ar.SerializeBits(&bIsRendererVisualized, 1);
+	Ar.SerializeBits(&RendererVisibility, 1);
 	Ar.SerializeBits(&ControllerMode, 1);
 	Ar << CurrentSceneName;
 	Ar << CurrentNodeName;
@@ -59,7 +60,7 @@ void FGameplayDebuggerCategory_VisualU::CollectData(APlayerController* OwnerPC, 
 			if (VisualController)
 			{
 				RepData.ControllerName = VisualController->GetFName().ToString();
-				RepData.bIsRendererVisualized = VisualController->IsVisualized();
+				RepData.RendererVisibility = StaticCast<uint8>(VisualController->GetRendererVisibility());
 				RepData.ControllerMode = StaticCast<uint8>(VisualController->GetMode());
 
 				const FScenario* CurrentScene = VisualController->GetCurrentScene();
@@ -104,7 +105,7 @@ void FGameplayDebuggerCategory_VisualU::DrawData(APlayerController* OwnerPC, FGa
 		const float CanvasX = Canvas->SizeX / Canvas->GetDPIScale();
 		const float InitialCategoryHeaderPosY = CanvasContext.CursorY - LineHeight;
 		CanvasContext.Printf(TEXT("{cyan}Visual Controller: {magenta}%s"), *RepData.ControllerName);
-		CanvasContext.Printf(TEXT("{cyan}Is Renderer visualized: {magenta}%s"), RepData.bIsRendererVisualized ? TEXT("true") : TEXT("false"));
+		CanvasContext.Printf(TEXT("{cyan}Renderer visibility: {magenta}%s"), *StaticEnum<ESlateVisibility>()->GetAuthoredNameStringByValue(RepData.RendererVisibility));
 		CanvasContext.Printf(TEXT("{cyan}Controller mode: {magenta}%s"), *StaticEnum<EVisualControllerMode>()->GetAuthoredNameStringByValue(RepData.ControllerMode));
 		CanvasContext.Printf(TEXT("{cyan}Current scenario: {magenta}%s"), *RepData.CurrentSceneName);
 		CanvasContext.Printf(TEXT("{cyan}Current node: {magenta}%s"), *RepData.CurrentNodeName);

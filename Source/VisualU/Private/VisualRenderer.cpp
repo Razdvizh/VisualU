@@ -122,6 +122,7 @@ void UVisualRenderer::ForceStopTransition()
 
 TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
 {
+	check(WidgetTree);
 	Canvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("Canvas"));
 	WidgetTree->RootWidget = Canvas;
 

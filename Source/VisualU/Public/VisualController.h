@@ -14,6 +14,9 @@
 
 class UVisualRenderer;
 class APlayerController;
+class DataTable;
+class UWorld;
+class UWidgetComponent;
 struct FStreamableHandle;
 
 /**
@@ -110,8 +113,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFastMoveStart, EVisualControllerD
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFastMoveEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoMoveStart, EVisualControllerDirection::Type, Direction);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAutoMoveEnd);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRendererVisualized);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRendererVanished);
 
 /**
  * Organizes scenes described by FScenario in a meaningful way.
@@ -136,13 +137,6 @@ public:
 	virtual void BeginDestroy() override;
 
 	/**
-	* Not ready for production code.
-	* 
-	* @param Ar archive to serialize this controller
-	*/
-	virtual void SerializeController_Experimental(FArchive& Ar);
-
-	/**
 	* Brings controller to idle state before serialization.
 	* 
 	* @param SaveContext save parameters
@@ -153,6 +147,13 @@ public:
 	* Setups initial values to make controller operational.
 	*/
 	virtual void PostInitProperties() override;
+
+	/**
+	* Not ready for production code.
+	*
+	* @param Ar archive to serialize this controller
+	*/
+	virtual void SerializeController_Experimental(FArchive& Ar);
 
 	/**
 	* Visualizes the next scene in the node.
@@ -263,23 +264,53 @@ public:
 	void CancelAutoMove();
 
 	/**
-	* Construct renderer if necessary and add it to the player screen.
-	* Will show currently selected scene.
+	* Reconstruct renderer to a new class if necessary and
+	* add it to the player screen.
+	* 
+	* @note renderer will show currently selected scene
+	* 
+	* @param RendererClass Renderer class, 
+	*        has no effect when current and provided classes are the same.
+	* @param ZOrder renderer layer on the screen
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder = 0);
+	void VisualizeToScreen(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder = 0);
 
 	/**
-	* Destroys underlying renderer.
+	* Reconstructs renderer to a new class if necessary and
+	* add it to the widget component.
+	* 
+	* @note renderer will show currently selected scene
+	* 
+	* @param RendererClass Renderer class, 
+	*        has no effect when current and provided classes are the same.
+	* @param Component widget component that should display the renderer
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void Discard();
+	void VisualizeToComponent(TSubclassOf<UVisualRenderer> RendererClass, UWidgetComponent* Component);
 
 	/**
-	* Changes renderer visibility.
+	* Removes renderer visualized to screen.
+	* Has no effect on widget component or not visualized renderer.
+	* 
+	* @note renderer will remain valid after removal
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	void SetVisibility(ESlateVisibility Visibility);
+	void RemoveFromScreen() const;
+
+	/**
+	* Sets renderer visibility.
+	* 
+	* @param Visibility new renderer visibility
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
+	void SetRendererVisibility(ESlateVisibility Visibility);
+
+	/**
+	* @return current renderer visibility
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
+	ESlateVisibility GetRendererVisibility() const;
 
 	/**
 	* Setter for UVisualController::NumScenesToLoad
@@ -291,7 +322,7 @@ public:
 	void SetNumScenesToLoad(int32 Num);
 
 	/**
-	* @return number of scenes to load.
+	* @return number of scenes to load
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Async", meta = (DisplayName = "GetNumScenariosToLoad"))
 	FORCEINLINE int32 GetNumScenesToLoad() const { return ScenesToLoad; };
@@ -441,12 +472,6 @@ public:
 	FORCEINLINE bool IsIdle() const { return Mode == EVisualControllerMode::Idle; }
 
 	/**
-	* @return {@code true} when UVisualController::Renderer is constructed
-	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Widget")
-	bool IsVisualized() const;
-
-	/**
 	* Development only.
 	* 
 	* @return debug information of the UVisualController::Head
@@ -515,18 +540,6 @@ public:
 	*/
 	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
 	FOnAutoMoveEnd OnAutoMoveEnd;
-
-	/**
-	* Called when renderer is visualized.
-	*/
-	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
-	FOnRendererVisualized OnRendererVisualized;
-
-	/**
-	* Called when renderer is discarded.
-	*/
-	UPROPERTY(BlueprintAssignable, Category = "Visual Controller|Events")
-	FOnRendererVanished OnRendererVanished;
 
 protected:
 	/**

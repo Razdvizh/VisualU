@@ -12,6 +12,8 @@
 #include "Tasks/Task.h"
 #include "Containers/Queue.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/GameModeBase.h"
+#include "Components/WidgetComponent.h"
 #include "Sound/SoundBase.h"
 #include "VisualVersioningSubsystem.h"
 #include "VisualUCustomVersion.h"
@@ -86,9 +88,75 @@ void UVisualController::BeginDestroy()
 	if (Renderer)
 	{
 		Renderer->ForceStopTransition();
+		Renderer->RemoveFromParent();
 	}
-
+	
 	Super::BeginDestroy();
+}
+
+void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
+{
+	CancelFastMove();
+	CancelAutoMove();
+	if (Renderer)
+	{
+		Renderer->ForceStopTransition();
+	}
+	
+	Super::PreSave(SaveContext);
+}
+
+void UVisualController::PostInitProperties()
+{
+	Super::PostInitProperties();
+
+	bPlaySound &= (GEngine && GEngine->UseSound());
+
+	FGameModeEvents::GameModePostLoginEvent.AddWeakLambda(this, [this](AGameModeBase*, APlayerController* PlayerController)
+	{
+		if (!HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject))
+		{
+			APlayerController* OwningPlayerController = GetOuterAPlayerController();
+			if (OwningPlayerController == PlayerController)
+			{
+				const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
+				check(VisualUSettings);
+
+				checkf(!VisualUSettings->FirstDataTable.IsNull(), TEXT("Unable to find first data table, please specify one in project settings."));
+				const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
+
+				checkf(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Data table must be based on FScenario struct."));
+				FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
+
+				checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
+				Head = GetCurrentScene();
+				NodeReferenceKeeper.Add(FirstDataTable);
+
+				Renderer = CreateWidget<UVisualRenderer>(OwningPlayerController, UVisualRenderer::StaticClass());
+				check(Renderer);
+
+				/*Rebuild widget immediately to allocate memory for persistent renderer widgets*/
+				Renderer->TakeWidget();
+
+				FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float)
+				{
+					/*Rebuild widget again on next tick to create persistent renderer widgets*/
+					Renderer->TakeWidget();
+
+					return false;
+				}));
+				
+				if (bPlaySound && !Head->Info.Sound.IsNull())
+				{
+					USoundBase* Sound = Head->Info.Sound.LoadSynchronous();
+					OwningPlayerController->ClientPlaySound(Sound);
+				}
+				PrepareScenes();
+
+				FGameModeEvents::GameModePostLoginEvent.RemoveAll(this);
+			}
+		}
+	});
 }
 
 void UVisualController::SerializeController_Experimental(FArchive& Ar)
@@ -136,43 +204,9 @@ void UVisualController::SerializeController_Experimental(FArchive& Ar)
 	Super::Serialize(Ar);
 }
 
-void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
-{
-	CancelFastMove();
-	CancelAutoMove();
-	if (Renderer)
-	{
-		Renderer->ForceStopTransition();
-	}
-	
-	Super::PreSave(SaveContext);
-}
-
-void UVisualController::PostInitProperties()
-{
-	Super::PostInitProperties();
-
-	bPlaySound &= (GEngine && GEngine->UseSound());
-
-	if (IsInGameThread() && FApp::IsGame())
-	{
-		const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
-
-		checkf(!VisualUSettings->FirstDataTable.IsNull(), TEXT("Unable to find first data table, please specify one in project settings."));
-		const UDataTable* FirstDataTable = VisualUSettings->FirstDataTable.LoadSynchronous();
-
-		checkf(FirstDataTable->GetRowStruct()->IsChildOf(FScenario::StaticStruct()), TEXT("Data table must be based on FScenario struct."));
-		FirstDataTable->GetAllRows(UE_SOURCE_LOCATION, Node);
-
-		checkf(Node.IsValidIndex(0), TEXT("First Data Table is empty!"));
-		Head = GetCurrentScene();
-		NodeReferenceKeeper.Add(FirstDataTable);
-	}
-}
-
 bool UVisualController::RequestNextScene()
 {
-	if (!CanAdvanceScene() || Renderer->IsTransitionInProgress())
+	if (!CanAdvanceScene() || IsTransitioning())
 	{
 		return false;
 	}
@@ -205,7 +239,7 @@ bool UVisualController::RequestNextScene()
 
 bool UVisualController::RequestPreviousScene()
 {
-	if (Renderer->IsTransitionInProgress())
+	if (IsTransitioning())
 	{
 		return false;
 	}
@@ -246,7 +280,7 @@ bool UVisualController::RequestPreviousScene()
 
 bool UVisualController::RequestScene(const FScenario* Scene)
 {
-	if (Renderer->IsTransitionInProgress())
+	if (IsTransitioning())
 	{
 		return false;
 	}
@@ -310,7 +344,7 @@ const FScenario* UVisualController::GetSceneAt(int32 Index)
 
 bool UVisualController::RequestNode(const UDataTable* NewNode)
 {
-	if (Renderer->IsTransitionInProgress() || IsFastMoving() || IsAutoMoving())
+	if (IsTransitioning() || IsFastMoving() || IsAutoMoving())
 	{
 		return false;
 	}
@@ -384,23 +418,21 @@ bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		OnAutoMoveStart.Broadcast(Direction);
 
 		const auto AutoMove = [this, Direction](float DeltaTime) -> bool
+		{
+			const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
+				? (!IsWithChoice() && RequestNextScene())
+				: RequestPreviousScene());
+
+			if (!bCanContinue)
 			{
-				const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
-					? (!IsWithChoice() && RequestNextScene())
-					: RequestPreviousScene());
+				CancelAutoMove();
+			}
 
-				if (!bCanContinue)
-				{
-					CancelAutoMove();
-				}
-
-				return bCanContinue;
-			};
+			return bCanContinue;
+		};
 
 		/*Fire it once first to replicate a do-while style*/
-		UWorld* World = GetWorld();
-		check(World);
-		AutoMove(World->GetDeltaSeconds());
+		AutoMove(0.f);
 
 		FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
 		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
@@ -436,36 +468,52 @@ void UVisualController::CancelAutoMove()
 	}
 }
 
-void UVisualController::Visualize(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
+void UVisualController::VisualizeToScreen(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
 {
-	if (!IsVisualized())
+	check(Renderer);
+	if (RendererClass != Renderer->GetClass())
 	{
 		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
 	}
 
+	Renderer->AddToPlayerScreen(ZOrder);
 	const FScenario* CurrentScene = GetCurrentScene();
 	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
-	Renderer->AddToPlayerScreen(ZOrder);
 	Renderer->DrawScene(CurrentScene);
-
-	OnRendererVisualized.Broadcast();
-
-	TryPlaySceneSound(CurrentScene->Info.Sound);
-	PrepareScenes();
 }
 
-void UVisualController::Discard()
+void UVisualController::VisualizeToComponent(TSubclassOf<UVisualRenderer> RendererClass, UWidgetComponent* Component)
+{
+	check(Renderer);
+	check(Component);
+	if (RendererClass != Renderer->GetClass())
+	{
+		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
+	}
+
+	Component->SetWidget(Renderer);
+	const FScenario* CurrentScene = GetCurrentScene();
+	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
+	Renderer->DrawScene(CurrentScene);
+
+}
+
+void UVisualController::RemoveFromScreen() const
 {
 	check(Renderer);
 	Renderer->RemoveFromParent();
-
-	OnRendererVanished.Broadcast();
 }
 
-void UVisualController::SetVisibility(ESlateVisibility Visibility)
+void UVisualController::SetRendererVisibility(ESlateVisibility Visibility)
 {
 	check(Renderer);
 	Renderer->SetVisibility(Visibility);
+}
+
+ESlateVisibility UVisualController::GetRendererVisibility() const
+{
+	check(Renderer);
+	return Renderer->GetVisibility();
 }
 
 void UVisualController::SetNumScenesToLoad(int32 Num)
@@ -536,17 +584,13 @@ bool UVisualController::IsScenarioExhausted(const FScenario& Scenario) const
 
 bool UVisualController::IsTransitioning() const
 {
-	return Renderer ? Renderer->IsTransitionInProgress() : false;
+	check(Renderer);
+	return Renderer->IsTransitionInProgress();
 }
 
 bool UVisualController::IsCurrentScenarioHead() const
 {
 	return GetCurrentScene() == Head;
-}
-
-bool UVisualController::IsVisualized() const
-{
-	return IsValid(Renderer);
 }
 
 const FString UVisualController::GetHeadDebugString() const
@@ -692,9 +736,10 @@ void UVisualController::CancelNextScene()
 
 bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario* To)
 {
+	check(Renderer);
+
 	if (bPlayTransitions && !Renderer->IsTransitionInProgress())
 	{
-		check(Renderer);
 		return Renderer->TryDrawTransition(From, To);
 	}
 
@@ -704,6 +749,7 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 void UVisualController::SetCurrentScene(const FScenario* Scene)
 {
 	check(Scene);
+	check(Renderer);
 	const UDataTable* SceneOwner = Scene->GetOwner();
 	const FScenario* CurrentScenario = GetCurrentScene();
 	const UDataTable* CurrentSceneOwner = CurrentScenario->GetOwner();

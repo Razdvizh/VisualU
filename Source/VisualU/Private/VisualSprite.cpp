@@ -22,7 +22,7 @@ void UVisualSprite::AssignSpriteInfo(const TArray<FVisualImageInfo>& InInfo)
 	if (!InInfo.IsEmpty())
 	{
 		TArray<UWidget*> ChildWidgets;
-		WidgetTree->GetChildWidgets(GetRootWidget(), ChildWidgets);
+		WidgetTree->GetAllWidgets(ChildWidgets);
 
 		int32 i, j;
 		for (i = j = 0; i < ChildWidgets.Num(); i++)
