@@ -501,7 +501,7 @@ public:
 		TSoftObjectPtr<UDataTable> SoftOwner;
 		if (Ar.IsSaving())
 		{
-			SoftOwner = Scenario.Owner;
+			SoftOwner = const_cast<UDataTable*>(Scenario.Owner);
 		}
 
 		Ar << SoftOwner;
