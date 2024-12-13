@@ -13,11 +13,11 @@ UVisualUSettings::UVisualUSettings(const FObjectInitializer& ObjectInitializer)
 	TransitionMPC(),
 	TransitionDuration(0.f),
 	AParameterName(TEXT("Transition 1")),
-	BParameterName(TEXT("Transition 2")),
-#if WITH_EDITORONLY_DATA
-	ScenarioFlagsNameOverrides()
-#endif
+	BParameterName(TEXT("Transition 2"))
 {
+#if WITH_EDITORONLY_DATA
+	ScenarioFlagsNameOverrides = TArray<FString>();
+#endif
 }
 
 void UVisualUSettings::PostInitProperties()
