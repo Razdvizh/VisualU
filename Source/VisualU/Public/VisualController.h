@@ -121,7 +121,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAutoMoveEnd);
  * \image html Tree_structure.png
  * 
  * @see UVisualUSettings
- *			FScenario
+ *		FScenario
  */
 UCLASS(Blueprintable, BlueprintType, EditInlineNew, Within = PlayerController)
 class VISUALU_API UVisualController : public UObject
@@ -171,6 +171,15 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the previous scene in the node"))
 	bool RequestPreviousScene();
+
+	/**
+	* Visualizes a scene adjacent to the current scene in specified direction.
+	* 
+	* @param Direction describes position of the adjacent scene to request
+	* @return result of the request
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Visualizes the adjacent scene in specified direction"))
+	bool RequestAdjacentScene(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
 
 	/**
 	* Visualize any exhausted scene.
@@ -543,7 +552,7 @@ public:
 
 protected:
 	/**
-	* Asynchronously load assets of the scene into the memory.
+	* Asynchronously loads assets of the scene into the memory.
 	* 
 	* @param Scene scenario that provides assets to stream in
 	* @param AfterLoadDelegate delegate to execute after assets are loaded
@@ -554,7 +563,7 @@ protected:
 	TSharedPtr<FStreamableHandle> LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
 	/**
-	* Synchronously load assets of the scene into the memory.
+	* Synchronously loads assets of the scene into the memory.
 	*
 	* @param Scene scenario that provides assets to load
 	* @param AfterLoadDelegate delegate to execute after assets are loaded
@@ -565,7 +574,8 @@ protected:
 	TSharedPtr<FStreamableHandle> LoadScene(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate = nullptr);
 
 	/**
-	* Loads assets of future scenes.
+	* Asynchronously loads assets of future scenes after controller moves.
+	* Has no effect when UVisualController::NumScenesToLoad is less than zero.
 	* 
 	* @param Direction determines where future scenes are
 	*/
@@ -590,13 +600,17 @@ protected:
 
 	/**
 	* Requests renderer to display transition animation.
+	* 
+	* @param From Scene that will be displayed at the start and then blended
+	*        as transition progresses. Usually the currently displayed scene.
+	* @param To Scene that will be visualized after transition ends
 	* @return result of the request
 	*/
 	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
 private:
 	/**
-	* Switch controller to the given scene, potentially switching node as well.
+	* Switches controller to the given scene, potentially switching node as well.
 	* 
 	* @param Scene scene to be visualized by this controller
 	*/
