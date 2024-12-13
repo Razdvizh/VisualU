@@ -7,13 +7,14 @@
 #include "Materials/MaterialInstance.h"
 #include "Materials/MaterialInterface.h"
 
+UBackgroundVisualImage::UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer) 
+	: UVisualImage(ObjectInitializer)
+{
+}
+
 void UBackgroundVisualImage::ReleaseSlateResources(bool bReleaseChildren)
 {
 	Super::ReleaseSlateResources(bReleaseChildren);
-}
-
-UBackgroundVisualImage::UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer) : UVisualImage(ObjectInitializer)
-{
 }
 
 void UBackgroundVisualImage::StopTransition()
