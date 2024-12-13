@@ -22,14 +22,14 @@ class UBackgroundVisualImage final : public UVisualImage
 	GENERATED_BODY()
 
 public:
+	UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer);
+
 	/**
 	* Releases memory allocated for slate widgets.
 	* 
 	* @param bReleaseChildren should memory of child widgets be released
 	*/
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
-
-	UBackgroundVisualImage(const FObjectInitializer& ObjectInitializer);
 
 	/**
 	* Stops ongoing transition.

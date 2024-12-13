@@ -15,6 +15,7 @@
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Containers/Ticker.h"
 #include "PaperFlipbook.h"
 #include "VisualSprite.h"
 #include "VisualImage.h"
@@ -54,6 +55,7 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 			Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
 
 			UCanvasPanelSlot* SpriteSlot = Canvas->AddChildToCanvas(Sprite);
+			check(SpriteSlot);
 			SpriteSlot->SetZOrder(SpriteData.ZOrder);
 			SpriteSlot->SetAnchors(SpriteData.Anchors);
 			SpriteSlot->SetAutoSize(true);
@@ -127,11 +129,17 @@ TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
 	WidgetTree->RootWidget = Canvas;
 
 	Background = WidgetTree->ConstructWidget<UBackgroundVisualImage>(UBackgroundVisualImage::StaticClass(), TEXT("Background"));
-	UCanvasPanelSlot* BackgroundSlot = Canvas->AddChildToCanvas(Background);
-	check(BackgroundSlot);
-	BackgroundSlot->SetAnchors(FVisualAnchors::FullScreen);
-	BackgroundSlot->SetOffsets(FVisualMargin::Zero);
-	BackgroundSlot->SetZOrder(INT_MIN);
+
+	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float)
+	{
+		UCanvasPanelSlot* BackgroundSlot = Canvas->AddChildToCanvas(Background);
+		check(BackgroundSlot);
+		BackgroundSlot->SetAnchors(FVisualAnchors::FullScreen);
+		BackgroundSlot->SetOffsets(FVisualMargin::Zero);
+		BackgroundSlot->SetZOrder(INT_MIN);
+
+		return false;
+	}));
 
 	return Super::RebuildWidget();
 }
