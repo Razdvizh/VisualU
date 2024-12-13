@@ -135,16 +135,8 @@ void UVisualController::PostInitProperties()
 				Renderer = CreateWidget<UVisualRenderer>(OwningPlayerController, UVisualRenderer::StaticClass());
 				check(Renderer);
 
-				/*Rebuild widget immediately to allocate memory for persistent renderer widgets*/
+				/*Rebuild widget immediately to create renderer widgets*/
 				Renderer->TakeWidget();
-
-				FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float)
-				{
-					/*Rebuild widget again on next tick to create persistent renderer widgets*/
-					Renderer->TakeWidget();
-
-					return false;
-				}));
 				
 				if (bPlaySound && !Head->Info.Sound.IsNull())
 				{

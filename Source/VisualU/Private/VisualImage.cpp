@@ -25,8 +25,6 @@ void UVisualImage::ReleaseSlateResources(bool bReleaseChildren)
 {
 	UVisualImageBase::ReleaseSlateResources(bReleaseChildren);
 	
-	Flipbook = nullptr;
-	CancelAsyncLoad();
 	VisualImageSlate.Reset();
 }
 
