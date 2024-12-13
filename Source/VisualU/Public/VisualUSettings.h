@@ -24,6 +24,43 @@ public:
 	UVisualUSettings(const FObjectInitializer& ObjectInitializer);
 
 	/**
+	* Applies scenario flags name overrides after config is loaded.
+	* 
+	* @see UVisualUSettings::ApplyOverrides
+	*/
+	virtual void PostInitProperties() override;
+
+#if WITH_EDITOR
+	/**
+	* Editor only.
+	* 
+	* Applies scenario flags name overrides when array of names is changed.
+	* 
+	* @see UVisualUSettings::ApplyOverrides
+	* 
+	* @param PropertyChangedEvent data regarding property change event. 
+	*/
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+	/**
+	* Editor only.
+	* 
+	* Applies scenario meta flags name overrides.
+	* Only affects metadata.
+	* 
+	* @see UVisualUSettings::ScenarioFlagsNameOverrides
+	*/
+	void ApplyOverrides();
+
+	/**
+	* Editor only.
+	* 
+	* Resets name overrides of scenario flags to plugin default values.
+	*/
+	void ResetOverrides();
+#endif
+
+	/**
 	* Fist node of UVisualController.
 	* Must be valid for proper initialization of the controller.
 	*/
@@ -43,7 +80,7 @@ public:
 	/**
 	* Duration, in seconds, of the transition between scenes
 	* 
-	* @see UVisualRenderer::Animation
+	* @see UVisualRenderer::Transition
 	*/
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 5.f, ClampMax = 5.f, ToolTip = "Duration, in seconds, of the transition between scenes"))
 	float TransitionDuration;
@@ -59,4 +96,15 @@ public:
 	*/
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Visual Controller|Transition")
 	FName BParameterName;
+
+#if WITH_EDITORONLY_DATA
+private:
+	/**
+	* Defines user names for scenario meta flags custom enums.
+	* Only affects enum metadata.
+	*/
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Editor", meta = (EditFixedOrder, AllowPrivateAccess = true))
+	TArray<FString> ScenarioFlagsNameOverrides;
+#endif
+
 };

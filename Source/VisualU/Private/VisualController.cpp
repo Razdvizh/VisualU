@@ -278,6 +278,17 @@ bool UVisualController::RequestPreviousScene()
 	return true;
 }
 
+bool UVisualController::RequestAdjacentScene(EVisualControllerDirection::Type Direction)
+{
+	check(Direction != EVisualControllerDirection::None);
+	if (Direction == EVisualControllerDirection::Forward)
+	{
+		return RequestNextScene();
+	}
+
+	return RequestPreviousScene();
+}
+
 bool UVisualController::RequestScene(const FScenario* Scene)
 {
 	if (IsTransitioning())
@@ -495,7 +506,6 @@ void UVisualController::VisualizeToComponent(TSubclassOf<UVisualRenderer> Render
 	const FScenario* CurrentScene = GetCurrentScene();
 	TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
 	Renderer->DrawScene(CurrentScene);
-
 }
 
 void UVisualController::RemoveFromScreen() const

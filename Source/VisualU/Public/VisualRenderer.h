@@ -105,7 +105,7 @@ private:
 
 	/**
 	* Scene that will be displayed after transition ends.
-	* It temporarily used during transition process.
+	* It is temporarily used during transition process.
 	* It is invalid when transition does not occur.
 	*/
 	const FScenario* FinalScene;
