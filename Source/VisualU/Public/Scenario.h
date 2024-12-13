@@ -71,7 +71,7 @@ public:
 	}
 
 	/**
-	* String representation of FSprite.
+	* @return string representation of FSprite.
 	*/
 	inline FString ToString() const
 	{
@@ -132,7 +132,7 @@ public:
 	TSoftObjectPtr<UMaterialInterface> TransitionMaterial;
 
 	/**
-	* String representation of FBackground.
+	* @return string representation of FBackground.
 	*/
 	inline FString ToString() const
 	{
@@ -240,7 +240,7 @@ public:
 	}
 
 	/**
-	* String representation of the scene.
+	* @return string representation of the scene.
 	*/
 	virtual FString ToString() const override
 	{
@@ -317,7 +317,7 @@ public:
 * @note FScenario is a polymorphic struct and can be extended if needed.
 * 
 * @see FSprite
-*		   UVisualController
+*	   UVisualController
 */
 USTRUCT(BlueprintType, meta = (ToolTip = " Describes a single scene/entry/\"frame\" of Visual Controller"))
 struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
@@ -335,7 +335,7 @@ public:
 
 protected:
 	/**
-	* Node that owns this scenario. Can be nullptr.
+	* Node that owns this scenario. Can be null.
 	* 
 	* @note Left undiscoverable by reflection to avoid circular references
 	*		and intricacies of TWeakObjectPtr.
@@ -371,7 +371,7 @@ public:
 	}
 
 	/*
-	* @return Node of this scenario, can be nullptr
+	* @return Node of this scenario, can be null.
 	*/
 	FORCEINLINE const UDataTable* GetOwner() const { return Owner; }
 
@@ -442,7 +442,7 @@ public:
 	}
 
 	/**
-	* String representation of scenario data.
+	* @return string representation of scenario data.
 	*/
 	virtual FString ToString() const
 	{
@@ -451,7 +451,7 @@ public:
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	/**
-	* String representation of this scenario for debugging purposes.
+	* @return string representation of this scenario for debugging purposes.
 	*/
 	FORCEINLINE FString GetDebugString() const
 	{

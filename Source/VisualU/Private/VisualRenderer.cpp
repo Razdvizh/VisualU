@@ -41,7 +41,7 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 		Canvas->RemoveChild(Sprite);
 	});
 
-	if (Scene->Info.Background.BackgroundArtInfo.Expression.IsValid())
+	if (!Scene->Info.Background.BackgroundArtInfo.Expression.IsNull())
 	{
 		Background->AssignVisualImageInfo(Scene->Info.Background.BackgroundArtInfo);
 	}
@@ -126,8 +126,6 @@ TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
 	Canvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("Canvas"));
 	WidgetTree->RootWidget = Canvas;
 
-	TSharedRef<SWidget> VisualSceneSlate = Super::RebuildWidget();
-
 	Background = WidgetTree->ConstructWidget<UBackgroundVisualImage>(UBackgroundVisualImage::StaticClass(), TEXT("Background"));
 	UCanvasPanelSlot* BackgroundSlot = Canvas->AddChildToCanvas(Background);
 	check(BackgroundSlot);
@@ -135,7 +133,7 @@ TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
 	BackgroundSlot->SetOffsets(FVisualMargin::Zero);
 	BackgroundSlot->SetZOrder(INT_MIN);
 
-	return VisualSceneSlate;
+	return Super::RebuildWidget();
 }
 
 void UVisualRenderer::NativeOnInitialized()
