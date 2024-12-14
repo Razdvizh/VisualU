@@ -400,8 +400,9 @@ bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions, bPlaySound);
 		bPlayTransitions = false;
 		bPlaySound = false;
-		Mode = EVisualControllerMode::FastMoving;
 		FastMoveTask->StartBackgroundTask();
+
+		Mode = EVisualControllerMode::FastMoving;
 
 		OnFastMoveStart.Broadcast(Direction);
 
@@ -413,18 +414,20 @@ bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 
 bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
 {
+	check(Direction != EVisualControllerDirection::None);
+
 	if (IsIdle())
 	{
-		check(Direction != EVisualControllerDirection::None);
 		Mode = EVisualControllerMode::AutoMoving;
 
 		OnAutoMoveStart.Broadcast(Direction);
 
 		const auto AutoMove = [this, Direction](float DeltaTime) -> bool
 		{
-			const bool bCanContinue = (Direction == EVisualControllerDirection::Forward
-				? (!IsWithChoice() && RequestNextScene())
-				: RequestPreviousScene());
+			const bool bIsForward = Direction == EVisualControllerDirection::Forward;
+			const bool bCanContinue = (bIsForward
+				? (!IsWithChoice() && RequestNextScene() && CanAdvanceScene())
+				: RequestPreviousScene() && CanRetractScene());
 
 			if (!bCanContinue)
 			{
@@ -435,12 +438,13 @@ bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		};
 
 		/*Fire it once first to replicate a do-while style*/
-		AutoMove(0.f);
+		if (AutoMove(0.f))
+		{
+			FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
+			AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
 
-		FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
-		AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
-
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -462,9 +466,13 @@ void UVisualController::CancelFastMove()
 
 void UVisualController::CancelAutoMove()
 {
-	if (IsAutoMoving() && AutoMoveHandle.IsValid())
+	if (IsAutoMoving())
 	{
-		FTSTicker::RemoveTicker(AutoMoveHandle);
+		if (AutoMoveHandle.IsValid())
+		{
+			FTSTicker::RemoveTicker(AutoMoveHandle);
+		}
+
 		Mode = EVisualControllerMode::Idle;
 
 		OnAutoMoveEnd.Broadcast();
