@@ -532,7 +532,7 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 	{
 		if (Num > ScenesToLoadLargeNum)
 		{
-			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for scene loading, it might have a significant impact on performance."), Num);
+			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for async scene loading, it might have a significant impact on performance."), Num);
 		}
 
 		ScenesToLoad = Num;
