@@ -338,6 +338,8 @@ public:
 
 	/**
 	* Setter for UVisualController::bPlayTransitions.
+	* Calling this during fast moving mode is discouraged because
+	* bPlayTransitions may change after fast moving mode is over.
 	* 
 	* @param bShouldPlay {@code true} to play transitions when available
 	*/
@@ -352,6 +354,8 @@ public:
 
 	/**
 	* Setter for UVisualController::bPlaySound.
+	* Calling this during fast moving mode is discouraged because
+	* bPlaySound may change after fast moving mode is over.
 	* 
 	* @param bShouldPlay {@code true} to play sound when available
 	*/
@@ -722,12 +726,16 @@ private:
 
 	/**
 	* Should controller attempt to play transitions between scenes.
+	* Changes to this value during fast moving mode
+	* may be reverted when said mode is over.
 	*/
 	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Transition", meta = (AllowPrivateAccess = true, ToolTip = "Should Visual Controller attempt to play transition between scenarios"))
 	bool bPlayTransitions;
 
 	/**
 	* Will controller attempt to play scene sound.
+	* Changes to this value during fast moving mode
+	* may be reverted when said mode is over.
 	* 
 	* @note sound will be disabled when engine is launched with no sound
 	*/
@@ -739,10 +747,10 @@ private:
 	* before moving to the next scene in auto move mode.
 	* Must be larger than transition duration to not stop on transitions.
 	* 
-	* @note don't put a zero to simulate fast forwarding, use fast move instead
+	* @note avoid a zero to simulate fast forwarding, use fast move instead
 	* 
 	* @see UVisualController::RequestAutoMove()
-	*		   UVisualController::RequestFastMove()
+	*	   UVisualController::RequestFastMove()
 	*/
 	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait before moving to the next scene in Auto Move mode. Must be larger than transition duration to not stop on transitions. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
 	float AutoMoveDelay;
