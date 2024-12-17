@@ -37,7 +37,7 @@ void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 {
 	checkf(VisualController, TEXT("Can't start fast move for invalid controller."));
 	check(ControllerDirection != EVisualControllerDirection::None);
-	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float DeltaTime)
+	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float)
 	{
 		if (IsValid(VisualController) && VisualController->IsFastMoving())
 		{
@@ -395,16 +395,17 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 
 bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Direction)
 {
-	if (IsIdle())
+	if (IsIdle() && Direction != EVisualControllerDirection::None)
 	{
 		FastMoveTask = MakeUnique<UE::VisualU::Private::FFastMoveAsyncTask>(this, Direction, bPlayTransitions, bPlaySound);
 		bPlayTransitions = false;
 		bPlaySound = false;
-		FastMoveTask->StartBackgroundTask();
 
 		Mode = EVisualControllerMode::FastMoving;
 
 		OnFastMoveStart.Broadcast(Direction);
+
+		FastMoveTask->StartBackgroundTask();
 
 		return true;
 	}
@@ -414,9 +415,7 @@ bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 
 bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
 {
-	check(Direction != EVisualControllerDirection::None);
-
-	if (IsIdle())
+	if (IsIdle() && Direction != EVisualControllerDirection::None)
 	{
 		Mode = EVisualControllerMode::AutoMoving;
 
