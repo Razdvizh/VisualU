@@ -132,6 +132,8 @@ void UVisualController::PostInitProperties()
 				Head = GetCurrentScene();
 				NodeReferenceKeeper.Add(FirstDataTable);
 
+				OnSceneStart.Broadcast(*Head);
+
 				Renderer = CreateWidget<UVisualRenderer>(OwningPlayerController, UVisualRenderer::StaticClass());
 				check(Renderer);
 
