@@ -18,7 +18,7 @@ void UVisualVersioningSubsystem::AlterDataTable(const UDataTable* DataTable, con
 	Scene->Info = Version;
 }
 
-void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
+void UVisualVersioningSubsystem::Checkout(FScenario* Scene) const
 {
 	check(Scene);
 	FScenarioId Id{ Scene->GetOwner(), Scene->GetIndex() };
@@ -28,7 +28,7 @@ void UVisualVersioningSubsystem::Checkout(FScenario* const Scene) const
 	}
 }
 
-void UVisualVersioningSubsystem::CheckoutAll(UDataTable* const DataTable) const
+void UVisualVersioningSubsystem::CheckoutAll(const UDataTable* DataTable) const
 {
 	check(DataTable);
 	TArray<FScenario*> Rows;
@@ -40,7 +40,7 @@ void UVisualVersioningSubsystem::CheckoutAll(UDataTable* const DataTable) const
 	}
 }
 
-void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
+void UVisualVersioningSubsystem::SerializeSubsystem(FArchive& Ar)
 {
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 
@@ -56,6 +56,7 @@ void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 			Ar << *Scene;
 			TArray<FVisualScenarioInfo> Infos;
 			Versions.MultiFind(SceneId, Infos, /*bMaintainOrder=*/true);
+			Infos.Add(Scene->Info);
 			Ar << Infos;
 		}
 	}
@@ -70,6 +71,8 @@ void UVisualVersioningSubsystem::SerializeSubsystem_Experimental(FArchive& Ar)
 			Ar << Scene;
 			TArray<FVisualScenarioInfo> Infos;
 			Ar << Infos;
+			FScenario* ResolvedScene = FScenario::ResolveScene(Scene);
+			ResolvedScene->Info = Infos.Pop();
 			for (FVisualScenarioInfo& Info : Infos)
 			{
 				FScenarioId Id {Scene.GetOwner(), Scene.GetIndex()};

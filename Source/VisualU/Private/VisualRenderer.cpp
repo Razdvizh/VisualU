@@ -28,18 +28,22 @@ UVisualRenderer::UVisualRenderer(const FObjectInitializer& ObjectInitializer)
 	Transition(nullptr),
 	FinalScene(nullptr),
 	Background(nullptr),
-	Canvas(nullptr)
+	Canvas(nullptr),
+	DrawHandle()
 {
 }
 
 void UVisualRenderer::DrawScene(const FScenario* Scene)
 {
 	check(Scene);
+	check(WidgetTree);
 
 	ForEachSprite([&](UVisualSprite* Sprite) 
 	{
-		Sprite->OnSpriteDisappear.Broadcast();
 		Canvas->RemoveChild(Sprite);
+		WidgetTree->RemoveWidget(Sprite);
+
+		Sprite->OnSpriteDisappear.Broadcast();
 	});
 
 	if (!Scene->Info.Background.BackgroundArtInfo.Expression.IsNull())
@@ -47,23 +51,104 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 		Background->AssignVisualImageInfo(Scene->Info.Background.BackgroundArtInfo);
 	}
 	
+	using FDrawRequest = TDelegate<void()>;
+
+	TArray<FDrawRequest> SpriteDrawRequests;
+	SpriteDrawRequests.Reserve(Scene->Info.SpritesParams.Num());
+
 	for (const FSprite& SpriteData : Scene->Info.SpritesParams)
 	{
 		if (UClass* const SpriteClass = SpriteData.SpriteClass.Get())
 		{
-			UVisualSprite* Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteClass, SpriteClass->GetFName());
+			const FName SpriteName = SpriteClass->GetFName();
+			UVisualSprite* Sprite = WidgetTree->ConstructWidget<UVisualSprite>(SpriteClass, SpriteName);
+			ESlateVisibility FinalVisibility = Sprite->GetVisibility();
+			Sprite->SetVisibility(ESlateVisibility::Hidden);
 			Sprite->AssignSpriteInfo(SpriteData.SpriteInfo);
 
 			UCanvasPanelSlot* SpriteSlot = Canvas->AddChildToCanvas(Sprite);
 			check(SpriteSlot);
+
 			SpriteSlot->SetZOrder(SpriteData.ZOrder);
 			SpriteSlot->SetAnchors(SpriteData.Anchors);
 			SpriteSlot->SetAutoSize(true);
-			SpriteSlot->SetPosition(SpriteData.Position);
+			
+			SpriteDrawRequests.Add(FDrawRequest::CreateWeakLambda(this, [this, SpriteName, SpriteData, FinalVisibility]
+			{
+				UVisualSprite* Sprite = WidgetTree->FindWidget<UVisualSprite>(SpriteName);
 
-			Sprite->OnSpriteAppear.Broadcast();
+				if (IsValid(Sprite) && IsValid(Sprite->Slot))
+				{
+					const FVector2D Size = Sprite->GetDesiredSize();
+
+					const bool bZeroAnchors = (SpriteData.Anchors.Minimum.IsZero() || SpriteData.Anchors.Maximum.IsZero());
+					const float XAnchor =
+						bZeroAnchors
+						? 0.f
+						: FMath::IsNearlyEqual(SpriteData.Anchors.Minimum.X, SpriteData.Anchors.Maximum.X)
+						? SpriteData.Anchors.Minimum.X
+						: FMath::Abs(SpriteData.Anchors.Maximum.X - SpriteData.Anchors.Minimum.X);
+
+					const float YAnchor =
+						bZeroAnchors
+						? 0.f
+						: FMath::IsNearlyEqual(SpriteData.Anchors.Minimum.Y, SpriteData.Anchors.Maximum.Y)
+						? SpriteData.Anchors.Minimum.Y
+						: FMath::Abs(SpriteData.Anchors.Maximum.Y - SpriteData.Anchors.Minimum.Y);
+
+					const FVector2D AnchorModifier = FVector2D(XAnchor, YAnchor);
+					const FVector2D SpritePosition = (Size * AnchorModifier * -1) + SpriteData.Position;
+
+					UCanvasPanelSlot* SpriteSlot = Cast<UCanvasPanelSlot>(Sprite->Slot);
+					check(SpriteSlot);
+
+					SpriteSlot->SetPosition(SpritePosition);
+					Sprite->SetVisibility(FinalVisibility);
+
+					Sprite->OnSpriteAppear.Broadcast();
+				}
+			}));
 		}
 	}
+
+	/*give time for Slate to fill in the cache so that it is possible to calculate position*/
+	DrawHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateWeakLambda(this, [this, SpriteDrawRequests](float)
+	{
+		static int32 Frames = 0;
+
+		Frames++;
+
+		/*Skip first frame*/
+		if (Frames == 1)
+		{
+			return true;
+		}
+		/*Force layout prepass on second frame*/
+		else if (Frames == 2)
+		{
+			ForEachSprite([](UVisualSprite* Sprite)
+			{
+				Sprite->ForceLayoutPrepass();
+			});
+
+			return true;
+		}
+		/*Skip third frame*/
+		else if (Frames == 3)
+		{
+			return true;
+		}
+		
+		/*Finally render the sprites on fourth frame*/
+		for (const FDrawRequest& DrawRequest : SpriteDrawRequests)
+		{
+			DrawRequest.ExecuteIfBound();
+		};
+
+		Frames = 0;
+
+		return false;
+	}));
 }
 
 bool UVisualRenderer::IsTransitionInProgress() const
@@ -89,8 +174,11 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 		UMaterialInstanceDynamic* DynamicTransitionMaterial = UMaterialInstanceDynamic::Create(TransitionMaterial, nullptr, TEXT("TransitionMaterial"));
 		DynamicTransitionMaterial->SetFlags(RF_Transient | RF_DuplicateTransient | RF_TextExportTransient);
 
-		ForEachSprite([](UVisualSprite* Sprite) 
+		ForEachSprite([this](UVisualSprite* Sprite) 
 		{
+			Canvas->RemoveChild(Sprite);
+			WidgetTree->RemoveWidget(Sprite);
+
 			Sprite->OnSpriteDisappear.Broadcast();
 		});
 		
@@ -187,6 +275,13 @@ void UVisualRenderer::NativeOnInitialized()
 			Track->AddScalarParameterKey(ParameterName, EndFrame.FrameNumber + 1, 1.f);
 		}
 	}
+}
+
+void UVisualRenderer::NativeDestruct()
+{
+	FTSTicker::GetCoreTicker().RemoveTicker(DrawHandle);
+
+	Super::NativeDestruct();
 }
 
 void UVisualRenderer::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
