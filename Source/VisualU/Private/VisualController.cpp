@@ -21,18 +21,6 @@
 #include "VisualRenderer.h"
 #include "VisualU.h"
 
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-static TAutoConsoleVariable<float> CVarEditorStallForLoading
-(
-	TEXT("VisualU.EditorStallForLoading"),
-	0.f,
-	TEXT("Editor only. Has effect when val > 0. Sleep process for specified amount of time during next scene loading to give GC time to catch up."),
-	ECVF_Cheat
-);
-#endif
-
-constexpr int32 ScenesToLoadLargeNum = 100;
-
 void UE::VisualU::Private::FFastMoveAsyncWorker::DoWork()
 {
 	checkf(VisualController, TEXT("Can't start fast move for invalid controller."));
@@ -112,9 +100,9 @@ void UVisualController::PostInitProperties()
 
 	bPlaySound &= (GEngine && GEngine->UseSound());
 
-	FGameModeEvents::GameModePostLoginEvent.AddWeakLambda(this, [this](AGameModeBase*, APlayerController* PlayerController)
+	if (!HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject))
 	{
-		if (!HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject))
+		auto Initialization = [this](APlayerController* PlayerController)
 		{
 			APlayerController* OwningPlayerController = GetOuterAPlayerController();
 			if (OwningPlayerController == PlayerController)
@@ -139,24 +127,38 @@ void UVisualController::PostInitProperties()
 
 				/*Rebuild widget immediately to create renderer widgets*/
 				Renderer->TakeWidget();
-				
-				if (bPlaySound && !Head->Info.Sound.IsNull())
-				{
-					USoundBase* Sound = Head->Info.Sound.LoadSynchronous();
-					OwningPlayerController->ClientPlaySound(Sound);
-				}
+
+				TSharedPtr<FStreamableHandle> HeadHandle = LoadScene(Head);
+				Renderer->DrawScene(Head);
+				TryPlaySceneSound(Head->Info.Sound);
 				PrepareScenes();
+			}
+		};
+
+		if (UWorld* World = GetWorld(); World && World->GetBegunPlay())
+		{
+			Initialization(GetOuterAPlayerController());
+		}
+		else
+		{
+			FGameModeEvents::GameModePostLoginEvent.AddWeakLambda(this, [this, Initialization](AGameModeBase*, APlayerController* PlayerController)
+			{
+				Initialization(PlayerController);
 
 				FGameModeEvents::GameModePostLoginEvent.RemoveAll(this);
-			}
+			});
 		}
-	});
+	}
 }
 
-void UVisualController::SerializeController_Experimental(FArchive& Ar)
+void UVisualController::SerializeController(FArchive& Ar)
 {
+	check(Renderer);
+
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 	Ar.ArIsSaveGame = true;
+
+	Super::Serialize(Ar);
 
 	if (Ar.IsSaving())
 	{
@@ -186,6 +188,7 @@ void UVisualController::SerializeController_Experimental(FArchive& Ar)
 		Ar << CurrentScenario;
 		if (CurrentScenario.GetOwner())
 		{
+			Node.Empty();
 			CurrentScenario.GetOwner()->GetAllRows(UE_SOURCE_LOCATION, Node);
 		}
 		SceneIndex = CurrentScenario.GetIndex();
@@ -193,13 +196,20 @@ void UVisualController::SerializeController_Experimental(FArchive& Ar)
 		FScenario SavedHead;
 		Ar << SavedHead;
 		Head = FScenario::ResolveScene(SavedHead);
-	}
 
-	Super::Serialize(Ar);
+		const FScenario* CurrentScene = GetCurrentScene();
+		TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
+		Renderer->DrawScene(CurrentScene);
+		TryPlaySceneSound(CurrentScene->Info.Sound);
+		PrepareScenes();
+
+		OnSceneStart.Broadcast(*CurrentScene);
+	}
 }
 
 bool UVisualController::RequestNextScene()
 {
+	check(Renderer);
 	if (!CanAdvanceScene() || IsTransitioning())
 	{
 		return false;
@@ -233,26 +243,31 @@ bool UVisualController::RequestNextScene()
 
 bool UVisualController::RequestPreviousScene()
 {
+	check(Renderer);
 	if (IsTransitioning())
 	{
 		return false;
-	}
-
-	if (UVisualVersioningSubsystem* VisualVersioning = GetOuterAPlayerController()->GetLocalPlayer()->GetSubsystem<UVisualVersioningSubsystem>())
-	{
-		VisualVersioning->Checkout(const_cast<FScenario*>(GetCurrentScene()));
 	}
 
 	if (!CanRetractScene())
 	{
 		if (!ExhaustedScenes.IsEmpty())
 		{
+			if (UVisualVersioningSubsystem* VisualVersioning = TryGetVisualVersioningSubsystem())
+			{
+				VisualVersioning->Checkout(const_cast<FScenario*>(GetCurrentScene()));
+			}
 			FScenario* Scene = ExhaustedScenes.Pop();
-			SetCurrentScene(Scene);
+			RollbackTo(Scene);
 			return true;
 		}
 
 		return false;
+	}
+
+	if (UVisualVersioningSubsystem* VisualVersioning = TryGetVisualVersioningSubsystem())
+	{
+		VisualVersioning->Checkout(const_cast<FScenario*>(GetCurrentScene()));
 	}
 
 	OnSceneEnd.Broadcast(GetCurrentScenario());
@@ -300,11 +315,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 		}
 		else
 		{
-			UVisualVersioningSubsystem* VisualVersioning = nullptr;
-			if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
-			{
-				VisualVersioning = LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
-			}
+			UVisualVersioningSubsystem* VisualVersioning = TryGetVisualVersioningSubsystem();
 			/*Traverse the stack until the requested Node is found*/
 			for (int32 i = ExhaustedScenes.Num() - 1; i >= 0; i--)
 			{
@@ -313,7 +324,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 					FScenario* ExhaustedScene = ExhaustedScenes.Pop();
 					if (VisualVersioning)
 					{
-						VisualVersioning->CheckoutAll(const_cast<UDataTable*>(ExhaustedScene->GetOwner()));
+						VisualVersioning->CheckoutAll(ExhaustedScene->GetOwner());
 					}
 					bIsFound = true;
 					break;
@@ -322,14 +333,14 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 				NodeReferenceKeeper.Remove(ExhaustedScene->GetOwner());
 				if (VisualVersioning)
 				{
-					VisualVersioning->CheckoutAll(const_cast<UDataTable*>(ExhaustedScene->GetOwner()));
+					VisualVersioning->CheckoutAll(ExhaustedScene->GetOwner());
 				}
 			}
 		}
 
 		if (bIsFound)
 		{
-			SetCurrentScene(Scene);
+			RollbackTo(Scene);
 		}
 	}
 
@@ -349,10 +360,11 @@ const FScenario* UVisualController::GetSceneAt(int32 Index)
 
 bool UVisualController::RequestNode(const UDataTable* NewNode)
 {
-	if (IsTransitioning() || IsFastMoving() || IsAutoMoving())
+	if (IsTransitioning() || !IsIdle())
 	{
 		return false;
 	}
+	check(Renderer);
 	check(NewNode);
 	checkf(!NewNode->GetRowMap().IsEmpty(), TEXT("Requesting empty node is not allowed."));
 	checkf(GetCurrentScene()->GetOwner() != NewNode, TEXT("Requesting active node is not allowed."));
@@ -531,6 +543,8 @@ void UVisualController::SetNumScenesToLoad(int32 Num)
 {
 	if (ensureMsgf(Num >= 0, TEXT("Expected positive value, set operation failed.")))
 	{
+		constexpr int32 ScenesToLoadLargeNum = 100;
+
 		if (Num > ScenesToLoadLargeNum)
 		{
 			UE_LOG(LogVisualU, Warning, TEXT("Received large (%i) request for async scene loading, it might have a significant impact on performance."), Num);
@@ -757,7 +771,7 @@ bool UVisualController::TryPlayTransition(const FScenario* From, const FScenario
 	return false;
 }
 
-void UVisualController::SetCurrentScene(const FScenario* Scene)
+void UVisualController::RollbackTo(const FScenario* Scene)
 {
 	check(Scene);
 	check(Renderer);
@@ -787,13 +801,19 @@ void UVisualController::SetCurrentScene(const FScenario* Scene)
 	OnSceneStart.Broadcast(*CurrentScene);
 }
 
+UVisualVersioningSubsystem* UVisualController::TryGetVisualVersioningSubsystem() const
+{
+	if (ULocalPlayer* LocalPlayer = GetOuterAPlayerController()->GetLocalPlayer())
+	{
+		return LocalPlayer->GetSubsystem<UVisualVersioningSubsystem>();
+	}
+
+	return nullptr;
+}
+
 void UVisualController::AssertNextSceneLoad(EVisualControllerDirection::Type Direction)
 {
 	check(Direction != EVisualControllerDirection::None);
 	const int32 NextSceneIndex = SceneIndex + StaticCast<int32>(Direction);
 	NextSceneHandle = LoadScene(GetSceneAt(NextSceneIndex));
-
-#if WITH_EDITOR
-	FPlatformProcess::Sleep(CVarEditorStallForLoading.GetValueOnAnyThread());
-#endif
 }

@@ -12,6 +12,7 @@ class UVisualSprite;
 class UCanvasPanel;
 class UWidgetAnimation;
 class UMaterialParameterCollection;
+class FTSTicker;
 
 /**
  * Responsible for visualizing data from described by FScenario.
@@ -80,6 +81,11 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 	/**
+	* Cancels the last draw request before destructing.
+	*/
+	virtual void NativeDestruct() override;
+
+	/**
 	* Finishes transition.
 	* 
 	* @param Animation finished transition animation
@@ -121,5 +127,10 @@ private:
 	*/
 	UPROPERTY()
 	TObjectPtr<UCanvasPanel> Canvas;
+
+	/**
+	* Handle to the latest draw request.
+	*/
+	FTSTicker::FDelegateHandle DrawHandle;
 	
 };
