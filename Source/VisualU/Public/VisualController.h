@@ -17,6 +17,7 @@ class APlayerController;
 class DataTable;
 class UWorld;
 class UWidgetComponent;
+class UVisualVersioningSubsystem;
 struct FStreamableHandle;
 
 /**
@@ -149,11 +150,12 @@ public:
 	virtual void PostInitProperties() override;
 
 	/**
-	* Not ready for production code.
+	* Serializes controller to the provided archive.
+	* Uses FVisualUCustomVersion.
 	*
 	* @param Ar archive to serialize this controller
 	*/
-	virtual void SerializeController_Experimental(FArchive& Ar);
+	virtual void SerializeController(FArchive& Ar);
 
 	/**
 	* Visualizes the next scene in the node.
@@ -612,13 +614,17 @@ protected:
 	*/
 	bool TryPlayTransition(const FScenario* From, const FScenario* To);
 
-private:
 	/**
-	* Switches controller to the given scene, potentially switching node as well.
+	* Switches controller to the previously seen scene.
 	* 
 	* @param Scene scene to be visualized by this controller
 	*/
-	void SetCurrentScene(const FScenario* Scene);
+	void RollbackTo(const FScenario* Scene);
+
+	/**
+	* @return valid visual versioning subsystem or nullptr.
+	*/
+	UVisualVersioningSubsystem* TryGetVisualVersioningSubsystem() const;
 
 	/**
 	* Guarantees that the next requested scene assets will be loaded.

@@ -18,9 +18,6 @@
 #include "Components/SlateWrapperTypes.h"
 #include "Containers/Queue.h"
 
-constexpr float TextSizeXThreshold = 500.f;
-constexpr float TextSizeXDefault = 412.f;
-
 FGameplayDebuggerCategory_VisualU::FGameplayDebuggerCategory_VisualU()
 {
 	bShowOnlyWithDebugActor = false;
@@ -118,8 +115,11 @@ void FGameplayDebuggerCategory_VisualU::DrawData(APlayerController* OwnerPC, FGa
 		CanvasContext.Printf(TEXT("{cyan}[Exhausted scenarios]\n{magenta}%s"), *RepData.ExhaustedScenesDesc);
 		CanvasContext.Printf(TEXT("{cyan}[Asynchronous queue]\n{magenta}%s"), *RepData.AsyncQueueDesc);
 
+		constexpr float TextSizeXThreshold = 500.f;
+		constexpr float TextSizeXDefault = 412.f;
+		constexpr float Padding = 5.f;
+
 		float CurrentSceneDescX = 0.f, CurrentSceneDescY = 0.f;
-		const float Padding = 5.f;
 		CanvasContext.MeasureString(RepData.CurrentSceneDesc, CurrentSceneDescX, CurrentSceneDescY);
 		CurrentSceneDescX = CurrentSceneDescX > TextSizeXThreshold ? TextSizeXDefault : CurrentSceneDescX;
 		CanvasContext.PrintfAt(CanvasX - Padding - CurrentSceneDescX, InitialCategoryHeaderPosY, TEXT("{cyan}[Current scenario info]"));

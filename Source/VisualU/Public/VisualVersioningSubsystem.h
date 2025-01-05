@@ -96,7 +96,7 @@ public:
 	* 
 	* @param Scene scene to revert back to the previous version
 	*/
-	void Checkout(FScenario* const Scene) const;
+	void Checkout(FScenario* Scene) const;
 
 	/**
 	* Switches all scenes in the data table to an older version.
@@ -104,14 +104,15 @@ public:
 	*
 	* @param DataTable node which scenes will be reverted to previous version
 	*/
-	void CheckoutAll(UDataTable* const DataTable) const;
+	void CheckoutAll(const UDataTable* DataTable) const;
 
 	/**
-	* Not ready for production code.
+	* Serializes versioning subsystem to the provided archive.
+	* Uses FVisualUCustomVersion.
 	*
 	* @param Ar archive to serialize this subsystem
 	*/
-	virtual void SerializeSubsystem_Experimental(FArchive& Ar);
+	virtual void SerializeSubsystem(FArchive& Ar);
 	
 	/**
 	* Discards all versions bringing scenes to original state.
