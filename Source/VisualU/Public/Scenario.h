@@ -249,7 +249,7 @@ public:
 		String += FString::Printf(TEXT("Line: %s\n"), Line.IsEmpty() ? TEXT("") : *Line.ToString());
 		String += FString::Printf(TEXT("Music: %s\n"), Sound.IsNull() ? TEXT("None") : *Sound.GetAssetName());
 		String += (Background.ToString() + TEXT("\n"));
-		String += FString::Printf(TEXT("Flags: %s\n"), *StaticEnum<EScenarioMetaFlags>()->GetValueOrBitfieldAsAuthoredNameString(Flags));
+		String += FString::Printf(TEXT("Flags: %s\n"), *StaticEnum<EScenarioMetaFlags>()->GetValueOrBitfieldAsString(Flags));
 
 		if (!SpritesParams.IsEmpty())
 		{
