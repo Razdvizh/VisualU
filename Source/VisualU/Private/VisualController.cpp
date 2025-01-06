@@ -135,7 +135,7 @@ void UVisualController::PostInitProperties()
 			}
 		};
 
-		if (UWorld* World = GetWorld(); World && World->GetBegunPlay())
+		if (UWorld* World = GetWorld(); World && World->HasBegunPlay())
 		{
 			Initialization(GetOuterAPlayerController());
 		}
