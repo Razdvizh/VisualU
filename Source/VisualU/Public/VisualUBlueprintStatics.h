@@ -32,7 +32,7 @@ public:
 	* 
 	* Outputs a friendly representation of scene asset data to the log.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (DevelopmentOnly, ToolTip = "Outputs a friendly representation of scene asset data to the log"))
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario", meta = (DevelopmentOnly, Keywords = "Scene data", ToolTip = "Outputs a friendly representation of scene asset data to the log"))
 	static void PrintScenesData();
 
 	/**

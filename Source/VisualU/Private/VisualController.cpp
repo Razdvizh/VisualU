@@ -472,6 +472,8 @@ void UVisualController::CancelFastMove()
 		FastMoveTask->Cancel();
 		FastMoveTask.Reset(nullptr);
 
+		Renderer->DrawScene(GetCurrentScene());
+
 		Mode = EVisualControllerMode::Idle;
 
 		OnFastMoveEnd.Broadcast();
@@ -486,6 +488,8 @@ void UVisualController::CancelAutoMove()
 		{
 			FTSTicker::RemoveTicker(AutoMoveHandle);
 		}
+
+		Renderer->DrawScene(GetCurrentScene());
 
 		Mode = EVisualControllerMode::Idle;
 
