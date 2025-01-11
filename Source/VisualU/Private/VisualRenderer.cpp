@@ -38,7 +38,7 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 	check(Scene);
 	check(WidgetTree);
 
-	ForEachSprite([&](UVisualSprite* Sprite) 
+	ForEachSprite([this](UVisualSprite* Sprite) 
 	{
 		Canvas->RemoveChild(Sprite);
 		WidgetTree->RemoveWidget(Sprite);
@@ -139,7 +139,7 @@ void UVisualRenderer::DrawScene(const FScenario* Scene)
 			return true;
 		}
 		
-		/*Finally render the sprites on fourth frame*/
+		/*Finally render the sprites on fifth frame*/
 		for (const FDrawRequest& DrawRequest : SpriteDrawRequests)
 		{
 			DrawRequest.ExecuteIfBound();
@@ -218,7 +218,7 @@ TSharedRef<SWidget> UVisualRenderer::RebuildWidget()
 
 	Background = WidgetTree->ConstructWidget<UBackgroundVisualImage>(UBackgroundVisualImage::StaticClass(), TEXT("Background"));
 
-	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([this](float)
+	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateWeakLambda(this, [this](float)
 	{
 		UCanvasPanelSlot* BackgroundSlot = Canvas->AddChildToCanvas(Background);
 		check(BackgroundSlot);
