@@ -6,12 +6,27 @@
 #include "Scenario.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetRegistry/AssetData.h"
+#include "AssetRegistry/ARFilter.h"
 #include "VisualController.h"
 #include "Engine/DataTable.h"
+#include "Misc/CoreMiscDefines.h"
+#include "VisualVersioningSubsystem.h"
+#include "PlatformFeatures.h"
+#include "SaveGameSystem.h"
+#include "Engine/LocalPlayer.h"
+#include "Serialization/Archive.h"
+#include "Serialization/MemoryWriter.h"
+#include "Serialization/MemoryReader.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 {
-	return Sprite->GetBakedTexture();
+	if (Sprite)
+	{
+		return Sprite->GetBakedTexture();
+	}
+
+	return nullptr;
 }
 
 void UVisualUBlueprintStatics::PrintScenesData()
@@ -41,6 +56,54 @@ void UVisualUBlueprintStatics::PrintScenesData()
 #endif
 }
 
+bool UVisualUBlueprintStatics::LoadVisualU(UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController, int32 UserIndex, const FString& Filename)
+{
+	check(!Filename.IsEmpty());
+
+	ISaveGameSystem* SaveGameSystem = IPlatformFeaturesModule::Get().GetSaveGameSystem();
+	check(SaveGameSystem);
+
+	FPlatformUserId UserId = FPlatformMisc::GetPlatformUserForUserIndex(UserIndex);
+	TArray<uint8> Data;
+
+	const bool bAttemptToUseNativeUI = true;
+	if (SaveGameSystem->LoadGame(
+		bAttemptToUseNativeUI,
+		*Filename,
+		UserId,
+		Data))
+	{
+		FMemoryReader MemoryReader = FMemoryReader(Data);
+		SerializeVisualU(MemoryReader, VersioningSubsystem, VisualController);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool UVisualUBlueprintStatics::SaveVisualU(UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController, int32 UserIndex, const FString& Filename)
+{
+	check(!Filename.IsEmpty());
+
+	ISaveGameSystem* SaveGameSystem = IPlatformFeaturesModule::Get().GetSaveGameSystem();
+	check(SaveGameSystem);
+
+	FPlatformUserId UserId = FPlatformMisc::GetPlatformUserForUserIndex(UserIndex);
+
+	TArray<uint8> Data;
+	FMemoryWriter MemoryWriter = FMemoryWriter(Data);
+	SerializeVisualU(MemoryWriter, VersioningSubsystem, VisualController);
+	FPlatformMisc::GetPlatformUserForUserIndex(UserIndex);
+
+	const bool bAttemptToUseNativeUI = true;
+	return SaveGameSystem->SaveGame(
+		bAttemptToUseNativeUI,
+		*Filename,
+		UserId,
+		Data);
+}
+
 bool UVisualUBlueprintStatics::Choose(UVisualController* Controller, const UDataTable* DataTable)
 {
 	check(Controller);
@@ -67,4 +130,14 @@ void UVisualUBlueprintStatics::GetScenesData(TArray<FAssetData>& OutData)
 	{
 		AssetRegistryModule.Get().GetAssets(Filter, OutData);
 	}
+}
+
+void UVisualUBlueprintStatics::SerializeVisualU(FArchive& Ar, UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController)
+{
+	check(VersioningSubsystem);
+	check(VisualController);
+
+	FObjectAndNameAsStringProxyArchive ProxyAr(Ar, /*bInLoadIfFindFails=*/false);
+	VersioningSubsystem->SerializeSubsystem(ProxyAr);
+	VisualController->SerializeController(ProxyAr);
 }
