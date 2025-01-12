@@ -6,9 +6,13 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "VisualUBlueprintStatics.generated.h"
 
+class UTexture2D;
 class UPaperSprite;
+class UVisualVersioningSubsystem;
 class UVisualController;
 class UDataTable;
+class FArchive;
+struct FAssetData;
 
 /**
 * Blueprint library with utility functions that could be helpful while
@@ -36,6 +40,32 @@ public:
 	static void PrintScenesData();
 
 	/**
+	* Loads previously saved VisualU contents from provided filename.
+	* 
+	* @param VersioningSubsystem subsystem to get the loaded data
+	* @param VisualController controller to get the loaded data
+	* @param UserIndex user performing the load
+	* @param Filename save file to load contents from
+	* 
+	* @return whether or not loading succeeded
+	*/
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Serialization")
+	static bool LoadVisualU(UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController, int32 UserIndex, const FString& Filename);
+
+	/**
+	* Saves VisualU contents to provided filename.
+	* 
+	* @param VersioningSubsystem subsystem to save
+	* @param VisualController controller to save
+	* @param UserIndex user performing the save
+	* @param Filename file to store VisualU content
+	* 
+	* @return whether or not saving succeeded
+	*/
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Serialization")
+	static bool SaveVisualU(UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController, int32 UserIndex, const FString& Filename);
+
+	/**
 	* Requests provided data table in the controller.
 	* 
 	* @param Controller controller that will request provided data table
@@ -54,4 +84,14 @@ private:
 	* @param OutData data of scene data tables
 	*/
 	static void GetScenesData(TArray<FAssetData>& OutData);
+
+	/**
+	* Serializes subsystem and controller to the provided archive.
+	* 
+	* @param Ar Archive to handle serialization
+	* @param VersioningSubsystem subsystem to be serialized
+	* @param VisualController controller to be serialized
+	*/
+	static void SerializeVisualU(FArchive& Ar, UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController);
+
 };
