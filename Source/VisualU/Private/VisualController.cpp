@@ -73,6 +73,7 @@ void UVisualController::BeginDestroy()
 {
 	CancelFastMove();
 	CancelAutoMove();
+
 	if (Renderer)
 	{
 		Renderer->ForceStopTransition();
@@ -86,6 +87,7 @@ void UVisualController::PreSave(FObjectPreSaveContext SaveContext)
 {
 	CancelFastMove();
 	CancelAutoMove();
+
 	if (Renderer)
 	{
 		Renderer->ForceStopTransition();
@@ -467,6 +469,7 @@ void UVisualController::CancelFastMove()
 {
 	if (IsFastMoving() && FastMoveTask.IsValid())
 	{
+		check(Renderer);
 		FastMoveTask->EnsureCompletion(/*bDoWorkOnThisThreadIfNotStarted=*/false);
 		FastMoveTask->Cancel();
 		FastMoveTask.Reset(nullptr);
@@ -483,6 +486,7 @@ void UVisualController::CancelAutoMove()
 {
 	if (IsAutoMoving())
 	{
+		check(Renderer);
 		if (AutoMoveHandle.IsValid())
 		{
 			FTSTicker::RemoveTicker(AutoMoveHandle);
