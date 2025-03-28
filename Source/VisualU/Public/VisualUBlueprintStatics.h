@@ -12,6 +12,7 @@ class UVisualVersioningSubsystem;
 class UVisualController;
 class UDataTable;
 class FArchive;
+struct FScenario;
 struct FAssetData;
 
 /**
@@ -32,6 +33,13 @@ public:
 	static UTexture2D* GetSpriteTexture(UPaperSprite* Sprite);
 
 	/**
+	* @param Scenario scene to get hash from
+	* @return hash of the provided scenario
+	*/
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Scenario")
+	static int64 GetScenarioHash(const FScenario& Scenario);
+
+	/**
 	* Development only.
 	* 
 	* Outputs a friendly representation of scene asset data to the log.
@@ -49,7 +57,7 @@ public:
 	* 
 	* @return whether or not loading succeeded
 	*/
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Serialization")
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Serialization", meta = (ToolTip = "Loads previously saved VisualU contents from provided filename."))
 	static bool LoadVisualU(UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController, int32 UserIndex, const FString& Filename);
 
 	/**
@@ -62,7 +70,7 @@ public:
 	* 
 	* @return whether or not saving succeeded
 	*/
-	UFUNCTION(BlueprintCallable, Category = "VisualU|Serialization")
+	UFUNCTION(BlueprintCallable, Category = "VisualU|Serialization", meta = (ToolTip = "Saves VisualU contents to provided filename."))
 	static bool SaveVisualU(UVisualVersioningSubsystem* VersioningSubsystem, UVisualController* VisualController, int32 UserIndex, const FString& Filename);
 
 	/**

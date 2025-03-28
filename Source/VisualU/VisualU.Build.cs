@@ -27,6 +27,11 @@ public class VisualU : ModuleRules
 			}
 			);
 
+		if (Target.Type.Equals(TargetType.Editor))
+		{
+			PublicDependencyModuleNames.Add("Settings");
+		}
+
 		SetupGameplayDebuggerSupport(Target);
 
 	}

@@ -319,7 +319,7 @@ public:
 * @see FSprite
 *	   UVisualController
 */
-USTRUCT(BlueprintType, meta = (ToolTip = " Describes a single scene/entry/\"frame\" of Visual Controller"))
+USTRUCT(BlueprintType, meta = (ToolTip = "Describes a single scene/entry/\"frame\" of Visual Controller"))
 struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
 {
 	GENERATED_BODY()
@@ -496,6 +496,11 @@ public:
 		Ar << *this;
 	}
 
+	FORCEINLINE friend uint32 GetTypeHash(const FScenario& Scenario)
+	{
+		return HashCombine(GetTypeHash(Scenario.Owner), Scenario.Index);
+	}
+
 	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FScenario& Scenario)
 	{
 		TSoftObjectPtr<UDataTable> SoftOwner;
@@ -516,7 +521,7 @@ public:
 
 	FORCEINLINE bool operator==(const FScenario& Other) const
 	{
-		return Info == Other.Info;
+		return (Owner == Other.Owner && Index == Other.Index);
 	}
 
 	FORCEINLINE bool operator!=(const FScenario& Other) const

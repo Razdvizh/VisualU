@@ -19,14 +19,16 @@ DEFINE_LOG_CATEGORY(LogVisualU);
 void FVisualUModule::StartupModule()
 {
 #if WITH_EDITOR
-	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings"));
-	SettingsSection = SettingsModule->RegisterSettings(
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings")))
+	{
+		SettingsSection = SettingsModule->RegisterSettings(
 		TEXT("Project"),
 		TEXT("Plugins"),
 		TEXT("VisualUSettings"),
 		LOCTEXT("VisualUSettingsName", "VisualU"),
 		LOCTEXT("VisualUSettingsDescription", "Configure options for VisualU elements"),
 		GetMutableDefault<UVisualUSettings>());
+	}
 #endif
 #if WITH_GAMEPLAY_DEBUGGER
 	IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
@@ -57,7 +59,12 @@ void FVisualUModule::ShutdownModule()
 #if WITH_EDITOR
 const UVisualUSettings* FVisualUModule::GetVisualSettings() const
 {
-	return StaticCast<UVisualUSettings*>(SettingsSection->GetSettingsObject().Get());
+	if (SettingsSection.IsValid())
+	{
+		return StaticCast<UVisualUSettings*>(SettingsSection->GetSettingsObject().Get());
+	}
+	
+	return nullptr;
 }
 #endif
 

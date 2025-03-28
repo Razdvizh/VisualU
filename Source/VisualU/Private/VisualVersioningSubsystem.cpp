@@ -111,10 +111,13 @@ FScenario* UVisualVersioningSubsystem::GetSceneChecked(const UDataTable* DataTab
 
 FScenario* UVisualVersioningSubsystem::GetSceneChecked(const FScenarioId& Id) const
 {
-	checkf(Id.Owner, TEXT("Can't identify a scene with invalid owner."));
+	checkf(!Id.SoftOwner.IsNull(), TEXT("Can't identify a scene with invalid owner."));
+
+	const UDataTable* Owner = Id.SoftOwner.LoadSynchronous();
+	check(Owner);
 
 	TArray<FScenario*> Rows;
-	Id.Owner->GetAllRows(UE_SOURCE_LOCATION, Rows);
+	Owner->GetAllRows(UE_SOURCE_LOCATION, Rows);
 
 	check(Rows.IsValidIndex(Id.Index));
 
