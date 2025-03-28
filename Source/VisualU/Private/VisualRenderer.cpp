@@ -237,14 +237,14 @@ void UVisualRenderer::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	const UVisualUSettings* VisualUSettings = GetDefault<UVisualUSettings>();
-	const float StartTime = 0.f;
+	constexpr float StartTime = 0.f;
 	const float EndTime = VisualUSettings->TransitionDuration;
 
 	const FName AnimationName = MakeUniqueObjectName(this, UWidgetAnimation::StaticClass());
 	Transition = NewObject<UWidgetAnimation>(this, AnimationName);
 	Transition->MovieScene = NewObject<UMovieScene>(Transition, AnimationName);
 	Transition->MovieScene->SetDisplayRate(FFrameRate(20, 1));
-
+	
 	const FFrameRate TickResolution = Transition->MovieScene->GetTickResolution();
 	
 	const FFrameTime InFrame = StartTime * TickResolution;
@@ -258,7 +258,7 @@ void UVisualRenderer::NativeOnInitialized()
 		UMaterialParameterCollection* Collection = ParameterCollection.LoadSynchronous();
 		check(Collection);
 
-		if (ensureMsgf(Collection->ScalarParameters.IsValidIndex(0), TEXT("No scalar parameters found to initialize transition animation. Please specify one scalar parameter in parameter collection.")))
+		if (ensureMsgf(!Collection->ScalarParameters.IsEmpty(), TEXT("No scalar parameters found to initialize transition animation. Please specify one scalar parameter in parameter collection.")))
 		{
 			UMovieSceneMaterialParameterCollectionTrack* Track = Transition->MovieScene->AddTrack<UMovieSceneMaterialParameterCollectionTrack>();
 			check(Track);
@@ -271,8 +271,8 @@ void UVisualRenderer::NativeOnInitialized()
 
 			Track->AddSection(*ParameterSection);
 			Track->MPC = Collection;
-			Track->AddScalarParameterKey(ParameterName, FFrameNumber(1), 0.f);
-			Track->AddScalarParameterKey(ParameterName, EndFrame.FrameNumber + 1, 1.f);
+			Track->AddScalarParameterKey(ParameterName, FFrameNumber(1), /*Value=*/0.f);
+			Track->AddScalarParameterKey(ParameterName, EndFrame.FrameNumber + 1, /*Value=*/1.f);
 		}
 	}
 }

@@ -306,7 +306,7 @@ bool UVisualController::RequestScene(const FScenario* Scene)
 	{
 		return false;
 	}
-
+	
 	check(Scene);
 	bool bIsFound = false;
 	if (ensureMsgf(!(Scene->GetOwner() == Head->GetOwner() && Scene->GetIndex() > Head->GetIndex()), TEXT("Only \"seen\" scene can be requested - %s"), *Scene->GetDebugString()))
@@ -381,12 +381,12 @@ bool UVisualController::RequestNode(const UDataTable* NewNode)
 	FScenario* Last = Node[SceneIndex];
 	ExhaustedScenes.Push(Last);
 
+	OnSceneEnd.Broadcast(*Last);
+
 	Node.Empty();
 	NewNode->GetAllRows(UE_SOURCE_LOCATION, Node);
 
 	checkf(!Node.IsEmpty(), TEXT("Trying to jump to empty Data Table! - %s"), *NewNode->GetFName().ToString());
-
-	OnSceneEnd.Broadcast(*Last);
 
 	SceneHandles.Empty();
 	CancelNextScene();
@@ -431,7 +431,11 @@ bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 
 bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
 {
-	if (IsIdle() && Direction != EVisualControllerDirection::None)
+	const bool bIsDelayGood = (!FMath::IsNegativeOrNegativeZero(AutoMoveDelay) && !FMath::IsNearlyZero(AutoMoveDelay));
+
+	if (IsIdle() 
+		&& Direction != EVisualControllerDirection::None && 
+		ensureMsgf(bIsDelayGood, TEXT("Zero or negative auto move delay is invalid, auto move request failed.")))
 	{
 		Mode = EVisualControllerMode::AutoMoving;
 
@@ -491,8 +495,6 @@ void UVisualController::CancelAutoMove()
 		{
 			FTSTicker::RemoveTicker(AutoMoveHandle);
 		}
-
-		Renderer->DrawScene(GetCurrentScene());
 
 		Mode = EVisualControllerMode::Idle;
 
@@ -574,10 +576,7 @@ void UVisualController::ShouldPlaySound(bool bShouldPlay)
 
 void UVisualController::SetAutoMoveDelay(float Delay)
 {
-	if (ensureMsgf(!FMath::IsNegativeOrNegativeZero(Delay), TEXT("Negative time is invalid, set operation failed.")))
-	{
-		AutoMoveDelay = Delay;
-	}
+	AutoMoveDelay = Delay;
 }
 
 const FScenario* UVisualController::GetCurrentScene() const

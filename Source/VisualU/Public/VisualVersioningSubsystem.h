@@ -26,17 +26,17 @@ class VISUALU_API UVisualVersioningSubsystem : public ULocalPlayerSubsystem
 private:
 	struct FScenarioId
 	{
-		const UDataTable* Owner;
+		TSoftObjectPtr<const UDataTable> SoftOwner;
 		int32 Index;
 
 		friend uint32 GetTypeHash(const FScenarioId& Id)
 		{
-			return HashCombine(GetTypeHash(Id.Owner), Id.Index);
+			return HashCombine(GetTypeHash(Id.SoftOwner), Id.Index);
 		}
 
 		friend bool operator==(const FScenarioId& Id, const FScenarioId& Other)
 		{
-			return Id.Owner == Other.Owner &&
+			return Id.SoftOwner == Other.SoftOwner &&
 				Id.Index == Other.Index;
 		}
 

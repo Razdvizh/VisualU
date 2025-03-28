@@ -29,6 +29,11 @@ UTexture2D* UVisualUBlueprintStatics::GetSpriteTexture(UPaperSprite* Sprite)
 	return nullptr;
 }
 
+int64 UVisualUBlueprintStatics::GetScenarioHash(const FScenario& Scenario)
+{
+	return StaticCast<int64>(GetTypeHash(Scenario));
+}
+
 void UVisualUBlueprintStatics::PrintScenesData()
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
