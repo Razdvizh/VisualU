@@ -11,7 +11,8 @@
 #include "MovieSceneSection.h"
 #include "MovieScene.h"
 #include "Animation/WidgetAnimation.h"
-#include "Animation/UMGSequencePlayer.h"
+#include "Animation/WidgetAnimationState.h"
+#include "Animation/WidgetAnimationHandle.h"
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
@@ -26,6 +27,7 @@
 UVisualRenderer::UVisualRenderer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer),
 	Transition(nullptr),
+	TransitionHandle(),
 	FinalScene(nullptr),
 	Background(nullptr),
 	Canvas(nullptr),
@@ -191,7 +193,7 @@ bool UVisualRenderer::TryDrawTransition(const FScenario* From, const FScenario* 
 		{
 			Background->PlayTransition(NextFlipbook, DynamicTransitionMaterial, ToBackgroundArtInfo.FrameIndex);
 		}
-		PlayAnimationForward(Transition, /*PlaybackSpeed=*/1.f, /*bRestoreState=*/true);
+		TransitionHandle = PlayAnimationForward(Transition, /*PlaybackSpeed=*/1.f, /*bRestoreState=*/true);
 	}
 
 	return bIsTransitionPossible;
@@ -201,10 +203,10 @@ void UVisualRenderer::ForceStopTransition()
 {
 	if (IsTransitionInProgress())
 	{
-		UUMGSequencePlayer* Player = GetSequencePlayer(Transition);
-		check(Player);
+		FWidgetAnimationState* TransitionState = TransitionHandle.GetAnimationState();
+		check(TransitionState);
 
-		Player->Stop();
+		TransitionState->Stop();
 
 		UpdateCanTick();
 	}

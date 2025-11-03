@@ -13,6 +13,7 @@ class UCanvasPanel;
 class UWidgetAnimation;
 class UMaterialParameterCollection;
 class FTSTicker;
+struct FWidgetAnimationHandle;
 
 /**
  * Responsible for visualizing data from described by FScenario.
@@ -108,6 +109,12 @@ private:
 	*/
 	UPROPERTY(Transient)
 	TObjectPtr<UWidgetAnimation> Transition;
+
+	/**
+	* Handle for the active transition animation.
+	*/
+	UPROPERTY()
+	FWidgetAnimationHandle TransitionHandle;
 
 	/**
 	* Scene that will be displayed after transition ends.

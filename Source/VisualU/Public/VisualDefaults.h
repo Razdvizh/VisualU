@@ -95,6 +95,6 @@ public:
 	*/
 	FString ToString() const
 	{
-		return FString::Printf(TEXT("Left: %d, Top: %d, Right: %d, Bottom: %d"), Left, Top, Right, Bottom);
+		return FString::Printf(TEXT("Left: %f, Top: %f, Right: %f, Bottom: %f"), Left, Top, Right, Bottom);
 	}
 };
