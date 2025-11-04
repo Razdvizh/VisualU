@@ -113,6 +113,14 @@ public:
 	* @param Ar archive to serialize this subsystem
 	*/
 	virtual void SerializeSubsystem(FArchive& Ar);
+
+	/**
+	* Serializes versioning subsystem to the provided archive.
+	* Uses FVisualUCustomVersion.
+	*
+	* @param Ar archive to serialize this subsystem
+	*/
+	virtual void Serialize(FArchive& Ar) override;
 	
 	/**
 	* Discards all versions bringing scenes to original state.

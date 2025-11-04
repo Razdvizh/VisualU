@@ -8,6 +8,7 @@ var searchData=
   ['tostring_5',['ToString',['../struct_f_visual_info.html#a7325c2f51f9b2598526049bf5ec733c8',1,'FVisualInfo']]],
   ['transition_6',['Transition',['../class_s_background_visual_image.html#a030e6488f721fbf836817445a1e150f8',1,'SBackgroundVisualImage::Transition'],['../class_u_visual_renderer.html#adc498138aadcc932bebd201fa166313d',1,'UVisualRenderer::Transition']]],
   ['transitionduration_7',['TransitionDuration',['../class_u_visual_u_settings.html#a7fbed77e7808b3c971dd2a2898ce6f31',1,'UVisualUSettings']]],
-  ['transitionmaterial_8',['TransitionMaterial',['../struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8',1,'FBackground']]],
-  ['transitionmpc_9',['TransitionMPC',['../class_u_visual_u_settings.html#a0797ca53cc101414db786f0d5cfb2085',1,'UVisualUSettings']]]
+  ['transitionhandle_8',['TransitionHandle',['../class_u_visual_renderer.html#a2a0819679ebad403d79c174381e53565',1,'UVisualRenderer']]],
+  ['transitionmaterial_9',['TransitionMaterial',['../struct_f_background.html#a7d852002f7a301bc55257cf118ae8cc8',1,'FBackground']]],
+  ['transitionmpc_10',['TransitionMPC',['../class_u_visual_u_settings.html#a0797ca53cc101414db786f0d5cfb2085',1,'UVisualUSettings']]]
 ];

@@ -24,13 +24,14 @@ var searchData=
   ['getnumscenestoload_21',['GetNumScenesToLoad',['../class_u_visual_controller.html#afff9e1eb92bc8704f73d6aa2b9a35eb1',1,'UVisualController']]],
   ['getreferencername_22',['GetReferencerName',['../class_s_background_visual_image.html#a1c310534a13968f1ad23b628d8bc09aa',1,'SBackgroundVisualImage::GetReferencerName()'],['../class_s_visual_image.html#addee9a5942d1c87ce2b197c450392160',1,'SVisualImage::GetReferencerName()']]],
   ['getrenderervisibility_23',['GetRendererVisibility',['../class_u_visual_controller.html#a17b6f1b15d3a5c906b4fa205256b016a',1,'UVisualController']]],
-  ['getsceneat_24',['GetSceneAt',['../class_u_visual_controller.html#a209f1af6ecfa9ebb69f33f86290c41c6',1,'UVisualController']]],
-  ['getscenechecked_25',['GetSceneChecked',['../class_u_visual_versioning_subsystem.html#a140ddba8f168898209b5bc2ff71004d6',1,'UVisualVersioningSubsystem::GetSceneChecked(const UDataTable *DataTable, const FName &amp;SceneName) const'],['../class_u_visual_versioning_subsystem.html#ab48893f3d2c041b5e9cd4bbfa9ce172f',1,'UVisualVersioningSubsystem::GetSceneChecked(const FScenarioId &amp;Id) const']]],
-  ['getscenesdata_26',['GetScenesData',['../class_u_visual_u_blueprint_statics.html#a6e0cf2a7ac9903a4255bd0caf9a7e856',1,'UVisualUBlueprintStatics']]],
-  ['getsocketoffset_27',['GetSocketOffset',['../class_u_visual_socket.html#aa0e2693bc82bc17874cc02f66a3599c4',1,'UVisualSocket']]],
-  ['getspriteindex_28',['GetSpriteIndex',['../class_s_visual_image.html#a9a01ce6620849850b4e5e42971751903',1,'SVisualImage']]],
-  ['getspritetexture_29',['GetSpriteTexture',['../class_u_visual_u_blueprint_statics.html#a594ecf5ed4fad6d54a21d1fa902f54c8',1,'UVisualUBlueprintStatics']]],
-  ['gettargetsprite_30',['GetTargetSprite',['../class_s_background_visual_image.html#adfeef107fae8149a7dfe641de0dd9808',1,'SBackgroundVisualImage']]],
-  ['gettransitionmaterial_31',['GetTransitionMaterial',['../class_u_m_e___transition_parameter2_d.html#a36dc7c3624fda29bd22423d84cab480d',1,'UME_TransitionParameter2D']]],
-  ['getvisualcontroller_32',['GetVisualController',['../class_i_visual_controller_interface.html#acd441a269fcf471e06d19c172de12c83',1,'IVisualControllerInterface']]]
+  ['getscenariohash_24',['GetScenarioHash',['../class_u_visual_u_blueprint_statics.html#a66f591da2c4e6b84ed0ec17913d6dc88',1,'UVisualUBlueprintStatics']]],
+  ['getsceneat_25',['GetSceneAt',['../class_u_visual_controller.html#a209f1af6ecfa9ebb69f33f86290c41c6',1,'UVisualController']]],
+  ['getscenechecked_26',['GetSceneChecked',['../class_u_visual_versioning_subsystem.html#a140ddba8f168898209b5bc2ff71004d6',1,'UVisualVersioningSubsystem::GetSceneChecked(const UDataTable *DataTable, const FName &amp;SceneName) const'],['../class_u_visual_versioning_subsystem.html#ab48893f3d2c041b5e9cd4bbfa9ce172f',1,'UVisualVersioningSubsystem::GetSceneChecked(const FScenarioId &amp;Id) const']]],
+  ['getscenesdata_27',['GetScenesData',['../class_u_visual_u_blueprint_statics.html#a6e0cf2a7ac9903a4255bd0caf9a7e856',1,'UVisualUBlueprintStatics']]],
+  ['getsocketoffset_28',['GetSocketOffset',['../class_u_visual_socket.html#aa0e2693bc82bc17874cc02f66a3599c4',1,'UVisualSocket']]],
+  ['getspriteindex_29',['GetSpriteIndex',['../class_s_visual_image.html#a9a01ce6620849850b4e5e42971751903',1,'SVisualImage']]],
+  ['getspritetexture_30',['GetSpriteTexture',['../class_u_visual_u_blueprint_statics.html#a594ecf5ed4fad6d54a21d1fa902f54c8',1,'UVisualUBlueprintStatics']]],
+  ['gettargetsprite_31',['GetTargetSprite',['../class_s_background_visual_image.html#adfeef107fae8149a7dfe641de0dd9808',1,'SBackgroundVisualImage']]],
+  ['gettransitionmaterial_32',['GetTransitionMaterial',['../class_u_m_e___transition_parameter2_d.html#a36dc7c3624fda29bd22423d84cab480d',1,'UME_TransitionParameter2D']]],
+  ['getvisualcontroller_33',['GetVisualController',['../class_i_visual_controller_interface.html#acd441a269fcf471e06d19c172de12c83',1,'IVisualControllerInterface']]]
 ];

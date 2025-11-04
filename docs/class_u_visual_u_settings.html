@@ -116,7 +116,7 @@ $(function(){initNavTree('class_u_visual_u_settings.html',''); initResizable(tru
 <p>Global plugin settings.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualUSettings.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.6/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualUSettings.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualUSettings:</div>
 <div class="dyncontent">
@@ -129,6 +129,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1083cb65eac9a14e42fd9c37ac2053d6" id="r_a1083cb65eac9a14e42fd9c37ac2053d6"><td class="memItemLeft" align="right" valign="top"><a id="a1083cb65eac9a14e42fd9c37ac2053d6" name="a1083cb65eac9a14e42fd9c37ac2053d6"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>UVisualUSettings</b> (const FObjectInitializer &amp;ObjectInitializer)</td></tr>
 <tr class="separator:a1083cb65eac9a14e42fd9c37ac2053d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad57500a068574c11f418cab5bfe681fb" id="r_ad57500a068574c11f418cab5bfe681fb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad57500a068574c11f418cab5bfe681fb">PostInitProperties</a> () override</td></tr>
+<tr class="memdesc:ad57500a068574c11f418cab5bfe681fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies scenario flags name overrides after config is loaded.  <br /></td></tr>
+<tr class="separator:ad57500a068574c11f418cab5bfe681fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -154,7 +157,36 @@ FName&#160;</td><td class="memItemRight" valign="bottom"><b>BParameterName</b></
 <div class="textblock"><p>Global plugin settings. </p>
 <p>Can be found under 'Plugins' category in project settings. <a class="el" href="class_visual_u.html">VisualU</a> settings are written to the 'DefaultPlugins.ini' config file.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_f_visual_u_module.html" title="VisualU plugin runtime module.">FVisualUModule</a> for registration details </dd></dl>
-</div><h2 class="groupheader">Member Data Documentation</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad57500a068574c11f418cab5bfe681fb" name="ad57500a068574c11f418cab5bfe681fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad57500a068574c11f418cab5bfe681fb">&#9670;&#160;</a></span>PostInitProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualUSettings::PostInitProperties </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Applies scenario flags name overrides after config is loaded. </p>
+<dl class="section see"><dt>See also</dt><dd>UVisualUSettings::ApplyOverrides </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
 <a id="a8cdc1e64076400180b071bf18baa8d1f" name="a8cdc1e64076400180b071bf18baa8d1f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cdc1e64076400180b071bf18baa8d1f">&#9670;&#160;</a></span>FirstDataTable</h2>
 
@@ -185,7 +217,7 @@ FName&#160;</td><td class="memItemRight" valign="bottom"><b>BParameterName</b></
 </div><div class="memdoc">
 
 <p>Duration, in seconds, of the transition between scenes. </p>
-<dl class="section see"><dt>See also</dt><dd>UVisualRenderer::Animation </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_u_visual_renderer.html#adc498138aadcc932bebd201fa166313d" title="Widget animation used to drive transition between scenes.">UVisualRenderer::Transition</a> </dd></dl>
 
 </div>
 </div>

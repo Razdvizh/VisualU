@@ -109,7 +109,6 @@ $(function(){initNavTree('class_u_visual_controller.html',''); initResizable(tru
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_u_visual_controller-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">UVisualController Class Reference</div></div>
@@ -119,7 +118,7 @@ $(function(){initNavTree('class_u_visual_controller.html',''); initResizable(tru
 <p>Organizes scenes described by <a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a> in a meaningful way.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualController.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.6/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualController.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualController:</div>
 <div class="dyncontent">
@@ -143,15 +142,21 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>BeginDestroy<
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PostInitProperties</b> () override</td></tr>
 <tr class="memdesc:a032a80f2b56eaa74b3deff19528d6b5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setups initial values to make controller operational. <br /></td></tr>
 <tr class="separator:a032a80f2b56eaa74b3deff19528d6b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6c4c56f4ad668383ce173f3379ce739" id="r_ae6c4c56f4ad668383ce173f3379ce739"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6c4c56f4ad668383ce173f3379ce739">SerializeController_Experimental</a> (FArchive &amp;Ar)</td></tr>
-<tr class="memdesc:ae6c4c56f4ad668383ce173f3379ce739"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not ready for production code.  <br /></td></tr>
-<tr class="separator:ae6c4c56f4ad668383ce173f3379ce739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1777104e92947581ebca0678a2c86ac" id="r_ab1777104e92947581ebca0678a2c86ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1777104e92947581ebca0678a2c86ac">SerializeController</a> (FArchive &amp;Ar)</td></tr>
+<tr class="memdesc:ab1777104e92947581ebca0678a2c86ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes controller to the provided archive.  <br /></td></tr>
+<tr class="separator:ab1777104e92947581ebca0678a2c86ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae205a59465d52b44fb2482f79806f07e" id="r_ae205a59465d52b44fb2482f79806f07e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae205a59465d52b44fb2482f79806f07e">Serialize</a> (FArchive &amp;Ar) override</td></tr>
+<tr class="memdesc:ae205a59465d52b44fb2482f79806f07e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes controller to the provided archive.  <br /></td></tr>
+<tr class="separator:ae205a59465d52b44fb2482f79806f07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aaaeac531eac3f43758068a1466f6fa" id="r_a4aaaeac531eac3f43758068a1466f6fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aaaeac531eac3f43758068a1466f6fa">RequestNextScene</a> ()</td></tr>
 <tr class="memdesc:a4aaaeac531eac3f43758068a1466f6fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the next scene in the node.  <br /></td></tr>
 <tr class="separator:a4aaaeac531eac3f43758068a1466f6fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ff83c6c5a2be08d8e60e9bb44b4f5f0" id="r_a2ff83c6c5a2be08d8e60e9bb44b4f5f0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ff83c6c5a2be08d8e60e9bb44b4f5f0">RequestPreviousScene</a> ()</td></tr>
 <tr class="memdesc:a2ff83c6c5a2be08d8e60e9bb44b4f5f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes the previous scene in the node.  <br /></td></tr>
 <tr class="separator:a2ff83c6c5a2be08d8e60e9bb44b4f5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae67fe03b885249bb7415aca40598b87f" id="r_ae67fe03b885249bb7415aca40598b87f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae67fe03b885249bb7415aca40598b87f">RequestAdjacentScene</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
+<tr class="memdesc:ae67fe03b885249bb7415aca40598b87f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualizes a scene adjacent to the current scene in specified direction.  <br /></td></tr>
+<tr class="separator:ae67fe03b885249bb7415aca40598b87f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa77ce6e5729d58afe299547bb262198e" id="r_aa77ce6e5729d58afe299547bb262198e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa77ce6e5729d58afe299547bb262198e">RequestScene</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene)</td></tr>
 <tr class="memdesc:aa77ce6e5729d58afe299547bb262198e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visualize any exhausted scene.  <br /></td></tr>
 <tr class="separator:aa77ce6e5729d58afe299547bb262198e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -273,13 +278,13 @@ FOnAutoMoveEnd&#160;</td><td class="memItemRight" valign="bottom"><b>OnAutoMoveE
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a38b41b254094fc786c99412d416d626e" id="r_a38b41b254094fc786c99412d416d626e"><td class="memItemLeft" align="right" valign="top">TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38b41b254094fc786c99412d416d626e">LoadSceneAsync</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene, FStreamableDelegate AfterLoadDelegate=nullptr)</td></tr>
-<tr class="memdesc:a38b41b254094fc786c99412d416d626e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously load assets of the scene into the memory.  <br /></td></tr>
+<tr class="memdesc:a38b41b254094fc786c99412d416d626e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously loads assets of the scene into the memory.  <br /></td></tr>
 <tr class="separator:a38b41b254094fc786c99412d416d626e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af57409462cef6195928971101e6a884c" id="r_af57409462cef6195928971101e6a884c"><td class="memItemLeft" align="right" valign="top">TSharedPtr&lt; FStreamableHandle &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af57409462cef6195928971101e6a884c">LoadScene</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene, FStreamableDelegate AfterLoadDelegate=nullptr)</td></tr>
-<tr class="memdesc:af57409462cef6195928971101e6a884c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously load assets of the scene into the memory.  <br /></td></tr>
+<tr class="memdesc:af57409462cef6195928971101e6a884c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously loads assets of the scene into the memory.  <br /></td></tr>
 <tr class="separator:af57409462cef6195928971101e6a884c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd8d96b2624b82a5b9cefc194f496f60" id="r_afd8d96b2624b82a5b9cefc194f496f60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd8d96b2624b82a5b9cefc194f496f60">PrepareScenes</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
-<tr class="memdesc:afd8d96b2624b82a5b9cefc194f496f60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads assets of future scenes.  <br /></td></tr>
+<tr class="memdesc:afd8d96b2624b82a5b9cefc194f496f60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asynchronously loads assets of future scenes after controller moves.  <br /></td></tr>
 <tr class="separator:afd8d96b2624b82a5b9cefc194f496f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31d5c6ec38889b007552918ecfed6e3a" id="r_a31d5c6ec38889b007552918ecfed6e3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31d5c6ec38889b007552918ecfed6e3a">TryPlaySceneSound</a> (TSoftObjectPtr&lt; USoundBase &gt; SceneSound) const</td></tr>
 <tr class="memdesc:a31d5c6ec38889b007552918ecfed6e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plays the scene sound when available.  <br /></td></tr>
@@ -290,12 +295,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a1889a5682e0f09726dfdc7a3e2e86295" id="r_a1889a5682e0f09726dfdc7a3e2e86295"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1889a5682e0f09726dfdc7a3e2e86295">TryPlayTransition</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *From, const <a class="el" href="struct_f_scenario.html">FScenario</a> *To)</td></tr>
 <tr class="memdesc:a1889a5682e0f09726dfdc7a3e2e86295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests renderer to display transition animation.  <br /></td></tr>
 <tr class="separator:a1889a5682e0f09726dfdc7a3e2e86295"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:acd3bbdf6de20406bb15e237f4beb36cb" id="r_acd3bbdf6de20406bb15e237f4beb36cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd3bbdf6de20406bb15e237f4beb36cb">SetCurrentScene</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene)</td></tr>
-<tr class="memdesc:acd3bbdf6de20406bb15e237f4beb36cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switch controller to the given scene, potentially switching node as well.  <br /></td></tr>
-<tr class="separator:acd3bbdf6de20406bb15e237f4beb36cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a603f5c4c5c620453164ad29e03f508c2" id="r_a603f5c4c5c620453164ad29e03f508c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a603f5c4c5c620453164ad29e03f508c2">RollbackTo</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> *Scene)</td></tr>
+<tr class="memdesc:a603f5c4c5c620453164ad29e03f508c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switches controller to the previously seen scene.  <br /></td></tr>
+<tr class="separator:a603f5c4c5c620453164ad29e03f508c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9070227c05897d1083599735840d2276" id="r_a9070227c05897d1083599735840d2276"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9070227c05897d1083599735840d2276">TryGetVisualVersioningSubsystem</a> () const</td></tr>
+<tr class="separator:a9070227c05897d1083599735840d2276"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea158cdd8cf5efc7df3216317fab9751" id="r_aea158cdd8cf5efc7df3216317fab9751"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea158cdd8cf5efc7df3216317fab9751">AssertNextSceneLoad</a> (EVisualControllerDirection::Type Direction=EVisualControllerDirection::Forward)</td></tr>
 <tr class="memdesc:aea158cdd8cf5efc7df3216317fab9751"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guarantees that the next requested scene assets will be loaded.  <br /></td></tr>
 <tr class="separator:aea158cdd8cf5efc7df3216317fab9751"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -341,9 +345,8 @@ TSet&lt; const UDataTable * &gt;&#160;</td><td class="memItemRight" valign="bott
 <tr class="memitem:a824dc0420ab29a81f773d371c013647b" id="r_a824dc0420ab29a81f773d371c013647b"><td class="memItemLeft" align="right" valign="top">int32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a824dc0420ab29a81f773d371c013647b">ScenesToLoad</a></td></tr>
 <tr class="memdesc:a824dc0420ab29a81f773d371c013647b"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many following scenes will be loaded asynchronously.  <br /></td></tr>
 <tr class="separator:a824dc0420ab29a81f773d371c013647b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a575eb1202c9cb864825ed807b09400d8" id="r_a575eb1202c9cb864825ed807b09400d8"><td class="memItemLeft" align="right" valign="top"><a id="a575eb1202c9cb864825ed807b09400d8" name="a575eb1202c9cb864825ed807b09400d8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b></td></tr>
-<tr class="memdesc:a575eb1202c9cb864825ed807b09400d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should controller attempt to play transitions between scenes. <br /></td></tr>
+<tr class="memitem:a575eb1202c9cb864825ed807b09400d8" id="r_a575eb1202c9cb864825ed807b09400d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a575eb1202c9cb864825ed807b09400d8">bPlayTransitions</a></td></tr>
+<tr class="memdesc:a575eb1202c9cb864825ed807b09400d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should controller attempt to play transitions between scenes.  <br /></td></tr>
 <tr class="separator:a575eb1202c9cb864825ed807b09400d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec740c9612d3aa929191ba3d3f786b00" id="r_aec740c9612d3aa929191ba3d3f786b00"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec740c9612d3aa929191ba3d3f786b00">bPlaySound</a></td></tr>
 <tr class="memdesc:aec740c9612d3aa929191ba3d3f786b00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will controller attempt to play scene sound.  <br /></td></tr>
@@ -380,7 +383,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -931,7 +934,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </table>
 </div><div class="memdoc">
 
-<p>Synchronously load assets of the scene into the memory. </p>
+<p>Synchronously loads assets of the scene into the memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Scene</td><td>scenario that provides assets to load </td></tr>
@@ -940,7 +943,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>handle to manage lifetime of streamed assets</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a38b41b254094fc786c99412d416d626e" title="Asynchronously load assets of the scene into the memory.">UVisualController::LoadSceneAsync()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a38b41b254094fc786c99412d416d626e" title="Asynchronously loads assets of the scene into the memory.">UVisualController::LoadSceneAsync()</a> </dd></dl>
 
 </div>
 </div>
@@ -971,7 +974,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </table>
 </div><div class="memdoc">
 
-<p>Asynchronously load assets of the scene into the memory. </p>
+<p>Asynchronously loads assets of the scene into the memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Scene</td><td>scenario that provides assets to stream in </td></tr>
@@ -980,7 +983,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>handle to manage lifetime of streamed assets</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#af57409462cef6195928971101e6a884c" title="Synchronously load assets of the scene into the memory.">UVisualController::LoadScene()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#af57409462cef6195928971101e6a884c" title="Synchronously loads assets of the scene into the memory.">UVisualController::LoadScene()</a> </dd></dl>
 
 </div>
 </div>
@@ -1059,7 +1062,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </table>
 </div><div class="memdoc">
 
-<p>Loads assets of future scenes. </p>
+<p>Asynchronously loads assets of future scenes after controller moves. </p>
+<p>Has no effect when UVisualController::NumScenesToLoad is less than zero.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Direction</td><td>determines where future scenes are </td></tr>
@@ -1120,6 +1124,32 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 <p>Removes renderer visualized to screen. </p>
 <p>Has no effect on widget component or not visualized renderer.</p>
 <dl class="section note"><dt>Note</dt><dd>renderer will remain valid after removal </dd></dl>
+
+</div>
+</div>
+<a id="ae67fe03b885249bb7415aca40598b87f" name="ae67fe03b885249bb7415aca40598b87f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae67fe03b885249bb7415aca40598b87f">&#9670;&#160;</a></span>RequestAdjacentScene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualController::RequestAdjacentScene </td>
+          <td>(</td>
+          <td class="paramtype">EVisualControllerDirection::Type</td>          <td class="paramname"><span class="paramname"><em>Direction</em></span><span class="paramdefsep"> = </span><span class="paramdefval">EVisualControllerDirection::Forward</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Visualizes a scene adjacent to the current scene in specified direction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Direction</td><td>describes position of the adjacent scene to request </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
 </div>
@@ -1299,8 +1329,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 </div>
 </div>
-<a id="ae6c4c56f4ad668383ce173f3379ce739" name="ae6c4c56f4ad668383ce173f3379ce739"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6c4c56f4ad668383ce173f3379ce739">&#9670;&#160;</a></span>SerializeController_Experimental()</h2>
+<a id="a603f5c4c5c620453164ad29e03f508c2" name="a603f5c4c5c620453164ad29e03f508c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a603f5c4c5c620453164ad29e03f508c2">&#9670;&#160;</a></span>RollbackTo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1309,7 +1339,74 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void UVisualController::SerializeController_Experimental </td>
+          <td class="memname">void UVisualController::RollbackTo </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_f_scenario.html">FScenario</a> *</td>          <td class="paramname"><span class="paramname"><em>Scene</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Switches controller to the previously seen scene. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Scene</td><td>scene to be visualized by this controller </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae205a59465d52b44fb2482f79806f07e" name="ae205a59465d52b44fb2482f79806f07e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae205a59465d52b44fb2482f79806f07e">&#9670;&#160;</a></span>Serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualController::Serialize </td>
+          <td>(</td>
+          <td class="paramtype">FArchive &amp;</td>          <td class="paramname"><span class="paramname"><em>Ar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serializes controller to the provided archive. </p>
+<p>Uses <a class="el" href="struct_f_visual_u_custom_version.html">FVisualUCustomVersion</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Ar</td><td>archive to serialize this controller </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab1777104e92947581ebca0678a2c86ac" name="ab1777104e92947581ebca0678a2c86ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1777104e92947581ebca0678a2c86ac">&#9670;&#160;</a></span>SerializeController()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualController::SerializeController </td>
           <td>(</td>
           <td class="paramtype">FArchive &amp;</td>          <td class="paramname"><span class="paramname"><em>Ar</em></span></td><td>)</td>
           <td></td>
@@ -1322,7 +1419,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </table>
 </div><div class="memdoc">
 
-<p>Not ready for production code. </p>
+<p>Serializes controller to the provided archive. </p>
+<p>Uses <a class="el" href="struct_f_visual_u_custom_version.html">FVisualUCustomVersion</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Ar</td><td>archive to serialize this controller </td></tr>
@@ -1351,39 +1449,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Delay</td><td>new delay, in seconds, between scenes in auto move mode </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="acd3bbdf6de20406bb15e237f4beb36cb" name="acd3bbdf6de20406bb15e237f4beb36cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd3bbdf6de20406bb15e237f4beb36cb">&#9670;&#160;</a></span>SetCurrentScene()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UVisualController::SetCurrentScene </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="struct_f_scenario.html">FScenario</a> *</td>          <td class="paramname"><span class="paramname"><em>Scene</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Switch controller to the given scene, potentially switching node as well. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Scene</td><td>scene to be visualized by this controller </td></tr>
   </table>
   </dd>
 </dl>
@@ -1456,6 +1521,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Setter for <a class="el" href="#aec740c9612d3aa929191ba3d3f786b00" title="Will controller attempt to play scene sound.">UVisualController::bPlaySound</a>. </p>
+<p>Calling this during fast moving mode is discouraged because bPlaySound may change after fast moving mode is over.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bShouldPlay</td><td><code class="JavaDocCode">true</code> to play sound when available </td></tr>
@@ -1481,12 +1547,39 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Setter for <a class="el" href="#a575eb1202c9cb864825ed807b09400d8" title="Should controller attempt to play transitions between scenes.">UVisualController::bPlayTransitions</a>. </p>
+<p>Calling this during fast moving mode is discouraged because bPlayTransitions may change after fast moving mode is over.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bShouldPlay</td><td><code class="JavaDocCode">true</code> to play transitions when available </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a9070227c05897d1083599735840d2276" name="a9070227c05897d1083599735840d2276"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9070227c05897d1083599735840d2276">&#9670;&#160;</a></span>TryGetVisualVersioningSubsystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> * UVisualController::TryGetVisualVersioningSubsystem </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>valid visual versioning subsystem or nullptr. </dd></dl>
 
 </div>
 </div>
@@ -1553,6 +1646,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Requests renderer to display transition animation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">From</td><td>Scene that will be displayed at the start and then blended as transition progresses. Usually the currently displayed scene. </td></tr>
+    <tr><td class="paramname">To</td><td>Scene that will be visualized after transition ends </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>result of the request </dd></dl>
 
 </div>
@@ -1642,7 +1742,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 <p>How long, in seconds, controller should wait before moving to the next scene in auto move mode. </p>
 <p>Must be larger than transition duration to not stop on transitions.</p>
-<dl class="section note"><dt>Note</dt><dd>don't put a zero to simulate fast forwarding, use fast move instead</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>avoid a zero to simulate fast forwarding, use fast move instead</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#aedb6df536c5cf265e0f7cf3187f753ef" title="Tries to activate auto move.">UVisualController::RequestAutoMove()</a> <a class="el" href="#adda59ec2daea21657f1f8a242f97a44a" title="Tries to activate fast move mode.">UVisualController::RequestFastMove()</a> </dd></dl>
 
 </div>
@@ -1693,7 +1793,33 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 </div><div class="memdoc">
 
 <p>Will controller attempt to play scene sound. </p>
+<p>Changes to this value during fast moving mode may be reverted when said mode is over.</p>
 <dl class="section note"><dt>Note</dt><dd>sound will be disabled when engine is launched with no sound </dd></dl>
+
+</div>
+</div>
+<a id="a575eb1202c9cb864825ed807b09400d8" name="a575eb1202c9cb864825ed807b09400d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a575eb1202c9cb864825ed807b09400d8">&#9670;&#160;</a></span>bPlayTransitions</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualController::bPlayTransitions</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should controller attempt to play transitions between scenes. </p>
+<p>Changes to this value during fast moving mode may be reverted when said mode is over. </p>
 
 </div>
 </div>
@@ -1719,7 +1845,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>bPlayTransitions</b><
 
 <p>Additional debug queue that gathers weak references to scenes that are meant to be loaded asynchronously. </p>
 <dl class="section note"><dt>Note</dt><dd>isn't present in shipping or test builds</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a861493c4e2807f5bdc5d3c016a545f39" title="Handles for resources of the following scenes.">UVisualController::SceneHandles</a> <a class="el" href="#afd8d96b2624b82a5b9cefc194f496f60" title="Loads assets of future scenes.">UVisualController::PrepareScenes()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a861493c4e2807f5bdc5d3c016a545f39" title="Handles for resources of the following scenes.">UVisualController::SceneHandles</a> <a class="el" href="#afd8d96b2624b82a5b9cefc194f496f60" title="Asynchronously loads assets of future scenes after controller moves.">UVisualController::PrepareScenes()</a> </dd></dl>
 
 </div>
 </div>
