@@ -155,8 +155,6 @@ void UVisualController::PostInitProperties()
 
 void UVisualController::SerializeController(FArchive& Ar)
 {
-	check(Renderer);
-
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
 	Ar.ArIsSaveGame = true;
 
@@ -199,13 +197,24 @@ void UVisualController::SerializeController(FArchive& Ar)
 		Ar << SavedHead;
 		Head = FScenario::ResolveScene(SavedHead);
 
-		const FScenario* CurrentScene = GetCurrentScene();
-		TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
-		Renderer->DrawScene(CurrentScene);
-		TryPlaySceneSound(CurrentScene->Info.Sound);
-		PrepareScenes();
+		if (UWorld* World = GetWorld(); World && World->GetBegunPlay())
+		{
+			const FScenario* CurrentScene = GetCurrentScene();
+			TSharedPtr<FStreamableHandle> CurrentSceneHandle = LoadScene(CurrentScene);
+			Renderer->DrawScene(CurrentScene);
+			TryPlaySceneSound(CurrentScene->Info.Sound);
+			PrepareScenes();
 
-		OnSceneStart.Broadcast(*CurrentScene);
+			OnSceneStart.Broadcast(*CurrentScene);
+		}
+	}
+}
+
+void UVisualController::Serialize(FArchive& Ar)
+{
+	if (!HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject))
+	{
+		SerializeController(Ar);
 	}
 }
 
@@ -479,6 +488,7 @@ void UVisualController::CancelFastMove()
 		FastMoveTask.Reset(nullptr);
 
 		Renderer->DrawScene(GetCurrentScene());
+		SceneHandles.Empty();
 
 		Mode = EVisualControllerMode::Idle;
 

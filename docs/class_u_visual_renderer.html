@@ -117,7 +117,7 @@ $(function(){initNavTree('class_u_visual_renderer.html',''); initResizable(true)
 <p>Responsible for visualizing data from described by <a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a>.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualRenderer.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.6/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualRenderer.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualRenderer:</div>
 <div class="dyncontent">
@@ -152,6 +152,10 @@ Protected Member Functions</h2></td></tr>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeOnInitialized</b> () override</td></tr>
 <tr class="memdesc:aa235aed796167a3087e03288a04c5b03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes renderer properties and transition animation. <br /></td></tr>
 <tr class="separator:aa235aed796167a3087e03288a04c5b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92aad92fbe9e0600c42922ad81fbae1d" id="r_a92aad92fbe9e0600c42922ad81fbae1d"><td class="memItemLeft" align="right" valign="top"><a id="a92aad92fbe9e0600c42922ad81fbae1d" name="a92aad92fbe9e0600c42922ad81fbae1d"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>NativeDestruct</b> () override</td></tr>
+<tr class="memdesc:a92aad92fbe9e0600c42922ad81fbae1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancels the last draw request before destructing. <br /></td></tr>
+<tr class="separator:a92aad92fbe9e0600c42922ad81fbae1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3232e562687f19dfe3c5d7757f011d34" id="r_a3232e562687f19dfe3c5d7757f011d34"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3232e562687f19dfe3c5d7757f011d34">OnAnimationFinished_Implementation</a> (const UWidgetAnimation *Animation) override</td></tr>
 <tr class="memdesc:a3232e562687f19dfe3c5d7757f011d34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finishes transition.  <br /></td></tr>
 <tr class="separator:a3232e562687f19dfe3c5d7757f011d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,6 +168,10 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:adc498138aadcc932bebd201fa166313d" id="r_adc498138aadcc932bebd201fa166313d"><td class="memItemLeft" align="right" valign="top">TObjectPtr&lt; UWidgetAnimation &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc498138aadcc932bebd201fa166313d">Transition</a></td></tr>
 <tr class="memdesc:adc498138aadcc932bebd201fa166313d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Widget animation used to drive transition between scenes.  <br /></td></tr>
 <tr class="separator:adc498138aadcc932bebd201fa166313d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a0819679ebad403d79c174381e53565" id="r_a2a0819679ebad403d79c174381e53565"><td class="memItemLeft" align="right" valign="top"><a id="a2a0819679ebad403d79c174381e53565" name="a2a0819679ebad403d79c174381e53565"></a>
+FWidgetAnimationHandle&#160;</td><td class="memItemRight" valign="bottom"><b>TransitionHandle</b></td></tr>
+<tr class="memdesc:a2a0819679ebad403d79c174381e53565"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle for the active transition animation. <br /></td></tr>
+<tr class="separator:a2a0819679ebad403d79c174381e53565"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c4b71f0e1f1eec92ce4ee49566fac85" id="r_a9c4b71f0e1f1eec92ce4ee49566fac85"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="struct_f_scenario.html">FScenario</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c4b71f0e1f1eec92ce4ee49566fac85">FinalScene</a></td></tr>
 <tr class="memdesc:a9c4b71f0e1f1eec92ce4ee49566fac85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scene that will be displayed after transition ends.  <br /></td></tr>
 <tr class="separator:a9c4b71f0e1f1eec92ce4ee49566fac85"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,6 +183,10 @@ TObjectPtr&lt; <a class="el" href="class_u_background_visual_image.html">UBackgr
 TObjectPtr&lt; UCanvasPanel &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Canvas</b></td></tr>
 <tr class="memdesc:a099cc1faa5e38d617bf709c20def1613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Persistent widget that holds background and all sprites of the scene. <br /></td></tr>
 <tr class="separator:a099cc1faa5e38d617bf709c20def1613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a319f0976168ea69fd070aa02cf9b92a8" id="r_a319f0976168ea69fd070aa02cf9b92a8"><td class="memItemLeft" align="right" valign="top"><a id="a319f0976168ea69fd070aa02cf9b92a8" name="a319f0976168ea69fd070aa02cf9b92a8"></a>
+FTSTicker::FDelegateHandle&#160;</td><td class="memItemRight" valign="bottom"><b>DrawHandle</b></td></tr>
+<tr class="memdesc:a319f0976168ea69fd070aa02cf9b92a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the latest draw request. <br /></td></tr>
+<tr class="separator:a319f0976168ea69fd070aa02cf9b92a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Responsible for visualizing data from described by <a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a>. </p>
@@ -384,7 +396,7 @@ TObjectPtr&lt; UCanvasPanel &gt;&#160;</td><td class="memItemRight" valign="bott
 </div><div class="memdoc">
 
 <p>Scene that will be displayed after transition ends. </p>
-<p>It temporarily used during transition process. It is invalid when transition does not occur. </p>
+<p>It is temporarily used during transition process. It is invalid when transition does not occur. </p>
 
 </div>
 </div>

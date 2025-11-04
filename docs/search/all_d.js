@@ -6,7 +6,7 @@ var searchData=
   ['playstransitions_3',['PlaysTransitions',['../class_u_visual_controller.html#a8f7d9820069f6376b4678585c9cd3825',1,'UVisualController']]],
   ['playtransition_4',['PlayTransition',['../class_u_background_visual_image.html#aecfe08d9e89bc1f8069445d20d17fb39',1,'UBackgroundVisualImage::PlayTransition(UPaperFlipbook *Target, UMaterialInstanceDynamic *Transition, bool bShouldAnimateTarget)'],['../class_u_background_visual_image.html#a36a71c9f4aa7016e8bea36a51e1e4790',1,'UBackgroundVisualImage::PlayTransition(UPaperFlipbook *Target, UMaterialInstanceDynamic *Transition, int32 FrameIndex)']]],
   ['position_5',['Position',['../struct_f_sprite.html#a2c809693994e7587afb0a223bf361344',1,'FSprite']]],
-  ['postinitproperties_6',['PostInitProperties',['../class_u_visual_controller.html#a032a80f2b56eaa74b3deff19528d6b5e',1,'UVisualController']]],
+  ['postinitproperties_6',['PostInitProperties',['../class_u_visual_controller.html#a032a80f2b56eaa74b3deff19528d6b5e',1,'UVisualController::PostInitProperties()'],['../class_u_visual_u_settings.html#ad57500a068574c11f418cab5bfe681fb',1,'UVisualUSettings::PostInitProperties()']]],
   ['postslatedrawelementextension_7',['PostSlateDrawElementExtension',['../class_s_visual_image.html#af9672ce74666debebbd2289f53136a42',1,'SVisualImage::PostSlateDrawElementExtension()'],['../class_s_visual_image_base.html#a3a66a97364c6c1e9046d2ebb6c5bfd77',1,'SVisualImageBase::PostSlateDrawElementExtension()']]],
   ['preparescenes_8',['PrepareScenes',['../class_u_visual_controller.html#afd8d96b2624b82a5b9cefc194f496f60',1,'UVisualController']]],
   ['presave_9',['PreSave',['../class_u_visual_controller.html#a489779e1396d8bc99494516482012456',1,'UVisualController']]],

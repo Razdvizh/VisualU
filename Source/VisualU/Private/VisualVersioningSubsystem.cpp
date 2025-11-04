@@ -43,6 +43,9 @@ void UVisualVersioningSubsystem::CheckoutAll(const UDataTable* DataTable) const
 void UVisualVersioningSubsystem::SerializeSubsystem(FArchive& Ar)
 {
 	Ar.UsingCustomVersion(FVisualUCustomVersion::GUID);
+	Ar.ArIsSaveGame = true;
+
+	Super::Serialize(Ar);
 
 	if (Ar.IsSaving())
 	{
@@ -79,6 +82,14 @@ void UVisualVersioningSubsystem::SerializeSubsystem(FArchive& Ar)
 				Versions.Add(Id, Info);
 			}
 		}
+	}
+}
+
+void UVisualVersioningSubsystem::Serialize(FArchive& Ar)
+{
+	if (!HasAnyFlags(RF_ClassDefaultObject | RF_ArchetypeObject))
+	{
+		SerializeSubsystem(Ar);
 	}
 }
 

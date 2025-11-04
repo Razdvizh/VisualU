@@ -116,7 +116,7 @@ $(function(){initNavTree('class_u_visual_u_blueprint_statics.html',''); initResi
 <p>Blueprint library with utility functions that could be helpful while developing blueprints with <a class="el" href="class_visual_u.html">VisualU</a> plugin.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualUBlueprintStatics.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.6/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualUBlueprintStatics.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualUBlueprintStatics:</div>
 <div class="dyncontent">
@@ -128,9 +128,17 @@ Inheritance diagram for UVisualUBlueprintStatics:</div>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a594ecf5ed4fad6d54a21d1fa902f54c8" id="r_a594ecf5ed4fad6d54a21d1fa902f54c8"><td class="memItemLeft" align="right" valign="top">static UTexture2D *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a594ecf5ed4fad6d54a21d1fa902f54c8">GetSpriteTexture</a> (UPaperSprite *Sprite)</td></tr>
 <tr class="separator:a594ecf5ed4fad6d54a21d1fa902f54c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66f591da2c4e6b84ed0ec17913d6dc88" id="r_a66f591da2c4e6b84ed0ec17913d6dc88"><td class="memItemLeft" align="right" valign="top">static int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66f591da2c4e6b84ed0ec17913d6dc88">GetScenarioHash</a> (const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;Scenario)</td></tr>
+<tr class="separator:a66f591da2c4e6b84ed0ec17913d6dc88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbf5645426855b08cbc7998ad5b999b9" id="r_acbf5645426855b08cbc7998ad5b999b9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbf5645426855b08cbc7998ad5b999b9">PrintScenesData</a> ()</td></tr>
 <tr class="memdesc:acbf5645426855b08cbc7998ad5b999b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Development only.  <br /></td></tr>
 <tr class="separator:acbf5645426855b08cbc7998ad5b999b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1adb505d36d6b9563abe2e04b8b9da19" id="r_a1adb505d36d6b9563abe2e04b8b9da19"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1adb505d36d6b9563abe2e04b8b9da19">LoadVisualU</a> (<a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *VersioningSubsystem, <a class="el" href="class_u_visual_controller.html">UVisualController</a> *VisualController, int32 UserIndex, const FString &amp;Filename)</td></tr>
+<tr class="memdesc:a1adb505d36d6b9563abe2e04b8b9da19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads previously saved <a class="el" href="class_visual_u.html">VisualU</a> contents from provided filename.  <br /></td></tr>
+<tr class="separator:a1adb505d36d6b9563abe2e04b8b9da19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf7f1430b1632637be0bdd78a75b8296" id="r_adf7f1430b1632637be0bdd78a75b8296"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf7f1430b1632637be0bdd78a75b8296">SaveVisualU</a> (<a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *VersioningSubsystem, <a class="el" href="class_u_visual_controller.html">UVisualController</a> *VisualController, int32 UserIndex, const FString &amp;Filename)</td></tr>
+<tr class="memdesc:adf7f1430b1632637be0bdd78a75b8296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves <a class="el" href="class_visual_u.html">VisualU</a> contents to provided filename.  <br /></td></tr>
+<tr class="separator:adf7f1430b1632637be0bdd78a75b8296"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a83455c4379d454f42d2fecf46a7816" id="r_a1a83455c4379d454f42d2fecf46a7816"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a83455c4379d454f42d2fecf46a7816">Choose</a> (<a class="el" href="class_u_visual_controller.html">UVisualController</a> *Controller, const UDataTable *DataTable)</td></tr>
 <tr class="memdesc:a1a83455c4379d454f42d2fecf46a7816"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests provided data table in the controller.  <br /></td></tr>
 <tr class="separator:a1a83455c4379d454f42d2fecf46a7816"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,6 +148,9 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a6e0cf2a7ac9903a4255bd0caf9a7e856" id="r_a6e0cf2a7ac9903a4255bd0caf9a7e856"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e0cf2a7ac9903a4255bd0caf9a7e856">GetScenesData</a> (TArray&lt; FAssetData &gt; &amp;OutData)</td></tr>
 <tr class="memdesc:a6e0cf2a7ac9903a4255bd0caf9a7e856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gathers asset data of all data tables based on <a class="el" href="struct_f_scenario.html" title="Describes a single scene/entry/&quot;frame&quot; of UVisualController.">FScenario</a>.  <br /></td></tr>
 <tr class="separator:a6e0cf2a7ac9903a4255bd0caf9a7e856"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6e9be1b2d332111500bcf6e86287b7d" id="r_ab6e9be1b2d332111500bcf6e86287b7d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6e9be1b2d332111500bcf6e86287b7d">SerializeVisualU</a> (FArchive &amp;Ar, <a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *VersioningSubsystem, <a class="el" href="class_u_visual_controller.html">UVisualController</a> *VisualController)</td></tr>
+<tr class="memdesc:ab6e9be1b2d332111500bcf6e86287b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes subsystem and controller to the provided archive.  <br /></td></tr>
+<tr class="separator:ab6e9be1b2d332111500bcf6e86287b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Blueprint library with utility functions that could be helpful while developing blueprints with <a class="el" href="class_visual_u.html">VisualU</a> plugin. </p>
@@ -181,6 +192,38 @@ Static Private Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>result of data table request</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_u_visual_controller.html#a3e1471d14ceb3108c7832a4c1ae7a1c0" title="Sets provided node as active and visualizes the first scene in it.">UVisualController::RequestNode()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a66f591da2c4e6b84ed0ec17913d6dc88" name="a66f591da2c4e6b84ed0ec17913d6dc88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66f591da2c4e6b84ed0ec17913d6dc88">&#9670;&#160;</a></span>GetScenarioHash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64 UVisualUBlueprintStatics::GetScenarioHash </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_f_scenario.html">FScenario</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Scenario</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Scenario</td><td>scene to get hash from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>hash of the provided scenario </dd></dl>
 
 </div>
 </div>
@@ -249,6 +292,57 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1adb505d36d6b9563abe2e04b8b9da19" name="a1adb505d36d6b9563abe2e04b8b9da19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1adb505d36d6b9563abe2e04b8b9da19">&#9670;&#160;</a></span>LoadVisualU()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualUBlueprintStatics::LoadVisualU </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *</td>          <td class="paramname"><span class="paramname"><em>VersioningSubsystem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_visual_controller.html">UVisualController</a> *</td>          <td class="paramname"><span class="paramname"><em>VisualController</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32</td>          <td class="paramname"><span class="paramname"><em>UserIndex</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const FString &amp;</td>          <td class="paramname"><span class="paramname"><em>Filename</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Loads previously saved <a class="el" href="class_visual_u.html">VisualU</a> contents from provided filename. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">VersioningSubsystem</td><td>subsystem to get the loaded data </td></tr>
+    <tr><td class="paramname">VisualController</td><td>controller to get the loaded data </td></tr>
+    <tr><td class="paramname">UserIndex</td><td>user performing the load </td></tr>
+    <tr><td class="paramname">Filename</td><td>save file to load contents from</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>whether or not loading succeeded </dd></dl>
+
+</div>
+</div>
 <a id="acbf5645426855b08cbc7998ad5b999b9" name="acbf5645426855b08cbc7998ad5b999b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbf5645426855b08cbc7998ad5b999b9">&#9670;&#160;</a></span>PrintScenesData()</h2>
 
@@ -274,6 +368,101 @@ Static Private Member Functions</h2></td></tr>
 
 <p>Development only. </p>
 <p>Outputs a friendly representation of scene asset data to the log. </p>
+
+</div>
+</div>
+<a id="adf7f1430b1632637be0bdd78a75b8296" name="adf7f1430b1632637be0bdd78a75b8296"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf7f1430b1632637be0bdd78a75b8296">&#9670;&#160;</a></span>SaveVisualU()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UVisualUBlueprintStatics::SaveVisualU </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *</td>          <td class="paramname"><span class="paramname"><em>VersioningSubsystem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_visual_controller.html">UVisualController</a> *</td>          <td class="paramname"><span class="paramname"><em>VisualController</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32</td>          <td class="paramname"><span class="paramname"><em>UserIndex</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const FString &amp;</td>          <td class="paramname"><span class="paramname"><em>Filename</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Saves <a class="el" href="class_visual_u.html">VisualU</a> contents to provided filename. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">VersioningSubsystem</td><td>subsystem to save </td></tr>
+    <tr><td class="paramname">VisualController</td><td>controller to save </td></tr>
+    <tr><td class="paramname">UserIndex</td><td>user performing the save </td></tr>
+    <tr><td class="paramname">Filename</td><td>file to store <a class="el" href="class_visual_u.html">VisualU</a> content</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>whether or not saving succeeded </dd></dl>
+
+</div>
+</div>
+<a id="ab6e9be1b2d332111500bcf6e86287b7d" name="ab6e9be1b2d332111500bcf6e86287b7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6e9be1b2d332111500bcf6e86287b7d">&#9670;&#160;</a></span>SerializeVisualU()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualUBlueprintStatics::SerializeVisualU </td>
+          <td>(</td>
+          <td class="paramtype">FArchive &amp;</td>          <td class="paramname"><span class="paramname"><em>Ar</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_visual_versioning_subsystem.html">UVisualVersioningSubsystem</a> *</td>          <td class="paramname"><span class="paramname"><em>VersioningSubsystem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_u_visual_controller.html">UVisualController</a> *</td>          <td class="paramname"><span class="paramname"><em>VisualController</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serializes subsystem and controller to the provided archive. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Ar</td><td>Archive to handle serialization </td></tr>
+    <tr><td class="paramname">VersioningSubsystem</td><td>subsystem to be serialized </td></tr>
+    <tr><td class="paramname">VisualController</td><td>controller to be serialized </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

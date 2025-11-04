@@ -118,7 +118,7 @@ $(function(){initNavTree('class_u_visual_versioning_subsystem.html',''); initRes
 <p>Allows for altering scenes in nodes.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;VisualVersioningSubsystem.h&gt;</code></p>
+<p><code>#include &lt;G:/UE5/UEProjects/5.6/VisualUEx/Plugins/VisualU/Source/VisualU/Public/VisualVersioningSubsystem.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for UVisualVersioningSubsystem:</div>
 <div class="dyncontent">
@@ -144,15 +144,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a20c5af58d8c5d0dcb0ae4182e5e73741"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a20c5af58d8c5d0dcb0ae4182e5e73741">AlterDataTable</a> (<a class="el" href="struct_f_scenario.html">FScenario</a> *Scene, V T::*... Members, const V &amp;... Values)</td></tr>
 <tr class="memdesc:a20c5af58d8c5d0dcb0ae4182e5e73741"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template version.  <br /></td></tr>
 <tr class="separator:a20c5af58d8c5d0dcb0ae4182e5e73741"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f769462043afc1717ee5306b68e7ad2" id="r_a1f769462043afc1717ee5306b68e7ad2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f769462043afc1717ee5306b68e7ad2">Checkout</a> (<a class="el" href="struct_f_scenario.html">FScenario</a> *const Scene) const</td></tr>
-<tr class="memdesc:a1f769462043afc1717ee5306b68e7ad2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switches scene to an older version.  <br /></td></tr>
-<tr class="separator:a1f769462043afc1717ee5306b68e7ad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af86c347d2e3a5c4e88109ea60305e299" id="r_af86c347d2e3a5c4e88109ea60305e299"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af86c347d2e3a5c4e88109ea60305e299">CheckoutAll</a> (UDataTable *const DataTable) const</td></tr>
-<tr class="memdesc:af86c347d2e3a5c4e88109ea60305e299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switches all scenes in the data table to an older version.  <br /></td></tr>
-<tr class="separator:af86c347d2e3a5c4e88109ea60305e299"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a035029c72dfb0a382c233bf55dfad5a3" id="r_a035029c72dfb0a382c233bf55dfad5a3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a035029c72dfb0a382c233bf55dfad5a3">SerializeSubsystem_Experimental</a> (FArchive &amp;Ar)</td></tr>
-<tr class="memdesc:a035029c72dfb0a382c233bf55dfad5a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not ready for production code.  <br /></td></tr>
-<tr class="separator:a035029c72dfb0a382c233bf55dfad5a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f1a05293e41cdfa58696dc244b53c25" id="r_a3f1a05293e41cdfa58696dc244b53c25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f1a05293e41cdfa58696dc244b53c25">Checkout</a> (<a class="el" href="struct_f_scenario.html">FScenario</a> *Scene) const</td></tr>
+<tr class="memdesc:a3f1a05293e41cdfa58696dc244b53c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switches scene to an older version.  <br /></td></tr>
+<tr class="separator:a3f1a05293e41cdfa58696dc244b53c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a384e7b9d43a72678bcbaac822cf1b79e" id="r_a384e7b9d43a72678bcbaac822cf1b79e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a384e7b9d43a72678bcbaac822cf1b79e">CheckoutAll</a> (const UDataTable *DataTable) const</td></tr>
+<tr class="memdesc:a384e7b9d43a72678bcbaac822cf1b79e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switches all scenes in the data table to an older version.  <br /></td></tr>
+<tr class="separator:a384e7b9d43a72678bcbaac822cf1b79e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27c291345dd47570e5c55d45285c85d3" id="r_a27c291345dd47570e5c55d45285c85d3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27c291345dd47570e5c55d45285c85d3">SerializeSubsystem</a> (FArchive &amp;Ar)</td></tr>
+<tr class="memdesc:a27c291345dd47570e5c55d45285c85d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes versioning subsystem to the provided archive.  <br /></td></tr>
+<tr class="separator:a27c291345dd47570e5c55d45285c85d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eab6370fadee754da112b6afe0b6cfa" id="r_a0eab6370fadee754da112b6afe0b6cfa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0eab6370fadee754da112b6afe0b6cfa">Serialize</a> (FArchive &amp;Ar) override</td></tr>
+<tr class="memdesc:a0eab6370fadee754da112b6afe0b6cfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes versioning subsystem to the provided archive.  <br /></td></tr>
+<tr class="separator:a0eab6370fadee754da112b6afe0b6cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab93f84faf0151f581bcc6fad29435b77" id="r_ab93f84faf0151f581bcc6fad29435b77"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab93f84faf0151f581bcc6fad29435b77">Deinitialize</a> () override</td></tr>
 <tr class="memdesc:ab93f84faf0151f581bcc6fad29435b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards all versions bringing scenes to original state.  <br /></td></tr>
 <tr class="separator:ab93f84faf0151f581bcc6fad29435b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -298,8 +301,8 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
 
 </div>
 </div>
-<a id="a1f769462043afc1717ee5306b68e7ad2" name="a1f769462043afc1717ee5306b68e7ad2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f769462043afc1717ee5306b68e7ad2">&#9670;&#160;</a></span>Checkout()</h2>
+<a id="a3f1a05293e41cdfa58696dc244b53c25" name="a3f1a05293e41cdfa58696dc244b53c25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f1a05293e41cdfa58696dc244b53c25">&#9670;&#160;</a></span>Checkout()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -307,7 +310,7 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
         <tr>
           <td class="memname">void UVisualVersioningSubsystem::Checkout </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_f_scenario.html">FScenario</a> *const</td>          <td class="paramname"><span class="paramname"><em>Scene</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="struct_f_scenario.html">FScenario</a> *</td>          <td class="paramname"><span class="paramname"><em>Scene</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -324,8 +327,8 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
 
 </div>
 </div>
-<a id="af86c347d2e3a5c4e88109ea60305e299" name="af86c347d2e3a5c4e88109ea60305e299"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af86c347d2e3a5c4e88109ea60305e299">&#9670;&#160;</a></span>CheckoutAll()</h2>
+<a id="a384e7b9d43a72678bcbaac822cf1b79e" name="a384e7b9d43a72678bcbaac822cf1b79e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a384e7b9d43a72678bcbaac822cf1b79e">&#9670;&#160;</a></span>CheckoutAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -333,7 +336,7 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
         <tr>
           <td class="memname">void UVisualVersioningSubsystem::CheckoutAll </td>
           <td>(</td>
-          <td class="paramtype">UDataTable *const</td>          <td class="paramname"><span class="paramname"><em>DataTable</em></span></td><td>)</td>
+          <td class="paramtype">const UDataTable *</td>          <td class="paramname"><span class="paramname"><em>DataTable</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -451,8 +454,8 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
 
 </div>
 </div>
-<a id="a035029c72dfb0a382c233bf55dfad5a3" name="a035029c72dfb0a382c233bf55dfad5a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a035029c72dfb0a382c233bf55dfad5a3">&#9670;&#160;</a></span>SerializeSubsystem_Experimental()</h2>
+<a id="a0eab6370fadee754da112b6afe0b6cfa" name="a0eab6370fadee754da112b6afe0b6cfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eab6370fadee754da112b6afe0b6cfa">&#9670;&#160;</a></span>Serialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -461,7 +464,41 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void UVisualVersioningSubsystem::SerializeSubsystem_Experimental </td>
+          <td class="memname">void UVisualVersioningSubsystem::Serialize </td>
+          <td>(</td>
+          <td class="paramtype">FArchive &amp;</td>          <td class="paramname"><span class="paramname"><em>Ar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serializes versioning subsystem to the provided archive. </p>
+<p>Uses <a class="el" href="struct_f_visual_u_custom_version.html">FVisualUCustomVersion</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Ar</td><td>archive to serialize this subsystem </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a27c291345dd47570e5c55d45285c85d3" name="a27c291345dd47570e5c55d45285c85d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27c291345dd47570e5c55d45285c85d3">&#9670;&#160;</a></span>SerializeSubsystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UVisualVersioningSubsystem::SerializeSubsystem </td>
           <td>(</td>
           <td class="paramtype">FArchive &amp;</td>          <td class="paramname"><span class="paramname"><em>Ar</em></span></td><td>)</td>
           <td></td>
@@ -474,7 +511,8 @@ template&lt;typename T  = FVisualScenarioInfo, typename... V&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Not ready for production code. </p>
+<p>Serializes versioning subsystem to the provided archive. </p>
+<p>Uses <a class="el" href="struct_f_visual_u_custom_version.html">FVisualUCustomVersion</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Ar</td><td>archive to serialize this subsystem </td></tr>

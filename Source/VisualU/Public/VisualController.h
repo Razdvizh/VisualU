@@ -158,6 +158,14 @@ public:
 	virtual void SerializeController(FArchive& Ar);
 
 	/**
+	* Serializes controller to the provided archive.
+	* Uses FVisualUCustomVersion.
+	*
+	* @param Ar archive to serialize this controller
+	*/
+	virtual void Serialize(FArchive& Ar) override;
+
+	/**
 	* Visualizes the next scene in the node.
 	* 
 	* @return result of the request
