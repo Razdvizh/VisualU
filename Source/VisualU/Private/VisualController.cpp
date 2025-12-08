@@ -445,8 +445,6 @@ bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		&& Direction != EVisualControllerDirection::None && 
 		ensureMsgf(bIsDelayGood, TEXT("Zero or negative auto move delay is invalid, auto move request failed.")))
 	{
-		AutoMoveDelay = Delay;
-
 		Mode = EVisualControllerMode::AutoMoving;
 
 		OnAutoMoveStart.Broadcast(Direction);
