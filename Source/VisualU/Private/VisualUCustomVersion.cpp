@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Evgeny Shustov
+// Copyright (c) 2025 Evgeny Shustov
 
 
 #include "VisualUCustomVersion.h"

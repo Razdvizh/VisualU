@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Evgeny Shustov
+// Copyright (c) 2025 Evgeny Shustov
 
 #pragma once
 
@@ -320,7 +320,10 @@ public:
 *	   UVisualController
 */
 USTRUCT(BlueprintType, meta = (ToolTip = "Describes a single scene/entry/\"frame\" of Visual Controller"))
-struct VISUALU_API FScenario : public FTableRowBase, public IInfoAssignable
+struct VISUALU_API FScenario : public FTableRowBase
+#if CPP
+	, public IInfoAssignable
+#endif
 {
 	GENERATED_BODY()
 

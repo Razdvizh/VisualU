@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Evgeny Shustov
+// Copyright (c) 2025 Evgeny Shustov
 
 
 #include "VisualRenderer.h"
@@ -203,12 +203,7 @@ void UVisualRenderer::ForceStopTransition()
 {
 	if (IsTransitionInProgress())
 	{
-		FWidgetAnimationState* TransitionState = TransitionHandle.GetAnimationState();
-		check(TransitionState);
-
-		TransitionState->Stop();
-
-		UpdateCanTick();
+		StopAnimation(Transition);
 	}
 }
 
