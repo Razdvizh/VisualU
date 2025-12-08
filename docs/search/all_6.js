@@ -2,7 +2,7 @@ var searchData=
 [
   ['getanimate_0',['GetAnimate',['../class_s_visual_image.html#a6fc318eba0c1668b2442518bb510236f',1,'SVisualImage']]],
   ['getasyncqueuedebugstring_1',['GetAsyncQueueDebugString',['../class_u_visual_controller.html#a6ed2f63bfc9ad970d48a1dad8fcdf8f1',1,'UVisualController']]],
-  ['getautomovedelay_2',['GetAutoMoveDelay',['../class_u_visual_controller.html#a60b376947e7bcf2eec997b64d46d010e',1,'UVisualController']]],
+  ['getautomovedebugdelay_2',['GetAutoMoveDebugDelay',['../class_u_visual_controller.html#a8d08d7458401c32c0136b8759ebe04a1',1,'UVisualController']]],
   ['getcolorandopacity_3',['GetColorAndOpacity',['../class_s_visual_image.html#a465f3609fb893e890a1814fe769c36cb',1,'SVisualImage::GetColorAndOpacity()'],['../class_u_visual_image.html#a922a46f495a6118ffd4a721fb039bc9f',1,'UVisualImage::GetColorAndOpacity()']]],
   ['getcurrentscenario_4',['GetCurrentScenario',['../class_u_visual_controller.html#a6b4275331f2d26aca51f2eb25bce0a38',1,'UVisualController']]],
   ['getcurrentscene_5',['GetCurrentScene',['../class_u_visual_controller.html#a9688f7206c6a845ad9ce9e72509bf53a',1,'UVisualController']]],

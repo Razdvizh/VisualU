@@ -4,7 +4,7 @@ var searchData=
   ['releaseslateresources_1',['ReleaseSlateResources',['../class_u_background_visual_image.html#a3dd805ae503a7ad6ee181813d2ff9b05',1,'UBackgroundVisualImage::ReleaseSlateResources()'],['../class_u_visual_image.html#a9dd44871f750cd252615cd50637811a5',1,'UVisualImage::ReleaseSlateResources()'],['../class_u_visual_socket.html#a31a664b6da4a161cf1af23b411d10895',1,'UVisualSocket::ReleaseSlateResources()'],['../class_u_visual_sprite.html#a966c751cfaee68607ce703a8c775cc50',1,'UVisualSprite::ReleaseSlateResources()']]],
   ['removefromscreen_2',['RemoveFromScreen',['../class_u_visual_controller.html#a63fbf2e1faf4e5bb27291d289ed9e7c0',1,'UVisualController']]],
   ['requestadjacentscene_3',['RequestAdjacentScene',['../class_u_visual_controller.html#ae67fe03b885249bb7415aca40598b87f',1,'UVisualController']]],
-  ['requestautomove_4',['RequestAutoMove',['../class_u_visual_controller.html#aedb6df536c5cf265e0f7cf3187f753ef',1,'UVisualController']]],
+  ['requestautomove_4',['RequestAutoMove',['../class_u_visual_controller.html#aef4e6da2a9a6e453cb6ad465c5d03e34',1,'UVisualController']]],
   ['requestfastmove_5',['RequestFastMove',['../class_u_visual_controller.html#adda59ec2daea21657f1f8a242f97a44a',1,'UVisualController']]],
   ['requestnextscene_6',['RequestNextScene',['../class_u_visual_controller.html#a4aaaeac531eac3f43758068a1466f6fa',1,'UVisualController']]],
   ['requestnode_7',['RequestNode',['../class_u_visual_controller.html#a3e1471d14ceb3108c7832a4c1ae7a1c0',1,'UVisualController']]],
