@@ -13,6 +13,5 @@ var class_u_visual_renderer =
     [ "Canvas", "class_u_visual_renderer.html#a099cc1faa5e38d617bf709c20def1613", null ],
     [ "DrawHandle", "class_u_visual_renderer.html#a319f0976168ea69fd070aa02cf9b92a8", null ],
     [ "FinalScene", "class_u_visual_renderer.html#a9c4b71f0e1f1eec92ce4ee49566fac85", null ],
-    [ "Transition", "class_u_visual_renderer.html#adc498138aadcc932bebd201fa166313d", null ],
-    [ "TransitionHandle", "class_u_visual_renderer.html#a2a0819679ebad403d79c174381e53565", null ]
+    [ "Transition", "class_u_visual_renderer.html#adc498138aadcc932bebd201fa166313d", null ]
 ];
