@@ -80,7 +80,7 @@ void FGameplayDebuggerCategory_VisualU::CollectData(APlayerController* OwnerPC, 
 
 				RepData.ControllerHeadDesc = VisualController->GetHeadDebugString();
 				RepData.bIsControllerTransitioning = VisualController->IsTransitioning();
-				RepData.ControllerAutoMoveDelay = VisualController->GetAutoMoveDelay();
+				RepData.ControllerAutoMoveDelay = VisualController->GetAutoMoveDebugDelay();
 				RepData.bControllerPlaysSound = VisualController->PlaysSound();
 				RepData.bControllerPlaysTransitions = VisualController->PlaysTransitions();
 				RepData.NumScenesToLoad = VisualController->GetNumScenesToLoad();

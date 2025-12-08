@@ -64,7 +64,6 @@ UVisualController::UVisualController(const FObjectInitializer& ObjectInitializer
 	ScenesToLoad(5),
 	bPlayTransitions(true),
 	bPlaySound(true),
-	AutoMoveDelay(5.f),
 	Mode(EVisualControllerMode::Idle)
 {
 }
@@ -438,14 +437,16 @@ bool UVisualController::RequestFastMove(EVisualControllerDirection::Type Directi
 	return false;
 }
 
-bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction)
+bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Direction, float Delay)
 {
-	const bool bIsDelayGood = (!FMath::IsNegativeOrNegativeZero(AutoMoveDelay) && !FMath::IsNearlyZero(AutoMoveDelay));
+	const bool bIsDelayGood = (!FMath::IsNegativeOrNegativeZero(Delay) && !FMath::IsNearlyZero(Delay));
 
 	if (IsIdle() 
 		&& Direction != EVisualControllerDirection::None && 
 		ensureMsgf(bIsDelayGood, TEXT("Zero or negative auto move delay is invalid, auto move request failed.")))
 	{
+		AutoMoveDelay = Delay;
+
 		Mode = EVisualControllerMode::AutoMoving;
 
 		OnAutoMoveStart.Broadcast(Direction);
@@ -469,7 +470,7 @@ bool UVisualController::RequestAutoMove(EVisualControllerDirection::Type Directi
 		if (AutoMove(0.f))
 		{
 			FTickerDelegate TickerDelegate = FTickerDelegate::CreateLambda(AutoMove);
-			AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, AutoMoveDelay);
+			AutoMoveHandle = FTSTicker::GetCoreTicker().AddTicker(TickerDelegate, Delay);
 
 			return true;
 		}
@@ -514,11 +515,11 @@ void UVisualController::CancelAutoMove()
 
 void UVisualController::VisualizeToScreen(TSubclassOf<UVisualRenderer> RendererClass, int32 ZOrder)
 {
-	check(Renderer);
 	if (RendererClass != Renderer->GetClass())
 	{
 		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
 	}
+	check(Renderer);
 
 	Renderer->AddToPlayerScreen(ZOrder);
 	const FScenario* CurrentScene = GetCurrentScene();
@@ -528,12 +529,12 @@ void UVisualController::VisualizeToScreen(TSubclassOf<UVisualRenderer> RendererC
 
 void UVisualController::VisualizeToComponent(TSubclassOf<UVisualRenderer> RendererClass, UWidgetComponent* Component)
 {
-	check(Renderer);
 	check(Component);
 	if (RendererClass != Renderer->GetClass())
 	{
 		Renderer = CreateWidget<UVisualRenderer>(GetOuterAPlayerController(), RendererClass);
 	}
+	check(Renderer);
 
 	Component->SetWidget(Renderer);
 	const FScenario* CurrentScene = GetCurrentScene();
@@ -582,11 +583,6 @@ void UVisualController::ShouldPlayTransitions(bool bShouldPlay)
 void UVisualController::ShouldPlaySound(bool bShouldPlay)
 {
 	bPlaySound = bShouldPlay;
-}
-
-void UVisualController::SetAutoMoveDelay(float Delay)
-{
-	AutoMoveDelay = Delay;
 }
 
 const FScenario* UVisualController::GetCurrentScene() const
@@ -673,6 +669,17 @@ const FString UVisualController::GetExhaustedScenesDebugString() const
 
 	return DebugString;
 }
+
+#pragma warning(disable: 4702)
+const float UVisualController::GetAutoMoveDebugDelay() const
+{
+#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+	return IsAutoMoving() ? AutoMoveDelay : -1.f;
+#endif
+
+	return -1.f;
+}
+#pragma warning(default: 4702)
 
 TSharedPtr<FStreamableHandle> UVisualController::LoadSceneAsync(const FScenario* Scene, FStreamableDelegate AfterLoadDelegate)
 {

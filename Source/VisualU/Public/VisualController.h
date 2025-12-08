@@ -255,18 +255,20 @@ public:
 	/**
 	* Tries to activate auto move.
 	* In this mode, controller will request scenes
-	* at the pace of UVisualController::AutoMoveDelay.
-	* This mode will end when scene with
+	* at the pace of specified delay.
+	* This mode will automatically end when scene with
 	* EScenarioMetaFlags::Choice is encountered.
 	* 
-	* @note ends when UVisualController::AutoMoveDelay is lower than
-	*		UVisualUSettings::TransitionDuration
-	* 
 	* @param Direction decides whether to request next or previous scenes
+	* @param Delay how long, in seconds, controller should wait
+	*		 before moving to the next scene in auto move mode.
+	*		 Must be larger than transition duration to not 
+	*		 interrupt transitions.
+	* 
 	* @return result of the request
 	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	bool RequestAutoMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward);
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control", meta = (ToolTip = "Tries to activate auto move. In this mode, controller will request scenes at the pace of specified delay."))
+	bool RequestAutoMove(EVisualControllerDirection::Type Direction = EVisualControllerDirection::Forward, float Delay = 5.f);
 
 	/**
 	* Ends fast move mode when it is active.
@@ -377,21 +379,7 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Sound")
 	FORCEINLINE bool PlaysSound() const { return bPlaySound; }
-
-	/**
-	* Setter for UVisualController::AutoMoveDelay.
-	* 
-	* @param Delay new delay, in seconds, between scenes in auto move mode
-	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	void SetAutoMoveDelay(float Delay);
 	
-	/**
-	* @return delay between scenes when controller is in auto move mode
-	*/
-	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Flow control")
-	FORCEINLINE float GetAutoMoveDelay() const { return AutoMoveDelay; }
-
 	/**
 	* @return currently visualized scene.
 	*/
@@ -519,6 +507,14 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Debug", meta = (DevelopmentOnly))
 	const FString GetExhaustedScenesDebugString() const;
+
+	/**
+	* Development only.
+	* 
+	* @return debug information about UVisualController::RequestAutoMove(EVisualControllerDirection::Type, float)
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Visual Controller|Debug", meta = (DevelopmentOnly))
+	const float GetAutoMoveDebugDelay() const;
 
 	/**
 	* Called when controller has switched to a different scenario.
@@ -688,6 +684,14 @@ private:
 	*		   UVisualController::PrepareScenes()
 	*/
 	TDeque<TWeakPtr<FStreamableHandle>> DebugSceneHandles{};
+
+	/**
+	* Current auto move delay in auto move mode.
+	* Negative when not in the mode or delay is not in use.
+	* 
+	* @note isn't present in shipping or test builds
+	*/
+	float AutoMoveDelay;
 #endif
 
 	/**
@@ -755,19 +759,6 @@ private:
 	*/
 	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Sound", meta = (AllowPrivateAccess = true, ToolTip = "Will Visual Controller play scene sound"))
 	bool bPlaySound;
-
-	/**
-	* How long, in seconds, controller should wait
-	* before moving to the next scene in auto move mode.
-	* Must be larger than transition duration to not stop on transitions.
-	* 
-	* @note avoid a zero to simulate fast forwarding, use fast move instead
-	* 
-	* @see UVisualController::RequestAutoMove()
-	*	   UVisualController::RequestFastMove()
-	*/
-	UPROPERTY(EditAnywhere, SaveGame, BlueprintReadOnly, Category = "Visual Controller|Flow control", meta = (AllowPrivateAccess = true, UIMin = 0.f, ClampMin = 0.f, ToolTip = "How long, in seconds, Visual Controller should wait before moving to the next scene in Auto Move mode. Must be larger than transition duration to not stop on transitions. Warning: don't put a zero to simulate fast forwarding, use FastMove instead."))
-	float AutoMoveDelay;
 
 	/**
 	* Current state of this controller.
